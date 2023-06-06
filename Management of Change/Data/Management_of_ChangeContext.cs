@@ -17,5 +17,7 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.ChangeRequest> ChangeRequest { get; set; } = default!;
 
         public DbSet<Management_of_Change.Models.ChangeType>? ChangeType { get; set; }
+
+        public DbSet<Management_of_Change.Models.ChangeLevel>? ChangeLevel { get; set; }
     }
 }

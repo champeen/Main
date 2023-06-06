@@ -84,8 +84,6 @@ namespace Management_of_Change.Models
                 // Look for any Change Types.....
                 if (!context.ChangeType.Any())
                 {
-
-
                     context.ChangeType.AddRange(
                         new ChangeType
                         {
@@ -244,7 +242,70 @@ namespace Management_of_Change.Models
                     );
                     context.SaveChanges();
                 }
-                
+
+                // Look for any Change Levels.....
+                if (!context.ChangeLevel.Any())
+                {
+                    context.ChangeLevel.AddRange(
+                        new ChangeLevel
+                        {
+                            Level = "Level 1 - Major",
+                            Description = "Any change that affects form, fit, or function of the product which would result in redefining the production specification. <b>Impacted customers are notified and must provide written approval of the change.</b>",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ChangeLevel
+                        {
+                            Level = "Level 2 - Major",
+                            Description = "Any change that affects form, fit, or function of the product but does not require to redefine the product specification.  Impacted customers may be notified but no formal approval of the change is required.",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ChangeLevel
+                        {
+                            Level = "Level 3 - Minor",
+                            Description = "A minor change with no customer impact therefore requiring no customer notification.",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ChangeLevel
+                        {
+                            Level = "Level 4 - Minor",
+                            Description = "Change to process or systems which has no effect on the product (e.g. changing an O2 sensor, process support equipment, upgrading software, minor recipe adjustment, etc.)",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = "Christie Tester",
+                            DeletedDate = DateTime.Now.AddYears(-2)
+                        },
+                        new ChangeLevel
+                        {
+                            Level = "Level 5 - Temporary",
+                            Description = "Used to document a temporary change to the process (e.g. R&D trials, extended engineering trials, etc.)",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "David Hasselhoff",
+                            ModifiedDate = DateTime.Now.AddDays(-5),
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
             }
         }
     }
