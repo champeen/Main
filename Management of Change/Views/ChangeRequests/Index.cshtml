@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Management_of_Change.Models.ChangeRequest>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Change Requests</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MOC_Number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Change_Owner)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location_Site)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title_Change_Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Scope_of_the_Change)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Justification_of_the_Change)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Change_Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Request_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Proudct_Line)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Change_Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Change_Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Area_of_Change)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MOC_Number) @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Change_Owner)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location_Site)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title_Change_Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Scope_of_the_Change)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Justification_of_the_Change)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Change_Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Request_Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Proudct_Line)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Change_Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Raw_Material_Component_Numbers_Impacted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Change_Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Area_of_Change)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expiration_Date_Temporary)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

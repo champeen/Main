@@ -1,0 +1,106 @@
+﻿@model Management_of_Change.Models.ChangeRequest
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Change Request for @Html.DisplayFor(model => model.MOC_Number) @Html.DisplayFor(model => model.Id)</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="MOC_Number" />
+            <input type="hidden" asp-for="Request_Date" />
+@*            <div class="form-group">
+                <label asp-for="MOC_Number" class="control-label"></label>
+                <input asp-for="MOC_Number" class="form-control" readonly="readonly" />
+                <span asp-validation-for="MOC_Number" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Change_Owner" class="control-label"></label>
+                <input asp-for="Change_Owner" class="form-control" />
+                <span asp-validation-for="Change_Owner" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location_Site" class="control-label"></label>
+                <input asp-for="Location_Site" class="form-control" />
+                <span asp-validation-for="Location_Site" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title_Change_Description" class="control-label"></label>
+                <input asp-for="Title_Change_Description" class="form-control" />
+                <span asp-validation-for="Title_Change_Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Scope_of_the_Change" class="control-label"></label>
+                <input asp-for="Scope_of_the_Change" class="form-control" />
+                <span asp-validation-for="Scope_of_the_Change" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Justification_of_the_Change" class="control-label"></label>
+                <input asp-for="Justification_of_the_Change" class="form-control" />
+                <span asp-validation-for="Justification_of_the_Change" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Change_Level" class="control-label"></label>
+                <input asp-for="Change_Level" class="form-control" />
+                <span asp-validation-for="Change_Level" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Area_of_Change" class="control-label"></label>
+                <input asp-for="Area_of_Change" class="form-control" />
+                <span asp-validation-for="Area_of_Change" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Expiration_Date_Temporary" class="control-label"></label>
+                <input asp-for="Expiration_Date_Temporary" class="form-control" />
+                <span asp-validation-for="Expiration_Date_Temporary" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Change_Status" class="control-label"></label>
+                <input asp-for="Change_Status" class="form-control" />
+                <span asp-validation-for="Change_Status" class="text-danger"></span>
+            </div>
+@*            <div class="form-group">
+                <label asp-for="Request_Date" class="control-label"></label>
+                <input asp-for="Request_Date" class="form-control" />
+                <span asp-validation-for="Request_Date" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <label asp-for="Proudct_Line" class="control-label"></label>
+                <input asp-for="Proudct_Line" class="form-control" />
+                <span asp-validation-for="Proudct_Line" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Change_Type" class="control-label"></label>
+                <input asp-for="Change_Type" class="form-control" />
+                <span asp-validation-for="Change_Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Estimated_Completion_Date" class="control-label"></label>
+                <input asp-for="Estimated_Completion_Date" class="form-control" />
+                <span asp-validation-for="Estimated_Completion_Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Raw_Material_Component_Numbers_Impacted" class="control-label"></label>
+                <input asp-for="Raw_Material_Component_Numbers_Impacted" class="form-control" />
+                <span asp-validation-for="Raw_Material_Component_Numbers_Impacted" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

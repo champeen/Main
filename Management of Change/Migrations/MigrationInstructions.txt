@@ -1,0 +1,7 @@
+﻿For My Use * MJWII *
+
+Add-Migration InitialCreate
+Update-Database
+
+Add-Migration Rating
+Update-Database
