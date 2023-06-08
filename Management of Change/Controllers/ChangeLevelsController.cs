@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,7 +24,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.ChangeLevel != null ? 
-                          View(await _context.ChangeLevel.ToListAsync()) :
+                          View(await _context.ChangeLevel.OrderBy(m => m.Order).ThenBy(m => m.Level).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ChangeLevel'  is null.");
         }
 
@@ -31,16 +32,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.ChangeLevel == null)
-            {
-                return NotFound();
-            }
+                 return NotFound();
 
             var changeLevel = await _context.ChangeLevel
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (changeLevel == null)
-            {
                 return NotFound();
-            }
 
             return View(changeLevel);
         }
@@ -48,7 +46,13 @@ namespace Management_of_Change.Controllers
         // GET: ChangeLevels/Create
         public IActionResult Create()
         {
-            return View();
+            ChangeLevel changeLevel = new ChangeLevel
+            {
+                CreatedUser = "Michael Wilson",
+                CreatedDate = DateTime.Now
+            };
+
+            return View(changeLevel);
         }
 
         // POST: ChangeLevels/Create
@@ -56,7 +60,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Level,Description,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeLevel changeLevel)
+        public async Task<IActionResult> Create([Bind("Id,Level,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeLevel changeLevel)
         {
             if (ModelState.IsValid)
             {
@@ -71,15 +75,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.ChangeLevel == null)
-            {
                 return NotFound();
-            }
 
             var changeLevel = await _context.ChangeLevel.FindAsync(id);
+
             if (changeLevel == null)
-            {
                 return NotFound();
-            }
+
             return View(changeLevel);
         }
 
@@ -88,12 +90,13 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Level,Description,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeLevel changeLevel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Level,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeLevel changeLevel)
         {
             if (id != changeLevel.Id)
-            {
                 return NotFound();
-            }
+
+            changeLevel.ModifiedUser = "Michael Wilson";
+            changeLevel.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
@@ -105,13 +108,9 @@ namespace Management_of_Change.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ChangeLevelExists(changeLevel.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -122,16 +121,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.ChangeLevel == null)
-            {
                 return NotFound();
-            }
 
             var changeLevel = await _context.ChangeLevel
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (changeLevel == null)
-            {
                 return NotFound();
-            }
 
             return View(changeLevel);
         }
@@ -142,14 +138,12 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.ChangeLevel == null)
-            {
                 return Problem("Entity set 'Management_of_ChangeContext.ChangeLevel'  is null.");
-            }
+
             var changeLevel = await _context.ChangeLevel.FindAsync(id);
+
             if (changeLevel != null)
-            {
                 _context.ChangeLevel.Remove(changeLevel);
-            }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

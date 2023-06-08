@@ -4,7 +4,7 @@ using System.Security.AccessControl;
 
 namespace Management_of_Change.Models
 {
-    public class ChangeRequest
+    public class ChangeRequest : TimeStamps
     {
         public int Id { get; set; }
         [Display(Name = "MOC #")]

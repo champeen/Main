@@ -19,5 +19,17 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.ChangeType>? ChangeType { get; set; }
 
         public DbSet<Management_of_Change.Models.ChangeLevel>? ChangeLevel { get; set; }
+
+        public DbSet<Management_of_Change.Models.ChangeStep>? ChangeStep { get; set; }
+
+        public DbSet<Management_of_Change.Models.ResponseDropdownSelections>? ResponseDropdownSelections { get; set; }
+
+        public DbSet<Management_of_Change.Models.ProductLine>? ProductLine { get; set; }
+
+        public DbSet<Management_of_Change.Models.SiteLocation>? SiteLocation { get; set; }
+
+        public DbSet<Management_of_Change.Models.ChangeArea>? ChangeArea { get; set; }
+
+        public DbSet<Management_of_Change.Models.GeneralMocQuestions>? GeneralMocQuestions { get; set; }
     }
 }
