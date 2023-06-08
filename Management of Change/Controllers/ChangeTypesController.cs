@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Management_of_Change.Data;
+﻿using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,7 +18,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.ChangeType != null ? 
-                          View(await _context.ChangeType.ToListAsync()) :
+                          View(await _context.ChangeType.OrderBy(m => m.Order).ThenBy(m => m.Type).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ChangeType'  is null.");
         }
 
@@ -31,16 +26,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.ChangeType == null)
-            {
                 return NotFound();
-            }
 
             var changeType = await _context.ChangeType
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (changeType == null)
-            {
                 return NotFound();
-            }
 
             return View(changeType);
         }
@@ -48,7 +40,13 @@ namespace Management_of_Change.Controllers
         // GET: ChangeTypes/Create
         public IActionResult Create()
         {
-            return View();
+            ChangeType changeType = new ChangeType
+            {
+                CreatedUser = "Michael Wilson",
+                CreatedDate = DateTime.Now
+            };
+
+            return View(changeType);
         }
 
         // POST: ChangeTypes/Create
@@ -56,7 +54,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Description,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeType changeType)
+        public async Task<IActionResult> Create([Bind("Id,Type,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeType changeType)
         {
             if (ModelState.IsValid)
             {
@@ -71,15 +69,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.ChangeType == null)
-            {
                 return NotFound();
-            }
 
             var changeType = await _context.ChangeType.FindAsync(id);
+
             if (changeType == null)
-            {
                 return NotFound();
-            }
+
             return View(changeType);
         }
 
@@ -88,12 +84,13 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Description,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeType changeType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeType changeType)
         {
             if (id != changeType.Id)
-            {
                 return NotFound();
-            }
+
+            changeType.ModifiedUser = "Michael Wilson";
+            changeType.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
@@ -105,13 +102,9 @@ namespace Management_of_Change.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ChangeTypeExists(changeType.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -122,16 +115,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.ChangeType == null)
-            {
                 return NotFound();
-            }
 
             var changeType = await _context.ChangeType
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (changeType == null)
-            {
                 return NotFound();
-            }
 
             return View(changeType);
         }
@@ -142,14 +132,12 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.ChangeType == null)
-            {
                 return Problem("Entity set 'Management_of_ChangeContext.ChangeType'  is null.");
-            }
+
             var changeType = await _context.ChangeType.FindAsync(id);
+
             if (changeType != null)
-            {
                 _context.ChangeType.Remove(changeType);
-            }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

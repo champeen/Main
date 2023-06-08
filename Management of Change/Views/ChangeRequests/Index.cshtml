@@ -12,7 +12,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
+            <th class="text-nowrap">
                 @Html.DisplayNameFor(model => model.MOC_Number)
             </th>
             <th>
@@ -64,7 +64,7 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td class="text-nowrap">
                     @Html.DisplayFor(modelItem => item.MOC_Number) @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
@@ -109,7 +109,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Expiration_Date_Temporary)
                 </td>
-                <td>
+                <td class="text-nowrap">
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

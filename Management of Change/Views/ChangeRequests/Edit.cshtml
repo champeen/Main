@@ -8,99 +8,119 @@
 
 <h4>Change Request for @Html.DisplayFor(model => model.MOC_Number) @Html.DisplayFor(model => model.Id)</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<form asp-action="Edit">
+    <div class="row">
+        <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="MOC_Number" />
             <input type="hidden" asp-for="Request_Date" />
-@*            <div class="form-group">
-                <label asp-for="MOC_Number" class="control-label"></label>
-                <input asp-for="MOC_Number" class="form-control" readonly="readonly" />
-                <span asp-validation-for="MOC_Number" class="text-danger"></span>
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="ModifiedDate" />
+            <input type="hidden" asp-for="ModifiedUser" />
+            <input type="hidden" asp-for="DeletedDate" />
+            <input type="hidden" asp-for="DeletedUser" />
+            @*            <div class="form-group">
+            <label asp-for="MOC_Number" class="control-label"></label>
+            <input asp-for="MOC_Number" class="form-control" readonly="readonly" />
+            <span asp-validation-for="MOC_Number" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
-                <label asp-for="Change_Owner" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Change_Owner" class="control-label fw-bold"></label>
                 <input asp-for="Change_Owner" class="form-control" />
                 <span asp-validation-for="Change_Owner" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Location_Site" class="control-label"></label>
-                <input asp-for="Location_Site" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Location_Site" class="control-label fw-bold"></label>
+                @*<input asp-for="Location_Site" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Location_Site, new SelectList(ViewBag.SiteLocations), new { @class="form-control form-select"})
                 <span asp-validation-for="Location_Site" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Title_Change_Description" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Title_Change_Description" class="control-label fw-bold"></label>
                 <input asp-for="Title_Change_Description" class="form-control" />
                 <span asp-validation-for="Title_Change_Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Scope_of_the_Change" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Scope_of_the_Change" class="control-label fw-bold"></label>
                 <input asp-for="Scope_of_the_Change" class="form-control" />
                 <span asp-validation-for="Scope_of_the_Change" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Justification_of_the_Change" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Justification_of_the_Change" class="control-label fw-bold"></label>
                 <input asp-for="Justification_of_the_Change" class="form-control" />
                 <span asp-validation-for="Justification_of_the_Change" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Change_Level" class="control-label"></label>
-                <input asp-for="Change_Level" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Change_Level" class="control-label fw-bold"></label>
+                @*<input asp-for="Change_Level" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Change_Level, new SelectList(ViewBag.Levels), new { @class="form-control form-select"})
                 <span asp-validation-for="Change_Level" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Area_of_Change" class="control-label"></label>
-                <input asp-for="Area_of_Change" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Area_of_Change" class="control-label fw-bold"></label>
+                @*<input asp-for="Area_of_Change" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Area_of_Change, new SelectList(ViewBag.ChangeAreas), new { @class="form-control form-select"})
                 <span asp-validation-for="Area_of_Change" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Expiration_Date_Temporary" class="control-label"></label>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group my-3">
+                <label asp-for="Expiration_Date_Temporary" class="control-label fw-bold"></label>
                 <input asp-for="Expiration_Date_Temporary" class="form-control" />
                 <span asp-validation-for="Expiration_Date_Temporary" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Change_Status" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Change_Status" class="control-label fw-bold"></label>
                 <input asp-for="Change_Status" class="form-control" />
                 <span asp-validation-for="Change_Status" class="text-danger"></span>
             </div>
-@*            <div class="form-group">
-                <label asp-for="Request_Date" class="control-label"></label>
-                <input asp-for="Request_Date" class="form-control" />
-                <span asp-validation-for="Request_Date" class="text-danger"></span>
+            @*            <div class="form-group">
+            <label asp-for="Request_Date" class="control-label"></label>
+            <input asp-for="Request_Date" class="form-control" />
+            <span asp-validation-for="Request_Date" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
-                <label asp-for="Proudct_Line" class="control-label"></label>
-                <input asp-for="Proudct_Line" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Proudct_Line" class="control-label fw-bold"></label>
+                @*<input asp-for="Proudct_Line" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Proudct_Line, new SelectList(ViewBag.ProductLines), new { @class="form-control form-select"})
                 <span asp-validation-for="Proudct_Line" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Change_Type" class="control-label"></label>
-                <input asp-for="Change_Type" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Change_Type" class="control-label fw-bold"></label>
+                @*<input asp-for="Change_Type" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Change_Type, new SelectList(ViewBag.Types), new { @class="form-control form-select"})
                 <span asp-validation-for="Change_Type" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Estimated_Completion_Date" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Estimated_Completion_Date" class="control-label fw-bold"></label>
                 <input asp-for="Estimated_Completion_Date" class="form-control" />
                 <span asp-validation-for="Estimated_Completion_Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Raw_Material_Component_Numbers_Impacted" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Raw_Material_Component_Numbers_Impacted" class="control-label fw-bold"></label>
                 <input asp-for="Raw_Material_Component_Numbers_Impacted" class="form-control" />
                 <span asp-validation-for="Raw_Material_Component_Numbers_Impacted" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="row my-3">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </span>
+                <span class="mx-2">
+                    <a class="mx-2" asp-action="Index">Cancel</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

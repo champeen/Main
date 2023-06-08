@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,7 +24,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.ChangeRequest != null ? 
-                          View(await _context.ChangeRequest.ToListAsync()) :
+                          View(await _context.ChangeRequest.OrderBy(m => m.Id).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ChangeRequest'  is null.");
         }
 
@@ -43,9 +44,24 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            ChangeRequest changeRequest = new ChangeRequest
+            {
+                CreatedUser = "Michael Wilson",
+                CreatedDate = DateTime.Now
+            };
+
+            // Persist Dropdown Selection Lists
+            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
+            ViewBag.Steps = await _context.ChangeStep.OrderBy(m => m.Order).Select(m => m.Step).ToListAsync();
+            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+            ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+
+            return View(changeRequest);
         }
 
         // POST: ChangeRequests/Create
@@ -53,7 +69,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
             if (ModelState.IsValid)
             {
@@ -77,6 +93,15 @@ namespace Management_of_Change.Controllers
             if (changeRequest == null)
                 return NotFound();
 
+            // Persist Dropdown Selection Lists
+            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
+            ViewBag.Steps = await _context.ChangeStep.OrderBy(m => m.Order).Select(m => m.Step).ToListAsync();
+            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+            ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+
             return View(changeRequest);
         }
 
@@ -85,10 +110,13 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
             if (id != changeRequest.Id)
                 return NotFound();
+
+            changeRequest.ModifiedUser = "Michael Wilson";
+            changeRequest.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
