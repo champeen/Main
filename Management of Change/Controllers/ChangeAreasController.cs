@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
-using Management_of_Change.Migrations;
+//using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {

@@ -1,0 +1,93 @@
+﻿@model IEnumerable<Management_of_Change.Models.ReviewType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Review Type</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+    <span class="mx-5"><a asp-controller="Admin" asp-action="Index">Previous</a></span>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reviewer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th>
+
+            @*            <th>
+            @Html.DisplayNameFor(model => model.CreatedUser)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.ModifiedUser)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.ModifiedDate)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.DeletedUser)
+            </th>
+            <th>
+            @Html.DisplayNameFor(model => model.DeletedDate)
+            </th>*@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Order)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reviewer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+
+                    @*<td>
+                @Html.DisplayFor(modelItem => item.CreatedUser)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.ModifiedUser)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.ModifiedDate)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.DeletedUser)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.DeletedDate)
+                </td>*@
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

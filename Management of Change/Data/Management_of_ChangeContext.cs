@@ -20,7 +20,7 @@ namespace Management_of_Change.Data
 
         public DbSet<Management_of_Change.Models.ChangeLevel>? ChangeLevel { get; set; }
 
-        public DbSet<Management_of_Change.Models.ChangeStep>? ChangeStep { get; set; }
+        public DbSet<Management_of_Change.Models.ChangeStatus>? ChangeStatus { get; set; }
 
         public DbSet<Management_of_Change.Models.ResponseDropdownSelections>? ResponseDropdownSelections { get; set; }
 
@@ -31,5 +31,15 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.ChangeArea>? ChangeArea { get; set; }
 
         public DbSet<Management_of_Change.Models.GeneralMocQuestions>? GeneralMocQuestions { get; set; }
+
+        public DbSet<Management_of_Change.Models.GeneralMocResponses>? GeneralMocResponses { get; set; }
+
+        public DbSet<Management_of_Change.Models.ReviewType>? ReviewType { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentMatrix>? ImpactAssessmentMatrix { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentResponse>? ImpactAssessmentResponse { get; set; }
+
+        public DbSet<Management_of_Change.Models.FinalReviewType>? FinalReviewType { get; set; }
     }
 }

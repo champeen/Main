@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
-using Management_of_Change.Migrations;
+//using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
@@ -40,6 +40,19 @@ namespace Management_of_Change.Controllers
             if (changeRequest == null)
                 return NotFound();
 
+            // Get all the General MOC Responses associated with this request...
+            changeRequest.GeneralMocResponses = await _context.GeneralMocResponses
+                .Where(m => m.ChangeRequestId == id)
+                .OrderBy(m => m.Order)
+                .ToListAsync();
+
+            // Get all the Impact Assessment Responses associated with this request...
+            changeRequest.ImpactAssessmentResponses = await _context.ImpactAssessmentResponse
+                .Where(m => m.ChangeRequestId == id)
+                .OrderBy(m => m.ReviewType)
+                .ThenBy(m => m.ChangeType)
+                .ToListAsync();
+
             return View(changeRequest);
         }
 
@@ -54,7 +67,7 @@ namespace Management_of_Change.Controllers
 
             // Persist Dropdown Selection Lists
             ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
-            ViewBag.Steps = await _context.ChangeStep.OrderBy(m => m.Order).Select(m => m.Step).ToListAsync();
+            ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
             ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -73,6 +86,54 @@ namespace Management_of_Change.Controllers
         {
             if (ModelState.IsValid)
             {
+                // add General MOC Questions
+                List<GeneralMocQuestions> questions = await _context.GeneralMocQuestions.OrderBy(m => m.Order).ToListAsync();
+                if (questions.Count > 0)
+                {
+                    changeRequest.GeneralMocResponses = new List<GeneralMocResponses>();
+                    foreach (var question in questions)
+                    {
+                        GeneralMocResponses response = new GeneralMocResponses
+                        {
+                            Question = question.Question,
+                            Order = question.Order,
+                            CreatedUser = "Michael Wilson",
+                            CreatedDate = DateTime.Now
+                        };
+                        changeRequest.GeneralMocResponses.Add(response);
+                    }
+                }
+
+                // add Impact Assessment Responses
+                List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix
+                    .Where(m => m.ChangeType == changeRequest.Change_Type)
+                    .OrderBy(m => m.ReviewType)
+                    .ThenBy(m => m.ChangeType)
+                    .ToListAsync();
+
+                if (impactAssessmentMatrix.Count > 0)
+                {
+                    changeRequest.ImpactAssessmentResponses = new List<ImpactAssessmentResponse>();
+                    foreach (var assessment in impactAssessmentMatrix)
+                    {
+                        ReviewType review = _context.ReviewType.Where(m => m.Type == assessment.ReviewType).FirstOrDefault();
+                        if (review != null)
+                        {
+                            ImpactAssessmentResponse response = new ImpactAssessmentResponse
+                            {
+                                ReviewType = assessment.ReviewType,
+                                ChangeType = assessment.ChangeType,
+                                Reviewer = review.Reviewer,
+                                ReviewerEmail = review.Email,
+                                Required = true,
+                                CreatedUser = "Michael Wilson",
+                                CreatedDate = DateTime.Now
+                            };
+                            changeRequest.ImpactAssessmentResponses.Add(response);
+                        }
+                    }
+                }
+
                 changeRequest.MOC_Number = "MOC-";
                 changeRequest.Request_Date = DateTime.Now.Date;
                 _context.Add(changeRequest);
@@ -95,7 +156,7 @@ namespace Management_of_Change.Controllers
 
             // Persist Dropdown Selection Lists
             ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
-            ViewBag.Steps = await _context.ChangeStep.OrderBy(m => m.Order).Select(m => m.Step).ToListAsync();
+            ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
             ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();

@@ -54,7 +54,6 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Order")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -192,7 +191,7 @@ namespace Management_of_Change.Migrations
                     b.ToTable("ChangeRequest");
                 });
 
-            modelBuilder.Entity("Management_of_Change.Models.ChangeStep", b =>
+            modelBuilder.Entity("Management_of_Change.Models.ChangeStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,13 +221,13 @@ namespace Management_of_Change.Migrations
                     b.Property<string>("Order")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Step")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ChangeStep");
+                    b.ToTable("ChangeStatus");
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.ChangeType", b =>
@@ -301,7 +300,6 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Order")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Question")
@@ -311,6 +309,156 @@ namespace Management_of_Change.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("GeneralMocQuestions");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.GeneralMocResponses", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChangeRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Response")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangeRequestId");
+
+                    b.ToTable("GeneralMocResponses");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.ImpactAssessmentMatrix", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ChangeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReviewType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ImpactAssessmentMatrix");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.ImpactAssessmentResponse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChangeRequestId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ChangeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateCompleted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Required")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ReviewCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReviewType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reviewer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReviewerEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangeRequestId");
+
+                    b.ToTable("ImpactAssessmentResponse");
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.ProductLine", b =>
@@ -380,7 +528,6 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Order")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Response")
@@ -390,6 +537,52 @@ namespace Management_of_Change.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ResponseDropdownSelections");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.ReviewType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reviewer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReviewType");
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.SiteLocation", b =>
@@ -429,6 +622,31 @@ namespace Management_of_Change.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SiteLocation");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.GeneralMocResponses", b =>
+                {
+                    b.HasOne("Management_of_Change.Models.ChangeRequest", null)
+                        .WithMany("GeneralMocResponses")
+                        .HasForeignKey("ChangeRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.ImpactAssessmentResponse", b =>
+                {
+                    b.HasOne("Management_of_Change.Models.ChangeRequest", null)
+                        .WithMany("ImpactAssessmentResponses")
+                        .HasForeignKey("ChangeRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.ChangeRequest", b =>
+                {
+                    b.Navigation("GeneralMocResponses");
+
+                    b.Navigation("ImpactAssessmentResponses");
                 });
 #pragma warning restore 612, 618
         }

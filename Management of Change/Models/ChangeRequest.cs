@@ -6,6 +6,7 @@ namespace Management_of_Change.Models
 {
     public class ChangeRequest : TimeStamps
     {
+        [Key]
         public int Id { get; set; }
         [Display(Name = "MOC #")]
         public string? MOC_Number { get; set; }
@@ -39,5 +40,7 @@ namespace Management_of_Change.Models
         public DateTime Estimated_Completion_Date { get; set; }
         [Display(Name = "Raw Materials/Component Numbers Impacted")]
         public string Raw_Material_Component_Numbers_Impacted {get; set;}
+        public List<GeneralMocResponses>? GeneralMocResponses { get; set; }
+        public List<ImpactAssessmentResponse>? ImpactAssessmentResponses { get; set; }
     }
 }

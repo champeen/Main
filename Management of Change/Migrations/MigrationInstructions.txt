@@ -3,5 +3,10 @@
 Add-Migration InitialCreate
 Update-Database
 
-Add-Migration Rating
-Update-Database
+TO DELETE ALL AND START OVER....
+
+- delete everything from the database
+- Update-Database -Migration 0
+- Remove-Migration
+- Add-Migration Initialize
+- Update-Database
