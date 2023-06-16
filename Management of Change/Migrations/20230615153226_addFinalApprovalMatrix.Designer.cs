@@ -4,6 +4,7 @@ using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Management_of_Change.Migrations
 {
     [DbContext(typeof(Management_of_ChangeContext))]
-    partial class Management_of_ChangeContextModelSnapshot : ModelSnapshot
+    [Migration("20230615153226_addFinalApprovalMatrix")]
+    partial class addFinalApprovalMatrix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -517,7 +520,7 @@ namespace Management_of_Change.Migrations
 
                     b.Property<string>("ChangeType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -534,7 +537,7 @@ namespace Management_of_Change.Migrations
 
                     b.Property<string>("FinalReviewType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
@@ -543,9 +546,6 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex(new[] { "ChangeType", "FinalReviewType" }, "IX_ChangeType_FinalReviewType_Index")
-                        .IsUnique();
 
                     b.ToTable("ImplementationFinalApprovalMatrix");
                 });

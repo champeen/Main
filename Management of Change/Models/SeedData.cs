@@ -1161,7 +1161,119 @@ namespace Management_of_Change.Models
                     context.SaveChanges();
                 }
 
-                // Look for any ReviewTypes.....
+                // Look for any FinalReviewTypes.....
+                if (!context.FinalReviewType.Any())
+                {
+                    context.FinalReviewType.AddRange(
+                        new FinalReviewType
+                        {
+                            Type = "EH&S Manager",
+                            Reviewer = "?",
+                            Email = "?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new FinalReviewType
+                        {
+                            Type = "Quality Manager",
+                            Reviewer = "?",
+                            Email = "?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new FinalReviewType
+                        {
+                            Type = "Operations Manager",
+                            Reviewer = "?",
+                            Email = "?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = "Jackson Browne",
+                            DeletedDate = DateTime.Now
+                        },
+                        new FinalReviewType
+                        {
+                            Type = "Engineering Manager",
+                            Reviewer = "?",
+                            Email = "?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new FinalReviewType
+                        {
+                            Type = "Facilities Manager",
+                            Reviewer = "?",
+                            Email = "?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new FinalReviewType
+                        {
+                            Type = "IT Manager",
+                            Reviewer = "Nagesh Sampangi",
+                            Email = "Nagesh.Sampangi@sksiltron.com",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new FinalReviewType
+                        {
+                            Type = "Supply Chain Manager",
+                            Reviewer = "?",
+                            Email = "?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new FinalReviewType
+                        {
+                            Type = "Commercial Manager",
+                            Reviewer = "Chris Toelle",
+                            Email = "Chris.Toelle@sksiltron.com",
+                            Order = "3",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any Impact Assessment Matrix Records.....
                 if (!context.ImpactAssessmentMatrix.Any())
                 {
                     context.ImpactAssessmentMatrix.AddRange(
@@ -3354,6 +3466,596 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         }
+                    );
+                    context.SaveChanges();
+                }
+                // Look for any Impact Assessment Matrix Records.....
+                if (!context.ImplementationFinalApprovalMatrix.Any())
+                {
+                    context.ImplementationFinalApprovalMatrix.AddRange(
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Commercial Manager",
+                            ChangeType = "Production Process Level 1-3",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "EHS System",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Equipment Installation",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Equipment Qualification",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Equipment Spec",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Facility Infrastructure",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Production Process Level 1-3",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Production Process Level 4-5",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Process Safety",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Product",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Raw Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "EH&S Manager",
+                            ChangeType = "Supplied Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Equipment Installation",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Equipment Qualification",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Equipment Spec",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Labeling",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Production Process Level 1-3",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Production Process Level 4-5",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Product",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Quality System",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Raw Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Recipe",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Quality Manager",
+                            ChangeType = "Supplied Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Equipment Installation",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Equipment Qualification",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Facility Infrastructure",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Production Process Level 1-3",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Production Process Level 4-5",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Process Safety",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Product",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Raw Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Operations Manager",
+                            ChangeType = "Supplied Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Equipment Installation",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Equipment Qualification",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Equipment Spec",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Facility Infrastructure",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Production Process Level 1-3",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Production Process Level 4-5",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Process Safety",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Product",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Raw Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Recipe",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Supplied Material\t",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Engineering Manager",
+                            ChangeType = "Supplied Material",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Facilities Manager",
+                            ChangeType = "",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                       new ImplementationFinalApprovalMatrix
+                       {
+                           FinalReviewType = "Facilities Manager",
+                           ChangeType = "Equipment Installation",
+                           CreatedUser = "Michael James Wilson II",
+                           CreatedDate = DateTime.Now,
+                           ModifiedUser = null,
+                           ModifiedDate = null,
+                           DeletedUser = null,
+                           DeletedDate = null
+                       },
+                        new ImplementationFinalApprovalMatrix
+                        {
+                            FinalReviewType = "Facilities Manager",
+                            ChangeType = "Equipment Spec",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                       new ImplementationFinalApprovalMatrix
+                       {
+                           FinalReviewType = "Facilities Manager",
+                           ChangeType = "Facility Infrastructure",
+                           CreatedUser = "Michael James Wilson II",
+                           CreatedDate = DateTime.Now,
+                           ModifiedUser = null,
+                           ModifiedDate = null,
+                           DeletedUser = null,
+                           DeletedDate = null
+                       },
+                       new ImplementationFinalApprovalMatrix
+                       {
+                           FinalReviewType = "IT Manager",
+                           ChangeType = "IT",
+                           CreatedUser = "Michael James Wilson II",
+                           CreatedDate = DateTime.Now,
+                           ModifiedUser = null,
+                           ModifiedDate = null,
+                           DeletedUser = null,
+                           DeletedDate = null
+                       },
+                       new ImplementationFinalApprovalMatrix
+                       {
+                           FinalReviewType = "Supply Chain Manager",
+                           ChangeType = "Labeling",
+                           CreatedUser = "Michael James Wilson II",
+                           CreatedDate = DateTime.Now,
+                           ModifiedUser = null,
+                           ModifiedDate = null,
+                           DeletedUser = null,
+                           DeletedDate = null
+                       },
+                       new ImplementationFinalApprovalMatrix
+                       {
+                           FinalReviewType = "Supply Chain Manager",
+                           ChangeType = "Production Process Level 1-3",
+                           CreatedUser = "Michael James Wilson II",
+                           CreatedDate = DateTime.Now,
+                           ModifiedUser = null,
+                           ModifiedDate = null,
+                           DeletedUser = null,
+                           DeletedDate = null
+                       },
+                       new ImplementationFinalApprovalMatrix
+                       {
+                           FinalReviewType = "Supply Chain Manager",
+                           ChangeType = "Production Process Level 4-5",
+                           CreatedUser = "Michael James Wilson II",
+                           CreatedDate = DateTime.Now,
+                           ModifiedUser = null,
+                           ModifiedDate = null,
+                           DeletedUser = null,
+                           DeletedDate = null
+                       },
+                       new ImplementationFinalApprovalMatrix
+                       {
+                           FinalReviewType = "Supply Chain Manager",
+                           ChangeType = "Supplied Material",
+                           CreatedUser = "Michael James Wilson II",
+                           CreatedDate = DateTime.Now,
+                           ModifiedUser = null,
+                           ModifiedDate = null,
+                           DeletedUser = null,
+                           DeletedDate = null
+                       }
                     );
                     context.SaveChanges();
                 }

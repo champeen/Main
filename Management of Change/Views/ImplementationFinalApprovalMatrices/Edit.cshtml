@@ -1,30 +1,35 @@
-﻿@model Management_of_Change.Models.ImpactAssessmentMatrix
+﻿@model Management_of_Change.Models.ImplementationFinalApprovalMatrix
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Impact Assessment Matrix</h1>
+<h1>Implementation Final Approval Matrix</h1>
 
-<h4>Create</h4>
+<h4>Edit</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
-            <div class="form-group">
-                <label asp-for="ReviewType" class="control-label"></label>
-                @*<input asp-for="ReviewType" class="form-control" />*@
-                @Html.DropDownListFor(model => model.ReviewType, new SelectList(ViewBag.ReviewTypes), new { @class="form-control form-select"})
-                <span asp-validation-for="ReviewType" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="ModifiedDate" />
+            <input type="hidden" asp-for="ModifiedUser" />
+            <input type="hidden" asp-for="DeletedDate" />
+            <input type="hidden" asp-for="DeletedUser" />
             <div class="form-group">
                 <label asp-for="ChangeType" class="control-label"></label>
                 @*<input asp-for="ChangeType" class="form-control" />*@
                 @Html.DropDownListFor(model => model.ChangeType, new SelectList(ViewBag.ChangeTypes), new { @class="form-control form-select"})
                 <span asp-validation-for="ChangeType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinalReviewType" class="control-label"></label>
+                @*<input asp-for="FinalReviewType" class="form-control" />*@
+                @Html.DropDownListFor(model => model.FinalReviewType, new SelectList(ViewBag.FinalReviewTypes), new { @class="form-control form-select"})
+                <span asp-validation-for="FinalReviewType" class="text-danger"></span>
             </div>
 @*            <div class="form-group">
                 <label asp-for="CreatedUser" class="control-label"></label>
@@ -57,7 +62,7 @@
                 <span asp-validation-for="DeletedDate" class="text-danger"></span>
             </div>*@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>

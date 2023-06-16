@@ -3,24 +3,30 @@
 }
 
 <h1 class="mb-5">Admin Access - Control File Maintenance</h1>
-<div class="row">
-    <div class="col-6">
-        <p><a class="navbar-brand" asp-controller="ChangeTypes" asp-action="Index">Change Type</a></p>
-        <p><a class="navbar-brand" asp-controller="ReviewTypes" asp-action="Index">Review Type</a></p>
-        <p><a class="navbar-brand" asp-controller="ChangeLevels" asp-action="Index">Change Level</a></p>
-        <p><a class="navbar-brand" asp-controller="ChangeStatus" asp-action="Index">Change Status</a></p>
-        <p><a class="navbar-brand" asp-controller="SiteLocations" asp-action="Index">Location/Site</a></p>
-        <p><a class="navbar-brand" asp-controller="ProductLines" asp-action="Index">Product Line</a></p>
-        <p><a class="navbar-brand" asp-controller="ChangeAreas" asp-action="Index">Area of Change</a></p>
-        <p><a class="navbar-brand" asp-controller="ImpactAssessmentMatrices" asp-action="Index">Impact Assessment Matrix</a></p>
-    </div>
-    <div class="col-6">
-        <p><a class="navbar-brand" asp-controller="GeneralMocQuestions" asp-action="Index">General MOC Questions</a></p>
-        <p><a class="navbar-brand" asp-controller="ResponseDropdownSelections" asp-action="Index">Response Dropdown Selections</a></p>
-        <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Final Approvers (coming)</a></p>
-        <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Position (coming)</a></p>
-        <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Review Options (coming)</a></p>
-        <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Emergency (coming)</a></p>
-        <p><a class="navbar-brand" asp-controller="ImpactAssessmentResponses" asp-action="Index">Impact Assessment Responses</a></p>
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <p><a class="navbar-brand" asp-controller="ChangeTypes" asp-action="Index">Change Type</a></p>
+            <p><a class="navbar-brand" asp-controller="ReviewTypes" asp-action="Index">Review Type - used with Impact Assessment Matrix</a></p>
+            <p><a class="navbar-brand" asp-controller="FinalReviewTypes" asp-action="Index">Final Review Type - used with Final Approval Matrix</a></p>
+            <p><a class="navbar-brand" asp-controller="ImpactAssessmentMatrices" asp-action="Index">Impact Assessment Matrix</a></p>
+            <p><a class="navbar-brand" asp-controller="ImplementationFinalApprovalMatrices" asp-action="Index">Implementation Final Approval Matrix</a></p>
+        </div>
+        <div class="col-4">
+            <p><a class="navbar-brand" asp-controller="ChangeLevels" asp-action="Index">Change Level</a></p>
+            <p><a class="navbar-brand" asp-controller="ChangeStatus" asp-action="Index">Change Status</a></p>
+            <p><a class="navbar-brand" asp-controller="SiteLocations" asp-action="Index">Location/Site</a></p>
+            <p><a class="navbar-brand" asp-controller="ProductLines" asp-action="Index">Product Line</a></p>
+            <p><a class="navbar-brand" asp-controller="ChangeAreas" asp-action="Index">Area of Change</a></p>
+            <p><a class="navbar-brand" asp-controller="GeneralMocQuestions" asp-action="Index">General MOC Questions</a></p>
+            <p><a class="navbar-brand" asp-controller="ResponseDropdownSelections" asp-action="Index">Response Dropdown Selections</a></p>
+        </div>
+        <div class="col-4">
+            <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Final Approvers (coming)</a></p>
+            <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Position (coming)</a></p>
+            <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Review Options (coming)</a></p>
+            <p><a class="navbar-brand text-danger" asp-controller="ChangeRequests" asp-action="Index">Emergency (coming)</a></p>
+        </div>
     </div>
 </div>
+

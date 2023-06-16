@@ -64,6 +64,20 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ReviewType,ChangeType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentMatrix impactAssessmentMatrix)
         {
+            // Make sure duplicates are not entered...
+            List<ImpactAssessmentMatrix> checkDupes = await _context.ImpactAssessmentMatrix
+                .Where(m => m.ChangeType == impactAssessmentMatrix.ChangeType)
+                .Where(m => m.ReviewType == impactAssessmentMatrix.ReviewType)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+                ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+                ModelState.AddModelError("ChangeType", "Change Type and Review Type combination already exist.");
+                ModelState.AddModelError("ReviewType", "Change Type and Review Type combination already exist.");
+                return View(impactAssessmentMatrix);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(impactAssessmentMatrix);
@@ -102,6 +116,20 @@ namespace Management_of_Change.Controllers
 
             impactAssessmentMatrix.ModifiedUser = "Michael Wilson";
             impactAssessmentMatrix.ModifiedDate = DateTime.Now;
+
+            // Make sure duplicates are not entered...
+            List<ImpactAssessmentMatrix> checkDupes = await _context.ImpactAssessmentMatrix
+                .Where(m => m.ChangeType == impactAssessmentMatrix.ChangeType)
+                .Where(m => m.ReviewType == impactAssessmentMatrix.ReviewType)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+                ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+                ModelState.AddModelError("ChangeType", "Change Type and Review Type combination already exist.");
+                ModelState.AddModelError("ReviewType", "Change Type and Review Type combination already exist.");
+                return View(impactAssessmentMatrix);
+            }
 
             if (ModelState.IsValid)
             {

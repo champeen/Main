@@ -23,7 +23,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.FinalReviewType != null ? 
-                          View(await _context.FinalReviewType.ToListAsync()) :
+                          View(await _context.FinalReviewType.OrderBy(m => m.Order).ThenBy(m => m.Type).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.FinalReviewType'  is null.");
         }
 
@@ -31,16 +31,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.FinalReviewType == null)
-            {
                 return NotFound();
-            }
 
             var finalReviewType = await _context.FinalReviewType
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (finalReviewType == null)
-            {
+
+            if (finalReviewType == null) 
                 return NotFound();
-            }
 
             return View(finalReviewType);
         }
@@ -48,7 +45,13 @@ namespace Management_of_Change.Controllers
         // GET: FinalReviewTypes/Create
         public IActionResult Create()
         {
-            return View();
+            FinalReviewType finalReviewType = new FinalReviewType
+            {
+                CreatedUser = "Michael Wilson",
+                CreatedDate = DateTime.Now
+            };
+
+            return View(finalReviewType);
         }
 
         // POST: FinalReviewTypes/Create
@@ -56,7 +59,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Reviewer,Email,Order")] FinalReviewType finalReviewType)
+        public async Task<IActionResult> Create([Bind("Id,Type,Reviewer,Email,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] FinalReviewType finalReviewType)
         {
             if (ModelState.IsValid)
             {
@@ -71,15 +74,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.FinalReviewType == null)
-            {
                 return NotFound();
-            }
 
             var finalReviewType = await _context.FinalReviewType.FindAsync(id);
+
             if (finalReviewType == null)
-            {
                 return NotFound();
-            }
+
             return View(finalReviewType);
         }
 
@@ -88,12 +89,13 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Reviewer,Email,Order")] FinalReviewType finalReviewType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Reviewer,Email,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] FinalReviewType finalReviewType)
         {
             if (id != finalReviewType.Id)
-            {
                 return NotFound();
-            }
+
+            finalReviewType.ModifiedUser = "Michael Wilson";
+            finalReviewType.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
@@ -105,13 +107,9 @@ namespace Management_of_Change.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!FinalReviewTypeExists(finalReviewType.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -122,16 +120,13 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.FinalReviewType == null)
-            {
                 return NotFound();
-            }
 
             var finalReviewType = await _context.FinalReviewType
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (finalReviewType == null)
-            {
                 return NotFound();
-            }
 
             return View(finalReviewType);
         }
@@ -142,14 +137,12 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.FinalReviewType == null)
-            {
                 return Problem("Entity set 'Management_of_ChangeContext.FinalReviewType'  is null.");
-            }
+
             var finalReviewType = await _context.FinalReviewType.FindAsync(id);
+
             if (finalReviewType != null)
-            {
                 _context.FinalReviewType.Remove(finalReviewType);
-            }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -1,10 +1,10 @@
-﻿@model Management_of_Change.Models.ImpactAssessmentMatrix
+﻿@model Management_of_Change.Models.ImplementationFinalApprovalMatrix
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Impact Assessment Matrix</h1>
+<h1>Implementation Final Approval Matrix</h1>
 
 <h4>Create</h4>
 <hr />
@@ -15,16 +15,16 @@
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
             <div class="form-group">
-                <label asp-for="ReviewType" class="control-label"></label>
-                @*<input asp-for="ReviewType" class="form-control" />*@
-                @Html.DropDownListFor(model => model.ReviewType, new SelectList(ViewBag.ReviewTypes), new { @class="form-control form-select"})
-                <span asp-validation-for="ReviewType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="ChangeType" class="control-label"></label>
                 @*<input asp-for="ChangeType" class="form-control" />*@
                 @Html.DropDownListFor(model => model.ChangeType, new SelectList(ViewBag.ChangeTypes), new { @class="form-control form-select"})
                 <span asp-validation-for="ChangeType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FinalReviewType" class="control-label"></label>
+                @*<input asp-for="FinalReviewType" class="form-control" />*@
+                @Html.DropDownListFor(model => model.FinalReviewType, new SelectList(ViewBag.FinalReviewTypes), new { @class="form-control form-select"})
+                <span asp-validation-for="FinalReviewType" class="text-danger"></span>
             </div>
 @*            <div class="form-group">
                 <label asp-for="CreatedUser" class="control-label"></label>
