@@ -20,44 +20,45 @@
             <input type="hidden" asp-for="ModifiedUser" />
             <input type="hidden" asp-for="DeletedDate" />
             <input type="hidden" asp-for="DeletedUser" />
-            <div class="form-group">
-                <label asp-for="ReviewType" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="ReviewType" class="control-label fw-bold"></label>
                 <input asp-for="ReviewType" class="form-control" />
                 <span asp-validation-for="ReviewType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ChangeType" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="ChangeType" class="control-label fw-bold"></label>
                 <input asp-for="ChangeType" class="form-control" />
                 <span asp-validation-for="ChangeType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Reviewer" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Reviewer" class="control-label fw-bold"></label>
                 <input asp-for="Reviewer" class="form-control" />
                 <span asp-validation-for="Reviewer" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ReviewerEmail" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="ReviewerEmail" class="control-label fw-bold"></label>
                 <input asp-for="ReviewerEmail" class="form-control" />
                 <span asp-validation-for="ReviewerEmail" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
+            <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold">
                     <input class="form-check-input" asp-for="Required" /> @Html.DisplayNameFor(model => model.Required)
                 </label>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
+            <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold">
                     <input class="form-check-input" asp-for="ReviewCompleted" /> @Html.DisplayNameFor(model => model.ReviewCompleted)
                 </label>
             </div>
-            <div class="form-group">
-                <label asp-for="DateCompleted" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="DateCompleted" class="control-label fw-bold"></label>
                 <input asp-for="DateCompleted" class="form-control" />
                 <span asp-validation-for="DateCompleted" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Comments" class="control-label"></label>
-                <input asp-for="Comments" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Comments" class="control-label fw-bold"></label>
+                @*<input asp-for="Comments" class="form-control" />*@
+                @Html.TextAreaFor(model => model.Comments, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="Comments" class="text-danger"></span>
             </div>
 @*            <div class="form-group">
@@ -97,7 +98,7 @@
             </div>*@
         </div>
     </div>
-    <div class="row my-3">
+    <div class="row my-4">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">

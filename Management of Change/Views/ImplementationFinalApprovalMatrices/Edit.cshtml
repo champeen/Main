@@ -19,17 +19,17 @@
             <input type="hidden" asp-for="ModifiedUser" />
             <input type="hidden" asp-for="DeletedDate" />
             <input type="hidden" asp-for="DeletedUser" />
-            <div class="form-group">
-                <label asp-for="ChangeType" class="control-label"></label>
-                @*<input asp-for="ChangeType" class="form-control" />*@
-                @Html.DropDownListFor(model => model.ChangeType, new SelectList(ViewBag.ChangeTypes), new { @class="form-control form-select"})
-                <span asp-validation-for="ChangeType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FinalReviewType" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="FinalReviewType" class="control-label fw-bold"></label>
                 @*<input asp-for="FinalReviewType" class="form-control" />*@
                 @Html.DropDownListFor(model => model.FinalReviewType, new SelectList(ViewBag.FinalReviewTypes), new { @class="form-control form-select"})
                 <span asp-validation-for="FinalReviewType" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ChangeType" class="control-label fw-bold"></label>
+                @*<input asp-for="ChangeType" class="form-control" />*@
+                @Html.DropDownListFor(model => model.ChangeType, new SelectList(ViewBag.ChangeTypes), new { @class="form-control form-select"})
+                <span asp-validation-for="ChangeType" class="text-danger"></span>
             </div>
 @*            <div class="form-group">
                 <label asp-for="CreatedUser" class="control-label"></label>
@@ -61,15 +61,12 @@
                 <input asp-for="DeletedDate" class="form-control" />
                 <span asp-validation-for="DeletedDate" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
+            <div class="form-group my-4">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="mx-3" asp-action="Index">Cancel</a>
             </div>
         </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+    </div>   
 </div>
 
 @section Scripts {

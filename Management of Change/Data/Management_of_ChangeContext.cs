@@ -43,5 +43,11 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.FinalReviewType>? FinalReviewType { get; set; }
 
         public DbSet<Management_of_Change.Models.ImplementationFinalApprovalMatrix>? ImplementationFinalApprovalMatrix { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImplementationFinalApprovalResponse>? ImplementationFinalApprovalResponse { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentResponseQuestions>? ImpactAssessmentResponseQuestions { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentResponseAnswer>? ImpactAssessmentResponseAnswer { get; set; }
     }
 }

@@ -4,9 +4,11 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
 
-<h4>Change Request for @Html.DisplayFor(model => model.MOC_Number) @Html.DisplayFor(model => model.Id)</h4>
+
+<h1>Change Request for @Html.DisplayFor(model => model.MOC_Number) @Html.DisplayFor(model => model.Id)</h1>
+
+<h4>Edit</h4>
 <hr />
 <form asp-action="Edit">
     <div class="row">
@@ -112,7 +114,7 @@
             <span asp-validation-for="Justification_of_the_Change" class="text-danger"></span>
         </div>
     </div>
-    <div class="row my-3">
+    <div class="row my-4">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">

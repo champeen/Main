@@ -62,6 +62,16 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Level,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeLevel changeLevel)
         {
+            // Make sure duplicates are not entered...
+            List<ChangeLevel> checkDupes = await _context.ChangeLevel
+                .Where(m => m.Level == changeLevel.Level)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Level", "Change Level already exists.");
+                return View(changeLevel);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(changeLevel);
@@ -94,6 +104,16 @@ namespace Management_of_Change.Controllers
         {
             if (id != changeLevel.Id)
                 return NotFound();
+
+            // Make sure duplicates are not entered...
+            List<ChangeLevel> checkDupes = await _context.ChangeLevel
+                .Where(m => m.Level == changeLevel.Level)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Level", "Change Level already exists.");
+                return View(changeLevel);
+            }
 
             changeLevel.ModifiedUser = "Michael Wilson";
             changeLevel.ModifiedDate = DateTime.Now;

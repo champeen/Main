@@ -62,6 +62,16 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Response,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ResponseDropdownSelections responseDropdownSelections)
         {
+            // Make sure duplicates are not entered...
+            List<ResponseDropdownSelections> checkDupes = await _context.ResponseDropdownSelections
+                .Where(m => m.Response == responseDropdownSelections.Response)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Response", "Response already exists.");
+                return View(responseDropdownSelections);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(responseDropdownSelections);
@@ -93,6 +103,16 @@ namespace Management_of_Change.Controllers
         {
             if (id != responseDropdownSelections.Id)
                 return NotFound();
+
+            // Make sure duplicates are not entered...
+            List<ResponseDropdownSelections> checkDupes = await _context.ResponseDropdownSelections
+                .Where(m => m.Response == responseDropdownSelections.Response)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Response", "Response already exists.");
+                return View(responseDropdownSelections);
+            }
 
             responseDropdownSelections.ModifiedUser = "Michael Wilson";
             responseDropdownSelections.ModifiedDate = DateTime.Now;

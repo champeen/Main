@@ -61,6 +61,16 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Type,Order,Reviewer,Email,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
         {
+            // Make sure duplicates are not entered...
+            List<ReviewType> checkDupes = await _context.ReviewType
+                .Where(m => m.Type == reviewType.Type)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Type", "Review Type already exists.");
+                return View(reviewType);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(reviewType);
@@ -93,6 +103,16 @@ namespace Management_of_Change.Controllers
         {
             if (id != reviewType.Id)
                 return NotFound();
+
+            // Make sure duplicates are not entered...
+            List<ReviewType> checkDupes = await _context.ReviewType
+                .Where(m => m.Type == reviewType.Type)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Type", "Review Type already exists.");
+                return View(reviewType);
+            }
 
             reviewType.ModifiedUser = "Michael Wilson";
             reviewType.ModifiedDate = DateTime.Now;

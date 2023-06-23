@@ -14,13 +14,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Status" class="control-label fw-bold"></label>
                 <input asp-for="Status" class="form-control" />
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Order" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label fw-bold"></label>
                 <input asp-for="Order" class="form-control" />
                 <span asp-validation-for="Order" class="text-danger"></span>
             </div>
@@ -54,15 +54,12 @@
                 <input asp-for="DeletedDate" class="form-control" />
                 <span asp-validation-for="DeletedDate" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
+            <div class="form-group my-4">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="mx-3" asp-action="Index">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -368,7 +368,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Change Proposal",
-                            Order = "1",
+                            Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -379,7 +379,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Change Evaluation",
-                            Order = "2",
+                            Order = "10",
                             CreatedUser = "Joe Jackson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -390,7 +390,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Implementation",
-                            Order = "3",
+                            Order = "15",
                             CreatedUser = "Steve Smith",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -401,7 +401,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Verification",
-                            Order = "4",
+                            Order = "20",
                             CreatedUser = "Fred Bear",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -412,7 +412,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "On Hold",
-                            Order = "5",
+                            Order = "25",
                             CreatedUser = "Ken Jones",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -423,7 +423,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Closed",
-                            Order = "6",
+                            Order = "30",
                             CreatedUser = "Shelly Shelby",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -434,7 +434,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Killed",
-                            Order = "7",
+                            Order = "35",
                             CreatedUser = "Johanna Jones",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -453,7 +453,7 @@ namespace Management_of_Change.Models
                         new ResponseDropdownSelections
                         {
                             Response = "Yes",
-                            Order = "1",
+                            Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -464,7 +464,7 @@ namespace Management_of_Change.Models
                         new ResponseDropdownSelections
                         {
                             Response = "No",
-                            Order = "2",
+                            Order = "10",
                             CreatedUser = "Joe Jackson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -475,7 +475,7 @@ namespace Management_of_Change.Models
                         new ResponseDropdownSelections
                         {
                             Response = "N/A",
-                            Order = "3",
+                            Order = "15",
                             CreatedUser = "Steve Smith",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = "Randy Radar",
@@ -494,7 +494,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "All Products",
-                            Order = "1",
+                            Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -505,7 +505,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "100mm bare",
-                            Order = "2",
+                            Order = "10",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -516,7 +516,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "150mm bare",
-                            Order = "3",
+                            Order = "15",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -527,7 +527,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "200mm bare",
-                            Order = "4",
+                            Order = "20",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -538,7 +538,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "All Epi",
-                            Order = "5",
+                            Order = "25",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -549,7 +549,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "100mm Epi",
-                            Order = "6",
+                            Order = "30",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -560,7 +560,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "150mm Epi",
-                            Order = "7",
+                            Order = "35",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -571,7 +571,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "200mm Epi",
-                            Order = "8",
+                            Order = "40",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -582,7 +582,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "165mm seed",
-                            Order = "9",
+                            Order = "45",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -593,7 +593,7 @@ namespace Management_of_Change.Models
                         new ProductLine
                         {
                             Description = "Multiple",
-                            Order = "91",
+                            Order = "50",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -612,7 +612,7 @@ namespace Management_of_Change.Models
                         new SiteLocation
                         {
                             Description = "All",
-                            Order = "1",
+                            Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -623,7 +623,7 @@ namespace Management_of_Change.Models
                         new SiteLocation
                         {
                             Description = "Auburn",
-                            Order = "2",
+                            Order = "10",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -634,7 +634,7 @@ namespace Management_of_Change.Models
                         new SiteLocation
                         {
                             Description = "Bay City",
-                            Order = "3",
+                            Order = "15",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = "Joe Jackson",
@@ -653,7 +653,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Growth",
-                            Order = "1",
+                            Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -664,7 +664,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Fab",
-                            Order = "2",
+                            Order = "10",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -675,7 +675,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Grind",
-                            Order = "3",
+                            Order = "15",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = "Joe Jackson",
@@ -686,7 +686,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Polish",
-                            Order = "4",
+                            Order = "20",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -697,7 +697,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Clean & Metrology",
-                            Order = "5",
+                            Order = "25",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -708,7 +708,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Epi",
-                            Order = "6",
+                            Order = "30",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -719,7 +719,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Sort & Package",
-                            Order = "7",
+                            Order = "35",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -730,7 +730,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Disposition",
-                            Order = "8",
+                            Order = "40",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -741,7 +741,7 @@ namespace Management_of_Change.Models
                         new ChangeArea
                         {
                             Description = "Other",
-                            Order = "9",
+                            Order = "45",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -760,7 +760,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does this change require new SOPs, Runsheets, Checklists, etc? If yes, ensure they are included in the MOC folder and upon MOC approval are submitted through the proper Document Management System process for review.",
-                            Order = "1",
+                            Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -771,7 +771,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does this change require the update of existing approved SOPs, Runsheets, Checklists, etc?  If yes, ensure they are included in the MOC folder and upon MOC approval are submitted through the proper Document Management System process for review. ",
-                            Order = "2",
+                            Order = "10",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -782,7 +782,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does this change require temporary SOPs, runsheets or checklists?  If yes, ensure they are included in the MOC folder and upon MOC approval are submitted through the proper Document Management System process for review. ",
-                            Order = "3",
+                            Order = "15",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -793,7 +793,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does this change require training?  If yes, ensure that the scope and justification of the training is provided in the Training Checklist and Impact Assessment is checked as required below.",
-                            Order = "4",
+                            Order = "20",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -804,7 +804,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does the change involve new chemicals or an increase in chemical quantities for the Site?  If yes, ensure that Environment and Health and Industrial Hygiene Impact Assessments are checked as required below.",
-                            Order = "5",
+                            Order = "25",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -815,7 +815,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does the change require IT support for new hardware, software, increased data storage, or a update/add to MES?  If yes, ensure IT checklist is checked as required below.",
-                            Order = "6",
+                            Order = "30",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -826,7 +826,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does the change require a new raw, intermediate, or Finished Goods material number?  If yes, ensure that the responsible Engineer has a task to begin the new material creation process in the Supply Chain Impact Assessment Checklist.\t\t\t\t\t\t\r\n",
-                            Order = "7",
+                            Order = "35",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -837,7 +837,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does the change require additional WIP packaging components?  If yes, provide information on how many in the Supply Chain Impact Assessment Checklist.",
-                            Order = "8",
+                            Order = "40",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -848,7 +848,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does the change impact existing raw material usage quantities (increase or decrease)?  If yes, provide detailed quantities in the Supply Chain Impact Assessment Checklist.",
-                            Order = "9",
+                            Order = "45",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -859,7 +859,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Is this change associated with a PTN?  If yes, please enter the PTN number(s) to the right.",
-                            Order = "91",
+                            Order = "50",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -870,7 +870,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Does this change require the use of a waiver for the release of final product?  If so, please enter the waiver number(s) to the right.",
-                            Order = "92",
+                            Order = "55",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -881,7 +881,7 @@ namespace Management_of_Change.Models
                         new GeneralMocQuestions
                         {
                             Question = "Is this change associated with a CMT (NOTE: all Level 1-3 changes require CMT)? If so, enter CMT number to the right and/or initiate CMT with CMT Leader.",
-                            Order = "93",
+                            Order = "60",
                             CreatedUser = "Joe",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = "Ron",
@@ -4059,6 +4059,1949 @@ namespace Management_of_Change.Models
                     );
                     context.SaveChanges();
                 }
+
+                // Look for any Impact Assessment Response Questions.....
+                if (!context.ImpactAssessmentResponseQuestions.Any())
+                {
+                    context.ImpactAssessmentResponseQuestions.AddRange(
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Device Expert",
+                            Question = "Does the change have the potential to impact device manufacturing?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Device Expert",
+                            Question = "Will wafers need to be tested to determine impact to device manufacturing?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Device Expert",
+                            Question = "Does the change require customer notification due to impact to device manufacturing?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Device Expert",
+                            Question = "Is additional data needed before the change can be approved?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does the change involve excavation or demolition? ",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Are there legal reviews and documents required concerning the change?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does the change require the aspects and impacts risk register to be reviewed and updated? (If not ISO14001 aspect then N/A)",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Will this change effect Environmental compliance?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Are there any chemicals or materials involved in this change (new chemicals, quantity change)?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does the change impact a chemical with a low odor threshold?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does this change require a modification to the appropriate and/or required labeling (content reactivity, flammability, etc.) of the vessels, lines, or containers?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Is there any waste or wastewater stream involved in this change?",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does this change impact the environment in any way (air, land, water)?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Are you making any changes to the EH&S requirements or making any changes that would require external permits or approvals?",
+                            Order = "50",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does the change impact an existing, or require a new, Michigan Department of Environmental Quality (MDEQ) flammable/combustible liquid storage tank registration?",
+                            Order = "55",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Is there an impact to the warehouse storage area allowed quantities? (including quantity package size or type, or method of shipping for raw materials, products, or waste)?",
+                            Order = "60",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Has the startup/shutdown procedure and checklist been completed?",
+                            Order = "65",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does this change require a new task or change an existing task in MES?",
+                            Order = "70",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Are any infrastructure changes needed for Environmental compliance? (Signage, waste handling, vents, etc.)?",
+                            Order = "75",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Environmental",
+                            Question = "Does this change involve the disposal of contaminated piping, metal or equipment?",
+                            Order = "80",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Does the change involve addition, deletion or modification of equipment or instrumentation?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "If the change is for new equipment, review and complete the 'New Equipment Checklist' as necessary",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Is a maintenance and reliability review needed for the change (Access, PMs, Critical spare parts, etc.)?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Has material of construction compatibility with the process been considered?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Does the new equipment require any special permitting/license (X-ray, Nuclear, boiler, etc.)?  Please see EHS Start-up/Shut-down Procedure.",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Is a pre-inspection required at the Vendor for this equipment?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Are there legal reviews and/or document required concerning the change?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Does this change involve a process safety device?  If yes, ensure Process Safety review is included in the impact assessment.",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Does this change require Pre-Startup Safety Review (PSSR)? If so, ensure completion",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Equipment",
+                            Question = "Do P&IDs need to be created/updated for equipment addition or change?  Assign task to appropriate Engineer.",
+                            Order = "50",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Does this change involve or disturb regulated chemicals (OSHA, EPA, etc.)?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Will this change impact any Industrial Hygiene programs?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Are any HazCom changes required? (SDS, training, PPE, etc.)",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Are any IH risk assessments required for this change? (Respiratory, ventilation, PPE, Noise, etc.)",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Will this change impact any laser or radiation programs?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Does this change require a new task or change an existing task in MES?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Does this change involve the release or disposal or scrap metal or equipment?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Are there any chemicals or materials involved in this change? ",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Does the change impact a chemical with a low odor threshold?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Health & IH",
+                            Question = "Is an ergonomic evaluation required for this change?",
+                            Order = "50",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "Will any HR resources be required to complete the change?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "What impact does the change have on employees?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "If any, what impact does this change have on labor/employment laws?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "What is the required timing of the change?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "What impact does this change have on headcount?  Increase/Decrease?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "What impact does the change have on employment practices and policies? ",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "Do new policies need to be created?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "Are there on-boarding/off-boarding required for this change?",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "HR",
+                            Question = "Are there legal reviews and documents required concerning the change?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Will any IT resources be required to complete the change?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Does this change involve any IT hardware or equipment?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Is there a change in security requirements?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Does additional software need to be procured?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Does additional hardware need to be procured?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Does this require data storage, if so how much and for how long does the data need to be retained?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Does this require an MES route change or new route?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Does this require a new product in MES?",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "IT",
+                            Question = "Does data from this need to be added to MES?  If so - as an EDC or EI?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Maintenance & Reliability",
+                            Question = "Does containment need to be considered for this change, such as for deluge water, rainwater runoff, etc.?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Maintenance & Reliability",
+                            Question = "Have the process or design boundary conditions changed?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Maintenance & Reliability",
+                            Question = "Where applicable, have all engineering disciplines been involved with the design or review of this change?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Maintenance & Reliability",
+                            Question = "Does this change involve any equipment or instrumentation, such as pumps or other rotating equipment, vessels, piping, any instrumentation,  IT hardware, vehicles, etc.?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Maintenance & Reliability",
+                            Question = "Does this change involve or impact personnel safety or an area where personnel work, including protection against exposure or injury?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Maintenance & Reliability",
+                            Question = "Should consideration be given to performing equipment maintenance (e.g. is a maintenance SOP needed or  MES PM tasks)?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Maintenance & Reliability",
+                            Question = "Do PMs need to be setup in MES?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - General",
+                            Question = "Does this change require updating existing SOPs, Runsheets, or other Records?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - General",
+                            Question = "Does this change require new SOPs, Runsheets, or other records?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - General",
+                            Question = "Documentation Note:  If a temporary SOP/runsheet is needed it should have an expiration date.  Review all attachments in the MOC folder and assign actions as needed to address updates.  Operations should ensure an approved SOP/Runsheet/etc. is in place before the temporary expires.",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - General",
+                            Question = "Does the location or ease of use for valves, switches, or any operating device impact operability or functionality?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - General",
+                            Question = "Will this change impact the physical environment (e.g. heating and cooling change) in which the operator is working?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - General",
+                            Question = "Does this change impact the material work flow such that LEAN manufacturing practices should be considered?  If new equipment, how will this flow/function?  Consider operator movement, inventory management, flow of the product through the process.",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - EPI",
+                            Question = "Does this change require updating existing SOPs, Runsheets, or other Records?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - EPI",
+                            Question = "Does this change require new SOPs, Runsheets, or other records?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - EPI",
+                            Question = "Documentation Note:  If a temporary SOP/runsheet is needed it should have an expiration date.  Review all attachments in the MOC folder and assign actions as needed to address updates.  Operations should ensure an approved SOP/Runsheet/etc. is in place before the temporary expires.",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - EPI",
+                            Question = "Does the location or ease of use for valves, switches, or any operating device impact operability or functionality?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - EPI",
+                            Question = "Will this change impact the physical environment (e.g. heating and cooling change) in which the operator is working?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Operations - EPI",
+                            Question = "Does this change impact the material work flow such that LEAN manufacturing practices should be considered?  If new equipment, how will this flow/function?  Consider operator movement, inventory management, flow of the product through the process.",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Does this change require a modification in the appropriate and/or require labeling (content, reactivity, flammability, etc.) of the vessels, lines, or containers? ",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Does this change involve or disturb regulated chemicals (Gov’t Agencies)?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Does this change involve or impact personnel safety or an area where personnel work, including protection against exposure or injury? (Including Industrial Hygiene)",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Is any type of protective system impacted or needed for this change? (e.g. emergency response, security, alarms, fire protection, or interlocks)",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Are you making any changes to the EH&S requirements or making any changes that would require external permits or approvals?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Has area near the change been reviewed for personnel safety?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Does this change require a new task or change an existing task in MES?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Has the startup/shutdown procedure and checklist been completed?",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = " Are any infrastructure changes needed for safety compliance? (Signage, fire ext., safety showers, etc.)",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Personal Safety",
+                            Question = "Does ES&S need to review the impact on security (e.g. exterior doors) for this change? - Safety",
+                            Order = "50",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Should the control strategy be evaluated for any control points changing or best practices that should be followed?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Is there a plant specific checklist or procedure for the code changes that should be followed?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Should the control logic be simulated or have additional reviews?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Is the Voice Messaging System going to be impacted due to this change?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Does new instrumentation or modifications to existing instrumentation need to be considered for process change?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Will new process control hardware be needed for this change?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Does this change involve a chemical manufacturing process?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Is any type of protective system impacted or needed for this change? (e.g. emergency response, security, alarms, fire protection, or interlocks)",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Equipment",
+                            Question = "Does this change require Dow approval?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Should the control strategy be evaluated for any control points changing or best practices that should be followed?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Is there a plant specific checklist or procedure for the code changes that should be followed?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Should the control logic be simulated or have additional reviews?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Is the Voice Messaging System going to be impacted due to this change?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Does new instrumentation or modifications to existing instrumentation need to be considered for process change?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Will new process control hardware be needed for this change?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Does this change involve a chemical manufacturing process?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Is any type of protective system impacted or needed for this change? (e.g. emergency response, security, alarms, fire protection, or interlocks)",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Growth Process",
+                            Question = "Does this change require Dow approval?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Should the control strategy be evaluated for any control points changing or best practices that should be followed?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Is there a plant specific checklist or procedure for the code changes that should be followed?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Should the control logic be simulated or have additional reviews?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Is the Voice Messaging System going to be impacted due to this change?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Does new instrumentation or modifications to existing instrumentation need to be considered for process change?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Will new process control hardware be needed for this change?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Does this change involve a chemical manufacturing process?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Is any type of protective system impacted or needed for this change? (e.g. emergency response, security, alarms, fire protection, or interlocks)",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Wafering",
+                            Question = "Does this change require Dow approval?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Should the control strategy be evaluated for any control points changing or best practices that should be followed?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Is there a plant specific checklist or procedure for the code changes that should be followed?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Should the control logic be simulated or have additional reviews?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Is the Voice Messaging System going to be impacted due to this change?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Does new instrumentation or modifications to existing instrumentation need to be considered for process change?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Will new process control hardware be needed for this change?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Does this change involve a chemical manufacturing process?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Is any type of protective system impacted or needed for this change? (e.g. emergency response, security, alarms, fire protection, or interlocks)",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Control & Engineering - Controls",
+                            Question = "Does this change require Dow approval?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Does this change involve or disturb regulated chemicals (OSHA, EPA,etc.)?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Should the off-site impact be reviewed?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Do procedures providing lines of defense or protection layers against process safety accidents need to be evaluated to determine if they should be designated Critical or Emergency?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Does compatibility of waste streams need to be evaluated?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Are there any chemical or materials involved in this change?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Does chemical compatibility need to be evaluated?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Does this change involve any equipment or instrumentation, such as pump or other rotating equipment, vessels, piping and instrumentations, IT hardware, vehicles, etc.?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Does this change involve or impact any infrastructures, such as buildings, structures, utilities, etc.?",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Does this change involve any type of technology, engineering discipline, specifications, or best practices?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Is any type pf protective system impacted or needed for this change? (emergency response, security alarms, fire protection, or interlocks)",
+                            Order = "50",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Process Safety",
+                            Question = "Does this change require inerting, bonding, grounding evaluation?",
+                            Order = "55",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Production Planning",
+                            Question = "Does this change require any WIP or finished goods to be put on hold or scrapped?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Production Planning",
+                            Question = "Does this change require a new Intermediate or Finished Good material number?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Production Planning",
+                            Question = "Does this change effect the cycle time or capacity of a tool long term?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Production Planning",
+                            Question = "Will this change require any downtime?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require an update to Quality procedures?  Any procedures, runsheets or checklists that may need updating?  Review/approve updated procedures that are included in the MOC folder.",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require customer notification?  PCN must be completed prior to change implementation.",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require specifications (raw material and/or product) to be updated?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require data package(s) to be updated?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require SPC limits to be reviewed?",
+                            Order = "25",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require Process capability to be reviewed?",
+                            Order = "30",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require Gage R&R/MSA to be reviewed?",
+                            Order = "35",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require the Control Plan and pFMEA to be reviewed? (Note: control plans are not available for each step but eventually will be per IATF requirements)",
+                            Order = "40",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require the Risk Register to be reviewed?",
+                            Order = "45",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change affect the approved supplier list?  If new supplier approval OR new material from an existing approved supplier, ensure that upon completion of Implementation, the supplier notification is sent. (POST-IMPLEMENTATION action)",
+                            Order = "50",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change involve any in process specifications and/or testing?",
+                            Order = "55",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Quality",
+                            Question = "Does this change require an update to the disposition procedures?",
+                            Order = "60",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Research & Development",
+                            Question = "Does the proposed change involve a material or process that has not been previously used?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Research & Development",
+                            Question = "Does the proposed change impact a material that will be received by a customer?",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Research & Development",
+                            Question = "Will the change make an impact that the customer will be capable of observing?",
+                            Order = "15",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Research & Development",
+                            Question = "Does this change negatively impact quality or metrology?",
+                            Order = "20",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Supply Chain",
+                            Question = "Does this change require a new raw material or change to an existing material?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Supply Chain",
+                            Question = "Does this change require a new supplier?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Supply Chain",
+                            Question = "Does this change require new WIP packaging (boats/cassettes, etc)?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Supply Chain",
+                            Question = "Does this change require inventory to be scrapped/written off?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Supply Chain",
+                            Question = "Does this change impact raw material usage quantities (increase/decrease)?",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Training",
+                            Question = "Is training required for this change? ",
+                            Order = "05",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ImpactAssessmentResponseQuestions
+                        {
+                            ReviewType = "Training",
+                            Question = "Will this training be required for break-in training binders? (new SOPs need to be added to the list in the binder)",
+                            Order = "10",
+                            CreatedUser = "Michael James Wilson II",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+
+
 
 
 

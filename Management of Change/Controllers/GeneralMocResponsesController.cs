@@ -23,7 +23,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.GeneralMocResponses != null ? 
-                          View(await _context.GeneralMocResponses.ToListAsync()) :
+                          View(await _context.GeneralMocResponses.OrderBy(m => m.Order).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.GeneralMocResponses'  is null.");
         }
 
@@ -43,9 +43,17 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: GeneralMocResponses/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            GeneralMocResponses generalMocResponses = new GeneralMocResponses
+            {
+                CreatedUser = "Michael Wilson",
+                CreatedDate = DateTime.Now
+            };
+
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+
+            return View(generalMocResponses);
         }
 
         // POST: GeneralMocResponses/Create
@@ -89,6 +97,9 @@ namespace Management_of_Change.Controllers
         {
             if (id != generalMocResponses.Id)
                 return NotFound();
+
+            generalMocResponses.ModifiedUser = "Michael Wilson";
+            generalMocResponses.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {

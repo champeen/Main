@@ -64,6 +64,16 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] SiteLocation siteLocation)
         {
+            // Make sure duplicates are not entered...
+            List<SiteLocation> checkDupes = await _context.SiteLocation
+                .Where(m => m.Description == siteLocation.Description)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Description", "Site/Location already exists.");
+                return View(siteLocation);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(siteLocation);
@@ -98,6 +108,16 @@ namespace Management_of_Change.Controllers
         {
             if (id != siteLocation.Id)
                 return NotFound();
+
+            // Make sure duplicates are not entered...
+            List<SiteLocation> checkDupes = await _context.SiteLocation
+                .Where(m => m.Description == siteLocation.Description)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Description", "Site/Location already exists.");
+                return View(siteLocation);
+            }
 
             siteLocation.ModifiedUser = "Michael Wilson";
             siteLocation.ModifiedDate = DateTime.Now;

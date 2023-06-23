@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -23,9 +24,9 @@ namespace Management_of_Change.Controllers
         // GET: ChangeRequests
         public async Task<IActionResult> Index()
         {
-              return _context.ChangeRequest != null ? 
-                          View(await _context.ChangeRequest.OrderBy(m => m.Id).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ChangeRequest'  is null.");
+            return _context.ChangeRequest != null ?
+                        View(await _context.ChangeRequest.OrderBy(m => m.Id).ToListAsync()) :
+                        Problem("Entity set 'Management_of_ChangeContext.ChangeRequest'  is null.");
         }
 
         // GET: ChangeRequests/Details/5
@@ -50,6 +51,32 @@ namespace Management_of_Change.Controllers
             changeRequest.ImpactAssessmentResponses = await _context.ImpactAssessmentResponse
                 .Where(m => m.ChangeRequestId == id)
                 .OrderBy(m => m.ReviewType)
+                .ThenBy(m => m.ChangeType)
+                .ToListAsync();
+
+            // Get all the Impact Assessment Responses Questions/Answers associated with this request...
+            if (changeRequest.ImpactAssessmentResponses.Any())
+            {
+                foreach (var record in changeRequest.ImpactAssessmentResponses)
+                {
+                    record.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
+                    .Where(m => m.ImpactAssessmentResponseId == record.Id)
+                    .OrderBy(m => m.ReviewType)
+                    .ThenBy(m => m.Order)
+                    .ToListAsync();
+                }
+            }
+            //// Get all the Impact Assessment Responses Questions/Answers associated with this request...
+            //changeRequest.ImpactAssessmentResponses.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
+            //    .Where(m => m.ImpactAssessmentResponseId == changeRequest.ImpactAssessmentResponses.Id)
+            //    .OrderBy(m => m.ReviewType)
+            //    .ThenBy(m => m.Order)
+            //    .ToListAsync();
+
+            // Get all the Final Approval Responses associated with this request...
+            changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
+                .Where(m => m.ChangeRequestId == id)
+                .OrderBy(m => m.FinalReviewType)
                 .ThenBy(m => m.ChangeType)
                 .ToListAsync();
 
@@ -110,7 +137,6 @@ namespace Management_of_Change.Controllers
                     .OrderBy(m => m.ReviewType)
                     .ThenBy(m => m.ChangeType)
                     .ToListAsync();
-
                 if (impactAssessmentMatrix.Count > 0)
                 {
                     changeRequest.ImpactAssessmentResponses = new List<ImpactAssessmentResponse>();
@@ -130,6 +156,61 @@ namespace Management_of_Change.Controllers
                                 CreatedDate = DateTime.Now
                             };
                             changeRequest.ImpactAssessmentResponses.Add(response);
+                        }
+                    }
+                }
+
+                // add Impact Assessment Response Quesion/Answers
+                if (changeRequest.ImpactAssessmentResponses != null && changeRequest.ImpactAssessmentResponses.Count > 0)
+                {
+                    foreach (var record in changeRequest.ImpactAssessmentResponses)
+                    {
+                        record.ImpactAssessmentResponseAnswers = new List<ImpactAssessmentResponseAnswer>();
+
+                        List<ImpactAssessmentResponseQuestions> IARQuestions = await _context.ImpactAssessmentResponseQuestions.Where(m => m.ReviewType == record.ReviewType).ToListAsync();
+
+                        if (IARQuestions != null && IARQuestions.Count > 0)
+                        {
+                            foreach (var question in IARQuestions)
+                            {
+                                ImpactAssessmentResponseAnswer rec = new ImpactAssessmentResponseAnswer
+                                {
+                                    ReviewType = record.ReviewType,
+                                    Question = question.Question,
+                                    Order = question.Order,
+                                    CreatedUser = "Michael Wilson",
+                                    CreatedDate = DateTime.Now
+                                };
+                                record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
+                            }
+                        }
+                    }
+                }
+
+                // add Implementation Final Approval Responses
+                List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix
+                    .Where(m => m.ChangeType == changeRequest.Change_Type)
+                    .OrderBy(m => m.FinalReviewType)
+                    .ThenBy(m => m.ChangeType)
+                    .ToListAsync();
+                if (implementationFinalApprovalMatrix.Count > 0)
+                {
+                    changeRequest.ImplementationFinalApprovalResponses = new List<ImplementationFinalApprovalResponse>();
+                    foreach (var assessment in implementationFinalApprovalMatrix)
+                    {
+                        FinalReviewType review = _context.FinalReviewType.Where(m => m.Type == assessment.FinalReviewType).FirstOrDefault();
+                        if (review != null)
+                        {
+                            ImplementationFinalApprovalResponse response = new ImplementationFinalApprovalResponse
+                            {
+                                FinalReviewType = assessment.FinalReviewType,
+                                ChangeType = assessment.ChangeType,
+                                Reviewer = review.Reviewer,
+                                ReviewerEmail = review.Email,
+                                CreatedUser = "Michael Wilson",
+                                CreatedDate = DateTime.Now
+                            };
+                            changeRequest.ImplementationFinalApprovalResponses.Add(response);
                         }
                     }
                 }
@@ -226,14 +307,14 @@ namespace Management_of_Change.Controllers
             {
                 _context.ChangeRequest.Remove(changeRequest);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ChangeRequestExists(int id)
         {
-          return (_context.ChangeRequest?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.ChangeRequest?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

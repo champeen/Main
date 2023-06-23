@@ -9,8 +9,10 @@ namespace Management_of_Change.Models
         [Key]
         public int Id { get; set; }
         //[Index("IX_ChangeType", 1, IsUnique = true)]
+        [Display(Name = "Change Type")]
         public string ChangeType { get; set; }
         //[Index("IX_FinalReviewType", IsUnique = true)]
+        [Display(Name = "Final Review Type")]
         public string FinalReviewType { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Management_of_Change.Models
@@ -7,15 +8,23 @@ namespace Management_of_Change.Models
     {
         [Key]
         public int Id { get; set; }
+        [Display(Name = "Review Type")]
         public string ReviewType { get; set; }
+        [Display(Name = "Change Type")]
         public string ChangeType { get; set; }
         public string? Reviewer { get; set; }
-        public string? ReviewerEmail { get; set; }
+        [Display(Name = "Reviewer Email")]
+        [EmailAddress]
+        public string ReviewerEmail { get; set; }
         public bool Required { get; set; }
+        [Display(Name = "Review Completed")]
         public bool ReviewCompleted { get; set; }
+        [Display(Name = "Date Completed")]
         public DateTime? DateCompleted { get; set; }
         public string? Comments { get; set; }
+        public List<ImpactAssessmentResponseAnswer>? ImpactAssessmentResponseAnswers { get; set; }
         [ForeignKey("ChangeRequest")]
         public int ChangeRequestId { get; set; }
+
     }
 }

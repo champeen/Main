@@ -4,9 +4,9 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>General MOC Questions</h1>
 
-<h4>GeneralMocQuestions</h4>
+<h4>Create</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,13 +14,13 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
-            <div class="form-group">
-                <label asp-for="Question" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Question" class="control-label fw-bold"></label>
                 <input asp-for="Question" class="form-control" />
                 <span asp-validation-for="Question" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Order" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label fw-bold"></label>
                 <input asp-for="Order" class="form-control" />
                 <span asp-validation-for="Order" class="text-danger"></span>
             </div>
@@ -54,15 +54,12 @@
                 <input asp-for="DeletedDate" class="form-control" />
                 <span asp-validation-for="DeletedDate" class="text-danger"></span>
             </div>*@
-            <div class="form-group">
+            <div class="form-group my-4">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="mx-3" asp-action="Index">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

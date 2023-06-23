@@ -39,6 +39,12 @@ namespace Management_of_Change.Controllers
             if (impactAssessmentResponse == null)
                 return NotFound();
 
+            // Get all the Impact Assessment Responses Questions/Answers associated with this request...
+            impactAssessmentResponse.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
+                    .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponse.Id)
+                    .OrderBy(m => m.Order)
+                    .ToListAsync();
+
             return View(impactAssessmentResponse);
         }
 

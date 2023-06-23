@@ -61,6 +61,16 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Status,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ChangeStatus changeStatus)
         {
+            // Make sure duplicates are not entered...
+            List<ChangeStatus> checkDupes = await _context.ChangeStatus
+                .Where(m => m.Status == changeStatus.Status)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Status", "Change Status already exists.");
+                return View(changeStatus);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(changeStatus);
@@ -93,6 +103,16 @@ namespace Management_of_Change.Controllers
         {
             if (id != changeStatus.Id)
                 return NotFound();
+
+            // Make sure duplicates are not entered...
+            List<ChangeStatus> checkDupes = await _context.ChangeStatus
+                .Where(m => m.Status == changeStatus.Status)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Status", "Change Status already exists.");
+                return View(changeStatus);
+            }
 
             changeStatus.ModifiedUser = "Michael Wilson";
             changeStatus.ModifiedDate = DateTime.Now;
