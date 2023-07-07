@@ -106,14 +106,14 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<ChangeArea> checkDupes = await _context.ChangeArea
-                .Where(m => m.Description == changeArea.Description)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Description", "Change Area already exists.");
-                return View(changeArea);
-            }
+            //List<ChangeArea> checkDupes = await _context.ChangeArea
+            //    .Where(m => m.Description == changeArea.Description)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Description", "Change Area already exists.");
+            //    return View(changeArea);
+            //}
 
             changeArea.ModifiedUser = "Michael Wilson";
             changeArea.ModifiedDate = DateTime.Now;

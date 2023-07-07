@@ -9,6 +9,18 @@
 <h4>Create</h4>
 <hr />
 <form asp-action="Create">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </span>
+                <span class="mx-2">
+                    <a class="mx-2" asp-action="Index">Cancel</a>
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -90,26 +102,26 @@
                 <span asp-validation-for="Expiration_Date_Temporary" class="text-danger"></span>
             </div>
         </div>
-    <div class="col-md-12">
-        <div class="form-group my-3">
-            <label asp-for="Title_Change_Description" class="control-label fw-bold"></label>
+        <div class="col-md-12">
+            <div class="form-group my-3">
+                <label asp-for="Title_Change_Description" class="control-label fw-bold"></label>
                 @Html.TextAreaFor(model => model.Title_Change_Description, new {@class = "form-control", @rows = 2 })
                 @*<input asp-for="Title_Change_Description" class="form-control" />*@
-            <span asp-validation-for="Title_Change_Description" class="text-danger"></span>
-        </div>
-        <div class="form-group my-3">
-            <label asp-for="Scope_of_the_Change" class="control-label fw-bold"></label>
+                <span asp-validation-for="Title_Change_Description" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Scope_of_the_Change" class="control-label fw-bold"></label>
                 @Html.TextAreaFor(model => model.Scope_of_the_Change, new {@class = "form-control", @rows = 3 })
                 @*<input asp-for="Scope_of_the_Change" class="form-control" />*@
-            <span asp-validation-for="Scope_of_the_Change" class="text-danger"></span>
-        </div>
-        <div class="form-group my-3">
-            <label asp-for="Justification_of_the_Change" class="control-label fw-bold"></label>
+                <span asp-validation-for="Scope_of_the_Change" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Justification_of_the_Change" class="control-label fw-bold"></label>
                 @Html.TextAreaFor(model => model.Justification_of_the_Change, new {@class = "form-control", @rows = 3 })
                 @*<input asp-for="Justification_of_the_Change" class="form-control" />*@
-            <span asp-validation-for="Justification_of_the_Change" class="text-danger"></span>
+                <span asp-validation-for="Justification_of_the_Change" class="text-danger"></span>
+            </div>
         </div>
-    </div>
     </div>
     <div class="row my-4">
         <div class="col-12">

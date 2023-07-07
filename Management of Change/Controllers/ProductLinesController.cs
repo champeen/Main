@@ -105,14 +105,14 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<ProductLine> checkDupes = await _context.ProductLine
-                .Where(m => m.Description == productLine.Description)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Description", "Product Line already exists.");
-                return View(productLine);
-            }
+            //List<ProductLine> checkDupes = await _context.ProductLine
+            //    .Where(m => m.Description == productLine.Description)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Description", "Product Line already exists.");
+            //    return View(productLine);
+            //}
 
             productLine.ModifiedUser = "Michael Wilson";
             productLine.ModifiedDate = DateTime.Now;

@@ -22,7 +22,7 @@ namespace Management_of_Change.Models
                     (
                         new ChangeRequest
                         {
-                            MOC_Number = "MOC-",
+                            MOC_Number = "MOC-230707-1",
                             Change_Owner = "Michael Wilson",
                             Location_Site = "Location Site 1",
                             Title_Change_Description = "Change in Boule Compound Mixture",
@@ -47,7 +47,7 @@ namespace Management_of_Change.Models
 
                         new ChangeRequest
                         {
-                            MOC_Number = "MOC-",
+                            MOC_Number = "MOC-230707-2",
                             Change_Owner = "Joe Jackson",
                             Location_Site = "Location Site 2",
                             Title_Change_Description = "Furnace Door Change",
@@ -72,7 +72,7 @@ namespace Management_of_Change.Models
 
                         new ChangeRequest
                         {
-                            MOC_Number = "MOC-",
+                            MOC_Number = "MOC-230708-1",
                             Change_Owner = "Test Testerson",
                             Location_Site = "Location Site 3",
                             Title_Change_Description = "Organization Chart Change",
@@ -306,6 +306,7 @@ namespace Management_of_Change.Models
                         {
                             Level = "Level 1 - Major",
                             Description = "Any change that affects form, fit, or function of the product which would result in redefining the production specification. <b>Impacted customers are notified and must provide written approval of the change.</b>",
+                            Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -317,6 +318,7 @@ namespace Management_of_Change.Models
                         {
                             Level = "Level 2 - Major",
                             Description = "Any change that affects form, fit, or function of the product but does not require to redefine the product specification.  Impacted customers may be notified but no formal approval of the change is required.",
+                            Order = "10",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -328,6 +330,7 @@ namespace Management_of_Change.Models
                         {
                             Level = "Level 3 - Minor",
                             Description = "A minor change with no customer impact therefore requiring no customer notification.",
+                            Order = "15",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -339,6 +342,7 @@ namespace Management_of_Change.Models
                         {
                             Level = "Level 4 - Minor",
                             Description = "Change to process or systems which has no effect on the product (e.g. changing an O2 sensor, process support equipment, upgrading software, minor recipe adjustment, etc.)",
+                            Order = "20",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -350,6 +354,7 @@ namespace Management_of_Change.Models
                         {
                             Level = "Level 5 - Temporary",
                             Description = "Used to document a temporary change to the process (e.g. R&D trials, extended engineering trials, etc.)",
+                            Order = "25",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = "David Hasselhoff",

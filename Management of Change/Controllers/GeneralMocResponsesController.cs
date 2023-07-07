@@ -115,7 +115,7 @@ namespace Management_of_Change.Controllers
                     else
                         throw;
                 }
-                return RedirectToAction("Details", "ChangeRequests", new { Id = generalMocResponses.ChangeRequestId });
+                return RedirectToAction("Details", "ChangeRequests", new { Id = generalMocResponses.ChangeRequestId, tab = "GeneralMocQuestions" });
             }
             return View(generalMocResponses);
         }

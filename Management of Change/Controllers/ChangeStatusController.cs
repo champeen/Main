@@ -105,14 +105,14 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<ChangeStatus> checkDupes = await _context.ChangeStatus
-                .Where(m => m.Status == changeStatus.Status)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Status", "Change Status already exists.");
-                return View(changeStatus);
-            }
+            //List<ChangeStatus> checkDupes = await _context.ChangeStatus
+            //    .Where(m => m.Status == changeStatus.Status)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Status", "Change Status already exists.");
+            //    return View(changeStatus);
+            //}
 
             changeStatus.ModifiedUser = "Michael Wilson";
             changeStatus.ModifiedDate = DateTime.Now;

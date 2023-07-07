@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using Azure.Core;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -22,15 +19,39 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string timestampFilter, string timestampFilter2)
         {
-            return _context.ChangeRequest != null ?
-                        View(await _context.ChangeRequest.OrderBy(m => m.Id).ToListAsync()) :
-                        Problem("Entity set 'Management_of_ChangeContext.ChangeRequest'  is null.");
+            ViewBag.activeRecordList = new List<String> { "Current", "Deleted", "All" };
+            //ViewBag.activeRecordList2 = new List<String> { "All","Current","Deleted" };
+
+            var requests = from m in _context.ChangeRequest
+                           select m;
+
+            switch (timestampFilter)
+            {
+                case null:
+                    requests = requests.Where(r => r.DeletedDate == null);
+                    break;
+                case "All":
+                    break;
+                case "Current":
+                    requests = requests.Where(r => r.DeletedDate == null);
+                    break;
+                case "Deleted":
+                    requests = requests.Where(r => r.DeletedDate != null);
+                    break;
+            }
+            //requests = requests.Where(r => r.Change_Owner.Equals("Joe Jackson"));
+
+            return View("Index", await requests.OrderBy(r => r.Id).ToListAsync());
+
+            //return _context.ChangeRequest != null ?
+            //            View(await _context.ChangeRequest.OrderBy(m => m.Id).ToListAsync()) :
+            //            Problem("Entity set 'Management_of_ChangeContext.ChangeRequest'  is null.");
         }
 
         // GET: ChangeRequests/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details")
         {
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
@@ -80,7 +101,43 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.ChangeType)
                 .ToListAsync();
 
-            return View(changeRequest);
+            ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
+            changeRequestViewModel.ChangeRequest = changeRequest;
+            // disable tab 3 if General MOC Responses have not been completed...
+            int countGMR = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
+            changeRequestViewModel.Tab3Disabled = countGMR > 0 ? "disabled" : "";
+            // disable tab4 (final review) if any Impact Assessment Responses have not been completed...
+            int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
+            changeRequestViewModel.Tab4Disabled = countIAR > 0 ? "disabled" : "";
+
+            changeRequestViewModel.TabActiveDetail = "";
+            changeRequestViewModel.TabActiveGeneralMocQuestions = "";
+            changeRequestViewModel.TabActiveImpactAssessments = "";
+            changeRequestViewModel.TabActiveFinalApprovals = "";
+
+            switch (tab)
+            {
+                case null:
+                    changeRequestViewModel.TabActiveDetail = "active";
+                    break;
+                case "":
+                    changeRequestViewModel.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    changeRequestViewModel.TabActiveDetail = "active";
+                    break;
+                case "GeneralMocQuestions":
+                    changeRequestViewModel.TabActiveGeneralMocQuestions = "active";
+                    break;
+                case "ActiveImpactAssessments":
+                    changeRequestViewModel.TabActiveImpactAssessments = "active";
+                    break;
+                case "FinalApprovals":
+                    changeRequestViewModel.TabActiveFinalApprovals = "active";
+                    break;
+            }
+
+            return View(changeRequestViewModel);
         }
 
         // GET: ChangeRequests/Create
@@ -214,12 +271,22 @@ namespace Management_of_Change.Controllers
                         }
                     }
                 }
-
-                changeRequest.MOC_Number = "MOC-";
+                // Mark would like the MOC_Number to be in the format "MOC-YYMMDD(seq)"
+                string mocNumber = "";
+                for (int i = 1; i < 10000; i++)
+                {
+                    mocNumber = "MOC-" + DateTime.Now.ToString("yyMMdd") + "-" + i.ToString();
+                    ChangeRequest record = await _context.ChangeRequest
+                        .FirstOrDefaultAsync(m => m.MOC_Number == mocNumber);
+                    if (record == null)
+                        break;
+                }
+                changeRequest.MOC_Number = mocNumber;
                 changeRequest.Request_Date = DateTime.Now.Date;
                 _context.Add(changeRequest);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                /*return RedirectToAction(nameof(Index));*/     //  NEED TO REDIRECT TO INDEX PAGE. NEED ID THAT WAS JUST PERSISTED!!!
+                return RedirectToAction("Details", new { id = changeRequest.Id });
             }
             return View(changeRequest);
         }
@@ -274,7 +341,8 @@ namespace Management_of_Change.Controllers
                     else
                         throw;
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = id });
             }
             return View(changeRequest);
         }
@@ -305,7 +373,10 @@ namespace Management_of_Change.Controllers
             var changeRequest = await _context.ChangeRequest.FindAsync(id);
             if (changeRequest != null)
             {
-                _context.ChangeRequest.Remove(changeRequest);
+                changeRequest.DeletedUser = "Michael J Wilson II";
+                changeRequest.DeletedDate = DateTime.Now;
+                _context.Update(changeRequest);
+                //_context.ChangeRequest.Remove(changeRequest);
             }
 
             await _context.SaveChangesAsync();

@@ -1,4 +1,5 @@
-﻿@model Management_of_Change.Models.ChangeRequest
+﻿@*@model Management_of_Change.Models.ChangeRequest*@
+@model Management_of_Change.ViewModels.ChangeRequestViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -9,167 +10,174 @@
 <div>
     <nav class="my-5">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-link active" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
-            <a class="nav-link" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
-            <a class="nav-link" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">Impact Assessments</a>
-            <a class="nav-link" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">Final Approvals</a>
+            <a class="nav-link @Model.TabActiveDetail" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+            <a class="nav-link @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
+            <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
+                Impact Assessments
+                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete">
+                </i>
+            </a>
+            <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
+                Final Approvals
+                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete">
+                </i>
+            </a>
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="text-nowrap">
                 <h4 class="mt-5">Details</h4>
-                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a> |
                 <a class="mx-2" asp-action="Index">Back to List</a>
             </div>
-            <hr/>
+            <hr />
             <dl class="row">
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.MOC_Number)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.MOC_Number)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.MOC_Number) @Html.DisplayFor(model => model.Id)
+                    @Html.DisplayFor(model => model.ChangeRequest.MOC_Number) @Html.DisplayFor(model => model.ChangeRequest.Id)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Change_Owner)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Owner)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Change_Owner)
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Owner)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Change_Status)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Change_Status)
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Status)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Location_Site)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Location_Site)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Location_Site)
+                    @Html.DisplayFor(model => model.ChangeRequest.Location_Site)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Change_Level)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Level)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Change_Level)
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Level)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Area_of_Change)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Area_of_Change)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Area_of_Change)
+                    @Html.DisplayFor(model => model.ChangeRequest.Area_of_Change)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Change_Type)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Type)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Change_Type)
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Type)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Proudct_Line)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Proudct_Line)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Proudct_Line)
+                    @Html.DisplayFor(model => model.ChangeRequest.Proudct_Line)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Request_Date)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Request_Date)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Request_Date)
+                    @Html.DisplayFor(model => model.ChangeRequest.Request_Date)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Estimated_Completion_Date)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Estimated_Completion_Date)
+                    @Html.DisplayFor(model => model.ChangeRequest.Estimated_Completion_Date)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Expiration_Date_Temporary)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Expiration_Date_Temporary)
+                    @Html.DisplayFor(model => model.ChangeRequest.Expiration_Date_Temporary)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Raw_Material_Component_Numbers_Impacted)
+                    @Html.DisplayFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Justification_of_the_Change)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Justification_of_the_Change)
                 </dt>
                 <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.Justification_of_the_Change, new {@rows = 2})
+                    @Html.DisplayFor(model => model.ChangeRequest.Justification_of_the_Change, new {@rows = 2})
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Title_Change_Description)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Title_Change_Description)
                 </dt>
                 <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.Title_Change_Description, new {@rows = 3})
+                    @Html.DisplayFor(model => model.ChangeRequest.Title_Change_Description, new {@rows = 3})
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Scope_of_the_Change)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Scope_of_the_Change)
                 </dt>
                 <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.Scope_of_the_Change, new {@rows = 3})
+                    @Html.DisplayFor(model => model.ChangeRequest.Scope_of_the_Change, new {@rows = 3})
                 </dd>
-
                 @*        <dt class="col-sm-2 my-2">&nbsp;</dt>
                 <dd class="col-sm-4 my-2">&nbsp;</dd>*@
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.CreatedUser)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.CreatedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.CreatedUser)
+                    @Html.DisplayFor(model => model.ChangeRequest.CreatedUser)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.CreatedDate)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.CreatedDate)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.CreatedDate)
+                    @Html.DisplayFor(model => model.ChangeRequest.CreatedDate)
                 </dd>
-                <hr />
+                @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ModifiedUser)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ModifiedUser)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ModifiedDate)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ModifiedDate)
-                </dd>
-                <hr />
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.DeletedUser)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.DeletedUser)
+                    @Html.DisplayFor(model => model.ChangeRequest.ModifiedUser)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.DeletedDate)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedDate)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.DeletedDate)
+                    @Html.DisplayFor(model => model.ChangeRequest.ModifiedDate)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.DeletedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.DeletedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.DeletedDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.DeletedDate)
                 </dd>
                 <hr />
             </dl>
         </div>
 
-        <div class="tab-pane fade" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
+        <div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
             <div class="text-nowrap">
                 <h4 class="mt-5">General MOC Questions</h4>
                 <a asp-action="Index">Back to List</a>
@@ -184,14 +192,11 @@
                         <th>
                             Response
                         </th>
-                        <th>
-                            Order
-                        </th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.GeneralMocResponses)
+                    @foreach (var item in Model.ChangeRequest.GeneralMocResponses)
                     {
                         <tr>
                             <td>
@@ -199,9 +204,6 @@
                             </td>
                             <td class="text-center">
                                 @Html.DisplayFor(modelItem => item.Response)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.Order)
                             </td>
                             <td class="text-nowrap">
                                 <a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
@@ -250,9 +252,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model.ImpactAssessmentResponses != null)
+                    @if (Model.ChangeRequest.ImpactAssessmentResponses != null)
                     {
-                        @foreach (var item in Model.ImpactAssessmentResponses)
+                        @foreach (var item in Model.ChangeRequest.ImpactAssessmentResponses)
                         {
                             <tr>
                                 <td>
@@ -281,7 +283,7 @@
                                 </td>
                                 <td class="text-nowrap">
                                     <a asp-controller="ImpactAssessmentResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-controller="ImpactAssessmentResponses" asp-action="Details" asp-route-id="@item.Id">Detail</a> 
+                                    <a asp-controller="ImpactAssessmentResponses" asp-action="Details" asp-route-id="@item.Id">Detail</a>
                                 </td>
                             </tr>
                         }
@@ -313,11 +315,11 @@
                         <th>
                             Review Result
                         </th>
-                        <th>
+                        <th class="text-center">
                             Review Completed
                         </th>
                         <th>
-                            Date Completed)
+                            Date Completed
                         </th>
                         <th>
                             Comment
@@ -326,7 +328,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.ImplementationFinalApprovalResponses)
+                    @foreach (var item in Model.ChangeRequest.ImplementationFinalApprovalResponses)
                     {
                         <tr>
                             <td>
@@ -344,7 +346,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReviewResult)
                             </td>
-                            <td>
+                            <td class="text-center">
                                 @Html.DisplayFor(modelItem => item.ReviewCompleted)
                             </td>
                             <td>
@@ -363,8 +365,6 @@
         </div>
     </div>
 </div>
-
-<hr />
 <div class="text-nowrap">
     @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
     <a asp-action="Index">Back to List</a>

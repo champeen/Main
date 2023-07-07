@@ -105,14 +105,14 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<FinalReviewType> checkDupes = await _context.FinalReviewType
-                .Where(m => m.Type == finalReviewType.Type)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Type", "Final Review Type already exists.");
-                return View(finalReviewType);
-            }
+            //List<FinalReviewType> checkDupes = await _context.FinalReviewType
+            //    .Where(m => m.Type == finalReviewType.Type)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Type", "Final Review Type already exists.");
+            //    return View(finalReviewType);
+            //}
 
             finalReviewType.ModifiedUser = "Michael Wilson";
             finalReviewType.ModifiedDate = DateTime.Now;

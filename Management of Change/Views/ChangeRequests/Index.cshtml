@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Management_of_Change.Models.ChangeRequest>
+@*@model Management_of_Change.Models.ChangeRequestViewModel*@
 
 @{
     ViewData["Title"] = "Index";
@@ -6,56 +7,86 @@
 
 <h1>Change Requests</h1>
 
-<p class="mt-5">
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<form asp-controller="ChangeRequests" asp-action="Index">
+    <div class="row mt-3">
+        <div class="col-7 text-start">
+            <a asp-action="Create">Create New</a>
+        </div>
+        <div class="col-2 fw-bold text-end">
+            Active/Non-Active Records:
+        </div>
+        <div class="col-2 text-start">
+            @Html.DropDownList("timestampFilter", new SelectList(ViewBag.ActiveRecordList), new {@class = "form-control form-select" })
+        </div>
+        @*        <div class="col-2 fw-bold text-end">
+        Another Filter:
+        </div>
+        <div class="col-1 text-start">
+        @Html.DropDownList("timestampFilter2", new SelectList(ViewBag.ActiveRecordList2), new {@class = "form-control" })
+        </div>*@
+        <div class="col-1 text-end">
+            <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+<table class="table mt-5">
     <thead>
         <tr>
             <th class="text-nowrap">
-                @Html.DisplayNameFor(model => model.MOC_Number)
+                MOC Number
+                @*@Html.DisplayNameFor(model => model.MOC_Number)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title_Change_Description)
+                Title/Change Description
+                @*@Html.DisplayNameFor(model => model.Title_Change_Description)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Change_Owner)
+                Change Owner
+                @*@Html.DisplayNameFor(model => model.Change_Owner)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Change_Status)
+                Change Status
+                @*@Html.DisplayNameFor(model => model.Change_Status)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Change_Level)
+                Change Level
+                @*@Html.DisplayNameFor(model => model.Change_Level)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Change_Type)
+                Change Type
+                @*@Html.DisplayNameFor(model => model.Change_Type)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Location_Site)
+                Location/Site
+                @*@Html.DisplayNameFor(model => model.Location_Site)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Area_of_Change)
+                Area of Change
+                @*@Html.DisplayNameFor(model => model.Area_of_Change)*@
             </th>
-@*            <th>
-                @Html.DisplayNameFor(model => model.Scope_of_the_Change)
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Scope_of_the_Change)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Justification_of_the_Change)
+            @Html.DisplayNameFor(model => model.Justification_of_the_Change)
             </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.Proudct_Line)
+                Product Line
+                @*@Html.DisplayNameFor(model => model.Proudct_Line)*@
             </th>
-@*            <th>
-                @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
             </th>*@
-@*            <th>
-                @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
             </th>*@
-@*            <th>
-                @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
             </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.Request_Date)
+                Request Date
+                @*@Html.DisplayNameFor(model => model.Request_Date)*@
             </th>
             <th></th>
         </tr>
@@ -65,7 +96,7 @@
         {
             <tr>
                 <td class="text-nowrap">
-                    @Html.DisplayFor(modelItem => item.MOC_Number) @Html.DisplayFor(modelItem => item.Id)
+                    @Html.DisplayFor(modelItem => item.MOC_Number)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title_Change_Description)
@@ -88,30 +119,30 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Area_of_Change)
                 </td>
-@*                <td>
-                    @Html.DisplayFor(modelItem => item.Scope_of_the_Change)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Justification_of_the_Change)
-                </td>*@
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Scope_of_the_Change)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Justification_of_the_Change)
+            </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Proudct_Line)
                 </td>
-@*                <td>
-                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                </td>*@
-@*                <td>
-                    @Html.DisplayFor(modelItem => item.Raw_Material_Component_Numbers_Impacted)
-                </td>*@
-@*                <td>
-                    @Html.DisplayFor(modelItem => item.Expiration_Date_Temporary)
-                </td>*@
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+            </td>*@
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Raw_Material_Component_Numbers_Impacted)
+            </td>*@
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Expiration_Date_Temporary)
+            </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Request_Date)
                 </td>
                 <td class="text-nowrap">
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-tab="Details">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>

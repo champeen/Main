@@ -11,6 +11,21 @@
 <h4>Edit</h4>
 <hr />
 <form asp-action="Edit">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </span>
+                <span class="mx-2">
+                    <a class="mx-2" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+
+                    @*<a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -121,7 +136,7 @@
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
                 <span class="mx-2">
-                    <a class="mx-2" asp-action="Index">Cancel</a>
+                    <a class="mx-2" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
                 </span>
             </div>
         </div>

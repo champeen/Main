@@ -110,14 +110,14 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<SiteLocation> checkDupes = await _context.SiteLocation
-                .Where(m => m.Description == siteLocation.Description)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Description", "Site/Location already exists.");
-                return View(siteLocation);
-            }
+            //List<SiteLocation> checkDupes = await _context.SiteLocation
+            //    .Where(m => m.Description == siteLocation.Description)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Description", "Site/Location already exists.");
+            //    return View(siteLocation);
+            //}
 
             siteLocation.ModifiedUser = "Michael Wilson";
             siteLocation.ModifiedDate = DateTime.Now;
