@@ -13,10 +13,10 @@
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
                 <span class="mx-2">
-                    <a class="mx-2" asp-action="Index">Cancel</a>
+                    @Html.ActionLink("Cancel","Index",new {},new {@class="btn btn-secondary"})
                 </span>
             </div>
         </div>
@@ -127,7 +127,7 @@
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
                 <span class="mx-2">
                     <a class="mx-2" asp-action="Index">Cancel</a>

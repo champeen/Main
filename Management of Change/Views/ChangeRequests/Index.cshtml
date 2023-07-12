@@ -10,7 +10,9 @@
 <form asp-controller="ChangeRequests" asp-action="Index">
     <div class="row mt-3">
         <div class="col-7 text-start">
-            <a asp-action="Create">Create New</a>
+            @*<a asp-action="Create">Create New</a>*@
+            @*            @Html.ActionLink("Create New","Create")*@
+            @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})
         </div>
         <div class="col-2 fw-bold text-end">
             Active/Non-Active Records:
@@ -24,13 +26,13 @@
         <div class="col-1 text-start">
         @Html.DropDownList("timestampFilter2", new SelectList(ViewBag.ActiveRecordList2), new {@class = "form-control" })
         </div>*@
-        <div class="col-1 text-end">
+        <div class="col-1 text-end text-">
             <input type="submit" value="Filter" class="btn btn-primary" />
         </div>
     </div>
 </form>
 
-<table class="table mt-5">
+<table class="table table-bordered table-striped mt-5">
     <thead>
         <tr>
             <th class="text-nowrap">
@@ -141,9 +143,15 @@
                     @Html.DisplayFor(modelItem => item.Request_Date)
                 </td>
                 <td class="text-nowrap">
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-tab="Details">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+@*                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" asp-route-tab="Details" class="btn btn-secondary">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>*@
+                    @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
+                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
+                    @if (item.DeletedDate == null)
+                    {
+                        @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger"})
+                    }                    
                 </td>
             </tr>
         }

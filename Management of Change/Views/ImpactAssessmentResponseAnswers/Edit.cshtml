@@ -8,11 +8,12 @@
 
 <h4>Edit</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="row my-4">
+    <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImpactAssessmentResponseId" />
             <input type="hidden" asp-for="ReviewType" />
             <input type="hidden" asp-for="Order" />
             <input type="hidden" asp-for="CreatedDate" />
@@ -28,7 +29,7 @@
             </div>*@
             <div class="form-group my-3">
                 <label asp-for="Question" class="control-label fw-bold"></label>
-                <input asp-for="Question" class="form-control" />
+                <input asp-for="Question" class="form-control" readonly/>
                 <span asp-validation-for="Question" class="text-danger"></span>
             </div>
 @*            <div class="form-group my-3">
@@ -39,27 +40,34 @@
             <div class="form-group my-3">
                 <label asp-for="Action" class="control-label fw-bold"></label>
                 @*<input asp-for="Action" class="form-control" />*@
-                @Html.DropDownListFor(model => model.Action, new SelectList(ViewBag.Responses), new { @class="form-control form-select"})
+                @Html.DropDownListFor(model => model.Action, new SelectList(ViewBag.Responses), new { @class="form-control form-select", @style="width:25%"})
                 <span asp-validation-for="Action" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="DetailsOfActionNeeded" class="control-label fw-bold"></label>
-                <input asp-for="DetailsOfActionNeeded" class="form-control" />
+                @*<input asp-for="DetailsOfActionNeeded" class="form-control" />*@
+                @Html.TextAreaFor(model => model.DetailsOfActionNeeded, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="DetailsOfActionNeeded" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="PreOrPostImplementation" class="control-label fw-bold"></label>
-                <input asp-for="PreOrPostImplementation" class="form-control" />
+@*                <input asp-for="PreOrPostImplementation" class="form-control" style="width:25%;" />*@
+                @Html.DropDownListFor(model => model.PreOrPostImplementation, 
+                    new List<SelectListItem>{
+                        new SelectListItem {Value="Pre", Text="Pre"},
+                        new SelectListItem {Value="Post", Text="Post"}},
+                        "--Select One--",
+                    new { @class="form-control form-select", @style="width:25%"})
                 <span asp-validation-for="PreOrPostImplementation" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="ActionOwner" class="control-label fw-bold"></label>
-                <input asp-for="ActionOwner" class="form-control" />
+                <input asp-for="ActionOwner" class="form-control" style="width:25%;" />
                 <span asp-validation-for="ActionOwner" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="DateDue" class="control-label fw-bold"></label>
-                <input asp-for="DateDue" class="form-control" />
+                <input asp-for="DateDue" class="form-control"  style="width:25%;"/>
                 <span asp-validation-for="DateDue" class="text-danger"></span>
             </div>
 @*            <div class="form-group my-3">
@@ -98,8 +106,9 @@
                 <span asp-validation-for="DeletedDate" class="text-danger"></span>
             </div>*@
             <div class="form-group text-nowrap">
-                <input class="me-2" type="submit" value="Save" class="btn btn-primary" />
-                <a class="ms-2" asp-action="Index">Back to List</a>
+                <input class="me-2 btn btn-primary" type="submit" value="Save"/>
+@*                <a class="ms-2" asp-action="Index">Back to List</a>*@
+                @Html.ActionLink("Cancel","Details","ImpactAssessmentResponses", new {id=Model.ImpactAssessmentResponseId}, new {@class="btn btn-secondary"})
             </div>
         </form>
     </div>

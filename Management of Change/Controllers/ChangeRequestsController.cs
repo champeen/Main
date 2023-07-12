@@ -115,6 +115,8 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.TabActiveImpactAssessments = "";
             changeRequestViewModel.TabActiveFinalApprovals = "";
 
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+
             switch (tab)
             {
                 case null:
@@ -129,14 +131,13 @@ namespace Management_of_Change.Controllers
                 case "GeneralMocQuestions":
                     changeRequestViewModel.TabActiveGeneralMocQuestions = "active";
                     break;
-                case "ActiveImpactAssessments":
+                case "ImpactAssessments":
                     changeRequestViewModel.TabActiveImpactAssessments = "active";
                     break;
                 case "FinalApprovals":
                     changeRequestViewModel.TabActiveFinalApprovals = "active";
                     break;
             }
-
             return View(changeRequestViewModel);
         }
 
@@ -292,7 +293,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string tab = "Details")
         {
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
@@ -310,6 +311,7 @@ namespace Management_of_Change.Controllers
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.Tab = tab;
 
             return View(changeRequest);
         }
@@ -342,10 +344,52 @@ namespace Management_of_Change.Controllers
                         throw;
                 }
                 //return RedirectToAction(nameof(Index));
+                //if (ViewBag.Tab == "Index")
+                //    return RedirectToAction("Index");
+                //else
                 return RedirectToAction("Details", new { id = id });
             }
             return View(changeRequest);
         }
+
+
+        // POST: ChangeRequests/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditMocQuestions(int id, [Bind("ChangeRequest, Tab3Disabled, Tab4Disabled, TabActiveDetail, TabActiveGeneralMocQuestions, TabActiveImpactAssessments, TabActiveFinalApprovals")] ChangeRequestViewModel changeRequestViewModel)
+        {
+            //if (id != changeRequestViewModel.ChangeRequest.Id)
+            //    return NotFound();
+
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //      foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
+            //      {
+            //          _context.Update(record);
+            //      }
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        throw;
+            //    }
+            //}
+
+            foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
+            {
+                record.ModifiedUser = "Michael James Wilson II";
+                record.ModifiedDate = DateTime.Now;
+                _context.Update(record);
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab="GeneralMocQuestions" });
+        }
+
+
 
         // GET: ChangeRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)

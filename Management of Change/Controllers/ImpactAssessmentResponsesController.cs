@@ -80,7 +80,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ImpactAssessmentResponses/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string tab = "ImpactAssessments")
         {
             if (id == null || _context.ImpactAssessmentResponse == null)
                 return NotFound();
@@ -90,6 +90,8 @@ namespace Management_of_Change.Controllers
             if (impactAssessmentResponse == null)
                 return NotFound();
 
+            ViewBag.Tab = tab;
+
             return View(impactAssessmentResponse);
         }
 
@@ -98,7 +100,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,ChangeType,Reviewer,ReviewerEmail,Required,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,ChangeType,Reviewer,ReviewerEmail,Required,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse, string tab = "ImpactAssessments")
         {
             if (id != impactAssessmentResponse.Id)
                 return NotFound();
@@ -120,7 +122,10 @@ namespace Management_of_Change.Controllers
                     else
                         throw;
                 }
-                return RedirectToAction("Details", "ChangeRequests", new { Id = impactAssessmentResponse.ChangeRequestId });
+                if (tab == "IARDetails")
+                    return RedirectToAction("Details", "ImpactAssessmentResponses", new { Id = impactAssessmentResponse.Id, tab = tab });
+                else
+                    return RedirectToAction("Details", "ChangeRequests", new { Id = impactAssessmentResponse.ChangeRequestId, tab=tab });
             }
             return View(impactAssessmentResponse);
         }

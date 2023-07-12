@@ -4,13 +4,15 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Impact Assessment Responses</h1>
+<h1>Impact Assessment Response</h1>
 
 <div>
     <div class="text-nowrap">
         <h4 class="mt-5">Details</h4>
-        <a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-        <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>
+@*        <a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+        <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>*@
+        @Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
+        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
     </div>
     <hr />
     <dl class="row">
@@ -105,19 +107,19 @@
     </dl>
 </div>
 <div class="text-nowrap my-3">
-    <a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>
+    @Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
+    @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
 </div>
 
 <hr />
 <div class="text-nowrap">
     <h4 class="mt-5">Impact Assessment Response Answers</h4>
     <div class="mt-4">
-        <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>
+        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
     </div>
 </div>
 
-<table class="table">
+<table class="table table-bordered table-striped mt-3">
     <thead>
         <tr>
 @*            <th>
@@ -188,13 +190,16 @@
                     @Html.DisplayFor(modelItem => item.DateDue)
                 </td>
                 <td class="text-nowrap">
-                    <a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Details" asp-route-id="@item.Id">Details</a>@* |
-                    <a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+@*                    <a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Details" asp-route-id="@item.Id">Details</a>*@
+                    @*<a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                    @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
+                    @Html.ActionLink("Details","Details", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-secondary"})
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
-<hr />
+@Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+

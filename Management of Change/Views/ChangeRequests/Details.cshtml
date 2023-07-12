@@ -10,14 +10,14 @@
 <div>
     <nav class="my-5">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-link @Model.TabActiveDetail" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
-            <a class="nav-link @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
-            <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
+            <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+            <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
+            <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled fw-bolder" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
                 Impact Assessments
                 <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete">
                 </i>
             </a>
-            <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
+            <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled fw-bolder" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
                 Final Approvals
                 <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete">
                 </i>
@@ -28,8 +28,10 @@
         <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="text-nowrap">
                 <h4 class="mt-5">Details</h4>
-                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a> |
-                <a class="mx-2" asp-action="Index">Back to List</a>
+                @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+                <a class="mx-2" asp-action="Index">Back to List</a>*@
+                @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
             </div>
             <hr />
             <dl class="row">
@@ -37,7 +39,7 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.MOC_Number)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.MOC_Number) @Html.DisplayFor(model => model.ChangeRequest.Id)
+                    @Html.DisplayFor(model => model.ChangeRequest.MOC_Number)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Change_Owner)
@@ -175,53 +177,136 @@
                 </dd>
                 <hr />
             </dl>
+            @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
 
         <div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
-            <div class="text-nowrap">
+            @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post))
+            {
                 <h4 class="mt-5">General MOC Questions</h4>
-                <a asp-action="Index">Back to List</a>
-            </div>
+                <div class="row">
+                    <div class="col-6">                        
+                        <div class="text-nowrap">
+                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
+                            <input type="submit" value="Save Changes" class="btn btn-primary" />
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        <input type="submit" value="Submit for Review" class="btn btn-success" />
+                    </div>
+                </div>
 
-            <table class="table mt-3">
-                <thead>
-                    <tr>
-                        <th>
-                            Question
-                        </th>
-                        <th>
-                            Response
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.ChangeRequest.GeneralMocResponses)
-                    {
+                @*@Html.HiddenFor(m => m.ChangeRequest)*@
+                @Html.HiddenFor(m => m.ChangeRequest.Id)
+                @*                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses)*@
+                @Html.HiddenFor(m => m.Tab3Disabled)
+                @Html.HiddenFor(m => m.Tab4Disabled)
+                @Html.HiddenFor(m => m.TabActiveImpactAssessments)
+                @Html.HiddenFor(m => m.TabActiveGeneralMocQuestions)
+                @Html.HiddenFor(m => m.TabActiveDetail)
+                <table class="table table-bordered table-striped mt-3">
+                    <thead>
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Question)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.Response)
-                            </td>
-                            <td class="text-nowrap">
-                                <a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                                @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-                            </td>
+                            <th>
+                                Question
+                            </th>
+                            <th>
+                                Response
+                            </th>
+                            @*<th></th>*@
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.ChangeRequest.GeneralMocResponses.Count; i++)
+                        {
+                            <tr>
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Id)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ChangeRequestId)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Question)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Order)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].CreatedUser)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].CreatedDate)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ModifiedUser)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ModifiedDate)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedUser)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedDate)
+                                <td>
+                                    @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Question)
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
+                            new SelectList(ViewBag.Responses), "--Select--",
+                            new { @class="form-control form-select"})
+                                </td>
+                            </tr>
+                            @*<td class="text-nowrap">*@
+                            @*@Html.ActionLink("Edit","Edit","GeneralMocResponses",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})*@
+                            @*<a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a></td>*@
+                        }
+                        @*                        @foreach (var item in Model.ChangeRequest.GeneralMocResponses)
+                    {
+                    <tr>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Question)
+                    </td>
+                    <td class="text-center">
+                    @Html.DropDownListFor(modelItem => item.Response, new SelectList(ViewBag.Responses), new { @class="form-control form-select"})
+                    </td>
+                    </tr>
+                    }*@
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-nowrap">
+                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                            <input type="submit" value="Save Changes" class="btn btn-primary" />
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        <input type="submit" value="Submit for Review" class="btn btn-success" />
+                    </div>
+                </div>
+            }
+
+            @*            <table class="table table-bordered table-striped mt-3">
+            <thead>
+            <tr>
+            <th>
+            Question
+            </th>
+            <th>
+            Response
+            </th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.ChangeRequest.GeneralMocResponses)
+            {
+            <tr>
+            <td>
+            @Html.DisplayFor(modelItem => item.Question)
+            </td>
+            <td class="text-center">
+            @Html.DisplayFor(modelItem => item.Response)
+            </td>
+            <td class="text-nowrap">
+            @Html.ActionLink("Edit","Edit","GeneralMocResponses",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
+            </td>
+            </tr>
+            }
+            </tbody>
+            </table>*@
         </div>
-        <div class="tab-pane fade" id="nav-impact-assessment" role="tabpanel" aria-labelledby="nav-impact-assessment-tab">
+        <div class="tab-pane fade show @Model.TabActiveImpactAssessments" id="nav-impact-assessment" role="tabpanel" aria-labelledby="nav-impact-assessment-tab">
             <div class="text-nowrap">
                 <h4 class="mt-5">Change Evaluations - Impact Assessments</h4>
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                <a asp-action="Index">Back to List</a>
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
             </div>
-            <table class="table mt-3">
+            <table class="table table-bordered table-striped mt-3">
                 <thead>
                     <tr>
                         <th>
@@ -282,22 +367,25 @@
                                     @Html.DisplayFor(modelItem => item.Comments)
                                 </td>
                                 <td class="text-nowrap">
-                                    <a asp-controller="ImpactAssessmentResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                    <a asp-controller="ImpactAssessmentResponses" asp-action="Details" asp-route-id="@item.Id">Detail</a>
+                                    @*<a asp-controller="ImpactAssessmentResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
+                                    @*<a asp-controller="ImpactAssessmentResponses" asp-action="Details" asp-route-id="@item.Id">Detail</a>*@                                    
+                                    @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
+                                    @Html.ActionLink("Detail","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                 </td>
                             </tr>
                         }
                     }
                 </tbody>
             </table>
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
-        <div class="tab-pane fade" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
+        <div class="tab-pane fade show @Model.TabActiveFinalApprovals" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
             <div class="text-nowrap">
                 <h4 class="mt-5">Implementation - Final Approvals </h4>
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                <a asp-action="Index">Back to List</a>
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
             </div>
-            <table class="table mt-3">
+            <table class="table table-bordered table-striped mt-3">
                 <thead>
                     <tr>
                         <th>
@@ -355,17 +443,17 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Comments)
                             </td>
-                            <td>
+                            <td>                                
                                 <a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
     </div>
 </div>
-<div class="text-nowrap">
-    @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-    <a asp-action="Index">Back to List</a>
+<div class="text-nowrap my-5">
+    @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@
 </div>
