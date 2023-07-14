@@ -10,6 +10,7 @@ namespace Management_of_Change.ViewModels
         public string? TabActiveGeneralMocQuestions { get; set; }
         public string? TabActiveImpactAssessments { get; set; }
         public string? TabActiveFinalApprovals { get; set; }
+        public bool ButtonSubmitForReview { get; set; }
 
     }
 }

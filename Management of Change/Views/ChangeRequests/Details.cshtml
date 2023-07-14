@@ -5,7 +5,24 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Change Request</h1>
+<div class="row">
+    <div class="col-4">
+        <h1>Change Request</h1>
+    </div>
+    <div class="col-8 text-end">
+        <h4>
+            <span class="fw-bold">
+                @Html.DisplayFor(model => model.ChangeRequest.MOC_Number)
+            </span>            
+        </h4>
+        <h4>
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status):
+            <span class="text-success fw-bold">
+                @Html.DisplayFor(model => model.ChangeRequest.Change_Status)
+            </span>            
+        </h4>
+    </div>
+</div>
 
 <div>
     <nav class="my-5">
@@ -182,18 +199,22 @@
         </div>
 
         <div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
-            @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post))
+            @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post, new {id=Model.ChangeRequest.Id}))
             {
                 <h4 class="mt-5">General MOC Questions</h4>
                 <div class="row">
-                    <div class="col-6">                        
+                    <div class="col-6">
                         <div class="text-nowrap">
                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
                             <input type="submit" value="Save Changes" class="btn btn-primary" />
                         </div>
                     </div>
                     <div class="col-6 text-end">
-                        <input type="submit" value="Submit for Review" class="btn btn-success" />
+                        @*<input type="submit" value="Submit for Review" class="btn btn-success" />*@
+                        @if (@Model.ButtonSubmitForReview == true)
+                        {
+                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
+                        }                        
                     </div>
                 </div>
 
@@ -265,7 +286,10 @@
                         </div>
                     </div>
                     <div class="col-6 text-end">
-                        <input type="submit" value="Submit for Review" class="btn btn-success" />
+                        @if (@Model.ButtonSubmitForReview == true)
+                        {
+                            @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                        }
                     </div>
                 </div>
             }
@@ -368,7 +392,7 @@
                                 </td>
                                 <td class="text-nowrap">
                                     @*<a asp-controller="ImpactAssessmentResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
-                                    @*<a asp-controller="ImpactAssessmentResponses" asp-action="Details" asp-route-id="@item.Id">Detail</a>*@                                    
+                                    @*<a asp-controller="ImpactAssessmentResponses" asp-action="Details" asp-route-id="@item.Id">Detail</a>*@
                                     @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
                                     @Html.ActionLink("Detail","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                 </td>
@@ -443,7 +467,7 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Comments)
                             </td>
-                            <td>                                
+                            <td>
                                 <a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                             </td>
                         </tr>

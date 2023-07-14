@@ -49,5 +49,7 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.ImpactAssessmentResponseQuestions>? ImpactAssessmentResponseQuestions { get; set; }
 
         public DbSet<Management_of_Change.Models.ImpactAssessmentResponseAnswer>? ImpactAssessmentResponseAnswer { get; set; }
+
+        public DbSet<Management_of_Change.Models.Task>? Task { get; set; }
     }
 }

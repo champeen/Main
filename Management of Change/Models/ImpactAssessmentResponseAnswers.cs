@@ -22,5 +22,7 @@ namespace Management_of_Change.Models
         public DateTime? DateDue { get; set; }
         [ForeignKey("ImpactAssessmentResponse")]
         public int ImpactAssessmentResponseId { get; set; }
+
+        public List<Task>? Tasks { get; set; }
     }
 }

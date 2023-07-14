@@ -5,6 +5,10 @@ using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Web;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -21,6 +25,39 @@ namespace Management_of_Change.Controllers
         // GET: ChangeRequests
         public async Task<IActionResult> Index(string timestampFilter, string timestampFilter2)
         {
+            ViewBag.UserName2 = Environment.UserDomainName;
+            ViewBag.UserName3 = Environment.UserName;
+            ViewBag.UserName6 = WindowsIdentity.GetCurrent().Name;
+            ViewBag.UserName7 = WindowsIdentity.GetCurrent().Owner;
+            ViewBag.UserName8 = WindowsIdentity.GetCurrent().User;
+            ViewBag.UserName9 = WindowsIdentity.GetCurrent().AccessToken;
+            ViewBag.UserName10 = WindowsIdentity.GetCurrent().Actor;
+            ViewBag.UserName11 = WindowsIdentity.GetCurrent().AuthenticationType;
+
+            ViewBag.UserName16 = WindowsIdentity.GetCurrent().ImpersonationLevel;
+            ViewBag.UserName17 = WindowsIdentity.GetCurrent().IsAnonymous;
+            ViewBag.UserName18 = WindowsIdentity.GetCurrent().IsAuthenticated;
+            ViewBag.UserName19 = WindowsIdentity.GetCurrent().IsGuest;
+            ViewBag.UserName20 = WindowsIdentity.GetCurrent().IsSystem;
+
+            ViewBag.UserName26 = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.UserName27 = User.FindFirstValue(ClaimTypes.Name);
+            ViewBag.UserName28 = User.Identity.Name;
+
+
+
+            //Request.ServerVariables["LOGON_USER"]
+            ViewBag.UserName29 = Request.HttpContext.User.Identity.Name;
+            ViewBag.UserName30 = Environment.GetEnvironmentVariable("USERNAME");
+
+            AppDomain appDomain = Thread.GetDomain();
+            appDomain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
+            WindowsPrincipal windowsPrincipal = (WindowsPrincipal)Thread.CurrentPrincipal;
+            ViewBag.UserName31 = windowsPrincipal.Identity.Name;
+
+
+
+
             ViewBag.activeRecordList = new List<String> { "Current", "Deleted", "All" };
             //ViewBag.activeRecordList2 = new List<String> { "All","Current","Deleted" };
 
@@ -87,12 +124,6 @@ namespace Management_of_Change.Controllers
                     .ToListAsync();
                 }
             }
-            //// Get all the Impact Assessment Responses Questions/Answers associated with this request...
-            //changeRequest.ImpactAssessmentResponses.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
-            //    .Where(m => m.ImpactAssessmentResponseId == changeRequest.ImpactAssessmentResponses.Id)
-            //    .OrderBy(m => m.ReviewType)
-            //    .ThenBy(m => m.Order)
-            //    .ToListAsync();
 
             // Get all the Final Approval Responses associated with this request...
             changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
@@ -138,6 +169,13 @@ namespace Management_of_Change.Controllers
                     changeRequestViewModel.TabActiveFinalApprovals = "active";
                     break;
             }
+
+            int count = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
+            if (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" && count == 0)
+                changeRequestViewModel.ButtonSubmitForReview = true;
+            else
+                changeRequestViewModel.ButtonSubmitForReview = false;
+
             return View(changeRequestViewModel);
         }
 
@@ -360,24 +398,6 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditMocQuestions(int id, [Bind("ChangeRequest, Tab3Disabled, Tab4Disabled, TabActiveDetail, TabActiveGeneralMocQuestions, TabActiveImpactAssessments, TabActiveFinalApprovals")] ChangeRequestViewModel changeRequestViewModel)
         {
-            //if (id != changeRequestViewModel.ChangeRequest.Id)
-            //    return NotFound();
-
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //      foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
-            //      {
-            //          _context.Update(record);
-            //      }
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        throw;
-            //    }
-            //}
-
             foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
             {
                 record.ModifiedUser = "Michael James Wilson II";
@@ -386,9 +406,48 @@ namespace Management_of_Change.Controllers
             }
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab="GeneralMocQuestions" });
+            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "GeneralMocQuestions" });
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitForReview(int id, ChangeRequestViewModel changeRequestViewModel)
+        {
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            // Get all the General MOC Responses associated with this request...
+            changeRequest.GeneralMocResponses = await _context.GeneralMocResponses.Where(m => m.ChangeRequestId == id).ToListAsync();
+
+            // Get all the Impact Assessment Responses associated with this request...
+            changeRequest.ImpactAssessmentResponses = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
+
+            // Get all the Impact Assessment Responses Questions/Answers associated with this request...
+            if (changeRequest.ImpactAssessmentResponses.Any())
+            {
+                foreach (var record in changeRequest.ImpactAssessmentResponses)
+                {
+                    record.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer.Where(m => m.ImpactAssessmentResponseId == record.Id).ToListAsync();
+                }
+            }
+
+            // Get all the Final Approval Responses associated with this request...
+            changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
+
+            changeRequest.Change_Status = "Submitted for Impact Assessment Review";
+            changeRequest.ModifiedUser = "Michael Wilson";
+            changeRequest.ModifiedDate = DateTime.Now;
+
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tab = "GeneralMocQuestions" });
+        }
 
 
         // GET: ChangeRequests/Delete/5
