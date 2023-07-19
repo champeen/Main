@@ -141,8 +141,11 @@
                 Action
             </th>
             <th>
-                Details Of ActionNeeded
+                Title (short desc.)
             </th>
+@*            <th>
+                Details Of ActionNeeded
+            </th>*@
             <th>
                 Pre Or Post Implementation
             </th>
@@ -178,8 +181,11 @@
                     @Html.DisplayFor(modelItem => item.Action)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DetailsOfActionNeeded)
+                    @Html.DisplayFor(modelItem => item.Title)
                 </td>
+@*                <td>
+                    @Html.DisplayFor(modelItem => item.DetailsOfActionNeeded)
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.PreOrPostImplementation)
                 </td>
@@ -195,6 +201,8 @@
                     @*<a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
                     @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
                     @Html.ActionLink("Details","Details", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-secondary"})
+                    @if(item.Tasks.Count > 0)
+                        @Html.ActionLink("Task","Details", "Tasks", new {id=@item.Tasks[0].Id, tab=""}, new {@class="btn btn-secondary"})
                 </td>
             </tr>
         }

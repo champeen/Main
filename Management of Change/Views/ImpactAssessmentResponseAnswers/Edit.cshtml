@@ -44,6 +44,12 @@
                 <span asp-validation-for="Action" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
+                <label asp-for="Title" class="control-label fw-bold"></label>
+                @*<input asp-for="DetailsOfActionNeeded" class="form-control" />*@
+                @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 1 })
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
                 <label asp-for="DetailsOfActionNeeded" class="control-label fw-bold"></label>
                 @*<input asp-for="DetailsOfActionNeeded" class="form-control" />*@
                 @Html.TextAreaFor(model => model.DetailsOfActionNeeded, new {@class = "form-control", @rows = 3 })

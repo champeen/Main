@@ -137,8 +137,7 @@ namespace Management_of_Change.Controllers
             if (id == null || _context.ChangeType == null)
                 return NotFound();
 
-            var changeType = await _context.ChangeType
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var changeType = await _context.ChangeType.FirstOrDefaultAsync(m => m.Id == id);
 
             if (changeType == null)
                 return NotFound();

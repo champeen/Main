@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using System.Collections.Immutable;
 
 namespace Management_of_Change.Controllers
 {
@@ -22,33 +23,47 @@ namespace Management_of_Change.Controllers
         // GET: Tasks
         public async Task<IActionResult> Index()
         {
-              return _context.Task != null ? 
-                          View(await _context.Task.ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
+            return _context.Task != null ?
+                        View(await _context.Task.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync()) :
+                        Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
         }
 
         // GET: Tasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Task == null)
-            {
                 return NotFound();
-            }
 
-            var task = await _context.Task
-                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var task = await _context.Task.FirstOrDefaultAsync(m => m.Id == id);
+
             if (task == null)
-            {
                 return NotFound();
-            }
+
+            ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
 
             return View(task);
         }
 
         // GET: Tasks/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            Models.Task task = new Models.Task
+            {
+                CreatedUser = "Michael Wilson",
+                CreatedDate = DateTime.Now
+            };
+
+            var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
+            List<SelectListItem> requests = new List<SelectListItem>();
+            foreach (var request in requestList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Id.ToString(), Text = request.MOC_Number + " : " + request.Title_Change_Description };
+                requests.Add(item);
+            }
+            ViewBag.ChangeRequests = requests;
+
+            return View(task);
         }
 
         // POST: Tasks/Create
@@ -56,10 +71,11 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,Status,AssignedToUser,AssignedByUser,Title,Description,CompletionNotes,CompletionDate,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
         {
             if (ModelState.IsValid)
             {
+                task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
                 _context.Add(task);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -71,15 +87,24 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Task == null)
-            {
                 return NotFound();
-            }
 
             var task = await _context.Task.FindAsync(id);
+
             if (task == null)
-            {
                 return NotFound();
+
+            var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
+            List<SelectListItem> requests = new List<SelectListItem>();
+            foreach (var request in requestList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Id.ToString(), Text = request.MOC_Number + " : " + request.Title_Change_Description };
+                if (request.Id == task.ChangeRequestId)
+                    item.Selected = true;
+                requests.Add(item);
             }
+            ViewBag.ChangeRequests = requests;
+
             return View(task);
         }
 
@@ -88,12 +113,14 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,Status,AssignedToUser,AssignedByUser,Title,Description,CompletionNotes,CompletionDate,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
         {
             if (id != task.Id)
-            {
                 return NotFound();
-            }
+
+            task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
+            task.ModifiedUser = "Michael Wilson";
+            task.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
@@ -105,13 +132,9 @@ namespace Management_of_Change.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TaskExists(task.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -122,16 +145,12 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Task == null)
-            {
                 return NotFound();
-            }
 
-            var task = await _context.Task
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var task = await _context.Task.FirstOrDefaultAsync(m => m.Id == id);
+
             if (task == null)
-            {
                 return NotFound();
-            }
 
             return View(task);
         }
@@ -142,22 +161,20 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Task == null)
-            {
                 return Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
-            }
+
             var task = await _context.Task.FindAsync(id);
+
             if (task != null)
-            {
                 _context.Task.Remove(task);
-            }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TaskExists(int id)
         {
-          return (_context.Task?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Task?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -12,17 +12,20 @@ namespace Management_of_Change.Models
         public string Question { get; set; }
         public string? Order { get; set; }
         public string? Action { get; set; }
+        [Display(Name = "Title (Short Description)")]
+        public string? Title { get; set; }
         [Display(Name = "Details of Action Needed")]
         public string? DetailsOfActionNeeded { get; set; }
         [Display(Name = "Pre or Post Implementation")]
         public string? PreOrPostImplementation { get; set; }
         [Display(Name = "Action Owner")]
         public string? ActionOwner { get; set; }
+        [DataType(DataType.Date)]
         [Display(Name = "Date Due")]
         public DateTime? DateDue { get; set; }
         [ForeignKey("ImpactAssessmentResponse")]
         public int ImpactAssessmentResponseId { get; set; }
 
-        public List<Task>? Tasks { get; set; }
+        public Task? Task { get; set; }
     }
 }

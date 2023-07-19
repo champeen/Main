@@ -31,6 +31,9 @@
                 @Html.DisplayNameFor(model => model.Action)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.DetailsOfActionNeeded)
             </th>
             <th>
@@ -84,6 +87,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Action)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DetailsOfActionNeeded)

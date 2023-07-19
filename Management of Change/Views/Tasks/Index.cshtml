@@ -13,8 +13,20 @@
     </div>
 </div>
 <table class="table table-bordered table-striped mt-5">
-    <thead>
+    <thead class="align-top align-text-top">
         <tr>
+            <th>
+                Task#
+            </th>
+            <th>
+                for MOC#
+            </th>
+            <th>
+                Implementation Type
+            </th>
+            <th>
+                Title
+            </th>
             <th>
                 Status
             </th>
@@ -25,13 +37,7 @@
                 Assigned By User
             </th>
             <th>
-                Title
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Completion Notes
+                Due Date
             </th>
             <th>
                 Completion Date
@@ -40,31 +46,42 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedToUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignedByUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompletionNotes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CompletionDate)
-            </td>
-            <td class="text-nowrap">
-@*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.MocNumber)*@
+                    @if(item.MocNumber == null)
+                        @Html.DisplayFor(modelItem => item.MocNumber)
+                    else
+                        @Html.ActionLink(item.MocNumber,"Details","ChangeRequests",new {id=@item.ChangeRequestId, tab="Details"},new {@class=""})
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImplementationType)
+                </td>    
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>                
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedToUser)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedByUser)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompletionDate)
+                </td>
+                <td class="text-nowrap">
+                    @*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
                     @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
@@ -73,8 +90,8 @@
                     {
                         @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger"})
                     }
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

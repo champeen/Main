@@ -31,7 +31,6 @@
         </div>
     </div>
 </form>
-
 <table class="table table-bordered table-striped mt-5 ">
     <thead class="align-top align-text-top">
         <tr>
@@ -98,7 +97,7 @@
         {
             <tr>
                 <td class="text-nowrap">
-                    @Html.DisplayFor(modelItem => item.MOC_Number)
+                    @Html.DisplayFor(modelItem => item.MOC_Number) || ID: @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title_Change_Description)
@@ -157,7 +156,11 @@
         }
     </tbody>
 </table>
-
+</br>
+</br>
+</br>
+</br>
+</br>
 <div class="fw-bolder">
     BELOW IS TEST INFORMATION ONLY ** MJWII **
 </div>

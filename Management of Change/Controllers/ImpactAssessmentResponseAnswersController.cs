@@ -61,7 +61,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ReviewType,Question,Order,Action,DetailsOfActionNeeded,PreOrPostImplementation,ActionOwner,DateDue,ImpactAssessmentResponseId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer)
+        public async Task<IActionResult> Create([Bind("Id,ReviewType,Question,Order,Action,Title,DetailsOfActionNeeded,PreOrPostImplementation,ActionOwner,DateDue,ImpactAssessmentResponseId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer)
         {
             if (ModelState.IsValid)
             {
@@ -85,6 +85,12 @@ namespace Management_of_Change.Controllers
 
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
 
+            // see if a task for this ImpactAssessmentResponseAnswers already exists (add it if it doesnt)
+            Models.Task existingTask = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == impactAssessmentResponseAnswer.Id);
+            //if (existingTask != null)
+            //    ViewBag.ExistingTask = true;
+            ViewBag.Task = existingTask;
+
             return View(impactAssessmentResponseAnswer);
         }
 
@@ -93,16 +99,62 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,Question,Order,Action,DetailsOfActionNeeded,PreOrPostImplementation,ActionOwner,DateDue,ImpactAssessmentResponseId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,Question,Order,Action,Title,DetailsOfActionNeeded,PreOrPostImplementation,ActionOwner,DateDue,ImpactAssessmentResponseId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer)
         {
             if (id != impactAssessmentResponseAnswer.Id)
                 return NotFound();
 
-            impactAssessmentResponseAnswer.ModifiedUser = "Michael Wilson";
-            impactAssessmentResponseAnswer.ModifiedDate = DateTime.Now;
-
             if (ModelState.IsValid)
             {
+                impactAssessmentResponseAnswer.ModifiedUser = "Michael Wilson";
+                impactAssessmentResponseAnswer.ModifiedDate = DateTime.Now;
+
+                // if there is an action to take, create a task for it...
+                if (impactAssessmentResponseAnswer.Action == "Yes")
+                {
+                    // If the task already exists for this Answer, update it.  If not, add it.
+                    // TO DO!!!!!
+
+                    // get ChangeRequest that this Task will belong to
+                    var changeRequestId = await _context.ImpactAssessmentResponse
+                        .Where(m => m.Id == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
+                        .Select(m => m.ChangeRequestId)
+                        .FirstOrDefaultAsync();
+
+                    // get MOC Number this Task will belong to
+                    var mocNumber = await _context.ChangeRequest
+                        .Where(m => m.Id == changeRequestId)
+                        .Select(m => m.MOC_Number)
+                        .FirstOrDefaultAsync();
+
+                    // see if a task for this ImpactAssessmentResponseAnswers already exists (add it if it doesnt)
+                    Models.Task existingTask = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == impactAssessmentResponseAnswer.Id);
+
+                    if (existingTask == null)
+                    {
+                        Models.Task task = new Models.Task
+                        {
+                            ChangeRequestId = changeRequestId,
+                            MocNumber = mocNumber,
+                            ImplementationType = impactAssessmentResponseAnswer.PreOrPostImplementation,
+                            Status = "Open",
+                            AssignedToUser = impactAssessmentResponseAnswer.ActionOwner,
+                            AssignedByUser = "Michael Wilson",
+                            Title = impactAssessmentResponseAnswer.Title,
+                            Description = impactAssessmentResponseAnswer.DetailsOfActionNeeded,
+                            DueDate = impactAssessmentResponseAnswer.DateDue,
+                            ImpactAssessmentResponseAnswerId = impactAssessmentResponseAnswer.Id,
+                            CreatedUser = "Michael Wilson",
+                            CreatedDate = DateTime.Now
+                        };
+                        _context.Add(task);
+                    }                        
+                    //else
+                    //{
+                    //    _context.Update(existingTask);
+                    //}                        
+                }
+
                 try
                 {
                     _context.Update(impactAssessmentResponseAnswer);

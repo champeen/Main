@@ -4,99 +4,167 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Task</h1>
 
 <div>
-    <h4>Task</h4>
+    <div class="text-nowrap">
+        <h4 class="mt-5">Details</h4>
+        @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+        <a class="mx-2" asp-action="Index">Back to List</a>*@
+        @Html.ActionLink("Edit","Edit",new {id=@Model.Id, tab="Details"},new {@class="btn btn-primary"})
+        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+    </div>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ChangeRequestId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ChangeRequestId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AssignedToUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AssignedToUser)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AssignedByUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AssignedByUser)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompletionNotes)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompletionNotes)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompletionDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompletionDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedUser)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedUser)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeletedUser)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeletedDate)
-        </dd>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="ChangeRequestId" />
+    <dl class="row my-2">
+        <div class="col-6">
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    MOC#
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.MocNumber) || ID: @Html.DisplayFor(model => model.ChangeRequestId)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.Status)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.Status)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.ImplementationType)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.ImplementationType)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.Title)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.Title)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.AssignedByUser)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.AssignedByUser)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.Description)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.Description)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.DueDate)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.DueDate)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.CompletionDate)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.CompletionDate)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.CompletionNotes)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.CompletionNotes)
+                </div>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.OnHoldReason)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.OnHoldReason)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.AssignedToUser)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.AssignedToUser)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.CreatedUser)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.CreatedUser)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.CreatedDate)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.CreatedDate)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.ModifiedUser)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.ModifiedUser)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.ModifiedDate)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.ModifiedDate)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.DeletedUser)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.DeletedUser)
+                </div>
+            </div>
+            <div class="row my-2">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.DeletedDate)
+                    </dt>
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.DeletedDate)
+                </div>
+            </div>
+        </div>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>*@
+    @Html.ActionLink("Edit","Edit",new {id=@Model.Id, tab="Details"},new {@class="btn btn-primary"})
+    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
 </div>

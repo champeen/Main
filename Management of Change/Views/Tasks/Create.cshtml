@@ -23,14 +23,27 @@
     </div>
     <div class="row my-4">
         <div class="col-md-12">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group my-3">
                 <div class="control-lable fw-bold">Change Request</div>
                 @*                <label  "Change Request" class="control-label fw-bold"></label>*@
-                <input asp-for="ChangeRequestId" class="form-control" />
+                @*<input asp-for="ChangeRequestId" class="form-control" />*@
+                @*@Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests), new { @class="form-control form-select"})*@
+                @Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests,"Value","Text"), new { @class="form-control form-select"})
                 <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ImplementationType" class="control-label fw-bold"></label>
+                @*<input asp-for="Status" class="form-control" />*@
+                @Html.DropDownListFor(model => model.ImplementationType,
+                new List<SelectListItem>{
+                new SelectListItem {Value="Pre", Text="Pre"},
+                new SelectListItem {Value="Post", Text="Post"}},
+                "--Select One--",
+                new { @class="form-control form-select", @style="max-width:25%"})
+                <span asp-validation-for="ImplementationType" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="Status" class="control-label fw-bold"></label>
@@ -63,24 +76,35 @@
             </div>
             <div class="form-group my-3">
                 <label asp-for="Description" class="control-label fw-bold"></label>
-                <input asp-for="Description" class="form-control" />
+                @*<input asp-for="Description" class="form-control" />*@
+                @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="CompletionNotes" class="control-label fw-bold"></label>
-                <input asp-for="CompletionNotes" class="form-control" />
-                <span asp-validation-for="CompletionNotes" class="text-danger"></span>
+                <label asp-for="DueDate" class="control-label fw-bold"></label>
+                <input asp-for="DueDate" class="form-control" style="max-width:25%" />
+                <span asp-validation-for="DueDate" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="CompletionDate" class="control-label fw-bold"></label>
-                <input asp-for="CompletionDate" class="form-control" />
+                <input asp-for="CompletionDate" class="form-control" style="max-width:25%" />
                 <span asp-validation-for="CompletionDate" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
+                <label asp-for="CompletionNotes" class="control-label fw-bold"></label>
+                @Html.TextAreaFor(model => model.CompletionNotes, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="CompletionNotes" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="OnHoldReason" class="control-label fw-bold"></label>
+                <input asp-for="OnHoldReason" class="form-control" />
+                <span asp-validation-for="OnHoldReason" class="text-danger"></span>
+            </div>
+            @*<div class="form-group my-3">
                 <label asp-for="ImpactAssessmentResponseAnswerId" class="control-label fw-bold"></label>
                 <select asp-for="ImpactAssessmentResponseAnswerId" class="form-control" asp-items="ViewBag.ImpactAssessmentResponseAnswerId"></select>
             </div>
-            @*            <div class="form-group">
+            <div class="form-group">
             <label asp-for="CreatedUser" class="control-label"></label>
             <input asp-for="CreatedUser" class="form-control" />
             <span asp-validation-for="CreatedUser" class="text-danger"></span>

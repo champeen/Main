@@ -39,11 +39,18 @@ namespace Management_of_Change.Controllers
             if (impactAssessmentResponse == null)
                 return NotFound();
 
-            // Get all the Impact Assessment Responses Questions/Answers associated with this request...
+            // Get all the ImpactAssessmentResponsesQuestions/Answers associated with this request...
             impactAssessmentResponse.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
                     .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponse.Id)
                     .OrderBy(m => m.Order)
                     .ToListAsync();
+
+            // Get all tasks associated with each ImpactAssessmentResponseAnswer
+            foreach (var record in impactAssessmentResponse.ImpactAssessmentResponseAnswers)
+            {
+                Models.Task task = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == record.Id);
+                record.Task = task;
+            }
 
             return View(impactAssessmentResponse);
         }
