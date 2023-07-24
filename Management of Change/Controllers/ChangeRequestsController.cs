@@ -1,14 +1,11 @@
-﻿using Azure.Core;
-using Management_of_Change.Data;
+﻿using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Web;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -16,6 +13,10 @@ namespace Management_of_Change.Controllers
     public class ChangeRequestsController : Controller
     {
         private readonly Management_of_ChangeContext _context;
+        //private readonly string AttachmentDirectory = @"C:\Applications\ManagementOfChange";
+        private readonly string AttachmentDirectory = @"\\aub1vdev-app01\ManagementOfChange\";
+        // http:\\ 
+        
 
         public ChangeRequestsController(Management_of_ChangeContext context)
         {
@@ -23,8 +24,14 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests
-        public async Task<IActionResult> Index(string timestampFilter, string timestampFilter2)
+        public async Task<IActionResult> Index(string timestampFilter)
         {
+
+            // 607 // active=515 // active & email > '' 467 //
+            var employees = await _context.__mst_employee
+                .Where(m => m.accountenabled == true && !String.IsNullOrWhiteSpace(m.onpremisessamaccountname) && !String.IsNullOrWhiteSpace(m.mail))
+                .ToListAsync();
+
             ViewBag.UserName2 = Environment.UserDomainName;
             ViewBag.UserName3 = Environment.UserName;
             ViewBag.UserName6 = WindowsIdentity.GetCurrent().Name;
@@ -43,8 +50,6 @@ namespace Management_of_Change.Controllers
             ViewBag.UserName26 = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewBag.UserName27 = User.FindFirstValue(ClaimTypes.Name);
             ViewBag.UserName28 = User.Identity.Name;
-
-
 
             //Request.ServerVariables["LOGON_USER"]
             ViewBag.UserName29 = Request.HttpContext.User.Identity.Name;
@@ -78,7 +83,6 @@ namespace Management_of_Change.Controllers
                     requests = requests.Where(r => r.DeletedDate != null);
                     break;
             }
-            //requests = requests.Where(r => r.Change_Owner.Equals("Joe Jackson"));
 
             return View("Index", await requests.OrderBy(r => r.Id).ToListAsync());
 
@@ -98,6 +102,8 @@ namespace Management_of_Change.Controllers
 
             if (changeRequest == null)
                 return NotFound();
+
+            ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
 
             // Get all the General MOC Responses associated with this request...
             changeRequest.GeneralMocResponses = await _context.GeneralMocResponses
@@ -132,11 +138,18 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.ChangeType)
                 .ToListAsync();
 
-            ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
+            // Get all the tasks associated with this ChangeRequest...
+            List<Models.Task> tasks = await _context.Task
+                .Where(m => m.ChangeRequestId == id)
+                .OrderBy(m => m.DueDate)
+                .ThenBy(m => m.Id)
+                .ToListAsync();
+
             changeRequestViewModel.ChangeRequest = changeRequest;
+            changeRequestViewModel.Tasks = tasks;
             // disable tab 3 if General MOC Responses have not been completed...
             int countGMR = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
-            changeRequestViewModel.Tab3Disabled = countGMR > 0 ? "disabled" : "";
+            changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" ? "disabled" : "";
             // disable tab4 (final review) if any Impact Assessment Responses have not been completed...
             int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
             changeRequestViewModel.Tab4Disabled = countIAR > 0 ? "disabled" : "";
@@ -145,6 +158,8 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.TabActiveGeneralMocQuestions = "";
             changeRequestViewModel.TabActiveImpactAssessments = "";
             changeRequestViewModel.TabActiveFinalApprovals = "";
+            changeRequestViewModel.TabActiveAttachments = "";
+            changeRequestViewModel.TabActiveTasks = "";
 
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
 
@@ -168,6 +183,12 @@ namespace Management_of_Change.Controllers
                 case "FinalApprovals":
                     changeRequestViewModel.TabActiveFinalApprovals = "active";
                     break;
+                case "Attachments":
+                    changeRequestViewModel.TabActiveAttachments = "active";
+                    break;
+                case "Tasks":
+                    changeRequestViewModel.TabActiveTasks = "active";
+                    break;
             }
 
             int count = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
@@ -175,6 +196,34 @@ namespace Management_of_Change.Controllers
                 changeRequestViewModel.ButtonSubmitForReview = true;
             else
                 changeRequestViewModel.ButtonSubmitForReview = false;
+
+            // Get all attachments
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(AttachmentDirectory,changeRequest.MOC_Number));
+
+            if (!Directory.Exists(Path.Combine(AttachmentDirectory, changeRequest.MOC_Number)))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<ViewModels.Attachment> attachments = new List<ViewModels.Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                ViewModels.Attachment attachment = new ViewModels.Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+            }
+            changeRequestViewModel.Attachments = attachments.OrderBy(m => m.Name).ToList();
 
             return View(changeRequestViewModel);
         }
@@ -324,7 +373,11 @@ namespace Management_of_Change.Controllers
                 changeRequest.Request_Date = DateTime.Now.Date;
                 _context.Add(changeRequest);
                 await _context.SaveChangesAsync();
-                /*return RedirectToAction(nameof(Index));*/     //  NEED TO REDIRECT TO INDEX PAGE. NEED ID THAT WAS JUST PERSISTED!!!
+
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(AttachmentDirectory, changeRequest.MOC_Number));
+                if (!Directory.Exists(Path.Combine(AttachmentDirectory, changeRequest.MOC_Number)))
+                    path.Create();
+
                 return RedirectToAction("Details", new { id = changeRequest.Id });
             }
             return View(changeRequest);
@@ -476,6 +529,7 @@ namespace Management_of_Change.Controllers
             var changeRequest = await _context.ChangeRequest.FindAsync(id);
             if (changeRequest != null)
             {
+                changeRequest.Change_Status = "Killed";
                 changeRequest.DeletedUser = "Michael J Wilson II";
                 changeRequest.DeletedDate = DateTime.Now;
                 _context.Update(changeRequest);
@@ -489,6 +543,40 @@ namespace Management_of_Change.Controllers
         private bool ChangeRequestExists(int id)
         {
             return (_context.ChangeRequest?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> DisplayAttachment(int id, string attachmentPath)
+        {
+            ProcessStartInfo psInfo = new ProcessStartInfo
+            {
+                FileName = attachmentPath,
+                UseShellExecute = true
+            };
+            Process.Start(psInfo);
+
+            return RedirectToAction("Details", new { id = id, tab = "Attachments" });
+        }
+
+        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _context.ChangeRequest == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", new { id = id, tab = "Attachments" });
+
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (changeRequest == null)
+                return NotFound();
+
+            string filePath = Path.Combine(AttachmentDirectory, changeRequest.MOC_Number, fileAttachment.FileName);
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction("Details", new { id = id, tab = "Attachments" });
         }
     }
 }

@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Management_of_Change.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Management_of_Change.Data;
-using Management_of_Change.Models;
-using System.Collections.Immutable;
 
 namespace Management_of_Change.Controllers
 {
@@ -21,11 +15,19 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string statusFilter)
         {
-            return _context.Task != null ?
-                        View(await _context.Task.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync()) :
-                        Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
+            var requests = from m in _context.Task
+                           select m;
+
+            if (statusFilter != null)
+                requests = requests.Where(r => r.Status == statusFilter);
+
+            return View("Index", await requests.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync());
+
+            //return _context.Task != null ?
+            //            View(await _context.Task.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync()) :
+            //            Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
         }
 
         // GET: Tasks/Details/5

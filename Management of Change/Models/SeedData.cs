@@ -28,7 +28,7 @@ namespace Management_of_Change.Models
                             Title_Change_Description = "Change in Boule Compound Mixture",
                             Scope_of_the_Change = "Scope of the Change 1",
                             Justification_of_the_Change = "Justification of Change 1",
-                            Change_Status = "Change Status 1",
+                            Change_Status = "Draft",
                             Request_Date = System.DateTime.Now,
                             Proudct_Line = "Product Line 1",
                             Change_Type = "Change Type 1",
@@ -53,7 +53,7 @@ namespace Management_of_Change.Models
                             Title_Change_Description = "Furnace Door Change",
                             Scope_of_the_Change = "Scope of the Change 2",
                             Justification_of_the_Change = "Justification of Change 2",
-                            Change_Status = "Change Status 2",
+                            Change_Status = "Killed",
                             Request_Date = System.DateTime.Now.AddYears(-2),
                             Proudct_Line = "Product Line 2",
                             Change_Type = "Change Type 2",
@@ -78,7 +78,7 @@ namespace Management_of_Change.Models
                             Title_Change_Description = "Organization Chart Change",
                             Scope_of_the_Change = "Scope of the Change 3",
                             Justification_of_the_Change = "Justification of Change 3",
-                            Change_Status = "Change Status 3",
+                            Change_Status = "Draft",
                             Request_Date = System.DateTime.Now.AddMonths(-2),
                             Proudct_Line = "Product Line 3",
                             Change_Type = "Change Type 3",
@@ -372,7 +372,7 @@ namespace Management_of_Change.Models
                     context.ChangeStatus.AddRange(
                         new ChangeStatus
                         {
-                            Status = "Change Proposal",
+                            Status = "Draft",
                             Order = "05",
                             CreatedUser = "Michael James Wilson II",
                             CreatedDate = DateTime.Now,
@@ -383,7 +383,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Change Evaluation",
+                            Status = "Submitted for Impact Assessment Review",
                             Order = "10",
                             CreatedUser = "Joe Jackson",
                             CreatedDate = DateTime.Now,
@@ -394,7 +394,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Implementation",
+                            Status = "Awaiting Completion of Pre Implementation Tasks",
                             Order = "15",
                             CreatedUser = "Steve Smith",
                             CreatedDate = DateTime.Now,
@@ -405,7 +405,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Verification",
+                            Status = "Submitted for Final Approvals",
                             Order = "20",
                             CreatedUser = "Fred Bear",
                             CreatedDate = DateTime.Now,
@@ -416,7 +416,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "On Hold",
+                            Status = "Submitted for Implementation",
                             Order = "25",
                             CreatedUser = "Ken Jones",
                             CreatedDate = DateTime.Now,
@@ -438,8 +438,19 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Killed",
+                            Status = "On Hold",
                             Order = "35",
+                            CreatedUser = "Johanna Jones",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ChangeStatus
+                        {
+                            Status = "Killed",
+                            Order = "40",
                             CreatedUser = "Johanna Jones",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,

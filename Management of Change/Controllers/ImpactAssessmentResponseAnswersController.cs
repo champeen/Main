@@ -104,6 +104,27 @@ namespace Management_of_Change.Controllers
             if (id != impactAssessmentResponseAnswer.Id)
                 return NotFound();
 
+            if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.Action))
+                    ModelState.AddModelError("Action", "Action is Required");
+
+            if (impactAssessmentResponseAnswer.Action == "Yes")
+            {
+                if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.Title))
+                    ModelState.AddModelError("Title", "Title is Required if there is an Action");
+
+                if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.DetailsOfActionNeeded))
+                    ModelState.AddModelError("DetailsOfActionNeeded", "Details of Action is Required if there is an Action");
+
+                if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.PreOrPostImplementation))
+                    ModelState.AddModelError("PreOrPostImplementation", "Pre or Post Implementation is Required if there is an Action");
+
+                if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.ActionOwner))
+                    ModelState.AddModelError("ActionOwner", "Action Owner is Required if there is an Action");
+
+                if (impactAssessmentResponseAnswer.DateDue == null)
+                    ModelState.AddModelError("DateDue", "Date Due is Required if there is an Action");
+            }
+
             if (ModelState.IsValid)
             {
                 impactAssessmentResponseAnswer.ModifiedUser = "Michael Wilson";
@@ -169,6 +190,7 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction("Details", "ImpactAssessmentResponses", new { Id = impactAssessmentResponseAnswer.ImpactAssessmentResponseId });
             }
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             return View(impactAssessmentResponseAnswer);
         }
 

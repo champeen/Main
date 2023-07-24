@@ -13,6 +13,11 @@ namespace Management_of_Change.Data
             : base(options)
         {
         }
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    builder.HasDefaultSchema("moc");
+        //    base.OnModelCreating(builder);
+        //}
 
         public DbSet<Management_of_Change.Models.ChangeRequest> ChangeRequest { get; set; } = default!;
 
@@ -51,5 +56,6 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.ImpactAssessmentResponseAnswer>? ImpactAssessmentResponseAnswer { get; set; }
 
         public DbSet<Management_of_Change.Models.Task>? Task { get; set; }
+        public DbSet<Management_of_Change.Models.__mst_employee>? __mst_employee { get; set; }
     }
 }

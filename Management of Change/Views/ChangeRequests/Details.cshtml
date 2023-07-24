@@ -13,13 +13,13 @@
         <h4>
             <span class="fw-bold">
                 @Html.DisplayFor(model => model.ChangeRequest.MOC_Number)
-            </span>            
+            </span>
         </h4>
         <h4>
             @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status):
             <span class="text-success fw-bold">
                 @Html.DisplayFor(model => model.ChangeRequest.Change_Status)
-            </span>            
+            </span>
         </h4>
     </div>
 </div>
@@ -39,16 +39,32 @@
                 <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete">
                 </i>
             </a>
+            <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab" data-bs-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments</a>
+            <a class="nav-link @Model.TabActiveTasks fw-bolder" id="nav-tasks-tab" data-bs-toggle="tab" href="#nav-tasks" role="tab" aria-controls="nav-profile" aria-selected="false">Tasks</a>
         </div>
     </nav>
+
     <div class="tab-content" id="nav-tabContent">
+        @******************************************************************************************************************************************@
+        @*  DETAIL TAB ****************************************************************************************************************************@
+        @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="text-nowrap">
                 <h4 class="mt-5">Details</h4>
                 @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
                 <a class="mx-2" asp-action="Index">Back to List</a>*@
-                @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                <div class="row">
+                    <div class="col-6 text-start">
+                        @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                    </div>
+                    <div class="col-6 text-end">
+                        @if (@Model.ButtonSubmitForReview == true)
+                        {
+                            @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                        }
+                    </div>
+                </div>
             </div>
             <hr />
             <dl class="row">
@@ -194,19 +210,31 @@
                 </dd>
                 <hr />
             </dl>
-            @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            <div class="row">
+                <div class="col-6 text-start">
+                    @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                </div>
+                <div class="col-6 text-end">
+                    @if (@Model.ButtonSubmitForReview == true)
+                    {
+                        @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                    }
+                </div>
+            </div>
         </div>
-
+        @******************************************************************************************************************************************@
+        @*  GENERAL MOC QUESTIONS TAB  ************************************************************************************************************@
+        @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
-            @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post, new {id=Model.ChangeRequest.Id}))
+            @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequest.Id }))
             {
                 <h4 class="mt-5">General MOC Questions</h4>
                 <div class="row">
                     <div class="col-6">
                         <div class="text-nowrap">
-                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
                             <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
                         </div>
                     </div>
                     <div class="col-6 text-end">
@@ -214,7 +242,7 @@
                         @if (@Model.ButtonSubmitForReview == true)
                         {
                             @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
-                        }                        
+                        }
                     </div>
                 </div>
 
@@ -281,8 +309,8 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="text-nowrap">
-                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                             <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                         </div>
                     </div>
                     <div class="col-6 text-end">
@@ -293,37 +321,10 @@
                     </div>
                 </div>
             }
-
-            @*            <table class="table table-bordered table-striped mt-3">
-            <thead>
-            <tr>
-            <th>
-            Question
-            </th>
-            <th>
-            Response
-            </th>
-            <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var item in Model.ChangeRequest.GeneralMocResponses)
-            {
-            <tr>
-            <td>
-            @Html.DisplayFor(modelItem => item.Question)
-            </td>
-            <td class="text-center">
-            @Html.DisplayFor(modelItem => item.Response)
-            </td>
-            <td class="text-nowrap">
-            @Html.ActionLink("Edit","Edit","GeneralMocResponses",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
-            </td>
-            </tr>
-            }
-            </tbody>
-            </table>*@
         </div>
+        @******************************************************************************************************************************************@
+        @*  IMPACT ASSESSMENT REVIEWS TAB  ********************************************************************************************************@
+        @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveImpactAssessments" id="nav-impact-assessment" role="tabpanel" aria-labelledby="nav-impact-assessment-tab">
             <div class="text-nowrap">
                 <h4 class="mt-5">Change Evaluations - Impact Assessments</h4>
@@ -403,6 +404,9 @@
             </table>
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
+        @******************************************************************************************************************************************@
+        @*  FINAL APPROVALS TAB  ******************************************************************************************************************@
+        @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveFinalApprovals" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
             <div class="text-nowrap">
                 <h4 class="mt-5">Implementation - Final Approvals </h4>
@@ -476,7 +480,148 @@
             </table>
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
+        @******************************************************************************************************************************************@
+        @*  ATTACHMENTS TAB  **********************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveAttachments" id="nav-attachments" role="tabpanel" aria-labelledby="nav-attachments-tab">
+            <div class="text-nowrap">
+                <h4 class="mt-5">Attachments</h4>
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+
+                @using (Html.BeginForm("SaveFile", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="control-label fw-bold mt-5">
+                        <strong>Upload File to Request</strong>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-10">
+                                <input type="file" name="fileAttachment" class="form-control" />
+                            </div>
+                            <div class="col-2">
+                                <input type="submit" value="Upload" class="form-control btn btn-success">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <table class="table table-bordered table-striped mt-5">
+                <thead>
+                    <tr>
+                        <th>
+                            File Name
+                        </th>
+                        <th>
+                            Date Added
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Attachments)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Size)
+                            </td>
+                            <td>
+                                @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                                @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                                @Html.ActionLink("View File","DisplayAttachment","ChangeRequests",new {id=@Model.ChangeRequest.Id, attachmentPath=@item.FullPath},new {@class="btn btn-secondary"})
+                                @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+        </div>
+        @******************************************************************************************************************************************@
+        @*  TASKS TAB  ****************************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveTasks" id="nav-tasks" role="tabpanel" aria-labelledby="nav-tasks-tab">
+            <div class="text-nowrap">
+                <h4 class="mt-5">Tasks</h4>
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            <table class="table table-bordered table-striped mt-5">
+                <thead class="align-top">
+                    <tr>
+                        <th>
+                            Task#
+                        </th>
+                        <th>
+                            Implementation Type
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Assigned To
+                        </th>
+                        <th>
+                            Assigned By
+                        </th>
+                        <th>
+                            Due Date
+                        </th>
+                        <th>
+                            Completion Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Tasks)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ImplementationType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssignedToUser)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssignedByUser)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DueDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompletionDate)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+        </div>
     </div>
+
+
+
 </div>
 <div class="text-nowrap my-5">
     @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@

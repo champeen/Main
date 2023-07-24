@@ -201,8 +201,10 @@
                     @*<a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
                     @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
                     @Html.ActionLink("Details","Details", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-secondary"})
-                    @if(item.Tasks.Count > 0)
-                        @Html.ActionLink("Task","Details", "Tasks", new {id=@item.Tasks[0].Id, tab=""}, new {@class="btn btn-secondary"})
+                    @if(item.Task != null)
+                    {
+                        @Html.ActionLink("Task","Details", "Tasks", new {id=@item.Task.Id, tab=""}, new {@class="btn btn-secondary"})
+                    }                    
                 </td>
             </tr>
         }

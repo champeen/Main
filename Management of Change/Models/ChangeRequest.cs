@@ -30,6 +30,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Status")]
         public string Change_Status { get; set; }
         [Display(Name = "Request Date")]
+        [DataType(DataType.Date)]
         public DateTime Request_Date { get; set; }
         [Display(Name = "Product Line")]
         public string Proudct_Line { get; set; }
