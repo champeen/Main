@@ -19,24 +19,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Order)
             </th>
-            @*            <th>
-            @Html.DisplayNameFor(model => model.CreatedUser)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.ModifiedUser)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.DeletedUser)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.DeletedDate)
-            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -50,24 +32,6 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Order)
                 </td>
-                @*            <td>
-            @Html.DisplayFor(modelItem => item.CreatedUser)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.ModifiedUser)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.ModifiedDate)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.DeletedUser)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.DeletedDate)
-            </td>*@
                 <td class="text-nowrap">
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

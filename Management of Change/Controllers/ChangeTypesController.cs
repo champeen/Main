@@ -1,15 +1,16 @@
 ﻿using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Management_of_Change.Controllers
 {
-    public class ChangeTypesController : Controller
+    public class ChangeTypesController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public ChangeTypesController(Management_of_ChangeContext context)
+        public ChangeTypesController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }

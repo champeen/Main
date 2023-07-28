@@ -7,14 +7,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Utilities;
 
 namespace Management_of_Change.Controllers
 {
-    public class SiteLocationsController : Controller
+    public class SiteLocationsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public SiteLocationsController(Management_of_ChangeContext context)
+        public SiteLocationsController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }

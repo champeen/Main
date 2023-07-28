@@ -15,6 +15,6 @@ namespace Management_of_Change.ViewModels
         public string? TabActiveAttachments { get; set; }
         public string? TabActiveTasks { get; set; }
         public bool ButtonSubmitForReview { get; set; }
-
+        public string? FileAttachmentError { get; set; }
     }
 }

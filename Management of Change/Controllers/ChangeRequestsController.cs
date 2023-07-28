@@ -6,31 +6,35 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Security.Principal;
+using Management_of_Change.Utilities;
+using Syroot.Windows.IO;
+using System.IO;
+using System.Net;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
-    public class ChangeRequestsController : Controller
+    public class ChangeRequestsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
         //private readonly string AttachmentDirectory = @"C:\Applications\ManagementOfChange";
         private readonly string AttachmentDirectory = @"\\aub1vdev-app01\ManagementOfChange\";
         // http:\\ 
-        
 
-        public ChangeRequestsController(Management_of_ChangeContext context)
+
+        public ChangeRequestsController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
+            //string username = User.Identity.Name != null ? User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1) : Environment.UserName;
         }
 
         // GET: ChangeRequests
         public async Task<IActionResult> Index(string timestampFilter)
         {
-
-            // 607 // active=515 // active & email > '' 467 //
-            var employees = await _context.__mst_employee
-                .Where(m => m.accountenabled == true && !String.IsNullOrWhiteSpace(m.onpremisessamaccountname) && !String.IsNullOrWhiteSpace(m.mail))
-                .ToListAsync();
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             ViewBag.UserName2 = Environment.UserDomainName;
             ViewBag.UserName3 = Environment.UserName;
@@ -52,16 +56,14 @@ namespace Management_of_Change.Controllers
             ViewBag.UserName28 = User.Identity.Name;
 
             //Request.ServerVariables["LOGON_USER"]
-            ViewBag.UserName29 = Request.HttpContext.User.Identity.Name;
+            ViewBag.UserName29 = Request.HttpContext.User?.Identity?.Name;
             ViewBag.UserName30 = Environment.GetEnvironmentVariable("USERNAME");
 
             AppDomain appDomain = Thread.GetDomain();
             appDomain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
             WindowsPrincipal windowsPrincipal = (WindowsPrincipal)Thread.CurrentPrincipal;
             ViewBag.UserName31 = windowsPrincipal.Identity.Name;
-
-
-
+            ViewBag.UserName32 = User.Identity.Name != null ? User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1) : Environment.UserName;
 
             ViewBag.activeRecordList = new List<String> { "Current", "Deleted", "All" };
             //ViewBag.activeRecordList2 = new List<String> { "All","Current","Deleted" };
@@ -84,6 +86,9 @@ namespace Management_of_Change.Controllers
                     break;
             }
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View("Index", await requests.OrderBy(r => r.Id).ToListAsync());
 
             //return _context.ChangeRequest != null ?
@@ -92,8 +97,13 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details")
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
 
@@ -104,6 +114,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
+            changeRequestViewModel.FileAttachmentError = fileAttachmentError;
 
             // Get all the General MOC Responses associated with this request...
             changeRequest.GeneralMocResponses = await _context.GeneralMocResponses
@@ -199,7 +210,7 @@ namespace Management_of_Change.Controllers
 
             // Get all attachments
             // Get the directory
-            DirectoryInfo path = new DirectoryInfo(Path.Combine(AttachmentDirectory,changeRequest.MOC_Number));
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(AttachmentDirectory, changeRequest.MOC_Number));
 
             if (!Directory.Exists(Path.Combine(AttachmentDirectory, changeRequest.MOC_Number)))
                 path.Create();
@@ -231,6 +242,11 @@ namespace Management_of_Change.Controllers
         // GET: ChangeRequests/Create
         public async Task<IActionResult> Create()
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             ChangeRequest changeRequest = new ChangeRequest
             {
                 CreatedUser = "Michael Wilson",
@@ -258,6 +274,11 @@ namespace Management_of_Change.Controllers
         {
             if (ModelState.IsValid)
             {
+                // make sure valid Username
+                ErrorViewModel errorViewModel = CheckAuthorization();
+                if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                    return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
                 // add General MOC Questions
                 List<GeneralMocQuestions> questions = await _context.GeneralMocQuestions.OrderBy(m => m.Order).ToListAsync();
                 if (questions.Count > 0)
@@ -386,6 +407,11 @@ namespace Management_of_Change.Controllers
         // GET: ChangeRequests/Edit/5
         public async Task<IActionResult> Edit(int? id, string tab = "Details")
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
 
@@ -414,6 +440,11 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id != changeRequest.Id)
                 return NotFound();
 
@@ -506,6 +537,11 @@ namespace Management_of_Change.Controllers
         // GET: ChangeRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
 
@@ -522,9 +558,14 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (_context.ChangeRequest == null)
             {
-                return Problem("Entity set 'Management_of_ChangeContext.ChangeRequest'  is null.");
+                return Problem("Entity set 'Management_of_ChangeContext.ChangeRequest' is null.");
             }
             var changeRequest = await _context.ChangeRequest.FindAsync(id);
             if (changeRequest != null)
@@ -545,30 +586,26 @@ namespace Management_of_Change.Controllers
             return (_context.ChangeRequest?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> DisplayAttachment(int id, string attachmentPath)
-        {
-            ProcessStartInfo psInfo = new ProcessStartInfo
-            {
-                FileName = attachmentPath,
-                UseShellExecute = true
-            };
-            Process.Start(psInfo);
-
-            return RedirectToAction("Details", new { id = id, tab = "Attachments" });
-        }
-
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
         {
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
 
             if (fileAttachment == null || fileAttachment.Length == 0)
-                return RedirectToAction("Details", new { id = id, tab = "Attachments" });
+                return RedirectToAction("Details", new { id = id, tab = "Attachments", fileAttachmentError = "No File Has Been Selected For Upload" });
 
             var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == id);
-
             if (changeRequest == null)
-                return NotFound();
+                return RedirectToAction("Index");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _context.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new { id = id, tab = "Attachments", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type." });
 
             string filePath = Path.Combine(AttachmentDirectory, changeRequest.MOC_Number, fileAttachment.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
@@ -577,6 +614,12 @@ namespace Management_of_Change.Controllers
             }
 
             return RedirectToAction("Details", new { id = id, tab = "Attachments" });
+        }
+
+        public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
+            return File(fileBytes, "application/x-msdownload", fileName);
         }
     }
 }

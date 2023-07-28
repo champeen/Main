@@ -7,15 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Utilities;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
-    public class ChangeStatusController : Controller
+    public class ChangeStatusController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public ChangeStatusController(Management_of_ChangeContext context)
+        public ChangeStatusController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }

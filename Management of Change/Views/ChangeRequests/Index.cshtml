@@ -145,11 +145,17 @@
                     @*                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id" asp-route-tab="Details" class="btn btn-secondary">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>*@
-                    @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
-                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
-                    @if (item.DeletedDate == null)
+                    @if (ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner)
                     {
-                        @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger"})
+                        @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
+                    }
+                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
+                    @if (ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner)
+                    {
+                        @if (item.DeletedDate == null)
+                        {
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger"})
+                        }
                     }
                 </td>
             </tr>
@@ -190,7 +196,7 @@
         </div>
         <div>
             AuthenticationType = @ViewBag.UserName11;
-        </div>        
+        </div>
         <div>
             ImpersonationLevel = @ViewBag.UserName16;
         </div>
@@ -205,7 +211,7 @@
         </div>
         <div>
             IsSystem = @ViewBag.UserName20;
-        </div>       
+        </div>
         <div>
             User.FindFirstValue(ClaimTypes.NameIdentifier) = @ViewBag.UserName26;
         </div>
@@ -222,8 +228,13 @@
             Environment.GetEnvironmentVariable("USERNAME") = @ViewBag.UserName30;
         </div>
         <div>
-            windowsPrincipal.Identity.Name; = @ViewBag.UserName31;
+            windowsPrincipal.Identity.Name = @ViewBag.UserName31;
         </div>
+        <div>
+            New Iternary Operator = @ViewBag.UserName32;
+        </div>
+
+
     </div>
     <div class="col-6">
         <div class="fw-bold text-danger">WHAT I GET LOCALLY</div>
@@ -260,10 +271,10 @@
         </div>
         <div>
             IsGuest = False;
-            </div>
+        </div>
         <div>
             IsSystem = False;
-        </div> 
+        </div>
         <div>
             User.FindFirstValue(ClaimTypes.NameIdentifier) = ;
         </div>

@@ -7,15 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Utilities;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
-    public class ChangeAreasController : Controller
+    public class ChangeAreasController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public ChangeAreasController(Management_of_ChangeContext context)
+        public ChangeAreasController(Management_of_ChangeContext context) : base (context)
         {
             _context = context;
         }
@@ -34,8 +35,7 @@ namespace Management_of_Change.Controllers
             if (id == null || _context.ChangeArea == null)
                 return NotFound();
 
-            var changeArea = await _context.ChangeArea
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var changeArea = await _context.ChangeArea.FirstOrDefaultAsync(m => m.Id == id);
 
             if (changeArea == null)
                 return NotFound();
@@ -143,8 +143,7 @@ namespace Management_of_Change.Controllers
             if (id == null || _context.ChangeArea == null)
                  return NotFound();
 
-            var changeArea = await _context.ChangeArea
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var changeArea = await _context.ChangeArea.FirstOrDefaultAsync(m => m.Id == id);
 
             if (changeArea == null)
                 return NotFound();

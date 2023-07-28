@@ -1,0 +1,32 @@
+﻿@model Management_of_Change.Models.Administrators
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Administrators</h1>
+
+<h4>Create</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <div class="form-group my-3">
+                <label asp-for="Username" class="control-label fw-bold"></label>
+                @Html.DropDownListFor(model => model.Username, new SelectList(ViewBag.Employees,"Value","Text"), new { @class="form-control form-select"})
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group my-4">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="mx-3" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

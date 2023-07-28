@@ -6016,8 +6016,118 @@ namespace Management_of_Change.Models
                     context.SaveChanges();
                 }
 
-
-
+                // Look for any Impact Assessment Response Questions.....
+                if (!context.AllowedAttachmentExtensions.Any())
+                {
+                    context.AllowedAttachmentExtensions.AddRange(
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "doc",
+                            Description = "Microsoft Word document before Word 2007"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "docx",
+                            Description = "Microsoft Word document"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "dot",
+                            Description = "Microsoft Word template before Word 2007"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "dotx",
+                            Description = "Microsoft Word template"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "gif",
+                            Description = "Graphical Interchange Format file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "jpeg",
+                            Description = "Joint Photographic Experts Group photo file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "jpg",
+                            Description = "Joint Photographic Experts Group photo file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "ods",
+                            Description = "OpenDocument Spreadsheet"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "pdf",
+                            Description = "Portable Document Format file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "png",
+                            Description = "Portable Network Graphics file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "ppt",
+                            Description = "Microsoft PowerPoint format before PowerPoint 2007"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "pptx",
+                            Description = "Microsoft PowerPoint presentation"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "psd",
+                            Description = "Adobe Photoshop file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "rtf",
+                            Description = "Rich Text Format file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "tif",
+                            Description = "Tagged Image Format file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "tiff",
+                            Description = "Tagged Image Format file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "txt",
+                            Description = "Unformatted text file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "vsd",
+                            Description = "Microsoft Visio drawing before Visio 2013"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "vsdx",
+                            Description = "Microsoft Visio drawing file"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "xls",
+                            Description = "Microsoft Excel workbook before Excel 2007"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = "xlsx",
+                            Description = "Microsoft Excel workbook after Excel 2007"
+                        }
+                    );
+                    context.SaveChanges();
+                }
 
 
 

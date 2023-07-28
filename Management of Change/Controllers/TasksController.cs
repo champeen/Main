@@ -1,15 +1,16 @@
 ﻿using Management_of_Change.Data;
+using Management_of_Change.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Management_of_Change.Controllers
 {
-    public class TasksController : Controller
+    public class TasksController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public TasksController(Management_of_ChangeContext context)
+        public TasksController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }
