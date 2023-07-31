@@ -48,8 +48,8 @@ namespace Management_of_Change.Controllers
         {
             ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer = new ImpactAssessmentResponseAnswer
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
@@ -128,8 +128,8 @@ namespace Management_of_Change.Controllers
 
             if (ModelState.IsValid)
             {
-                impactAssessmentResponseAnswer.ModifiedUser = "Michael Wilson";
-                impactAssessmentResponseAnswer.ModifiedDate = DateTime.Now;
+                impactAssessmentResponseAnswer.ModifiedUser = _username;
+                impactAssessmentResponseAnswer.ModifiedDate = DateTime.UtcNow;
 
                 // if there is an action to take, create a task for it...
                 if (impactAssessmentResponseAnswer.Action == "Yes")
@@ -161,13 +161,13 @@ namespace Management_of_Change.Controllers
                             ImplementationType = impactAssessmentResponseAnswer.PreOrPostImplementation,
                             Status = "Open",
                             AssignedToUser = impactAssessmentResponseAnswer.ActionOwner,
-                            AssignedByUser = "Michael Wilson",
+                            AssignedByUser = _username,
                             Title = impactAssessmentResponseAnswer.Title,
                             Description = impactAssessmentResponseAnswer.DetailsOfActionNeeded,
                             DueDate = impactAssessmentResponseAnswer.DateDue,
                             ImpactAssessmentResponseAnswerId = impactAssessmentResponseAnswer.Id,
-                            CreatedUser = "Michael Wilson",
-                            CreatedDate = DateTime.Now
+                            CreatedUser = _username,
+                            CreatedDate = DateTime.UtcNow
                         };
                         _context.Add(task);
                     }                        

@@ -49,8 +49,8 @@ namespace Management_of_Change.Controllers
         {
             GeneralMocQuestions generalMocQuestions = new GeneralMocQuestions
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(generalMocQuestions);
@@ -96,8 +96,8 @@ namespace Management_of_Change.Controllers
             if (id != generalMocQuestions.Id)
                 return NotFound();
 
-            generalMocQuestions.ModifiedUser = "Michael Wilson";
-            generalMocQuestions.ModifiedDate = DateTime.Now;
+            generalMocQuestions.ModifiedUser = _username;
+            generalMocQuestions.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

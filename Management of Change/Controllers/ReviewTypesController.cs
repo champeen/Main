@@ -48,8 +48,8 @@ namespace Management_of_Change.Controllers
         {
             ReviewType reviewType = new ReviewType
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(reviewType);
@@ -115,8 +115,8 @@ namespace Management_of_Change.Controllers
                 return View(reviewType);
             }
 
-            reviewType.ModifiedUser = "Michael Wilson";
-            reviewType.ModifiedDate = DateTime.Now;
+            reviewType.ModifiedUser = _username;
+            reviewType.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

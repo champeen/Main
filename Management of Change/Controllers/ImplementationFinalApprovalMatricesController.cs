@@ -48,8 +48,8 @@ namespace Management_of_Change.Controllers
         {
             ImplementationFinalApprovalMatrix implementationFinalApprovalMatrix = new ImplementationFinalApprovalMatrix
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
@@ -129,8 +129,8 @@ namespace Management_of_Change.Controllers
                 return View(implementationFinalApprovalMatrix);
             }
 
-            implementationFinalApprovalMatrix.ModifiedUser = "Michael Wilson";
-            implementationFinalApprovalMatrix.ModifiedDate = DateTime.Now;
+            implementationFinalApprovalMatrix.ModifiedUser = _username;
+            implementationFinalApprovalMatrix.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

@@ -48,8 +48,8 @@ namespace Management_of_Change.Controllers
         {
             FinalReviewType finalReviewType = new FinalReviewType
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(finalReviewType);
@@ -115,8 +115,8 @@ namespace Management_of_Change.Controllers
             //    return View(finalReviewType);
             //}
 
-            finalReviewType.ModifiedUser = "Michael Wilson";
-            finalReviewType.ModifiedDate = DateTime.Now;
+            finalReviewType.ModifiedUser = _username;
+            finalReviewType.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

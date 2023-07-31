@@ -48,8 +48,8 @@ namespace Management_of_Change.Controllers
         {
             ChangeArea changeArea = new ChangeArea
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(changeArea);
@@ -115,8 +115,8 @@ namespace Management_of_Change.Controllers
             //    return View(changeArea);
             //}
 
-            changeArea.ModifiedUser = "Michael Wilson";
-            changeArea.ModifiedDate = DateTime.Now;
+            changeArea.ModifiedUser = _username;
+            changeArea.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

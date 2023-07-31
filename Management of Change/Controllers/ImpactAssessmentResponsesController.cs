@@ -61,8 +61,8 @@ namespace Management_of_Change.Controllers
         {
             ImpactAssessmentResponse impactAssessmentResponse = new ImpactAssessmentResponse
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             //ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
@@ -113,8 +113,8 @@ namespace Management_of_Change.Controllers
             if (id != impactAssessmentResponse.Id)
                 return NotFound();
 
-            impactAssessmentResponse.ModifiedUser = "Michael Wilson";
-            impactAssessmentResponse.ModifiedDate = DateTime.Now;
+            impactAssessmentResponse.ModifiedUser = _username;
+            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

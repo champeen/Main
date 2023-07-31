@@ -10,6 +10,8 @@ using Management_of_Change.Utilities;
 using Syroot.Windows.IO;
 using System.IO;
 using System.Net;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -19,9 +21,6 @@ namespace Management_of_Change.Controllers
         private readonly Management_of_ChangeContext _context;
         //private readonly string AttachmentDirectory = @"C:\Applications\ManagementOfChange";
         private readonly string AttachmentDirectory = @"\\aub1vdev-app01\ManagementOfChange\";
-        // http:\\ 
-
-
         public ChangeRequestsController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
@@ -90,10 +89,6 @@ namespace Management_of_Change.Controllers
             ViewBag.Username = _username;
 
             return View("Index", await requests.OrderBy(r => r.Id).ToListAsync());
-
-            //return _context.ChangeRequest != null ?
-            //            View(await _context.ChangeRequest.OrderBy(m => m.Id).ToListAsync()) :
-            //            Problem("Entity set 'Management_of_ChangeContext.ChangeRequest'  is null.");
         }
 
         // GET: ChangeRequests/Details/5
@@ -236,6 +231,9 @@ namespace Management_of_Change.Controllers
             }
             changeRequestViewModel.Attachments = attachments.OrderBy(m => m.Name).ToList();
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View(changeRequestViewModel);
         }
 
@@ -249,13 +247,16 @@ namespace Management_of_Change.Controllers
 
             ChangeRequest changeRequest = new ChangeRequest
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                Change_Owner = _username,
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
+
+            changeRequest.Change_Status = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Status).FirstOrDefaultAsync();
 
             // Persist Dropdown Selection Lists
             ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
-            ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
+            //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
             ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -290,8 +291,8 @@ namespace Management_of_Change.Controllers
                         {
                             Question = question.Question,
                             Order = question.Order,
-                            CreatedUser = "Michael Wilson",
-                            CreatedDate = DateTime.Now
+                            CreatedUser = _username,
+                            CreatedDate = DateTime.UtcNow
                         };
                         changeRequest.GeneralMocResponses.Add(response);
                     }
@@ -318,8 +319,8 @@ namespace Management_of_Change.Controllers
                                 Reviewer = review.Reviewer,
                                 ReviewerEmail = review.Email,
                                 Required = true,
-                                CreatedUser = "Michael Wilson",
-                                CreatedDate = DateTime.Now
+                                CreatedUser = _username,
+                                CreatedDate = DateTime.UtcNow
                             };
                             changeRequest.ImpactAssessmentResponses.Add(response);
                         }
@@ -344,8 +345,8 @@ namespace Management_of_Change.Controllers
                                     ReviewType = record.ReviewType,
                                     Question = question.Question,
                                     Order = question.Order,
-                                    CreatedUser = "Michael Wilson",
-                                    CreatedDate = DateTime.Now
+                                    CreatedUser = _username,
+                                    CreatedDate = DateTime.UtcNow
                                 };
                                 record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
                             }
@@ -373,8 +374,8 @@ namespace Management_of_Change.Controllers
                                 ChangeType = assessment.ChangeType,
                                 Reviewer = review.Reviewer,
                                 ReviewerEmail = review.Email,
-                                CreatedUser = "Michael Wilson",
-                                CreatedDate = DateTime.Now
+                                CreatedUser = _username,
+                                CreatedDate = DateTime.UtcNow
                             };
                             changeRequest.ImplementationFinalApprovalResponses.Add(response);
                         }
@@ -430,6 +431,27 @@ namespace Management_of_Change.Controllers
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.Tab = tab;
 
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+
+                if (user.onpremisessamaccountname == changeRequest.Change_Owner)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+
+
             return View(changeRequest);
         }
 
@@ -448,8 +470,8 @@ namespace Management_of_Change.Controllers
             if (id != changeRequest.Id)
                 return NotFound();
 
-            changeRequest.ModifiedUser = "Michael Wilson";
-            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            changeRequest.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {
@@ -484,8 +506,8 @@ namespace Management_of_Change.Controllers
         {
             foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
             {
-                record.ModifiedUser = "Michael James Wilson II";
-                record.ModifiedDate = DateTime.Now;
+                record.ModifiedUser = _username;
+                record.ModifiedDate = DateTime.UtcNow;
                 _context.Update(record);
             }
             await _context.SaveChangesAsync();
@@ -524,8 +546,8 @@ namespace Management_of_Change.Controllers
             changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
 
             changeRequest.Change_Status = "Submitted for Impact Assessment Review";
-            changeRequest.ModifiedUser = "Michael Wilson";
-            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            changeRequest.ModifiedDate = DateTime.UtcNow;
 
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
@@ -571,8 +593,8 @@ namespace Management_of_Change.Controllers
             if (changeRequest != null)
             {
                 changeRequest.Change_Status = "Killed";
-                changeRequest.DeletedUser = "Michael J Wilson II";
-                changeRequest.DeletedDate = DateTime.Now;
+                changeRequest.DeletedUser = _username;
+                changeRequest.DeletedDate = DateTime.UtcNow;
                 _context.Update(changeRequest);
                 //_context.ChangeRequest.Remove(changeRequest);
             }

@@ -24,6 +24,9 @@ namespace Management_of_Change.Controllers
             if (statusFilter != null)
                 requests = requests.Where(r => r.Status == statusFilter);
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View("Index", await requests.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync());
 
             //return _context.Task != null ?
@@ -44,6 +47,8 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             return View(task);
         }
@@ -53,8 +58,8 @@ namespace Management_of_Change.Controllers
         {
             Models.Task task = new Models.Task
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
@@ -97,6 +102,7 @@ namespace Management_of_Change.Controllers
             if (task == null)
                 return NotFound();
 
+            // Create Dropdown List of Change Requests...
             var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
             List<SelectListItem> requests = new List<SelectListItem>();
             foreach (var request in requestList)
@@ -122,8 +128,8 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
-            task.ModifiedUser = "Michael Wilson";
-            task.ModifiedDate = DateTime.Now;
+            task.ModifiedUser = _username;
+            task.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

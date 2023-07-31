@@ -48,8 +48,8 @@ namespace Management_of_Change.Controllers
         {
             ImpactAssessmentMatrix impactAssessmentMatrix = new ImpactAssessmentMatrix
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
@@ -115,8 +115,8 @@ namespace Management_of_Change.Controllers
             if (id != impactAssessmentMatrix.Id)
                 return NotFound();
 
-            impactAssessmentMatrix.ModifiedUser = "Michael Wilson";
-            impactAssessmentMatrix.ModifiedDate = DateTime.Now;
+            impactAssessmentMatrix.ModifiedUser = _username;
+            impactAssessmentMatrix.ModifiedDate = DateTime.UtcNow;
 
             // Make sure duplicates are not entered...
             List<ImpactAssessmentMatrix> checkDupes = await _context.ImpactAssessmentMatrix

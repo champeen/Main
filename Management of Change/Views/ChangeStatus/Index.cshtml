@@ -17,6 +17,9 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Default)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Order)
             </th>
 @*            <th>
@@ -46,6 +49,9 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Default)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Order)

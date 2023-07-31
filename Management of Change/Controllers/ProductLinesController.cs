@@ -49,8 +49,8 @@ namespace Management_of_Change.Controllers
         {
             ProductLine productLine = new ProductLine
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(productLine);
@@ -115,8 +115,8 @@ namespace Management_of_Change.Controllers
             //    return View(productLine);
             //}
 
-            productLine.ModifiedUser = "Michael Wilson";
-            productLine.ModifiedDate = DateTime.Now;
+            productLine.ModifiedUser = _username;
+            productLine.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

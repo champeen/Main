@@ -43,8 +43,8 @@ namespace Management_of_Change.Controllers
         {
             ChangeType changeType = new ChangeType
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(changeType);
@@ -110,8 +110,8 @@ namespace Management_of_Change.Controllers
                 return View(changeType);
             }
 
-            changeType.ModifiedUser = "Michael Wilson";
-            changeType.ModifiedDate = DateTime.Now;
+            changeType.ModifiedUser = _username;
+            changeType.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

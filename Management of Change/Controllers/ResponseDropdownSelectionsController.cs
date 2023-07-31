@@ -49,8 +49,8 @@ namespace Management_of_Change.Controllers
         {
             Models.ResponseDropdownSelections model = new Models.ResponseDropdownSelections
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(model);
@@ -115,8 +115,8 @@ namespace Management_of_Change.Controllers
             //    return View(responseDropdownSelections);
             //}
 
-            responseDropdownSelections.ModifiedUser = "Michael Wilson";
-            responseDropdownSelections.ModifiedDate = DateTime.Now;
+            responseDropdownSelections.ModifiedUser = _username;
+            responseDropdownSelections.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

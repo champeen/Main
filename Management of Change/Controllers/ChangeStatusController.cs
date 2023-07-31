@@ -49,8 +49,8 @@ namespace Management_of_Change.Controllers
         {
             Models.ChangeStatus changeStatus = new Models.ChangeStatus
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
             return View(changeStatus);
         }
@@ -60,7 +60,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Status,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ChangeStatus changeStatus)
+        public async Task<IActionResult> Create([Bind("Id,Default,Status,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ChangeStatus changeStatus)
         {
             // Make sure duplicates are not entered...
             List<ChangeStatus> checkDupes = await _context.ChangeStatus
@@ -100,7 +100,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Status,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ChangeStatus changeStatus)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Default,Status,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ChangeStatus changeStatus)
         {
             if (id != changeStatus.Id)
                 return NotFound();
@@ -115,8 +115,8 @@ namespace Management_of_Change.Controllers
             //    return View(changeStatus);
             //}
 
-            changeStatus.ModifiedUser = "Michael Wilson";
-            changeStatus.ModifiedDate = DateTime.Now;
+            changeStatus.ModifiedUser = _username;
+            changeStatus.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {

@@ -117,7 +117,10 @@
                     @*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-                    @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
+                    @if (ViewBag.IsAdmin || ViewBag.Username == item.AssignedByUser || ViewBag.Username == item.AssignedToUser)
+                    {
+                        @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
+                    }                    
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
 @*                    @if (item.DeletedDate == null)
                     {

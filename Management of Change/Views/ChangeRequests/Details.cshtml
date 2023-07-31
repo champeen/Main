@@ -55,13 +55,19 @@
                 <a class="mx-2" asp-action="Index">Back to List</a>*@
                 <div class="row">
                     <div class="col-6 text-start">
-                        @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                        {
+                            @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                        }
                         @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                     </div>
                     <div class="col-6 text-end">
                         @if (@Model.ButtonSubmitForReview == true)
                         {
-                            @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                            }
                         }
                     </div>
                 </div>
@@ -212,13 +218,19 @@
             </dl>
             <div class="row">
                 <div class="col-6 text-start">
-                    @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                    {
+                        @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                    }
                     @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                 </div>
                 <div class="col-6 text-end">
                     @if (@Model.ButtonSubmitForReview == true)
                     {
-                        @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                        {
+                            @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                        }
                     }
                 </div>
             </div>
@@ -233,7 +245,10 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="text-nowrap">
-                            <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            }
                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
                         </div>
                     </div>
@@ -241,7 +256,10 @@
                         @*<input type="submit" value="Submit for Review" class="btn btn-success" />*@
                         @if (@Model.ButtonSubmitForReview == true)
                         {
-                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
+                            }
                         }
                     </div>
                 </div>
@@ -309,14 +327,20 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="text-nowrap">
-                            <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            }
                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                         </div>
                     </div>
                     <div class="col-6 text-end">
                         @if (@Model.ButtonSubmitForReview == true)
                         {
-                            @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {}, new {@class="btn btn-success text-end"})
+                            }
                         }
                     </div>
                 </div>
@@ -394,7 +418,10 @@
                                 <td class="text-nowrap">
                                     @*<a asp-controller="ImpactAssessmentResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
                                     @*<a asp-controller="ImpactAssessmentResponses" asp-action="Details" asp-route-id="@item.Id">Detail</a>*@
-                                    @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
+                                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                                    {
+                                        @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
+                                    }                                    
                                     @Html.ActionLink("Detail","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                 </td>
                             </tr>
@@ -472,7 +499,11 @@
                                 @Html.DisplayFor(modelItem => item.Comments)
                             </td>
                             <td>
-                                <a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                                @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                                {
+                                    @Html.ActionLink("Edit","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary"})
+                                    @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                }
                             </td>
                         </tr>
                     }
@@ -498,14 +529,13 @@
                         <div class="row">
                             <div class="col-10">
                                 <input type="file" name="fileAttachment" class="form-control" />
-
                                 <div class="form-group text-danger fw-bold">
                                     @*<input asp-for="FileAttachmentError" class="form-control" />*@
                                     @Html.DisplayFor(m => m.FileAttachmentError)
                                 </div>
 
-@*                                <input type="hidden" asp-for="Error" />
-                                <span asp-validation-for="Error" class="text-danger"></span>*@
+                                @*<input type="hidden" asp-for="Error" />
+                            <span asp-validation-for="Error" class="text-danger"></span>*@
                             </div>
                             <div class="col-2">
                                 <input type="submit" value="Upload" class="form-control btn btn-success">
@@ -545,7 +575,7 @@
                             <td>
                                 @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
                                 @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
-                                @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})   
+                                @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
                                 @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
                             </td>
                         </tr>
@@ -597,7 +627,8 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Id)
+                                @*@Html.DisplayFor(modelItem => item.Id)*@
+                                @Html.ActionLink("Task#" + item.Id.ToString(),"Details","Tasks",new {id=@item.Id, tab="Tasks"},new {@class=""})
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ImplementationType)
@@ -627,9 +658,6 @@
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
         </div>
     </div>
-
-
-
 </div>
 <div class="text-nowrap my-5">
     @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@

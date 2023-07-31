@@ -11,7 +11,10 @@
         <h4 class="mt-5">Details</h4>
         @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
         <a class="mx-2" asp-action="Index">Back to List</a>*@
-        @Html.ActionLink("Edit","Edit",new {id=@Model.Id, tab="Details"},new {@class="btn btn-primary"})
+        @if (ViewBag.IsAdmin || ViewBag.Username == Model.AssignedByUser || ViewBag.Username == Model.AssignedToUser)
+        {
+            @Html.ActionLink("Edit","Edit",new {id=@Model.Id, tab="Details"},new {@class="btn btn-primary"})
+        }        
         @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
     </div>
     <hr />
@@ -53,14 +56,6 @@
             </div>
             <div class="row my-3">
                 <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.AssignedByUser)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.AssignedByUser)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
                     @Html.DisplayNameFor(model => model.Description)
                 </div>
                 <div class="col-9">
@@ -69,10 +64,36 @@
             </div>
             <div class="row my-3">
                 <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.AssignedByUser)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.AssignedByUser)
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.AssignedToUser)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.AssignedToUser)
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-3 text-end fw-bold">
                     @Html.DisplayNameFor(model => model.DueDate)
                 </div>
                 <div class="col-9">
                     @Html.DisplayFor(model => model.DueDate)
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="row my-3">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.OnHoldReason)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.OnHoldReason)
                 </div>
             </div>
             <div class="row my-3">
@@ -89,25 +110,6 @@
                 </div>
                 <div class="col-9">
                     @Html.DisplayFor(model => model.CompletionNotes)
-                </div>
-            </div>
-
-        </div>
-        <div class="col-6">
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.OnHoldReason)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.OnHoldReason)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.AssignedToUser)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.AssignedToUser)
                 </div>
             </div>
             <div class="row my-3">
@@ -165,6 +167,9 @@
 <div>
     @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>*@
-    @Html.ActionLink("Edit","Edit",new {id=@Model.Id, tab="Details"},new {@class="btn btn-primary"})
+    @if (ViewBag.IsAdmin || ViewBag.Username == Model.AssignedByUser || ViewBag.Username == Model.AssignedToUser)
+    {
+        @Html.ActionLink("Edit","Edit",new {id=@Model.Id, tab="Details"},new {@class="btn btn-primary"})
+    }    
     @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
 </div>

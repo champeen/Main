@@ -49,8 +49,8 @@ namespace Management_of_Change.Controllers
         {
             ImplementationFinalApprovalResponse implementationFinalApprovalResponse = new ImplementationFinalApprovalResponse
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(implementationFinalApprovalResponse);
@@ -96,8 +96,8 @@ namespace Management_of_Change.Controllers
             if (id != implementationFinalApprovalResponse.Id)
                 return NotFound();
 
-            implementationFinalApprovalResponse.ModifiedUser = "Michael Wilson";
-            implementationFinalApprovalResponse.ModifiedDate = DateTime.Now;
+            implementationFinalApprovalResponse.ModifiedUser = _username;
+            implementationFinalApprovalResponse.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {
