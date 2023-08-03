@@ -34,7 +34,7 @@
 </form>
 
 <table class="table table-bordered table-striped mt-5">
-    <thead class="align-top align-text-top">
+    <thead class="align-top align-text-top table-primary">
         <tr>
             <th>
                 Task#
@@ -78,7 +78,7 @@
                     @if (item.MocNumber == null)
                         @Html.DisplayFor(modelItem => item.MocNumber)
                     else
-                        @Html.ActionLink(item.MocNumber,"Details","ChangeRequests",new {id=@item.ChangeRequestId, tab="Details"},new {@class=""})
+                        @Html.ActionLink(item.MocNumber,"Details","ChangeRequests",new {id=@item.ChangeRequestId, tab="Tasks"},new {@class=""})
 
                     </td>
                     <td>

@@ -27,7 +27,8 @@
                     MOC#
                 </div>
                 <div class="col-9">
-                    @Html.DisplayFor(model => model.MocNumber) || ID: @Html.DisplayFor(model => model.ChangeRequestId)
+                    @Html.ActionLink(Model.MocNumber,"Details","ChangeRequests",new {id=Model.ChangeRequestId, tab="Tasks"},new {@class=""})
+                    @*@Html.DisplayFor(model => model.MocNumber) || ID: @Html.DisplayFor(model => model.ChangeRequestId)*@
                 </div>
             </div>
             <div class="row my-3">

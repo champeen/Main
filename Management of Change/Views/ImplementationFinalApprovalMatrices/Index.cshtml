@@ -11,13 +11,13 @@
     <span class="mx-5"><a asp-controller="Admin" asp-action="Index">Previous</a></span>
 </p>
 <table class="table table-bordered table-striped">
-    <thead>
+    <thead class="table-primary">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FinalReviewType)
+                @Html.DisplayNameFor(model => model.ChangeType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ChangeType)
+                @Html.DisplayNameFor(model => model.FinalReviewType)
             </th>
             @*            <th>
             @Html.DisplayNameFor(model => model.CreatedUser)
@@ -45,10 +45,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FinalReviewType)
+                    @Html.DisplayFor(modelItem => item.ChangeType)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ChangeType)
+                    @Html.DisplayFor(modelItem => item.FinalReviewType)
                 </td>
                 @*            <td>
             @Html.DisplayFor(modelItem => item.CreatedUser)

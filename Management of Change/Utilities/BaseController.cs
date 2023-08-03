@@ -1,7 +1,9 @@
 ﻿using Management_of_Change.Controllers;
 using Management_of_Change.Data;
+using Management_of_Change.Models;
 using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -116,6 +118,29 @@ namespace Management_of_Change.Utilities
 
             return null;
         }
+
+        public List<SelectListItem> getUserList(string username = null)
+        {
+            // Create Dropdown List of Users...
+            var userList = _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToList();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                if (user.onpremisessamaccountname == username)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            return users;
+
+        } 
 
     }
 }

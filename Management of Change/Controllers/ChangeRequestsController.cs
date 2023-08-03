@@ -30,39 +30,49 @@ namespace Management_of_Change.Controllers
         // GET: ChangeRequests
         public async Task<IActionResult> Index(string timestampFilter)
         {
+            // TEST MJWII // ChangeRequest = 4 // ImpactAssessmentResponse = 1 // ImpactAssessmentResponseAnswers = 1-16
+            // see if all of this ImpactAssessmentResponses have questions answered from reviewer.  If so, mark as complete...
+//            bool found = await _context.ImpactAssessmentResponseAnswer.Where(m => m.ImpactAssessmentResponseId == 1).Where(m => m.Action != null).AnyAsync();
+            // here we set the ImpactAssessmentResponse for the reviewer as 'Complete'
+
+            // see if all of this ChangeRequests ImpactAssessmentResponses are complete.  If so, promote/change status of the ChangeRequest...
+//            bool found2 = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == 4).Where(m => m.ReviewCompleted != true).AnyAsync();
+            // here we would set the status of the request to 'Awaiting Completion of Pre-Implementation Tasks'
+            // END TEST MJWII
+
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            ViewBag.UserName2 = Environment.UserDomainName;
-            ViewBag.UserName3 = Environment.UserName;
-            ViewBag.UserName6 = WindowsIdentity.GetCurrent().Name;
-            ViewBag.UserName7 = WindowsIdentity.GetCurrent().Owner;
-            ViewBag.UserName8 = WindowsIdentity.GetCurrent().User;
-            ViewBag.UserName9 = WindowsIdentity.GetCurrent().AccessToken;
-            ViewBag.UserName10 = WindowsIdentity.GetCurrent().Actor;
-            ViewBag.UserName11 = WindowsIdentity.GetCurrent().AuthenticationType;
+            //ViewBag.UserName2 = Environment.UserDomainName;
+            //ViewBag.UserName3 = Environment.UserName;
+            //ViewBag.UserName6 = WindowsIdentity.GetCurrent().Name;
+            //ViewBag.UserName7 = WindowsIdentity.GetCurrent().Owner;
+            //ViewBag.UserName8 = WindowsIdentity.GetCurrent().User;
+            //ViewBag.UserName9 = WindowsIdentity.GetCurrent().AccessToken;
+            //ViewBag.UserName10 = WindowsIdentity.GetCurrent().Actor;
+            //ViewBag.UserName11 = WindowsIdentity.GetCurrent().AuthenticationType;
 
-            ViewBag.UserName16 = WindowsIdentity.GetCurrent().ImpersonationLevel;
-            ViewBag.UserName17 = WindowsIdentity.GetCurrent().IsAnonymous;
-            ViewBag.UserName18 = WindowsIdentity.GetCurrent().IsAuthenticated;
-            ViewBag.UserName19 = WindowsIdentity.GetCurrent().IsGuest;
-            ViewBag.UserName20 = WindowsIdentity.GetCurrent().IsSystem;
+            //ViewBag.UserName16 = WindowsIdentity.GetCurrent().ImpersonationLevel;
+            //ViewBag.UserName17 = WindowsIdentity.GetCurrent().IsAnonymous;
+            //ViewBag.UserName18 = WindowsIdentity.GetCurrent().IsAuthenticated;
+            //ViewBag.UserName19 = WindowsIdentity.GetCurrent().IsGuest;
+            //ViewBag.UserName20 = WindowsIdentity.GetCurrent().IsSystem;
 
-            ViewBag.UserName26 = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            ViewBag.UserName27 = User.FindFirstValue(ClaimTypes.Name);
-            ViewBag.UserName28 = User.Identity.Name;
+            //ViewBag.UserName26 = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //ViewBag.UserName27 = User.FindFirstValue(ClaimTypes.Name);
+            //ViewBag.UserName28 = User.Identity.Name;
 
-            //Request.ServerVariables["LOGON_USER"]
-            ViewBag.UserName29 = Request.HttpContext.User?.Identity?.Name;
-            ViewBag.UserName30 = Environment.GetEnvironmentVariable("USERNAME");
+            ////Request.ServerVariables["LOGON_USER"]
+            //ViewBag.UserName29 = Request.HttpContext.User?.Identity?.Name;
+            //ViewBag.UserName30 = Environment.GetEnvironmentVariable("USERNAME");
 
-            AppDomain appDomain = Thread.GetDomain();
-            appDomain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
-            WindowsPrincipal windowsPrincipal = (WindowsPrincipal)Thread.CurrentPrincipal;
-            ViewBag.UserName31 = windowsPrincipal.Identity.Name;
-            ViewBag.UserName32 = User.Identity.Name != null ? User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1) : Environment.UserName;
+            //AppDomain appDomain = Thread.GetDomain();
+            //appDomain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
+            //WindowsPrincipal windowsPrincipal = (WindowsPrincipal)Thread.CurrentPrincipal;
+            //ViewBag.UserName31 = windowsPrincipal.Identity.Name;
+            //ViewBag.UserName32 = User.Identity.Name != null ? User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1) : Environment.UserName;
 
             ViewBag.activeRecordList = new List<String> { "Current", "Deleted", "All" };
             //ViewBag.activeRecordList2 = new List<String> { "All","Current","Deleted" };

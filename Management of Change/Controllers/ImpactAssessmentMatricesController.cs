@@ -24,7 +24,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.ImpactAssessmentMatrix != null ? 
-                          View(await _context.ImpactAssessmentMatrix.OrderBy(m => m.ReviewType).ThenBy(m => m.ChangeType).ToListAsync()) :
+                          View(await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentMatrix'  is null.");
         }
 

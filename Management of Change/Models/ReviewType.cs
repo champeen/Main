@@ -9,7 +9,8 @@ namespace Management_of_Change.Models
         public string Type { get; set; }
         public string? Reviewer { get; set; }
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
+        public string? Username { get; set; }
         public string? Order { get; set; }
     }
 }

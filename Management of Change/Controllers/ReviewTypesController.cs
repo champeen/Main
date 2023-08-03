@@ -44,13 +44,30 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ReviewTypes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             ReviewType reviewType = new ReviewType
             {
                 CreatedUser = _username,
                 CreatedDate = DateTime.UtcNow
             };
+
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                users.Add(item);
+            }
+            ViewBag.Users = users;
 
             return View(reviewType);
         }
@@ -60,17 +77,31 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Order,Reviewer,Email,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
+        public async Task<IActionResult> Create([Bind("Id,Type,Order,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
         {
             // Make sure duplicates are not entered...
             List<ReviewType> checkDupes = await _context.ReviewType
                 .Where(m => m.Type == reviewType.Type)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
                 ModelState.AddModelError("Type", "Review Type already exists.");
-                return View(reviewType);
+
+            // make sure all selected employee data is found, valid and correct
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == reviewType.Username);
+            if (employee != null)
+            {
+                reviewType.Reviewer = employee.displayname;
+                reviewType.Email = employee.mail;
             }
+            else
+                ModelState.AddModelError("Username", "Employee record not found for Username: " + reviewType.Username);
+
+            if (String.IsNullOrWhiteSpace(reviewType.Username))
+                ModelState.AddModelError("Username", "Employee record has a blank Username");
+            if (String.IsNullOrWhiteSpace(reviewType.Reviewer))
+                ModelState.AddModelError("Username", "Employee record has a blank Display Name");
+            if (String.IsNullOrWhiteSpace(reviewType.Email))
+                ModelState.AddModelError("Username", "Employee record has a blank Email");
 
             if (ModelState.IsValid)
             {
@@ -78,6 +109,24 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+
             return View(reviewType);
         }
 
@@ -92,6 +141,25 @@ namespace Management_of_Change.Controllers
             if (reviewType == null)
                 return NotFound();
 
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                if (user.onpremisessamaccountname == reviewType.Username)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+
             return View(reviewType);
         }
 
@@ -100,26 +168,39 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Order,Reviewer,Email,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Order,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
         {
             if (id != reviewType.Id)
                 return NotFound();
 
             // Make sure duplicates are not entered...
             List<ReviewType> checkDupes = await _context.ReviewType
-                .Where(m => m.Type == reviewType.Type)
+                .Where(m => m.Type == reviewType.Type && m.Id != reviewType.Id)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
                 ModelState.AddModelError("Type", "Review Type already exists.");
-                return View(reviewType);
-            }
 
-            reviewType.ModifiedUser = _username;
-            reviewType.ModifiedDate = DateTime.UtcNow;
+            // make sure all selected employee data is found, valid and correct
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == reviewType.Username);
+            if (employee != null)
+            {
+                reviewType.Reviewer = employee.displayname;
+                reviewType.Email = employee.mail;
+            }
+            else
+                ModelState.AddModelError("Username", "Employee record not found for Username: " + reviewType.Username);
+
+            if (String.IsNullOrWhiteSpace(reviewType.Username))
+                ModelState.AddModelError("Username", "Employee record has a blank Username");
+            if (String.IsNullOrWhiteSpace(reviewType.Reviewer))
+                ModelState.AddModelError("Username", "Employee record has a blank Display Name");
+            if (String.IsNullOrWhiteSpace(reviewType.Email))
+                ModelState.AddModelError("Username", "Employee record has a blank Email");
 
             if (ModelState.IsValid)
             {
+                reviewType.ModifiedUser = _username;
+                reviewType.ModifiedDate = DateTime.UtcNow;
                 try
                 {
                     _context.Update(reviewType);
@@ -134,6 +215,28 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            //// Create Dropdown List of Users...
+            //var userList = await _context.__mst_employee
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+            //    .Where(m => m.accountenabled == true)
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+            //    .OrderBy(m => m.displayname)
+            //    .ThenBy(m => m.onpremisessamaccountname)
+            //    .ToListAsync();
+            //List<SelectListItem> users = new List<SelectListItem>();
+            //foreach (var user in userList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+            //    if (user.onpremisessamaccountname == reviewType.Username)
+            //        item.Selected = true;
+            //    users.Add(item);
+            //}
+            //ViewBag.Users = users;
+
+            ViewBag.Users = getUserList(reviewType.Username);
+
             return View(reviewType);
         }
 

@@ -67,10 +67,10 @@
             @Html.DisplayFor(model => model.ModifiedDate)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.Required)
+            @Html.DisplayNameFor(model => model.ReviewCompleted)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.Required)
+            @Html.DisplayFor(model => model.ReviewCompleted)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
             @Html.DisplayNameFor(model => model.DeletedUser)
@@ -79,10 +79,10 @@
             @Html.DisplayFor(model => model.DeletedUser)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ReviewCompleted)
+            @Html.DisplayNameFor(model => model.DateCompleted)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ReviewCompleted)
+            @Html.DisplayFor(model => model.DateCompleted)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
             @Html.DisplayNameFor(model => model.DeletedDate)
@@ -90,14 +90,6 @@
         <dd class="col-sm-4 my-2">
             @Html.DisplayFor(model => model.DeletedDate)
         </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.DateCompleted)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.DateCompleted)
-        </dd>
-        <dt class="col-sm-2 my-2"></dt>
-        <dd class="col-sm-4 my-2"></dd>
         <dt class="col-sm-2 my-2 text-end">
             @Html.DisplayNameFor(model => model.Comments)
         </dt>
@@ -110,7 +102,6 @@
     @Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
     @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
 </div>
-
 <hr />
 <div class="text-nowrap">
     <h4 class="mt-5">Impact Assessment Response Answers</h4>
@@ -118,10 +109,9 @@
         @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
     </div>
 </div>
-
 <table class="table table-bordered table-striped mt-3">
-    <thead>
-        <tr>
+    <thead class="table-primary">
+        <tr class="table-primary">
 @*            <th>
                 Impact Assessment Response Id
             </th>
@@ -141,7 +131,7 @@
                 Action
             </th>
             <th>
-                Title (short desc.)
+                Title/Short Description
             </th>
 @*            <th>
                 Details Of ActionNeeded
@@ -196,9 +186,6 @@
                     @Html.DisplayFor(modelItem => item.DateDue)
                 </td>
                 <td class="text-nowrap">
-@*                    <a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Details" asp-route-id="@item.Id">Details</a>*@
-                    @*<a asp-controller="ImpactAssessmentResponseAnswers" asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
                     @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
                     @Html.ActionLink("Details","Details", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-secondary"})
                     @if(item.Task != null)

@@ -68,7 +68,7 @@
             </div>
             <div class="form-group my-3">
                 <label asp-for="ActionOwner" class="control-label fw-bold"></label>
-                <input asp-for="ActionOwner" class="form-control" style="width:25%;" />
+                @Html.DropDownListFor(model => model.ActionOwner, new SelectList(ViewBag.Users,"Value","Text"), "--Select One--", new { @class="form-control form-select", @style="max-width:25%;"})
                 <span asp-validation-for="ActionOwner" class="text-danger"></span>
             </div>
             <div class="form-group my-3">

@@ -1,5 +1,7 @@
 ﻿using Management_of_Change.Data;
+using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +20,11 @@ namespace Management_of_Change.Controllers
         // GET: Tasks
         public async Task<IActionResult> Index(string statusFilter)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             var requests = from m in _context.Task
                            select m;
 
@@ -37,16 +44,20 @@ namespace Management_of_Change.Controllers
         // GET: Tasks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id == null || _context.Task == null)
                 return NotFound();
-
 
             var task = await _context.Task.FirstOrDefaultAsync(m => m.Id == id);
 
             if (task == null)
                 return NotFound();
 
-            ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
+            ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
@@ -56,12 +67,19 @@ namespace Management_of_Change.Controllers
         // GET: Tasks/Create
         public async Task<IActionResult> Create()
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             Models.Task task = new Models.Task
             {
+                AssignedByUser = _username,
                 CreatedUser = _username,
                 CreatedDate = DateTime.UtcNow
             };
 
+            // Create Dropdown List of ChangeRequests...
             var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
             List<SelectListItem> requests = new List<SelectListItem>();
             foreach (var request in requestList)
@@ -70,6 +88,23 @@ namespace Management_of_Change.Controllers
                 requests.Add(item);
             }
             ViewBag.ChangeRequests = requests;
+
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                users.Add(item);
+            }
+            ViewBag.Users = users;
 
             return View(task);
         }
@@ -81,6 +116,11 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (ModelState.IsValid)
             {
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
@@ -114,6 +154,26 @@ namespace Management_of_Change.Controllers
             }
             ViewBag.ChangeRequests = requests;
 
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+
+                if (user.onpremisessamaccountname == task.AssignedToUser)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+
             return View(task);
         }
 
@@ -124,6 +184,11 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id != task.Id)
                 return NotFound();
 
@@ -153,6 +218,11 @@ namespace Management_of_Change.Controllers
         // GET: Tasks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id == null || _context.Task == null)
                 return NotFound();
 
@@ -169,6 +239,11 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (_context.Task == null)
                 return Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
 

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Microsoft.Identity.Client;
 
 namespace Management_of_Change.Controllers
 {
@@ -92,6 +93,25 @@ namespace Management_of_Change.Controllers
             //    ViewBag.ExistingTask = true;
             ViewBag.Task = existingTask;
 
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                if (user.onpremisessamaccountname == impactAssessmentResponseAnswer.ActionOwner)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+
             return View(impactAssessmentResponseAnswer);
         }
 
@@ -111,19 +131,19 @@ namespace Management_of_Change.Controllers
             if (impactAssessmentResponseAnswer.Action == "Yes")
             {
                 if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.Title))
-                    ModelState.AddModelError("Title", "Title is Required if there is an Action");
+                    ModelState.AddModelError("Title", "Title is Required if there is an action needed");
 
                 if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.DetailsOfActionNeeded))
-                    ModelState.AddModelError("DetailsOfActionNeeded", "Details of Action is Required if there is an Action");
+                    ModelState.AddModelError("DetailsOfActionNeeded", "Details of Action is Required if there is an action needed");
 
                 if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.PreOrPostImplementation))
-                    ModelState.AddModelError("PreOrPostImplementation", "Pre or Post Implementation is Required if there is an Action");
+                    ModelState.AddModelError("PreOrPostImplementation", "Pre or Post Implementation is Required if there is an action needed");
 
                 if (string.IsNullOrWhiteSpace(impactAssessmentResponseAnswer.ActionOwner))
-                    ModelState.AddModelError("ActionOwner", "Action Owner is Required if there is an Action");
+                    ModelState.AddModelError("ActionOwner", "Action Owner is Required if there is an action needed");
 
                 if (impactAssessmentResponseAnswer.DateDue == null)
-                    ModelState.AddModelError("DateDue", "Date Due is Required if there is an Action");
+                    ModelState.AddModelError("DateDue", "Date Due is Required if there is an action needed");
             }
 
             if (ModelState.IsValid)
@@ -137,15 +157,14 @@ namespace Management_of_Change.Controllers
                     // If the task already exists for this Answer, update it.  If not, add it.
                     // TO DO!!!!!
 
-                    // get ChangeRequest that this Task will belong to
-                    var changeRequestId = await _context.ImpactAssessmentResponse
+                    // get ImpactAssessmentResponse Change Request that this Task will belong to
+                    ImpactAssessmentResponse impactAssessmentResponse = await _context.ImpactAssessmentResponse
                         .Where(m => m.Id == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
-                        .Select(m => m.ChangeRequestId)
                         .FirstOrDefaultAsync();
 
                     // get MOC Number this Task will belong to
                     var mocNumber = await _context.ChangeRequest
-                        .Where(m => m.Id == changeRequestId)
+                        .Where(m => m.Id == impactAssessmentResponse.ChangeRequestId)
                         .Select(m => m.MOC_Number)
                         .FirstOrDefaultAsync();
 
@@ -156,7 +175,7 @@ namespace Management_of_Change.Controllers
                     {
                         Models.Task task = new Models.Task
                         {
-                            ChangeRequestId = changeRequestId,
+                            ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
                             MocNumber = mocNumber,
                             ImplementationType = impactAssessmentResponseAnswer.PreOrPostImplementation,
                             Status = "Open",
@@ -181,6 +200,49 @@ namespace Management_of_Change.Controllers
                 {
                     _context.Update(impactAssessmentResponseAnswer);
                     await _context.SaveChangesAsync();
+
+                    // see if all of this ImpactAssessmentResponses have questions answered from reviewer.  If so, mark as complete...
+                    bool found = await _context.ImpactAssessmentResponseAnswer
+                        .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
+                        .Where(m => m.Action == null)
+                        .AnyAsync();
+
+                    if (!found)
+                    {
+                        // get ImpactAssessmentResponse Change Request that this Task will belong to
+                        ImpactAssessmentResponse impactAssessmentResponse = await _context.ImpactAssessmentResponse
+                            .Where(m => m.Id == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
+                            .Where(m => m.ReviewCompleted != true)
+                            .FirstOrDefaultAsync();
+                        if (impactAssessmentResponse != null)
+                        {
+                            impactAssessmentResponse.ReviewCompleted = true;
+                            impactAssessmentResponse.DateCompleted = DateTime.UtcNow;
+                            impactAssessmentResponse.ModifiedUser= _username;
+                            impactAssessmentResponse.ModifiedDate= DateTime.UtcNow;
+                            _context.Update(impactAssessmentResponse);
+                            await _context.SaveChangesAsync();
+                        }
+
+                        // see if all of this ChangeRequests ImpactAssessmentResponses are complete.  If so, promote/change status of the ChangeRequest...
+                        bool foundIAR = await _context.ImpactAssessmentResponse
+                            .Where(m => m.ChangeRequestId == impactAssessmentResponse.ChangeRequestId)
+                            .Where(m => m.ReviewCompleted != true)
+                            .AnyAsync();
+
+                        if (!foundIAR) 
+                        {
+                            ChangeRequest changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == impactAssessmentResponse.ChangeRequestId);
+                            if (changeRequest != null)
+                            {
+                                changeRequest.Change_Status = "Submitted for Final Approvals";
+                                changeRequest.ModifiedDate= DateTime.UtcNow;
+                                changeRequest.ModifiedUser = _username;
+                                _context.Update(changeRequest);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -191,6 +253,25 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction("Details", "ImpactAssessmentResponses", new { Id = impactAssessmentResponseAnswer.ImpactAssessmentResponseId });
             }
+            
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                if (user.onpremisessamaccountname == impactAssessmentResponseAnswer.ActionOwner)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            ViewBag.Users = users;
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             return View(impactAssessmentResponseAnswer);
         }

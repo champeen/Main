@@ -24,7 +24,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.ImplementationFinalApprovalMatrix != null ? 
-                          View(await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.FinalReviewType).ThenBy(m => m.ChangeType).ToListAsync()) :
+                          View(await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ImplementationFinalApprovalMatrix'  is null.");
         }
 
