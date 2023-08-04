@@ -76,7 +76,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ReviewType,ChangeType,Reviewer,ReviewerEmail,Required,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse)
+        public async Task<IActionResult> Create([Bind("Id,ReviewType,ChangeType,Reviewer,ReviewerEmail,Username,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse)
         {
             if (ModelState.IsValid)
             {
@@ -99,6 +99,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             ViewBag.Tab = tab;
+            ViewBag.Users = getUserList(impactAssessmentResponse.Username);
 
             return View(impactAssessmentResponse);
         }
@@ -108,16 +109,32 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,ChangeType,Reviewer,ReviewerEmail,Required,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse, string tab = "ImpactAssessments")
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,ChangeType,Username,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse, string tab = "ImpactAssessments")
         {
             if (id != impactAssessmentResponse.Id)
                 return NotFound();
 
-            impactAssessmentResponse.ModifiedUser = _username;
-            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+            // make sure all selected employee data is found, valid and correct
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == impactAssessmentResponse.Username);
+            if (employee != null)
+            {
+                impactAssessmentResponse.Reviewer = employee.displayname;
+                impactAssessmentResponse.ReviewerEmail = employee.mail;
+            }
+            else
+                ModelState.AddModelError("Username", "Employee record not found for Username: " + impactAssessmentResponse.Username);
+
+            if (String.IsNullOrWhiteSpace(impactAssessmentResponse.Username))
+                ModelState.AddModelError("Username", "Employee record has a blank Username");
+            if (String.IsNullOrWhiteSpace(impactAssessmentResponse.Reviewer))
+                ModelState.AddModelError("Username", "Employee record has a blank Display Name");
+            if (String.IsNullOrWhiteSpace(impactAssessmentResponse.ReviewerEmail))
+                ModelState.AddModelError("Username", "Employee record has a blank Email");
 
             if (ModelState.IsValid)
             {
+                impactAssessmentResponse.ModifiedUser = _username;
+                impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
                 try
                 {
                     _context.Update(impactAssessmentResponse);
@@ -135,6 +152,7 @@ namespace Management_of_Change.Controllers
                 else
                     return RedirectToAction("Details", "ChangeRequests", new { Id = impactAssessmentResponse.ChangeRequestId, tab=tab });
             }
+            ViewBag.Users = getUserList(impactAssessmentResponse.Username);
             return View(impactAssessmentResponse);
         }
 

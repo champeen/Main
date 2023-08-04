@@ -411,7 +411,7 @@
                                 </td>
                                 <td class="text-nowrap">
 
-                                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                                    @if (ViewBag.IsAdmin || ViewBag.Username == item.Username)
                                     {
                                         @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
                                     }                                    

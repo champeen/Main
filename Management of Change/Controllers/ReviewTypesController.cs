@@ -52,22 +52,23 @@ namespace Management_of_Change.Controllers
                 CreatedDate = DateTime.UtcNow
             };
 
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            //// Create Dropdown List of Users...
+            //var userList = await _context.__mst_employee
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+            //    .Where(m => m.accountenabled == true)
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+            //    .OrderBy(m => m.displayname)
+            //    .ThenBy(m => m.onpremisessamaccountname)
+            //    .ToListAsync();
+            //List<SelectListItem> users = new List<SelectListItem>();
+            //foreach (var user in userList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+            //    users.Add(item);
+            //}
+            //ViewBag.Users = users;
+            ViewBag.Users = getUserList();
 
             return View(reviewType);
         }
@@ -141,24 +142,25 @@ namespace Management_of_Change.Controllers
             if (reviewType == null)
                 return NotFound();
 
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                if (user.onpremisessamaccountname == reviewType.Username)
-                    item.Selected = true;
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            //// Create Dropdown List of Users...
+            //var userList = await _context.__mst_employee
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+            //    .Where(m => m.accountenabled == true)
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+            //    .OrderBy(m => m.displayname)
+            //    .ThenBy(m => m.onpremisessamaccountname)
+            //    .ToListAsync();
+            //List<SelectListItem> users = new List<SelectListItem>();
+            //foreach (var user in userList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+            //    if (user.onpremisessamaccountname == reviewType.Username)
+            //        item.Selected = true;
+            //    users.Add(item);
+            //}
+            //ViewBag.Users = users;
+            ViewBag.Users = getUserList(reviewType.Username);
 
             return View(reviewType);
         }

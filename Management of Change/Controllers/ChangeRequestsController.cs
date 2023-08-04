@@ -328,7 +328,7 @@ namespace Management_of_Change.Controllers
                                 ChangeType = assessment.ChangeType,
                                 Reviewer = review.Reviewer,
                                 ReviewerEmail = review.Email,
-                                Required = true,
+                                Username = review.Username,
                                 CreatedUser = _username,
                                 CreatedDate = DateTime.UtcNow
                             };
