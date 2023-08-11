@@ -9,6 +9,7 @@ using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
 using Microsoft.Identity.Client;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
@@ -24,7 +25,14 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponseAnswers
         public async Task<IActionResult> Index()
         {
-              return _context.ImpactAssessmentResponseAnswer != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ImpactAssessmentResponseAnswer != null ? 
                           View(await _context.ImpactAssessmentResponseAnswer.OrderBy(m => m.ImpactAssessmentResponseId).ThenBy(m => m.Order).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentResponseAnswer'  is null.");
         }
@@ -32,6 +40,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponseAnswers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentResponseAnswer == null)
                 return NotFound();
 
@@ -47,6 +62,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponseAnswers/Create
         public async Task<IActionResult> Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer = new ImpactAssessmentResponseAnswer
             {
                 CreatedUser = _username,
@@ -65,6 +87,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ReviewType,Question,Order,Action,Title,DetailsOfActionNeeded,PreOrPostImplementation,ActionOwner,DateDue,ImpactAssessmentResponseId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (ModelState.IsValid)
             {
                 _context.Add(impactAssessmentResponseAnswer);
@@ -77,6 +106,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponseAnswers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentResponseAnswer == null)
                 return NotFound();
 
@@ -122,6 +158,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,Question,Order,Action,Title,DetailsOfActionNeeded,PreOrPostImplementation,ActionOwner,DateDue,ImpactAssessmentResponseId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != impactAssessmentResponseAnswer.Id)
                 return NotFound();
 
@@ -279,6 +322,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponseAnswers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentResponseAnswer == null)
                 return NotFound();
 
@@ -296,6 +346,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ImpactAssessmentResponseAnswer == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentResponseAnswer'  is null.");
 

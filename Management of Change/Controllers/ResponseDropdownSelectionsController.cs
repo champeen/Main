@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -24,7 +25,14 @@ namespace Management_of_Change.Controllers
         // GET: ResponseDropdownSelections
         public async Task<IActionResult> Index()
         {
-              return _context.ResponseDropdownSelections != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ResponseDropdownSelections != null ? 
                           View(await _context.ResponseDropdownSelections.OrderBy(m => m.Order).ThenBy(m => m.Response).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ResponseDropdownSelections'  is null.");
         }
@@ -32,6 +40,13 @@ namespace Management_of_Change.Controllers
         // GET: ResponseDropdownSelections/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ResponseDropdownSelections == null)
                 return NotFound();
 
@@ -47,6 +62,13 @@ namespace Management_of_Change.Controllers
         // GET: ResponseDropdownSelections/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             Models.ResponseDropdownSelections model = new Models.ResponseDropdownSelections
             {
                 CreatedUser = _username,
@@ -63,6 +85,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Response,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ResponseDropdownSelections responseDropdownSelections)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             // Make sure duplicates are not entered...
             List<ResponseDropdownSelections> checkDupes = await _context.ResponseDropdownSelections
                 .Where(m => m.Response == responseDropdownSelections.Response)
@@ -85,6 +114,13 @@ namespace Management_of_Change.Controllers
         // GET: ResponseDropdownSelections/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ResponseDropdownSelections == null)
                  return NotFound();
  
@@ -102,6 +138,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Response,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ResponseDropdownSelections responseDropdownSelections)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != responseDropdownSelections.Id)
                 return NotFound();
 
@@ -140,6 +183,13 @@ namespace Management_of_Change.Controllers
         // GET: ResponseDropdownSelections/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ResponseDropdownSelections == null)
                 return NotFound();
  
@@ -157,6 +207,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ResponseDropdownSelections == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ResponseDropdownSelections'  is null.");
 

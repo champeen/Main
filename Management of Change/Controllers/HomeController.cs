@@ -19,13 +19,84 @@ namespace Management_of_Change.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            string username = _username;
+            ViewBag.Username = username;
+            ViewBag.UserDisplayName = _userDisplayName;
+
+            DashboardViewModel dashboardVM = new DashboardViewModel();
+
+            // Get all active ChangeRequests for current user...
+            dashboardVM.DraftMocs = await _context.ChangeRequest
+                .Where(m => m.DeletedDate == null)
+                .Where(m => m.Change_Owner == username)
+                .Where(m => m.Change_Status == "Draft")
+                .ToListAsync();
+
+            // Get all incomplete Impact Assessments assigned to user...
+            List<ChangeRequest> changeRequestsIA = await _context.ChangeRequest
+                .Where(m => m.DeletedDate == null)
+                .Where(m => m.Change_Status == "Submitted for Impact Assessment Review")
+                .ToListAsync();
+            foreach(var changeRequest in changeRequestsIA)
+            {
+                changeRequest.ImpactAssessmentResponses = await _context.ImpactAssessmentResponse
+                    .Where(m => m.ChangeRequestId == changeRequest.Id)
+                    .Where(m => m.Username == username)
+                    .Where(m => m.ReviewCompleted == false)
+                    .ToListAsync();
+
+                foreach (var impactAssessmentResponse in changeRequest.ImpactAssessmentResponses)
+                {
+                    impactAssessmentResponse.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
+                        .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponse.Id)
+                        .ToListAsync();
+                    var blah = "blah";
+                }
+            }
+            dashboardVM.IncompleteImpactAssessments = changeRequestsIA.Where(m => m.ImpactAssessmentResponses.Count > 0).ToList();
+
+            // Get all incomplete Final Approvals assigned to user...
+            List<ChangeRequest> changeRequestsFA = await _context.ChangeRequest
+                .Where(m => m.DeletedDate == null)
+                .Where(m => m.Change_Status == "Submitted for Final Approvals")
+                .ToListAsync();
+            foreach (var changeRequest in changeRequestsFA)
+            {
+                changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
+                    .Where(m => m.ChangeRequestId == changeRequest.Id)
+                    .Where(m => m.Username == username)
+                    .Where(m => m.ReviewCompleted == false)
+                    .ToListAsync();
+            }
+            dashboardVM.IncompleteFinalApprovals = changeRequestsFA.Where(m => m.ImplementationFinalApprovalResponses.Count > 0).ToList();
+
+            // Get all the Open/In Progress Tasks associated with the user...
+            dashboardVM.OpenTasks = await _context.Task
+                .Where(m => m.Status == "Open" || m.Status == "In-Progress")
+                .Where(m => m.AssignedToUser == username)
+                .OrderBy(m => m.DueDate)
+                .ToListAsync();
+
+
+            return View(dashboardVM);
         }
 
         public IActionResult Privacy()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View();
         }
 

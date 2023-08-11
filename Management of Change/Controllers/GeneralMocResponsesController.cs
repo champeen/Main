@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,7 +24,14 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocResponses
         public async Task<IActionResult> Index()
         {
-              return _context.GeneralMocResponses != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.GeneralMocResponses != null ? 
                           View(await _context.GeneralMocResponses.OrderBy(m => m.Order).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.GeneralMocResponses'  is null.");
         }
@@ -31,6 +39,13 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocResponses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.GeneralMocResponses == null)
                 return NotFound();
 
@@ -46,6 +61,13 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocResponses/Create
         public async Task<IActionResult> Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             GeneralMocResponses generalMocResponses = new GeneralMocResponses
             {
                 CreatedUser = _username,
@@ -64,6 +86,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,Question,Response,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] GeneralMocResponses generalMocResponses)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (ModelState.IsValid)
             {
                 _context.Add(generalMocResponses);
@@ -76,6 +105,13 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocResponses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.GeneralMocResponses == null)
                 return NotFound();
 
@@ -96,6 +132,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,Question,Response,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] GeneralMocResponses generalMocResponses)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != generalMocResponses.Id)
                 return NotFound();
 
@@ -124,6 +167,13 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocResponses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.GeneralMocResponses == null)
                 return NotFound();
 
@@ -141,6 +191,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.GeneralMocResponses == null)
                 return Problem("Entity set 'Management_of_ChangeContext.GeneralMocResponses'  is null.");
 

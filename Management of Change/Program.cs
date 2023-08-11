@@ -2,7 +2,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Utilities;
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 try
 {
@@ -18,6 +21,8 @@ try
 
     // Add services to the container.
     builder.Services.AddControllersWithViews();
+
+    builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
     var app = builder.Build();
 
@@ -45,7 +50,8 @@ try
 
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=ChangeRequests}/{action=Index}/{id?}");
+        //pattern: "{controller=ChangeRequests}/{action=Index}/{id?}");
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.Run();
 }

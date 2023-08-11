@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,14 +24,28 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentMatrices
         public async Task<IActionResult> Index()
         {
-              return _context.ImpactAssessmentMatrix != null ? 
-                          View(await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync()) :
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ImpactAssessmentMatrix != null ? 
+                          View("Index", await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentMatrix'  is null.");
         }
 
         // GET: ImpactAssessmentMatrices/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentMatrix == null)
                 return NotFound();
 
@@ -46,6 +61,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentMatrices/Create
         public async Task<IActionResult> Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             ImpactAssessmentMatrix impactAssessmentMatrix = new ImpactAssessmentMatrix
             {
                 CreatedUser = _username,
@@ -65,6 +87,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ReviewType,ChangeType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentMatrix impactAssessmentMatrix)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             // Make sure duplicates are not entered...
             List<ImpactAssessmentMatrix> checkDupes = await _context.ImpactAssessmentMatrix
                 .Where(m => m.ChangeType == impactAssessmentMatrix.ChangeType)
@@ -91,6 +120,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentMatrices/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentMatrix == null)
                 return NotFound();
 
@@ -112,6 +148,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,ChangeType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentMatrix impactAssessmentMatrix)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != impactAssessmentMatrix.Id)
                 return NotFound();
 
@@ -154,6 +197,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentMatrices/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentMatrix == null)
                 return NotFound();
 
@@ -171,6 +221,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ImpactAssessmentMatrix == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentMatrix'  is null.");
 

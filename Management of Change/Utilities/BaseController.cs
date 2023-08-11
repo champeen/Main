@@ -16,6 +16,7 @@ namespace Management_of_Change.Utilities
         private readonly Management_of_ChangeContext _context;
 
         private string? userName { get; set; }
+        private string? userDisplayName { get; set; }
         private bool? isAuthorized { get; set; }
         private bool? isAdmin { get; set; }
 
@@ -30,6 +31,23 @@ namespace Management_of_Change.Utilities
                 }
                 else
                     return userName;
+            }
+        }
+
+        public string _userDisplayName
+        {
+            get
+            {
+                if (userDisplayName == null)
+                {
+                    userDisplayName = _context.__mst_employee
+                        .Where(m => m.onpremisessamaccountname == userName)
+                        .Where(m => m.accountenabled == true)
+                        .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                        .Select(m => m.displayname)
+                        .FirstOrDefault();
+                }
+                return String.IsNullOrWhiteSpace(userDisplayName) ? userName : userDisplayName;
             }
         }
 

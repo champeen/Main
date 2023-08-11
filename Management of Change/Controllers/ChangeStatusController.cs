@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -24,7 +25,14 @@ namespace Management_of_Change.Controllers
         // GET: ChangeSteps
         public async Task<IActionResult> Index()
         {
-              return _context.ChangeStatus != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ChangeStatus != null ? 
                           View(await _context.ChangeStatus.OrderBy(m => m.Order).ThenBy(m => m.Status).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ChangeStatus'  is null.");
         }
@@ -32,6 +40,13 @@ namespace Management_of_Change.Controllers
         // GET: ChangeStatus/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ChangeStatus == null)
                 return NotFound();
 
@@ -47,6 +62,13 @@ namespace Management_of_Change.Controllers
         // GET: ChangeStatus/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             Models.ChangeStatus changeStatus = new Models.ChangeStatus
             {
                 CreatedUser = _username,
@@ -62,6 +84,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Default,Status,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ChangeStatus changeStatus)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             // Make sure duplicates are not entered...
             List<ChangeStatus> checkDupes = await _context.ChangeStatus
                 .Where(m => m.Status == changeStatus.Status)
@@ -84,6 +113,13 @@ namespace Management_of_Change.Controllers
         // GET: ChangeStatus/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ChangeStatus == null)
                  return NotFound();
 
@@ -102,6 +138,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Default,Status,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.ChangeStatus changeStatus)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != changeStatus.Id)
                 return NotFound();
 
@@ -140,6 +183,13 @@ namespace Management_of_Change.Controllers
         // GET: ChangeStatus/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ChangeStatus == null)
                 return NotFound();
 
@@ -157,6 +207,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ChangeStatus == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ChangeStatus'  is null.");
 

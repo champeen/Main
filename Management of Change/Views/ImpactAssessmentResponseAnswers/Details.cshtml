@@ -13,7 +13,7 @@
     <div>
         @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
         <a asp-action="Index">Back to List</a>*@
-        @Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARADetails"},new {@class="btn btn-primary"})
+        @*@Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARADetails"},new {@class="btn btn-primary"})*@
         @Html.ActionLink("Back to Impact Assessment Response","Details", "ImpactAssessmentResponses", new {id=@Model?.ImpactAssessmentResponseId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
     </div>
     <hr />
@@ -134,6 +134,6 @@
 <div>
 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>*@
-    @Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARADetails"},new {@class="btn btn-primary"})
+    @*@Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARADetails"},new {@class="btn btn-primary"})*@
     @Html.ActionLink("Back to Impact Assessment Response","Details", "ImpactAssessmentResponses", new {id=@Model?.ImpactAssessmentResponseId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
 </div>

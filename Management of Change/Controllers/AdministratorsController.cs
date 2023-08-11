@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
@@ -25,14 +26,22 @@ namespace Management_of_Change.Controllers
         // GET: Administrators
         public async Task<IActionResult> Index()
         {
-            if (String.IsNullOrWhiteSpace(_username))
-                return RedirectToAction("Error", "Home", new { errorMessage = "Invalid Username: " + _username + ". Contact MoC Admin." });
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            if (!_isAuthorized)
-                return RedirectToAction("Error", "Home", new {errorMessage = "User " + _username + " Unauthorized - Not Setup as Active Employee. Contact MoC Admin."});
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
-            if (!_isAdmin)
-                return RedirectToAction("Error", "Home", new { errorMessage = "Must be setup as an Administrator to have access." });
+
+            //if (String.IsNullOrWhiteSpace(_username))
+            //    return RedirectToAction("Error", "Home", new { errorMessage = "Invalid Username: " + _username + ". Contact MoC Admin." });
+
+            //if (!_isAuthorized)
+            //    return RedirectToAction("Error", "Home", new {errorMessage = "User " + _username + " Unauthorized - Not Setup as Active Employee. Contact MoC Admin."});
+
+            //if (!_isAdmin)
+            //    return RedirectToAction("Error", "Home", new { errorMessage = "Must be setup as an Administrator to have access." });
 
               return _context.Administrators != null ? 
                           View(await _context.Administrators.OrderBy(m=>m.Username).ToListAsync()) :
@@ -42,6 +51,13 @@ namespace Management_of_Change.Controllers
         // GET: Administrators/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.Administrators == null)
                 return NotFound();
 
@@ -55,6 +71,13 @@ namespace Management_of_Change.Controllers
         // GET: Administrators/Create
         public async Task<IActionResult> Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             Administrators administrators = new Administrators
             {
                 CreatedUser = _username,
@@ -86,6 +109,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Administrators administrators)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (ModelState.IsValid)
             {
                 _context.Add(administrators);
@@ -98,6 +128,13 @@ namespace Management_of_Change.Controllers
         // GET: Administrators/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.Administrators == null)
                 return NotFound();
 
@@ -115,6 +152,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Administrators administrators)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != administrators.Id)
                 return NotFound();
 
@@ -140,6 +184,13 @@ namespace Management_of_Change.Controllers
         // GET: Administrators/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.Administrators == null)
                 return NotFound();
 
@@ -156,6 +207,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.Administrators == null)
                 return Problem("Entity set 'Management_of_ChangeContext.Administrators'  is null.");
 

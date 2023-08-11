@@ -15,7 +15,8 @@ namespace Management_of_Change.Models
         public string? Reviewer { get; set; }
         [Display(Name = "Reviewer Email")]
         [EmailAddress]
-        public string ReviewerEmail { get; set; }
+        public string? ReviewerEmail { get; set; }
+        public string? Username { get; set; }
         [Display(Name = "Review Result")]
         public string? ReviewResult { get; set; }
         [Display(Name = "Review Completed")]

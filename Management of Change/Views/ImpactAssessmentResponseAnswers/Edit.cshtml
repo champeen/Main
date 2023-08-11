@@ -11,6 +11,11 @@
 <div class="row my-4">
     <div class="col-md-12">
         <form asp-action="Edit">
+            <div class="form-group text-nowrap">
+                <input class="me-2 btn btn-primary" type="submit" value="Save" />
+                @*                <a class="ms-2" asp-action="Index">Back to List</a>*@
+                @Html.ActionLink("Cancel","Details","ImpactAssessmentResponses", new {id=Model.ImpactAssessmentResponseId}, new {@class="btn btn-secondary"})
+            </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="ImpactAssessmentResponseId" />
@@ -22,20 +27,20 @@
             <input type="hidden" asp-for="ModifiedUser" />
             <input type="hidden" asp-for="DeletedDate" />
             <input type="hidden" asp-for="DeletedUser" />
-@*            <div class="form-group my-3">
-                <label asp-for="ReviewType" class="control-label fw-bold"></label>
-                <input asp-for="ReviewType" class="form-control" />
-                <span asp-validation-for="ReviewType" class="text-danger"></span>
+            @*            <div class="form-group my-3">
+            <label asp-for="ReviewType" class="control-label fw-bold"></label>
+            <input asp-for="ReviewType" class="form-control" />
+            <span asp-validation-for="ReviewType" class="text-danger"></span>
             </div>*@
             <div class="form-group my-3">
                 <label asp-for="Question" class="control-label fw-bold"></label>
-                <input asp-for="Question" class="form-control" readonly/>
+                <input asp-for="Question" class="form-control" readonly />
                 <span asp-validation-for="Question" class="text-danger"></span>
             </div>
-@*            <div class="form-group my-3">
-                <label asp-for="Order" class="control-label fw-bold"></label>
-                <input asp-for="Order" class="form-control" />
-                <span asp-validation-for="Order" class="text-danger"></span>
+            @*            <div class="form-group my-3">
+            <label asp-for="Order" class="control-label fw-bold"></label>
+            <input asp-for="Order" class="form-control" />
+            <span asp-validation-for="Order" class="text-danger"></span>
             </div>*@
             <div class="form-group my-3">
                 <label asp-for="Action" class="control-label fw-bold"></label>
@@ -57,13 +62,13 @@
             </div>
             <div class="form-group my-3">
                 <label asp-for="PreOrPostImplementation" class="control-label fw-bold"></label>
-@*                <input asp-for="PreOrPostImplementation" class="form-control" style="width:25%;" />*@
-                @Html.DropDownListFor(model => model.PreOrPostImplementation, 
-                    new List<SelectListItem>{
-                        new SelectListItem {Value="Pre", Text="Pre"},
-                        new SelectListItem {Value="Post", Text="Post"}},
-                        "--Select One--",
-                    new { @class="form-control form-select", @style="width:25%"})
+                @*                <input asp-for="PreOrPostImplementation" class="form-control" style="width:25%;" />*@
+                @Html.DropDownListFor(model => model.PreOrPostImplementation,
+                new List<SelectListItem>{
+                new SelectListItem {Value="Pre", Text="Pre"},
+                new SelectListItem {Value="Post", Text="Post"}},
+                "--Select One--",
+                new { @class="form-control form-select", @style="width:25%"})
                 <span asp-validation-for="PreOrPostImplementation" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
@@ -73,47 +78,17 @@
             </div>
             <div class="form-group my-3">
                 <label asp-for="DateDue" class="control-label fw-bold"></label>
-                <input asp-for="DateDue" class="form-control"  style="width:25%;"/>
+                <input asp-for="DateDue" class="form-control" style="width:25%;" />
                 <span asp-validation-for="DateDue" class="text-danger"></span>
             </div>
-@*            <div class="form-group my-3">
-                <label asp-for="ImpactAssessmentResponseId" class="control-label"></label>
-                <select asp-for="ImpactAssessmentResponseId" class="form-control" asp-items="ViewBag.ImpactAssessmentResponseId"></select>
-                <span asp-validation-for="ImpactAssessmentResponseId" class="text-danger"></span>
-            </div>*@
-@*            <div class="form-group">
-                <label asp-for="CreatedUser" class="control-label"></label>
-                <input asp-for="CreatedUser" class="form-control" />
-                <span asp-validation-for="CreatedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUser" class="control-label"></label>
-                <input asp-for="ModifiedUser" class="form-control" />
-                <span asp-validation-for="ModifiedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUser" class="control-label"></label>
-                <input asp-for="DeletedUser" class="form-control" />
-                <span asp-validation-for="DeletedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedDate" class="control-label"></label>
-                <input asp-for="DeletedDate" class="form-control" />
-                <span asp-validation-for="DeletedDate" class="text-danger"></span>
+            @*            <div class="form-group my-3">
+            <label asp-for="ImpactAssessmentResponseId" class="control-label"></label>
+            <select asp-for="ImpactAssessmentResponseId" class="form-control" asp-items="ViewBag.ImpactAssessmentResponseId"></select>
+            <span asp-validation-for="ImpactAssessmentResponseId" class="text-danger"></span>
             </div>*@
             <div class="form-group text-nowrap">
-                <input class="me-2 btn btn-primary" type="submit" value="Save"/>
-@*                <a class="ms-2" asp-action="Index">Back to List</a>*@
+                <input class="me-2 btn btn-primary" type="submit" value="Save" />
+                @*<a class="ms-2" asp-action="Index">Back to List</a>*@
                 @Html.ActionLink("Cancel","Details","ImpactAssessmentResponses", new {id=Model.ImpactAssessmentResponseId}, new {@class="btn btn-secondary"})
             </div>
         </form>
@@ -121,9 +96,10 @@
 </div>
 
 <div>
-    
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

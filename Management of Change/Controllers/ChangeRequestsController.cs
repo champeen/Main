@@ -111,7 +111,7 @@ namespace Management_of_Change.Controllers
 
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
-
+ 
             var changeRequest = await _context.ChangeRequest
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -273,6 +273,9 @@ namespace Management_of_Change.Controllers
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View(changeRequest);
         }
 
@@ -289,6 +292,9 @@ namespace Management_of_Change.Controllers
                 ErrorViewModel errorViewModel = CheckAuthorization();
                 if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                     return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+                ViewBag.IsAdmin = _isAdmin;
+                ViewBag.Username = _username;
 
                 // add General MOC Questions
                 List<GeneralMocQuestions> questions = await _context.GeneralMocQuestions.OrderBy(m => m.Order).ToListAsync();
@@ -384,6 +390,7 @@ namespace Management_of_Change.Controllers
                                 ChangeType = assessment.ChangeType,
                                 Reviewer = review.Reviewer,
                                 ReviewerEmail = review.Email,
+                                Username = review.Username,
                                 CreatedUser = _username,
                                 CreatedDate = DateTime.UtcNow
                             };
@@ -440,6 +447,8 @@ namespace Management_of_Change.Controllers
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.Tab = tab;
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             // Create Dropdown List of Users...
             var userList = await _context.__mst_employee
@@ -514,6 +523,10 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditMocQuestions(int id, [Bind("ChangeRequest, Tab3Disabled, Tab4Disabled, TabActiveDetail, TabActiveGeneralMocQuestions, TabActiveImpactAssessments, TabActiveFinalApprovals")] ChangeRequestViewModel changeRequestViewModel)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
             {
                 record.ModifiedUser = _username;
@@ -529,6 +542,10 @@ namespace Management_of_Change.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForReview(int id, ChangeRequestViewModel changeRequestViewModel)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id == null || id == 0)
                 return NotFound();
 
@@ -581,6 +598,9 @@ namespace Management_of_Change.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (changeRequest == null)
                 return NotFound();
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             return View(changeRequest);
         }

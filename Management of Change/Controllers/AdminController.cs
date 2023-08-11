@@ -25,6 +25,9 @@ namespace Management_of_Change.Controllers
             if (!_isAdmin)
                 return RedirectToAction("Unauthorized", "Home", new { message = "Must be setup as an Administrator to have access." });
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View();
         }
     }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,7 +24,14 @@ namespace Management_of_Change.Controllers
         // GET: AllowedAttachmentExtensions
         public async Task<IActionResult> Index()
         {
-              return _context.AllowedAttachmentExtensions != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.AllowedAttachmentExtensions != null ? 
                           View(await _context.AllowedAttachmentExtensions.OrderBy(m => m.ExtensionName).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.AllowedAttachmentExtensions'  is null.");
         }
@@ -31,6 +39,13 @@ namespace Management_of_Change.Controllers
         // GET: AllowedAttachmentExtensions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.AllowedAttachmentExtensions == null)
                 return NotFound();
 
@@ -45,6 +60,13 @@ namespace Management_of_Change.Controllers
         // GET: AllowedAttachmentExtensions/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View();
         }
 
@@ -55,6 +77,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ExtensionName,Description")] AllowedAttachmentExtensions allowedAttachmentExtensions)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             // Make sure duplicates are not entered...
             List<AllowedAttachmentExtensions> checkDupes = await _context.AllowedAttachmentExtensions
                 .Where(m => m.ExtensionName == allowedAttachmentExtensions.ExtensionName)
@@ -77,6 +106,13 @@ namespace Management_of_Change.Controllers
         // GET: AllowedAttachmentExtensions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.AllowedAttachmentExtensions == null)
                 return NotFound();
 
@@ -95,6 +131,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ExtensionName,Description")] AllowedAttachmentExtensions allowedAttachmentExtensions)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != allowedAttachmentExtensions.Id)
                 return NotFound();
 
@@ -120,6 +163,13 @@ namespace Management_of_Change.Controllers
         // GET: AllowedAttachmentExtensions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.AllowedAttachmentExtensions == null)
                 return NotFound();
 
@@ -136,6 +186,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.AllowedAttachmentExtensions == null)
                 return Problem("Entity set 'Management_of_ChangeContext.AllowedAttachmentExtensions'  is null.");
 

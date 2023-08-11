@@ -55,7 +55,7 @@
                 <a class="mx-2" asp-action="Index">Back to List</a>*@
                 <div class="row">
                     <div class="col-6 text-start">
-                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                         {
                             @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
                         }
@@ -218,7 +218,7 @@
             </dl>
             <div class="row">
                 <div class="col-6 text-start">
-                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                     {
                         @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
                     }
@@ -245,7 +245,7 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="text-nowrap">
-                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                             {
                                 <input type="submit" value="Save Changes" class="btn btn-primary" />
                             }
@@ -302,16 +302,23 @@
                                     @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Question)
                                 </td>
                                 <td>
-                                    @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
-                            new SelectList(ViewBag.Responses), "--Select--",
-                            new { @class="form-control form-select"})
+                                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                                    {
+                                        @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
+                                            new SelectList(ViewBag.Responses), "--Select--",
+                                            new { @class="form-control form-select"})
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Response)
+                                    }
                                 </td>
                             </tr>
                             @*<td class="text-nowrap">*@
                             @*@Html.ActionLink("Edit","Edit","GeneralMocResponses",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})*@
                             @*<a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a></td>*@
                         }
-                        @*                        @foreach (var item in Model.ChangeRequest.GeneralMocResponses)
+                        @*@foreach (var item in Model.ChangeRequest.GeneralMocResponses)
                     {
                     <tr>
                     <td>
@@ -327,7 +334,7 @@
                 <div class="row">
                     <div class="col-6">
                         <div class="text-nowrap">
-                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                             {
                                 <input type="submit" value="Save Changes" class="btn btn-primary" />
                             }
@@ -410,11 +417,10 @@
                                     @Html.DisplayFor(modelItem => item.Comments)
                                 </td>
                                 <td class="text-nowrap">
-
-                                    @if (ViewBag.IsAdmin || ViewBag.Username == item.Username)
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review"))
                                     {
                                         @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
-                                    }                                    
+                                    }
                                     @Html.ActionLink("Detail","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                 </td>
                             </tr>
@@ -492,7 +498,7 @@
                                 @Html.DisplayFor(modelItem => item.Comments)
                             </td>
                             <td>
-                                @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                                @if (ViewBag.IsAdmin || ViewBag.Username == item.Username)
                                 {
                                     @Html.ActionLink("Edit","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary"})
                                     @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@

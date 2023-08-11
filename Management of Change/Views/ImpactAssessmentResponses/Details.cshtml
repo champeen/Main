@@ -1,4 +1,5 @@
-﻿@model Management_of_Change.Models.ImpactAssessmentResponse
+﻿@*@model Management_of_Change.Models.ImpactAssessmentResponse*@
+@model Management_of_Change.ViewModels.ImpactAssessmentResponseViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,110 +12,116 @@
         <h4 class="mt-5">Details</h4>
 @*        <a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
         <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>*@
-        @Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
-        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review")
+        {
+            @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
+        }        
+        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
     </div>
     <hr />
     <dl class="row">
 @*        <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="ChangeRequestId" />*@
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ReviewType)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewType)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ReviewType)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewType)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.CreatedUser)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.CreatedUser)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.CreatedUser)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.CreatedUser)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ChangeType)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ChangeType)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ChangeType)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ChangeType)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.CreatedDate)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.CreatedDate)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.CreatedDate)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.CreatedDate)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.Reviewer)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Reviewer)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.Reviewer)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Reviewer)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ModifiedUser)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ModifiedUser)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ModifiedUser)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ModifiedUser)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ReviewerEmail)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewerEmail)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ReviewerEmail)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewerEmail)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ModifiedDate)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ModifiedDate)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ModifiedDate)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.Username)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Username)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.Username)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Username)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.DeletedUser)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DeletedUser)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.DeletedUser)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DeletedUser)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ReviewCompleted)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewCompleted)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ReviewCompleted)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewCompleted)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.DeletedDate)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DeletedDate)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.DeletedDate)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DeletedDate)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.DateCompleted)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DateCompleted)
         </dt>
         <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.DateCompleted)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DateCompleted)
         </dd>
         <dt class="col-sm-2 my-2 text-end"></dt>
         <dd class="col-sm-4 my-2"></dd>
         <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.Comments)
+            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Comments)
         </dt>
         <dd class="col-sm-10 my-2">
-            @Html.DisplayFor(model => model.Comments)
+            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Comments)
         </dd>
     </dl>
 </div>
 <div class="text-nowrap my-3">
-    @Html.ActionLink("Edit","Edit",new {id=@Model?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
-    @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review")
+    {
+        @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
+    }    
+    @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
 </div>
 <hr />
 <div class="text-nowrap">
     <h4 class="mt-5">Impact Assessment Response Answers</h4>
     <div class="mt-4">
-        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
     </div>
 </div>
 <table class="table table-bordered table-striped mt-3">
@@ -157,7 +164,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.ImpactAssessmentResponseAnswers)
+        @foreach (var item in Model.ImpactAssessmentResponse.ImpactAssessmentResponseAnswers)
         {
             <tr>
 @*                <td>
@@ -194,7 +201,10 @@
                     @Html.DisplayFor(modelItem => item.DateDue)
                 </td>
                 <td class="text-nowrap">
-                    @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review")
+                    {
+                        @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
+                    }                    
                     @Html.ActionLink("Details","Details", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-secondary"})
                     @if(item.Task != null)
                     {
@@ -206,5 +216,5 @@
     </tbody>
 </table>
 
-@Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+@Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
 

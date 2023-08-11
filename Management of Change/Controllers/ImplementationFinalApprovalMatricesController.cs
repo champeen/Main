@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,7 +24,14 @@ namespace Management_of_Change.Controllers
         // GET: ImplementationFinalApprovalMatrices
         public async Task<IActionResult> Index()
         {
-              return _context.ImplementationFinalApprovalMatrix != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ImplementationFinalApprovalMatrix != null ? 
                           View(await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ImplementationFinalApprovalMatrix'  is null.");
         }
@@ -31,6 +39,13 @@ namespace Management_of_Change.Controllers
         // GET: ImplementationFinalApprovalMatrices/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImplementationFinalApprovalMatrix == null)
                 return NotFound();
 
@@ -46,6 +61,13 @@ namespace Management_of_Change.Controllers
         // GET: ImplementationFinalApprovalMatrices/Create
         public async Task<IActionResult> Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             ImplementationFinalApprovalMatrix implementationFinalApprovalMatrix = new ImplementationFinalApprovalMatrix
             {
                 CreatedUser = _username,
@@ -65,6 +87,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ChangeType,FinalReviewType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImplementationFinalApprovalMatrix implementationFinalApprovalMatrix)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             // Make sure duplicates are not entered...
             List<ImplementationFinalApprovalMatrix> checkDupes = await _context.ImplementationFinalApprovalMatrix
                 .Where(m => m.ChangeType == implementationFinalApprovalMatrix.ChangeType)
@@ -91,6 +120,13 @@ namespace Management_of_Change.Controllers
         // GET: ImplementationFinalApprovalMatrices/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImplementationFinalApprovalMatrix == null)
                 return NotFound();
 
@@ -112,6 +148,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeType,FinalReviewType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImplementationFinalApprovalMatrix implementationFinalApprovalMatrix)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != implementationFinalApprovalMatrix.Id)
                 return NotFound();
 
@@ -154,6 +197,13 @@ namespace Management_of_Change.Controllers
         // GET: ImplementationFinalApprovalMatrices/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImplementationFinalApprovalMatrix == null)
                 return NotFound();
 
@@ -171,6 +221,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ImplementationFinalApprovalMatrix == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ImplementationFinalApprovalMatrix'  is null.");
 

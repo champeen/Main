@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
@@ -23,7 +24,14 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponses
         public async Task<IActionResult> Index()
         {
-              return _context.ImpactAssessmentResponse != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ImpactAssessmentResponse != null ? 
                           View(await _context.ImpactAssessmentResponse.OrderBy(m => m.ReviewType).ThenBy(m => m.ChangeType).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentResponse'  is null.");
         }
@@ -31,34 +39,52 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (id == null || _context.ImpactAssessmentResponse == null)
+                return NotFound();        
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            ImpactAssessmentResponseViewModel impactAssessmentResponseVM = new ImpactAssessmentResponseViewModel();
+
+            // Get Impact Assessment Response...
+            impactAssessmentResponseVM.ImpactAssessmentResponse = await _context.ImpactAssessmentResponse.FirstOrDefaultAsync(m => m.Id == id);
+            if (impactAssessmentResponseVM.ImpactAssessmentResponse == null)
                 return NotFound();
 
-            var impactAssessmentResponse = await _context.ImpactAssessmentResponse
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (impactAssessmentResponse == null)
-                return NotFound();
+            // Get the Change Request the Impact Assessment Response belongs to...
+            impactAssessmentResponseVM.ChangeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == impactAssessmentResponseVM.ImpactAssessmentResponse.ChangeRequestId);
 
             // Get all the ImpactAssessmentResponsesQuestions/Answers associated with this request...
-            impactAssessmentResponse.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
-                    .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponse.Id)
+            impactAssessmentResponseVM.ImpactAssessmentResponse.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
+                    .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponseVM.ImpactAssessmentResponse.Id)
                     .OrderBy(m => m.Order)
                     .ToListAsync();
 
-            // Get all tasks associated with each ImpactAssessmentResponseAnswer
-            foreach (var record in impactAssessmentResponse.ImpactAssessmentResponseAnswers)
-            {
-                Models.Task task = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == record.Id);
-                record.Task = task;
-            }
+            //// Get all tasks associated with each ImpactAssessmentResponseAnswer
+            //foreach (var record in impactAssessmentResponse.ImpactAssessmentResponseAnswers)
+            //{
+            //    Models.Task task = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == record.Id);
+            //    record.Task = task;
+            //}
 
-            return View(impactAssessmentResponse);
+            return View(impactAssessmentResponseVM);
         }
 
         // GET: ImpactAssessmentResponses/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             ImpactAssessmentResponse impactAssessmentResponse = new ImpactAssessmentResponse
             {
                 CreatedUser = _username,
@@ -78,6 +104,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ReviewType,ChangeType,Reviewer,ReviewerEmail,Username,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (ModelState.IsValid)
             {
                 _context.Add(impactAssessmentResponse);
@@ -90,6 +123,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponses/Edit/5
         public async Task<IActionResult> Edit(int? id, string tab = "ImpactAssessments")
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentResponse == null)
                 return NotFound();
 
@@ -111,6 +151,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ReviewType,ChangeType,Username,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImpactAssessmentResponse impactAssessmentResponse, string tab = "ImpactAssessments")
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != impactAssessmentResponse.Id)
                 return NotFound();
 
@@ -159,6 +206,13 @@ namespace Management_of_Change.Controllers
         // GET: ImpactAssessmentResponses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ImpactAssessmentResponse == null)
                 return NotFound();
 
@@ -176,6 +230,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ImpactAssessmentResponse == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentResponse'  is null.");
 
