@@ -116,6 +116,11 @@ namespace Management_of_Change.Utilities
         //{
 
         //}
+        public BaseController(Management_of_ChangeContext context, WebApplicationBuilder builder)
+        {
+            _context = context;
+        }
+
         public BaseController(Management_of_ChangeContext context)
         {
             _context = context;
@@ -124,6 +129,11 @@ namespace Management_of_Change.Utilities
         public BaseController(ILogger<AdminController> logger)
         {
             
+        }
+
+        public BaseController()
+        {
+
         }
 
         public ErrorViewModel CheckAuthorization()

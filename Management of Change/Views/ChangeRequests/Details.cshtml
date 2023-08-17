@@ -153,18 +153,18 @@
                     @Html.DisplayFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
                 </dd>
                 @*<hr />*@
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.Justification_of_the_Change)
-                </dt>
-                <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Justification_of_the_Change, new {@rows = 2})
-                </dd>
                 @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Title_Change_Description)
                 </dt>
                 <dd class="col-sm-10 my-1">
                     @Html.DisplayFor(model => model.ChangeRequest.Title_Change_Description, new {@rows = 3})
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Justification_of_the_Change)
+                </dt>
+                <dd class="col-sm-10 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Justification_of_the_Change, new {@rows = 2})
                 </dd>
                 @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
@@ -417,11 +417,15 @@
                                     @Html.DisplayFor(modelItem => item.Comments)
                                 </td>
                                 <td class="text-nowrap">
-                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review"))
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.ReviewCompleted == false))
                                     {
                                         @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
                                     }
                                     @Html.ActionLink("Detail","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
+                                    {
+                                       @Html.ActionLink("Mark as Complete","MarkComplete","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-success"})
+                                    }
                                 </td>
                             </tr>
                         }
@@ -503,6 +507,7 @@
                                     @Html.ActionLink("Edit","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary"})
                                     @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
                                 }
+                                @Html.ActionLink("Detail","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
                             </td>
                         </tr>
                     }

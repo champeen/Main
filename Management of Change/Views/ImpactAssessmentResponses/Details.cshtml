@@ -12,7 +12,7 @@
         <h4 class="mt-5">Details</h4>
 @*        <a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
         <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>*@
-        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review")
+        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
         {
             @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
         }        
@@ -111,7 +111,7 @@
     </dl>
 </div>
 <div class="text-nowrap my-3">
-    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review")
+    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
     {
         @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
     }    
@@ -201,7 +201,7 @@
                     @Html.DisplayFor(modelItem => item.DateDue)
                 </td>
                 <td class="text-nowrap">
-                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review")
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
                     {
                         @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
                     }                    

@@ -37,12 +37,13 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ImplementationFinalApprovalResponses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string tab = "FinalApprovals")
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            ViewBag.Tab = tab;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
@@ -52,8 +53,10 @@ namespace Management_of_Change.Controllers
             var implementationFinalApprovalResponse = await _context.ImplementationFinalApprovalResponse.FirstOrDefaultAsync(m => m.Id == id);
             if (implementationFinalApprovalResponse == null)
                 return NotFound();
-
-            return View(implementationFinalApprovalResponse);
+            //if (tab == "FinalApprovals")
+            //    return RedirectToAction("Details", "ChangeRequests", new { Id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });
+            //else
+                return View(implementationFinalApprovalResponse);
         }
 
         // GET: ImplementationFinalApprovalResponses/Create
@@ -127,7 +130,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeType,FinalReviewType,Username,ReviewResult,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImplementationFinalApprovalResponse implementationFinalApprovalResponse, string tab = "FinalApprovals")
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeType,FinalReviewType,Username,Reviewer,ReviewerEmail,ReviewResult,ReviewCompleted,DateCompleted,Comments,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ImplementationFinalApprovalResponse implementationFinalApprovalResponse/*, string tab = "FinalApprovals"*/)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -160,10 +163,45 @@ namespace Management_of_Change.Controllers
             {
                 implementationFinalApprovalResponse.ModifiedUser = _username;
                 implementationFinalApprovalResponse.ModifiedDate = DateTime.UtcNow;
+
+                if (implementationFinalApprovalResponse.ReviewCompleted == null || implementationFinalApprovalResponse.ReviewCompleted == false)
+                    implementationFinalApprovalResponse.DateCompleted = null;
+                else
+                    implementationFinalApprovalResponse.DateCompleted = DateTime.UtcNow;
+
                 try
                 {
                     _context.Update(implementationFinalApprovalResponse);
                     await _context.SaveChangesAsync();
+
+                    // check to see if all final reviews are complete for this change request.  If so, advanced to next stage/status...
+                    bool found = await _context.ImplementationFinalApprovalResponse
+                        .Where(m => m.ChangeRequestId == implementationFinalApprovalResponse.ChangeRequestId)
+                        .Where(m => m.ReviewCompleted == null || m.ReviewCompleted == false)
+                        .AnyAsync();
+
+                    if (!found)
+                    {
+                        // There are no incomplete final approvals.  Advance to next stage.
+                        var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == implementationFinalApprovalResponse.ChangeRequestId);
+                        if (changeRequest != null)
+                        {
+                            changeRequest.Change_Status = "Submitted for Implementation";
+                            changeRequest.ModifiedDate = DateTime.UtcNow;
+                            changeRequest.ModifiedUser = _username;
+                            _context.Update(changeRequest);
+                            await _context.SaveChangesAsync();
+
+                            // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
+                            // TODO MJWII
+                            var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                            foreach(var record in adminApproverList)
+                            {
+                                var blah = "MJWII";
+                            }
+                        }                            
+                    }
+                    
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -172,10 +210,10 @@ namespace Management_of_Change.Controllers
                     else
                         throw;
                 }
-                if (tab == "IARDetails")
-                    return RedirectToAction("Details", "ImplementationFinalApprovalResponses", new { Id = implementationFinalApprovalResponse.Id, tab = tab });
-                else
-                    return RedirectToAction("Details", "ChangeRequests", new { Id = implementationFinalApprovalResponse.ChangeRequestId, tab = tab });
+                //if (tab == "IARDetails")
+                //    return RedirectToAction("Details", "ImplementationFinalApprovalResponses", new { Id = implementationFinalApprovalResponse.Id, tab = tab });
+                //else
+                    return RedirectToAction("Details", "ChangeRequests", new { Id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });
             }
             ViewBag.Users = getUserList(implementationFinalApprovalResponse.Username);
             return View(implementationFinalApprovalResponse);

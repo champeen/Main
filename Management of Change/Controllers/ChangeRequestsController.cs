@@ -32,11 +32,11 @@ namespace Management_of_Change.Controllers
         {
             // TEST MJWII // ChangeRequest = 4 // ImpactAssessmentResponse = 1 // ImpactAssessmentResponseAnswers = 1-16
             // see if all of this ImpactAssessmentResponses have questions answered from reviewer.  If so, mark as complete...
-//            bool found = await _context.ImpactAssessmentResponseAnswer.Where(m => m.ImpactAssessmentResponseId == 1).Where(m => m.Action != null).AnyAsync();
+            //            bool found = await _context.ImpactAssessmentResponseAnswer.Where(m => m.ImpactAssessmentResponseId == 1).Where(m => m.Action != null).AnyAsync();
             // here we set the ImpactAssessmentResponse for the reviewer as 'Complete'
 
             // see if all of this ChangeRequests ImpactAssessmentResponses are complete.  If so, promote/change status of the ChangeRequest...
-//            bool found2 = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == 4).Where(m => m.ReviewCompleted != true).AnyAsync();
+            //            bool found2 = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == 4).Where(m => m.ReviewCompleted != true).AnyAsync();
             // here we would set the status of the request to 'Awaiting Completion of Pre-Implementation Tasks'
             // END TEST MJWII
 
@@ -572,12 +572,35 @@ namespace Management_of_Change.Controllers
             // Get all the Final Approval Responses associated with this request...
             changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
 
+            // Update ChangeRequest...
             changeRequest.Change_Status = "Submitted for Impact Assessment Review";
             changeRequest.ModifiedUser = _username;
             changeRequest.ModifiedDate = DateTime.UtcNow;
-
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
+
+            // Email All Users ImpactResponse Review/Approval links...
+            foreach (var record in changeRequest.ImpactAssessmentResponses)
+            {
+                string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
+                string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null);
+
+                EmailHistory emailHistory = new EmailHistory
+                {
+                    Subject = subject,
+                    Body = body,
+                    SentToDisplayName = record.Reviewer,
+                    SentToUsername = record.Username,
+                    SentToEmail = record.ReviewerEmail,
+                    ChangeRequestId = changeRequest.Id,
+                    ImpactAssessmentResponseId = record.Id,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedUser = _username
+                };
+                _context.Add(emailHistory);
+                await _context.SaveChangesAsync();
+            }
 
             return RedirectToAction("Details", new { id = id, tab = "GeneralMocQuestions" });
         }

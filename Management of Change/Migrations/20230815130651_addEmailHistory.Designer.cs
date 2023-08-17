@@ -3,6 +3,7 @@ using System;
 using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Management_of_Change.Migrations
 {
     [DbContext(typeof(Management_of_ChangeContext))]
-    partial class Management_of_ChangeContextModelSnapshot : ModelSnapshot
+    [Migration("20230815130651_addEmailHistory")]
+    partial class addEmailHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +32,6 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Approver")
-                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
@@ -606,9 +606,6 @@ namespace Management_of_Change.Migrations
 
                     b.Property<string>("ModifiedUser")
                         .HasColumnType("text");
-
-                    b.Property<bool>("QuestionsAnswered")
-                        .HasColumnType("boolean");
 
                     b.Property<bool>("ReviewCompleted")
                         .HasColumnType("boolean");

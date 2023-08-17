@@ -232,60 +232,109 @@ namespace Management_of_Change.Controllers
                             CreatedDate = DateTime.UtcNow
                         };
                         _context.Add(task);
-                    }                        
-                    //else
-                    //{
-                    //    _context.Update(existingTask);
-                    //}                        
+                    }                     
                 }
-
                 try
                 {
                     _context.Update(impactAssessmentResponseAnswer);
                     await _context.SaveChangesAsync();
 
-                    // see if all of this ImpactAssessmentResponses have questions answered from reviewer.  If so, mark as complete...
-                    bool found = await _context.ImpactAssessmentResponseAnswer
+                    // see if all of this ImpactAssessmentResponses have questions answered from reviewer.  If so, mark as all answered. If not, mark as not all answered.
+                    bool foundIncomplete = await _context.ImpactAssessmentResponseAnswer
                         .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
                         .Where(m => m.Action == null)
                         .AnyAsync();
 
-                    if (!found)
+                    // get ImpactAssessmentResponse ChangeRequest that this Task will belong to
+                    ImpactAssessmentResponse impactAssessmentResponse = await _context.ImpactAssessmentResponse
+                        .Where(m => m.Id == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
+                        //.Where(m => m.ReviewCompleted != true)
+                        .FirstOrDefaultAsync();
+
+                    if (impactAssessmentResponse != null)
                     {
-                        // get ImpactAssessmentResponse Change Request that this Task will belong to
-                        ImpactAssessmentResponse impactAssessmentResponse = await _context.ImpactAssessmentResponse
-                            .Where(m => m.Id == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
-                            .Where(m => m.ReviewCompleted != true)
-                            .FirstOrDefaultAsync();
-                        if (impactAssessmentResponse != null)
+                        // found at least 1 incomplete review from reviewer - make sure to mark ImpactAssessmentResponse as not fully answered
+                        if (foundIncomplete)
                         {
-                            impactAssessmentResponse.ReviewCompleted = true;
-                            impactAssessmentResponse.DateCompleted = DateTime.UtcNow;
-                            impactAssessmentResponse.ModifiedUser= _username;
-                            impactAssessmentResponse.ModifiedDate= DateTime.UtcNow;
+                            impactAssessmentResponse.QuestionsAnswered = false;
+                            impactAssessmentResponse.ModifiedUser = _username;
+                            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+                            _context.Update(impactAssessmentResponse);
+                            await _context.SaveChangesAsync();
+
+                        }
+                        // all review questions for reviewers impactAssessment have been answered.  Mark as fully answered
+                        else
+                        {
+                            impactAssessmentResponse.QuestionsAnswered = true;
+                            impactAssessmentResponse.ModifiedUser = _username;
+                            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
                             _context.Update(impactAssessmentResponse);
                             await _context.SaveChangesAsync();
                         }
-
-                        // see if all of this ChangeRequests ImpactAssessmentResponses are complete.  If so, promote/change status of the ChangeRequest...
-                        bool foundIAR = await _context.ImpactAssessmentResponse
-                            .Where(m => m.ChangeRequestId == impactAssessmentResponse.ChangeRequestId)
-                            .Where(m => m.ReviewCompleted != true)
-                            .AnyAsync();
-
-                        if (!foundIAR) 
-                        {
-                            ChangeRequest changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == impactAssessmentResponse.ChangeRequestId);
-                            if (changeRequest != null)
-                            {
-                                changeRequest.Change_Status = "Submitted for Final Approvals";
-                                changeRequest.ModifiedDate= DateTime.UtcNow;
-                                changeRequest.ModifiedUser = _username;
-                                _context.Update(changeRequest);
-                                await _context.SaveChangesAsync();
-                            }
-                        }
                     }
+
+
+
+
+                    //if (!found)
+                    //{
+                    //    if (impactAssessmentResponse != null)
+                    //    {
+                    //        impactAssessmentResponse.ReviewCompleted = true;
+                    //        impactAssessmentResponse.DateCompleted = DateTime.UtcNow;
+                    //        impactAssessmentResponse.ModifiedUser= _username;
+                    //        impactAssessmentResponse.ModifiedDate= DateTime.UtcNow;
+                    //        _context.Update(impactAssessmentResponse);
+                    //        await _context.SaveChangesAsync();
+                    //    }
+
+                    //    // see if all of this ChangeRequests ImpactAssessmentResponses are complete.  If so, promote/change status of the ChangeRequest...
+                    //    bool foundIAR = await _context.ImpactAssessmentResponse
+                    //        .Where(m => m.ChangeRequestId == impactAssessmentResponse.ChangeRequestId)
+                    //        .Where(m => m.ReviewCompleted != true)
+                    //        .AnyAsync();
+
+                    //    if (!foundIAR) 
+                    //    {
+                    //        ChangeRequest changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == impactAssessmentResponse.ChangeRequestId);
+                    //        if (changeRequest != null)
+                    //        {
+                    //            changeRequest.Change_Status = "Submitted for Final Approvals";
+                    //            changeRequest.ModifiedDate= DateTime.UtcNow;
+                    //            changeRequest.ModifiedUser = _username;
+                    //            _context.Update(changeRequest);
+                    //            await _context.SaveChangesAsync();
+
+                    //            changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
+                    //                .Where(m => m.ChangeRequestId == changeRequest.Id)
+                    //                .ToListAsync();
+
+                    //            // Email All Users ImpactResponse Review/Approval links...
+                    //            foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
+                    //            {
+                    //                string subject = @"Management of Change (MoC) - Final Approval Needed";
+                    //                string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                    //                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null);
+
+                    //                EmailHistory emailHistory = new EmailHistory
+                    //                {
+                    //                    Subject = subject,
+                    //                    Body = body,
+                    //                    SentToDisplayName = record.Reviewer,
+                    //                    SentToUsername = record.Username,
+                    //                    SentToEmail = record.ReviewerEmail,
+                    //                    ChangeRequestId = changeRequest.Id,
+                    //                    ImpactAssessmentResponseId = record.Id,
+                    //                    CreatedDate = DateTime.UtcNow,
+                    //                    CreatedUser = _username
+                    //                };
+                    //                _context.Add(emailHistory);
+                    //                await _context.SaveChangesAsync();
+                    //            }
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (DbUpdateConcurrencyException)
                 {

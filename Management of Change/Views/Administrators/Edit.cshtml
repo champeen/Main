@@ -24,6 +24,11 @@
                 <input asp-for="Username" class="form-control" />
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
+            <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold">
+                    <input class="form-check-input" asp-for="Approver" /> @Html.DisplayNameFor(model => model.Approver)
+                </label>
+            </div>
             <div class="form-group my-4">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a  class="mx-3" asp-action="Index">Cancel</a>

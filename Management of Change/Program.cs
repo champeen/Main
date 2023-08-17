@@ -6,10 +6,20 @@ using Management_of_Change.Utilities;
 using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Diagnostics;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+    Initialization.Initialize(builder);
+
+    // Test Sending Email
+    //Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "michael.wilson@sksiltron.com;", null, null/*, "", null*/);
+
+    //Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject", "<h1>Hello</h1></br>This is <h2>Vincent Villalon</h2></br></br>This is the next line and main subject.<br/><br/>", "vincent.villalon@sksiltron.com;", null, null/*, "", null*/);
+
+    //// Test Sending Teams Message
+    //Initialization.TeamsErrorProvider.SendMessage("This is a test <br/><br/> EOM");
 
     // USE SQL SERVER.....
     //builder.Services.AddDbContext<Management_of_ChangeContext>(options =>
@@ -55,9 +65,44 @@ try
 
     app.Run();
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    throw;
+    // LOG IN WINDOWS EVENT LOG
+    using (EventLog eventLog = new EventLog("Application"))
+    {
+        StackTrace st = new StackTrace(ex, true);
+        StackFrame frame = st.GetFrame(0);
+        string fileName = frame.GetFileName();
+        string methodName = frame.GetMethod().Name;
+        int line = frame.GetFileLineNumber();
+
+        eventLog.Source = "Application";
+        eventLog.WriteEntry(
+            "ERROR: Management of Change Application (MoC)" + Environment.NewLine +
+            "CLASS: " + fileName + Environment.NewLine +
+            "METHOD: " + methodName + Environment.NewLine +
+            "LINE NUMBER: " + line.ToString() + Environment.NewLine +
+            "MESSAGE: " + ex.Message,
+            EventLogEntryType.Error);
+    }
+
+    // SEND TEAMS ERROR MESSAGE
+    Initialization.TeamsErrorProvider.SendMessage(
+    "ERROR: Management of Change Application (MoC) </br>" +
+    "MESSAGE: " + ex.Message + "</br> " +
+    "INNER EXCEPTION: " + ex.InnerException);
+
+    // SEND EMAIL ERROR MESSAGE
+    Initialization.EmailProviderSmtp.SendMessage(
+        "ERROR: Management of Change Application (MoC)",
+        "ERROR: Management of Change Application (MoC) </br>" +
+            "MESSAGE: " + ex.Message + "</br> " +
+            "INNER EXCEPTION: " + ex.InnerException,
+        "michael.wilson@sksiltron.com;",
+        null,
+        null);
+        //"",
+        //null);
 }
 
 

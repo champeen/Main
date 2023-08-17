@@ -7,5 +7,6 @@ namespace Management_of_Change.Models
         [Key]
         public int Id { get; set; }
         public string Username { get; set; }
+        public bool Approver { get; set; }
     }
 }
