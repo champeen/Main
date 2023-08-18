@@ -197,7 +197,25 @@ namespace Management_of_Change.Controllers
                             var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
                             foreach(var record in adminApproverList)
                             {
-                                var blah = "MJWII";
+                                var admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
+                                string subject = @"Management of Change (MoC) - Close-Out/Complete Needed";
+                                string body = @"Your Close-Out/Complete of an MoC Change Request is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                                Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null);
+
+                                EmailHistory emailHistory = new EmailHistory
+                                {
+                                    Subject = subject,
+                                    Body = body,
+                                    SentToDisplayName = admin.displayname,
+                                    SentToUsername = record.Username,
+                                    SentToEmail = admin.mail,
+                                    ChangeRequestId = changeRequest.Id,
+                                    ImplementationFinalApprovalResponseId = implementationFinalApprovalResponse.Id,
+                                    CreatedDate = DateTime.UtcNow,
+                                    CreatedUser = _username
+                                };
+                                _context.Add(emailHistory);
+                                await _context.SaveChangesAsync();
                             }
                         }                            
                     }

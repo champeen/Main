@@ -25,7 +25,6 @@
                     {
                         @Html.ActionLink("Cancel","Details", new {id=@Model.Id}, new {@class="btn btn-secondary"})
                     }
-
                 </span>
             </div>
         </div>
@@ -118,7 +117,7 @@
     <div class="col-md-12">
         <div class="form-group my-3">
             <label asp-for="Title_Change_Description" class="control-label fw-bold"></label>
-            @Html.TextAreaFor(model => model.Title_Change_Description, new {@class = "form-control", @rows = 2 })
+            @Html.TextAreaFor(model => model.Title_Change_Description, new {@class = "form-control", @rows = 1 })
             @*<input asp-for="Title_Change_Description" class="form-control" />*@
             <span asp-validation-for="Title_Change_Description" class="text-danger"></span>
         </div>

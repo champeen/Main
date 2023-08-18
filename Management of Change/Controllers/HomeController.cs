@@ -84,7 +84,6 @@ namespace Management_of_Change.Controllers
                 .OrderBy(m => m.DueDate)
                 .ToListAsync();
 
-
             return View(dashboardVM);
         }
 

@@ -15,6 +15,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Location Site")]
         public string Location_Site { get; set; }
         [Display(Name = "Title/Change Description")]
+        [MaxLength(100)]
         public string Title_Change_Description { get; set; }
         [Display(Name = "Scope of Change")]
         public string Scope_of_the_Change { get; set; }
@@ -38,7 +39,7 @@ namespace Management_of_Change.Models
         public string Change_Type { get; set; }
         [Display(Name = "Estimated Completion Date")]
         [DataType(DataType.Date)]
-        public DateTime Estimated_Completion_Date { get; set; }
+        public DateTime? Estimated_Completion_Date { get; set; }
         [Display(Name = "Raw Materials/Component Numbers Impacted")]
         public string Raw_Material_Component_Numbers_Impacted {get; set;}
         public List<GeneralMocResponses>? GeneralMocResponses { get; set; }

@@ -26,22 +26,42 @@
 
 <div>
     <nav class="my-5">
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
-            <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
-            <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled fw-bolder" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
-                Impact Assessments
-                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete">
-                </i>
-            </a>
-            <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled fw-bolder" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
-                Final Approvals
-                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete">
-                </i>
-            </a>
-            <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab" data-bs-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments</a>
-            <a class="nav-link @Model.TabActiveTasks fw-bolder" id="nav-tasks-tab" data-bs-toggle="tab" href="#nav-tasks" role="tab" aria-controls="nav-profile" aria-selected="false">Tasks</a>
-        </div>
+        <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled fw-bolder" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Impact Assessments
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled fw-bolder" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Final Approvals
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab5Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Close Out/Complete
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item ms-auto">
+                <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab" data-bs-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-item me-auto nav-link @Model.TabActiveTasks fw-bolder" id="nav-tasks-tab" data-bs-toggle="tab" href="#nav-tasks" role="tab" aria-controls="nav-profile" aria-selected="false">Tasks</a>
+            </li>
+
+        </ul>
     </nav>
 
     <div class="tab-content" id="nav-tabContent">
@@ -305,8 +325,8 @@
                                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                                     {
                                         @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
-                                            new SelectList(ViewBag.Responses), "--Select--",
-                                            new { @class="form-control form-select"})
+                            new SelectList(ViewBag.Responses), "--Select--",
+                            new { @class="form-control form-select"})
                                     }
                                     else
                                     {
@@ -424,7 +444,7 @@
                                     @Html.ActionLink("Detail","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
-                                       @Html.ActionLink("Mark as Complete","MarkComplete","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-success"})
+                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
                                     }
                                 </td>
                             </tr>
@@ -502,7 +522,7 @@
                                 @Html.DisplayFor(modelItem => item.Comments)
                             </td>
                             <td>
-                                @if (ViewBag.IsAdmin || ViewBag.Username == item.Username)
+                                @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Final Approvals"))
                                 {
                                     @Html.ActionLink("Edit","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary"})
                                     @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
@@ -514,6 +534,29 @@
                 </tbody>
             </table>
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+        </div>
+        @******************************************************************************************************************************************@
+        @*  CLOSE OUT/COMPLETE TAB  ***************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveCloseoutComplete" id="nav-closeout-complete" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
+            <div class="text-nowrap">
+                <h4 class="mt-5">Close-Out/Complete Change Request </h4>
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @if (ViewBag.OpenPreImplementationTasks > 0)
+                {
+                    <div class="fw-bold text-danger my-3">
+                        Cannot Close-out/Complete Change Request.  There are outstanding Pre-Implementation non-closed Tasks outstanding!
+                    </div>
+                }
+                else
+                {
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Submitted for Implementation"))
+                    {
+                        @Html.ActionLink("Close-Out/Complete","CloseoutComplete", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success"})
+                    }
+                }
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
         </div>
         @******************************************************************************************************************************************@
         @*  ATTACHMENTS TAB  **********************************************************************************************************************@

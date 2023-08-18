@@ -111,7 +111,7 @@ namespace Management_of_Change.Controllers
 
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
- 
+
             var changeRequest = await _context.ChangeRequest
                 .FirstOrDefaultAsync(m => m.Id == id);
 
@@ -161,6 +161,11 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.Id)
                 .ToListAsync();
 
+            ViewBag.OpenPreImplementationTasks = tasks
+                .Where(m => m.Status == "Open" || m.Status == "In-Progress" || m.Status == "On Hold")
+                .Where(m => m.ImplementationType == "Pre")
+                .Count();
+
             changeRequestViewModel.ChangeRequest = changeRequest;
             changeRequestViewModel.Tasks = tasks;
             // disable tab 3 if General MOC Responses have not been completed...
@@ -169,11 +174,15 @@ namespace Management_of_Change.Controllers
             // disable tab4 (final review) if any Impact Assessment Responses have not been completed...
             int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
             changeRequestViewModel.Tab4Disabled = countIAR > 0 ? "disabled" : "";
+            // disable tab5 (Closeout/Complete) if any Final Approvals have not been completed...
+            int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
+            changeRequestViewModel.Tab5Disabled = countFA > 0 ? "disabled" : "";
 
             changeRequestViewModel.TabActiveDetail = "";
             changeRequestViewModel.TabActiveGeneralMocQuestions = "";
             changeRequestViewModel.TabActiveImpactAssessments = "";
             changeRequestViewModel.TabActiveFinalApprovals = "";
+            changeRequestViewModel.TabActiveCloseoutComplete = "";
             changeRequestViewModel.TabActiveAttachments = "";
             changeRequestViewModel.TabActiveTasks = "";
 
@@ -198,6 +207,9 @@ namespace Management_of_Change.Controllers
                     break;
                 case "FinalApprovals":
                     changeRequestViewModel.TabActiveFinalApprovals = "active";
+                    break;
+                case "CloseoutComplete":
+                    changeRequestViewModel.TabActiveCloseoutComplete = "active";
                     break;
                 case "Attachments":
                     changeRequestViewModel.TabActiveAttachments = "active";
@@ -538,6 +550,78 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "GeneralMocQuestions" });
         }
 
+        public async Task<IActionResult> MarkImpactAssessmentComplete(int id, string tab = "ImpactAssessments")
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // get ImpactAssessmentResponse record...
+            ImpactAssessmentResponse impactAssessmentResponse = await _context.ImpactAssessmentResponse.FirstOrDefaultAsync(m => m.Id == id);
+            if (impactAssessmentResponse == null)
+                return NotFound();
+
+            // Mark the Impact Assessment Response as complete...
+            impactAssessmentResponse.ReviewCompleted = true;
+            impactAssessmentResponse.DateCompleted = DateTime.UtcNow;
+            impactAssessmentResponse.ModifiedUser = _username;
+            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+            _context.Update(impactAssessmentResponse);
+            await _context.SaveChangesAsync();
+
+            // See if all ImpactAssessments for this MoC are now complete - if so advance to next stage...
+            bool foundIncomplete = await _context.ImpactAssessmentResponse
+                .Where(m => m.ChangeRequestId == impactAssessmentResponse.ChangeRequestId)
+                .Where(m => m.ReviewCompleted == null || m.ReviewCompleted == false)
+                .AnyAsync();
+
+            if (foundIncomplete == false)
+            {
+                // Get the Change Request and change the Status to the next step...
+                var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == impactAssessmentResponse.ChangeRequestId);
+                if (changeRequest == null)
+                    return NotFound();
+
+                changeRequest.Change_Status = "Submitted for Final Approvals";
+                changeRequest.ModifiedDate = DateTime.UtcNow;
+                changeRequest.ModifiedUser = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
+
+                changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
+                    .Where(m => m.ChangeRequestId == changeRequest.Id)
+                    .ToListAsync();
+
+                // Email All Users ImpactResponse Review/Approval links...
+                foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
+                {
+                    string subject = @"Management of Change (MoC) - Final Approval Needed";
+                    string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null);
+
+                    EmailHistory emailHistory = new EmailHistory
+                    {
+                        Subject = subject,
+                        Body = body,
+                        SentToDisplayName = record.Reviewer,
+                        SentToUsername = record.Username,
+                        SentToEmail = record.ReviewerEmail,
+                        ChangeRequestId = changeRequest.Id,
+                        ImpactAssessmentResponseId = record.Id,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedUser = _username
+                    };
+                    _context.Add(emailHistory);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "ImpactAssessments" });
+        }
+
         //[HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForReview(int id, ChangeRequestViewModel changeRequestViewModel)
@@ -649,10 +733,9 @@ namespace Management_of_Change.Controllers
                 changeRequest.DeletedUser = _username;
                 changeRequest.DeletedDate = DateTime.UtcNow;
                 _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
                 //_context.ChangeRequest.Remove(changeRequest);
-            }
-
-            await _context.SaveChangesAsync();
+            }            
             return RedirectToAction(nameof(Index));
         }
 
@@ -695,6 +778,29 @@ namespace Management_of_Change.Controllers
         {
             byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
             return File(fileBytes, "application/x-msdownload", fileName);
+        }
+
+        public async Task<IActionResult> CloseoutComplete(int id)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            changeRequest.Change_Status = "Closed";
+            changeRequest.ModifiedUser = _username;
+            changeRequest.ModifiedDate = DateTime.UtcNow;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = changeRequest.Id, tab = "CloseoutComplete" });
         }
     }
 }

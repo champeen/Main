@@ -274,9 +274,6 @@ namespace Management_of_Change.Controllers
                         }
                     }
 
-
-
-
                     //if (!found)
                     //{
                     //    if (impactAssessmentResponse != null)
