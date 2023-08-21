@@ -65,12 +65,12 @@ namespace Management_of_Change.Controllers
                     .OrderBy(m => m.Order)
                     .ToListAsync();
 
-            //// Get all tasks associated with each ImpactAssessmentResponseAnswer
-            //foreach (var record in impactAssessmentResponse.ImpactAssessmentResponseAnswers)
-            //{
-            //    Models.Task task = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == record.Id);
-            //    record.Task = task;
-            //}
+            // Get all tasks associated with each ImpactAssessmentResponseAnswer
+            foreach (var record in impactAssessmentResponseVM.ImpactAssessmentResponse.ImpactAssessmentResponseAnswers)
+            {
+                Models.Task task = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == record.Id);
+                record.Task = task;
+            }
 
             return View(impactAssessmentResponseVM);
         }

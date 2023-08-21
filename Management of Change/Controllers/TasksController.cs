@@ -125,6 +125,28 @@ namespace Management_of_Change.Controllers
             {
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
                 _context.Add(task);
+
+                // Send Email Out notifying the person who is assigned the task
+                string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
+                string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>MoC Title: </strong>" + task.Title + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+                if (toPerson != null)
+                {
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+
+                    EmailHistory emailHistory = new EmailHistory
+                    {
+                        Subject = subject,
+                        Body = body,
+                        SentToDisplayName = toPerson.displayname,
+                        SentToUsername = toPerson.onpremisessamaccountname,
+                        SentToEmail = toPerson.mail,
+                        ChangeRequestId = task.ChangeRequestId,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedUser = _username
+                    };
+                    _context.Add(emailHistory);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
