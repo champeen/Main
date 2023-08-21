@@ -14,11 +14,11 @@
             @*            @Html.ActionLink("Create New","Create")*@
             @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})
         </div>
-        <div class="col-2 fw-bold text-end">
-            Active/Non-Active Records:
+        <div class="col-2 fw-bold text-end mt-2">
+            Status:
         </div>
         <div class="col-2 text-start">
-            @Html.DropDownList("timestampFilter", new SelectList(ViewBag.ActiveRecordList), new {@class = "form-control form-select" })
+            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList),"All", new {@class = "form-control form-select" })
         </div>
         @*        <div class="col-2 fw-bold text-end">
         Another Filter:
@@ -99,7 +99,7 @@
                 <td class="text-nowrap">
                     @Html.DisplayFor(modelItem => item.MOC_Number) || ID: @Html.DisplayFor(modelItem => item.Id)
                 </td>
-                <td>
+                <td >
                     @Html.DisplayFor(modelItem => item.Title_Change_Description)
                 </td>
                 <td>

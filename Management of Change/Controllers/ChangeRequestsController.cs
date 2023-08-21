@@ -28,7 +28,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests
-        public async Task<IActionResult> Index(string timestampFilter)
+        public async Task<IActionResult> Index(string statusFilter)
         {
             // TEST MJWII // ChangeRequest = 4 // ImpactAssessmentResponse = 1 // ImpactAssessmentResponseAnswers = 1-16
             // see if all of this ImpactAssessmentResponses have questions answered from reviewer.  If so, mark as complete...
@@ -74,24 +74,23 @@ namespace Management_of_Change.Controllers
             //ViewBag.UserName31 = windowsPrincipal.Identity.Name;
             //ViewBag.UserName32 = User.Identity.Name != null ? User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1) : Environment.UserName;
 
-            ViewBag.activeRecordList = new List<String> { "Current", "Deleted", "All" };
+            //ViewBag.StatusList = new List<String> { "All","Draft", "Submitted for Impact Assessment Review", "Submitted for Final Approvals", "Submitted for Implementation", "Closed", "On Hold", "Killed" };
             //ViewBag.activeRecordList2 = new List<String> { "All","Current","Deleted" };
+
+            ViewBag.StatusList = _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToList();
 
             var requests = from m in _context.ChangeRequest
                            select m;
+            requests = requests.Where(r => r.DeletedDate == null);
 
-            switch (timestampFilter)
+            switch (statusFilter)
             {
                 case null:
-                    requests = requests.Where(r => r.DeletedDate == null);
                     break;
                 case "All":
                     break;
-                case "Current":
-                    requests = requests.Where(r => r.DeletedDate == null);
-                    break;
-                case "Deleted":
-                    requests = requests.Where(r => r.DeletedDate != null);
+                default:
+                    requests = requests.Where(m => m.Change_Status == statusFilter);
                     break;
             }
 
