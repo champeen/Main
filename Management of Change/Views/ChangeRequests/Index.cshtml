@@ -145,16 +145,16 @@
                     @*                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id" asp-route-tab="Details" class="btn btn-secondary">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>*@
-                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner) && (item.Change_Status == "Draft"))
+@*                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner) && (item.Change_Status == "Draft"))
                     {
                         @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
-                    }
-                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
+                    }*@
+                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})             
                     @if (ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner)
                     {
                         @if (item.DeletedDate == null && item.Change_Status == "Draft")
                         {
-                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"})
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-2", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"})
                             @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"></i>*@
                         }
                     }

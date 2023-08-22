@@ -23,7 +23,6 @@
         </h4>
     </div>
 </div>
-
 <div>
     <nav class="my-5">
         <ul class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -86,7 +85,7 @@
                         {
                             @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                             {
-                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
                             }
                         }
                     </div>
@@ -249,7 +248,7 @@
                     {
                         @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                         {
-                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
+                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
                         }
                     }
                 </div>
@@ -278,7 +277,7 @@
                         {
                             @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                             {
-                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
                             }
                         }
                     </div>
@@ -366,7 +365,7 @@
                         {
                             @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                             {
-                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end"})
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
                             }
                         }
                     </div>
@@ -437,11 +436,11 @@
                                     @Html.DisplayFor(modelItem => item.Comments)
                                 </td>
                                 <td class="text-nowrap">
-                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.ReviewCompleted == false))
-                                    {
-                                        @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
-                                    }
-                                    @Html.ActionLink("Detail","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
+                                    @*                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.ReviewCompleted == false))
+                            {
+                            @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
+                            }*@
+                                    @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
                                         @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
@@ -463,76 +462,85 @@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
             </div>
-            <table class="table table-bordered table-striped mt-3">
-                <thead class="table-primary">
-                    <tr>
-                        <th>
-                            Change Type
-                        </th>
-                        <th>
-                            Final Review Type
-                        </th>
-                        <th>
-                            Reviewer
-                        </th>
-                        <th>
-                            Reviewer Email
-                        </th>
-                        <th>
-                            Review Result
-                        </th>
-                        <th class="text-center">
-                            Review Completed
-                        </th>
-                        <th>
-                            Date Completed
-                        </th>
-                        <th>
-                            Comment
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.ChangeRequest.ImplementationFinalApprovalResponses)
-                    {
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mt-3 ">
+                    <thead class="table-primary">
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ChangeType)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.FinalReviewType)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Reviewer)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReviewerEmail)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.ReviewResult)
-                            </td>
-                            <td class="text-center">
-                                @Html.DisplayFor(modelItem => item.ReviewCompleted)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.DateCompleted)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Comments)
-                            </td>
-                            <td>
-                                @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Final Approvals"))
-                                {
-                                    @Html.ActionLink("Edit","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary"})
-                                    @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
-                                }
-                                @Html.ActionLink("Detail","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
-                            </td>
+                            <th>
+                                Change Type
+                            </th>
+                            <th>
+                                Final Review Type
+                            </th>
+                            <th>
+                                Reviewer
+                            </th>
+                            <th>
+                                Reviewer Email
+                            </th>
+                            <th class="text-center">
+                                Review Completed
+                            </th>
+                            <th class="text-center">
+                                Date Completed
+                            </th>
+                            <th>
+                                Review Result
+                            </th>
+                            <th>
+                                Comment
+                            </th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ChangeRequest.ImplementationFinalApprovalResponses)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ChangeType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FinalReviewType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Reviewer)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.ReviewCompleted)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReviewResult)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Comments)
+                                </td>
+                                <td class="text-nowrap">
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Final Approvals"))
+                                    {
+                                        @Html.ActionLink("Review","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                        @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                        if (item.ReviewResult != null && item.ReviewResult != "")
+                                        {
+                                            @Html.ActionLink("Mark Complete","CompleteFinalReview","ChangeRequests",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-success ms-2", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Detail","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
         @******************************************************************************************************************************************@
@@ -704,6 +712,7 @@
             </table>
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
         </div>
+
     </div>
 </div>
 <div class="text-nowrap my-5">

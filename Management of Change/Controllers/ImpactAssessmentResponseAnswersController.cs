@@ -279,23 +279,15 @@ namespace Management_of_Change.Controllers
                     {
                         // found at least 1 incomplete review from reviewer - make sure to mark ImpactAssessmentResponse as not fully answered
                         if (foundIncomplete)
-                        {
                             impactAssessmentResponse.QuestionsAnswered = false;
-                            impactAssessmentResponse.ModifiedUser = _username;
-                            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
-                            _context.Update(impactAssessmentResponse);
-                            await _context.SaveChangesAsync();
-
-                        }
                         // all review questions for reviewers impactAssessment have been answered.  Mark as fully answered
                         else
-                        {
                             impactAssessmentResponse.QuestionsAnswered = true;
-                            impactAssessmentResponse.ModifiedUser = _username;
-                            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
-                            _context.Update(impactAssessmentResponse);
-                            await _context.SaveChangesAsync();
-                        }
+
+                        impactAssessmentResponse.ModifiedUser = _username;
+                        impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+                        _context.Update(impactAssessmentResponse);
+                        await _context.SaveChangesAsync();
                     }
 
                     //if (!found)

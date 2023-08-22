@@ -45,38 +45,6 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            //ViewBag.UserName2 = Environment.UserDomainName;
-            //ViewBag.UserName3 = Environment.UserName;
-            //ViewBag.UserName6 = WindowsIdentity.GetCurrent().Name;
-            //ViewBag.UserName7 = WindowsIdentity.GetCurrent().Owner;
-            //ViewBag.UserName8 = WindowsIdentity.GetCurrent().User;
-            //ViewBag.UserName9 = WindowsIdentity.GetCurrent().AccessToken;
-            //ViewBag.UserName10 = WindowsIdentity.GetCurrent().Actor;
-            //ViewBag.UserName11 = WindowsIdentity.GetCurrent().AuthenticationType;
-
-            //ViewBag.UserName16 = WindowsIdentity.GetCurrent().ImpersonationLevel;
-            //ViewBag.UserName17 = WindowsIdentity.GetCurrent().IsAnonymous;
-            //ViewBag.UserName18 = WindowsIdentity.GetCurrent().IsAuthenticated;
-            //ViewBag.UserName19 = WindowsIdentity.GetCurrent().IsGuest;
-            //ViewBag.UserName20 = WindowsIdentity.GetCurrent().IsSystem;
-
-            //ViewBag.UserName26 = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //ViewBag.UserName27 = User.FindFirstValue(ClaimTypes.Name);
-            //ViewBag.UserName28 = User.Identity.Name;
-
-            ////Request.ServerVariables["LOGON_USER"]
-            //ViewBag.UserName29 = Request.HttpContext.User?.Identity?.Name;
-            //ViewBag.UserName30 = Environment.GetEnvironmentVariable("USERNAME");
-
-            //AppDomain appDomain = Thread.GetDomain();
-            //appDomain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
-            //WindowsPrincipal windowsPrincipal = (WindowsPrincipal)Thread.CurrentPrincipal;
-            //ViewBag.UserName31 = windowsPrincipal.Identity.Name;
-            //ViewBag.UserName32 = User.Identity.Name != null ? User.Identity.Name.Substring(User.Identity.Name.LastIndexOf(@"\") + 1) : Environment.UserName;
-
-            //ViewBag.StatusList = new List<String> { "All","Draft", "Submitted for Impact Assessment Review", "Submitted for Final Approvals", "Submitted for Implementation", "Closed", "On Hold", "Killed" };
-            //ViewBag.activeRecordList2 = new List<String> { "All","Current","Deleted" };
-
             ViewBag.StatusList = _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToList();
 
             var requests = from m in _context.ChangeRequest
@@ -297,6 +265,12 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
+            if (changeRequest.Estimated_Completion_Date == null)
+                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
+
+            if (changeRequest.Estimated_Completion_Date < DateTime.Today)
+                ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
+
             if (ModelState.IsValid)
             {
                 // make sure valid Username
@@ -430,6 +404,18 @@ namespace Management_of_Change.Controllers
 
                 return RedirectToAction("Details", new { id = changeRequest.Id });
             }
+
+            // Persist Dropdown Selection Lists
+            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
+            //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
+            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+            ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View(changeRequest);
         }
 
@@ -525,7 +511,6 @@ namespace Management_of_Change.Controllers
             }
             return View(changeRequest);
         }
-
 
         // POST: ChangeRequests/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -777,6 +762,76 @@ namespace Management_of_Change.Controllers
         {
             byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
             return File(fileBytes, "application/x-msdownload", fileName);
+        }
+
+        public async Task<IActionResult> CompleteFinalReview(int id)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the FinalApproval record....
+            ImplementationFinalApprovalResponse implementationFinalApprovalResponse = await _context.ImplementationFinalApprovalResponse.FirstOrDefaultAsync(m => m.Id == id);
+            if (implementationFinalApprovalResponse == null)
+                return NotFound();
+
+            implementationFinalApprovalResponse.ReviewCompleted = true;
+            implementationFinalApprovalResponse.DateCompleted = DateTime.UtcNow;
+            implementationFinalApprovalResponse.ModifiedDate = DateTime.UtcNow;
+            implementationFinalApprovalResponse.ModifiedUser = _username;
+            _context.Update(implementationFinalApprovalResponse);
+            await _context.SaveChangesAsync();
+
+            // check to see if all final reviews are complete for this change request.  If so, advanced to next stage/status...
+            bool found = await _context.ImplementationFinalApprovalResponse
+                .Where(m => m.ChangeRequestId == implementationFinalApprovalResponse.ChangeRequestId)
+                .Where(m => m.ReviewCompleted == null || m.ReviewCompleted == false)
+                .AnyAsync();
+
+            if (!found)
+            {
+                // There are no incomplete final approvals.  Advance to next stage.
+                var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == implementationFinalApprovalResponse.ChangeRequestId);
+                if (changeRequest != null)
+                {
+                    changeRequest.Change_Status = "Submitted for Implementation";
+                    changeRequest.ModifiedDate = DateTime.UtcNow;
+                    changeRequest.ModifiedUser = _username;
+                    _context.Update(changeRequest);
+                    await _context.SaveChangesAsync();
+
+                    // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
+                    // TODO MJWII
+                    var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                    foreach (var record in adminApproverList)
+                    {
+                        var admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
+                        string subject = @"Management of Change (MoC) - Close-Out/Complete Needed";
+                        string body = @"Your Close-Out/Complete of an MoC Change Request is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null);
+
+                        EmailHistory emailHistory = new EmailHistory
+                        {
+                            Subject = subject,
+                            Body = body,
+                            SentToDisplayName = admin.displayname,
+                            SentToUsername = record.Username,
+                            SentToEmail = admin.mail,
+                            ChangeRequestId = changeRequest.Id,
+                            ImplementationFinalApprovalResponseId = implementationFinalApprovalResponse.Id,
+                            CreatedDate = DateTime.UtcNow,
+                            CreatedUser = _username
+                        };
+                        _context.Add(emailHistory);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+
+            return RedirectToAction("Details", new { id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });
         }
 
         public async Task<IActionResult> CloseoutComplete(int id)

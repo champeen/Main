@@ -31,7 +31,7 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _context.ImpactAssessmentResponse != null ? 
+            return _context.ImpactAssessmentResponse != null ?
                           View(await _context.ImpactAssessmentResponse.OrderBy(m => m.ReviewType).ThenBy(m => m.ChangeType).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentResponse'  is null.");
         }
@@ -44,7 +44,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             if (id == null || _context.ImpactAssessmentResponse == null)
-                return NotFound();        
+                return NotFound();
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
@@ -197,7 +197,7 @@ namespace Management_of_Change.Controllers
                 if (tab == "IARDetails")
                     return RedirectToAction("Details", "ImpactAssessmentResponses", new { Id = impactAssessmentResponse.Id, tab = tab });
                 else
-                    return RedirectToAction("Details", "ChangeRequests", new { Id = impactAssessmentResponse.ChangeRequestId, tab=tab });
+                    return RedirectToAction("Details", "ChangeRequests", new { Id = impactAssessmentResponse.ChangeRequestId, tab = tab });
             }
             ViewBag.Users = getUserList(impactAssessmentResponse.Username);
             return View(impactAssessmentResponse);
@@ -244,14 +244,64 @@ namespace Management_of_Change.Controllers
 
             if (impactAssessmentResponse != null)
                 _context.ImpactAssessmentResponse.Remove(impactAssessmentResponse);
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ImpactAssessmentResponseExists(int id)
         {
-          return (_context.ImpactAssessmentResponse?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.ImpactAssessmentResponse?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> MarkNoAction(int id)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer = await _context.ImpactAssessmentResponseAnswer.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (impactAssessmentResponseAnswer != null)
+            {
+                impactAssessmentResponseAnswer.Action = "No";
+                impactAssessmentResponseAnswer.ModifiedDate = DateTime.UtcNow;
+                impactAssessmentResponseAnswer.ModifiedUser = _username;
+                _context.Update(impactAssessmentResponseAnswer);
+                await _context.SaveChangesAsync();
+            }
+
+            // see if there is at least one incomplete impact assessment response review.....
+            bool foundIncomplete = await _context.ImpactAssessmentResponseAnswer
+                .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
+                .Where(m => m.Action == null)
+                .AnyAsync();
+
+            // get ImpactAssessmentResponse ChangeRequest that this Task will belong to
+            ImpactAssessmentResponse impactAssessmentResponse = await _context.ImpactAssessmentResponse
+                .Where(m => m.Id == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
+                //.Where(m => m.ReviewCompleted != true)
+                .FirstOrDefaultAsync();
+
+            if (impactAssessmentResponse != null)
+            {
+                // found at least 1 incomplete review from reviewer - make sure to mark ImpactAssessmentResponse as not fully answered
+                if (foundIncomplete)
+                    impactAssessmentResponse.QuestionsAnswered = false;
+                // all review questions for reviewers impactAssessment have been answered.  Mark as fully answered
+                else
+                    impactAssessmentResponse.QuestionsAnswered = true;
+
+                impactAssessmentResponse.ModifiedUser = _username;
+                impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+                _context.Update(impactAssessmentResponse);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { Id = impactAssessmentResponseAnswer.ImpactAssessmentResponseId });
         }
     }
 }

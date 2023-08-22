@@ -8,116 +8,140 @@
 <h1>Impact Assessment Response</h1>
 
 <div>
-    <div class="text-nowrap">
-        <h4 class="mt-5">Details</h4>
-@*        <a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-        <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>*@
-        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
-        {
-            @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
-        }        
-        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+    <div class="accordion mt-5" id="accordionExample" >
+        <div class="" >
+            <h2 class="accordion-header" id="headingOne" >
+                <button class="accordion-button" @*style="max-width:20%;"*@ type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <h4 @*class="mt-5"*@>Details</h4><span class="ms-2">(click to display)</span>
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="text-nowrap">
+                        @*<h4 class="mt-5">Details</h4>*@
+                        @*<a class="me-2" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+                        <a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>*@
+                        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
+                        {
+                            @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
+                        }
+                        @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+                    </div>
+                    <hr />
+                    <dl class="row">
+                        @*        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ChangeRequestId" />*@
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewType)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewType)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.CreatedUser)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.CreatedUser)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ChangeType)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ChangeType)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.CreatedDate)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.CreatedDate)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Reviewer)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Reviewer)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ModifiedUser)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ModifiedUser)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewerEmail)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewerEmail)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ModifiedDate)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ModifiedDate)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Username)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Username)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DeletedUser)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DeletedUser)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewCompleted)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewCompleted)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DeletedDate)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DeletedDate)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DateCompleted)
+                        </dt>
+                        <dd class="col-sm-4 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DateCompleted)
+                        </dd>
+                        <dt class="col-sm-2 my-2 text-end"></dt>
+                        <dd class="col-sm-4 my-2"></dd>
+                        <dt class="col-sm-2 my-2 text-end">
+                            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Comments)
+                        </dt>
+                        <dd class="col-sm-10 my-2">
+                            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Comments)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="text-nowrap my-3">
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
+                    {
+                        @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
+                    }
+                    @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
+
+                </div>
+                <hr />
+
+
+            </div>
+        </div>
     </div>
-    <hr />
-    <dl class="row">
-@*        <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="ChangeRequestId" />*@
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewType)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewType)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.CreatedUser)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.CreatedUser)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ChangeType)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ChangeType)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.CreatedDate)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.CreatedDate)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Reviewer)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Reviewer)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ModifiedUser)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ModifiedUser)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewerEmail)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewerEmail)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ModifiedDate)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ModifiedDate)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Username)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Username)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DeletedUser)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DeletedUser)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.ReviewCompleted)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.ReviewCompleted)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DeletedDate)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DeletedDate)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.DateCompleted)
-        </dt>
-        <dd class="col-sm-4 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.DateCompleted)
-        </dd>
-        <dt class="col-sm-2 my-2 text-end"></dt>
-        <dd class="col-sm-4 my-2"></dd>
-        <dt class="col-sm-2 my-2 text-end">
-            @Html.DisplayNameFor(model => model.ImpactAssessmentResponse.Comments)
-        </dt>
-        <dd class="col-sm-10 my-2">
-            @Html.DisplayFor(model => model.ImpactAssessmentResponse.Comments)
-        </dd>
-    </dl>
 </div>
-<div class="text-nowrap my-3">
-    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
-    {
-        @Html.ActionLink("Edit","Edit",new {id=@Model.ImpactAssessmentResponse?.Id, tab="IARDetails"},new {@class="btn btn-primary"})
-    }    
-    @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
-</div>
-<hr />
+
+
+
+
+
+
+
+
 <div class="text-nowrap">
     <h4 class="mt-5">Impact Assessment Response Answers</h4>
     <div class="mt-4">
@@ -127,11 +151,11 @@
 <table class="table table-bordered table-striped mt-3">
     <thead class="table-primary">
         <tr class="table-primary">
-@*            <th>
-                Impact Assessment Response Id
+            @*<th>
+            Impact Assessment Response Id
             </th>
             <th>
-                Impact Assessment Response Answer Id
+            Impact Assessment Response Answer Id
             </th>*@
             <th>
                 Review Type
@@ -139,8 +163,8 @@
             <th>
                 Question
             </th>
-@*            <th>
-                Order
+            @*<th>
+            Order
             </th>*@
             <th>
                 Action
@@ -148,8 +172,8 @@
             <th>
                 Title/Short Description
             </th>
-@*            <th>
-                Details Of ActionNeeded
+            @*<th>
+            Details Of ActionNeeded
             </th>*@
             <th>
                 Pre Or Post Implementation
@@ -167,30 +191,30 @@
         @foreach (var item in Model.ImpactAssessmentResponse.ImpactAssessmentResponseAnswers)
         {
             <tr>
-@*                <td>
-                    @Html.DisplayFor(modelItem => item.ImpactAssessmentResponseId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
+                @*<td>
+            @Html.DisplayFor(modelItem => item.ImpactAssessmentResponseId)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Id)
+            </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.ReviewType)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Question)
                 </td>
-@*                <td>
-                    @Html.DisplayFor(modelItem => item.Order)
-                </td>*@
+                @*<td>
+            @Html.DisplayFor(modelItem => item.Order)
+            </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Action)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-@*                <td>
-                    @Html.DisplayFor(modelItem => item.DetailsOfActionNeeded)
-                </td>*@
+                @*<td>
+            @Html.DisplayFor(modelItem => item.DetailsOfActionNeeded)
+            </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.PreOrPostImplementation)
                 </td>
@@ -204,12 +228,16 @@
                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
                     {
                         @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
-                    }                    
-                    @Html.ActionLink("Details","Details", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-secondary"})
-                    @if(item.Task != null)
+                        @Html.ActionLink("No Action Needed","MarkNoAction", "ImpactAssessmentResponses", new {id=@item.Id, tab=""}, new {@class="btn btn-primary ms-2"})
+                    }
+                    else
                     {
-                        @Html.ActionLink("Task","Details", "Tasks", new {id=@item.Task.Id, tab=""}, new {@class="btn btn-secondary"})
+                        @Html.ActionLink("Details","Details", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-secondary"})
                     }                    
+                    @if (item.Task != null)
+                    {
+                        @Html.ActionLink("Task","Details", "Tasks", new {id=@item.Task.Id, tab=""}, new {@class="btn btn-secondary ms-2"})
+                    }
                 </td>
             </tr>
         }
