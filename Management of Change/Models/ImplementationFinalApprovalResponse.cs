@@ -22,6 +22,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Review Completed")]
         public bool ReviewCompleted { get; set; }
         [Display(Name = "Date Completed")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? DateCompleted { get; set; }
         public string? Comments { get; set; }
         [ForeignKey("ChangeRequest")]

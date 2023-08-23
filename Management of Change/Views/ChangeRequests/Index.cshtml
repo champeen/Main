@@ -26,7 +26,7 @@
         <div class="col-1 text-start">
         @Html.DropDownList("timestampFilter2", new SelectList(ViewBag.ActiveRecordList2), new {@class = "form-control" })
         </div>*@
-        <div class="col-1 text-end text-">
+        <div class="col-1 text-start">
             <input type="submit" value="Filter" class="btn btn-primary" />
         </div>
     </div>
@@ -152,7 +152,7 @@
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})             
                     @if (ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner)
                     {
-                        @if (item.DeletedDate == null && item.Change_Status == "Draft")
+                        @if (item.DeletedDate == null && item.Change_Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
                         {
                             @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-2", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"})
                             @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"></i>*@

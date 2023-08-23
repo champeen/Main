@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;
+using System.Security.AccessControl;
 //using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
@@ -217,6 +218,8 @@ namespace Management_of_Change.Controllers
                     Size = Convert.ToInt32(i.Length)
                 };
                 attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
             }
             changeRequestViewModel.Attachments = attachments.OrderBy(m => m.Name).ToList();
 
@@ -764,6 +767,12 @@ namespace Management_of_Change.Controllers
             return File(fileBytes, "application/x-msdownload", fileName);
         }
 
+        public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, tab = "Attachments" });
+        }
+
         public async Task<IActionResult> CompleteFinalReview(int id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -855,6 +864,92 @@ namespace Management_of_Change.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "CloseoutComplete" });
+        }
+
+        public async Task<IActionResult> CreateTask(int changeRequestId)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            Models.Task task = new Models.Task
+            {
+                ChangeRequestId = changeRequestId,
+                AssignedByUser = _username,
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            //// Create Dropdown List of ChangeRequests...
+            //var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
+            //List<SelectListItem> requests = new List<SelectListItem>();
+            //foreach (var request in requestList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = request.Id.ToString(), Text = request.MOC_Number + " : " + request.Title_Change_Description };
+            //    requests.Add(item);
+            //}
+            //ViewBag.ChangeRequests = requests;
+
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+
+            return View(task);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateTask([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (ModelState.IsValid)
+            {
+                task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
+                _context.Add(task);
+
+                // Send Email Out notifying the person who is assigned the task
+                string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
+                string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>MoC Title: </strong>" + task.Title + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+                if (toPerson != null)
+                {
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+
+                    EmailHistory emailHistory = new EmailHistory
+                    {
+                        Subject = subject,
+                        Body = body,
+                        SentToDisplayName = toPerson.displayname,
+                        SentToUsername = toPerson.onpremisessamaccountname,
+                        SentToEmail = toPerson.mail,
+                        ChangeRequestId = task.ChangeRequestId,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedUser = _username
+                    };
+                    _context.Add(emailHistory);
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "ChangeRequests", new { Id = task.ChangeRequestId, Tab = "Tasks" });
+            }
+            return View(task);
         }
     }
 }

@@ -69,10 +69,10 @@
         @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="text-nowrap">
-                <h4 class="mt-5">Details</h4>
+                @*<h4 class="mt-5">Details</h4>*@
                 @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
                 <a class="mx-2" asp-action="Index">Back to List</a>*@
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-6 text-start">
                         @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                         {
@@ -260,8 +260,8 @@
         <div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
             @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequest.Id }))
             {
-                <h4 class="mt-5">General MOC Questions</h4>
-                <div class="row">
+                @*<h4 class="mt-5">General MOC Questions</h4>*@
+                <div class="row mt-5">
                     <div class="col-6">
                         <div class="text-nowrap">
                             @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
@@ -376,8 +376,8 @@
         @*  IMPACT ASSESSMENT REVIEWS TAB  ********************************************************************************************************@
         @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveImpactAssessments" id="nav-impact-assessment" role="tabpanel" aria-labelledby="nav-impact-assessment-tab">
-            <div class="text-nowrap">
-                <h4 class="mt-5">Change Evaluations - Impact Assessments</h4>
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Change Evaluations - Impact Assessments</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
             </div>
@@ -393,13 +393,13 @@
                         <th>
                             Reviewer
                         </th>
-                        <th>
+@*                        <th>
                             ReviewerEmail
-                        </th>
-                        <th>
+                        </th>*@
+                        <th class="text-center" style="width: 5%;">
                             Review Completed
                         </th>
-                        <th>
+                        <th class="text-center" style="width: 5%;">
                             Date Completed
                         </th>
                         <th>
@@ -423,13 +423,13 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Reviewer)
                                 </td>
-                                <td>
+@*                                <td>
                                     @Html.DisplayFor(modelItem => item.ReviewerEmail)
-                                </td>
-                                <td>
+                                </td>*@
+                                <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.ReviewCompleted)
                                 </td>
-                                <td>
+                                    <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.DateCompleted)
                                 </td>
                                 <td>
@@ -457,8 +457,8 @@
         @*  FINAL APPROVALS TAB  ******************************************************************************************************************@
         @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveFinalApprovals" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
-            <div class="text-nowrap">
-                <h4 class="mt-5">Implementation - Final Approvals </h4>
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Implementation - Final Approvals </h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
             </div>
@@ -475,13 +475,13 @@
                             <th>
                                 Reviewer
                             </th>
-                            <th>
+@*                            <th>
                                 Reviewer Email
-                            </th>
-                            <th class="text-center">
+                            </th>*@
+                            <th class="text-center" style="width: 5%;">
                                 Review Completed
                             </th>
-                            <th class="text-center">
+                            <th class="text-center" style="width: 5%;">
                                 Date Completed
                             </th>
                             <th>
@@ -506,14 +506,14 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Reviewer)
                                 </td>
-                                <td>
+@*                                <td>
                                     @Html.DisplayFor(modelItem => item.ReviewerEmail)
-                                </td>
+                                </td>*@
                                 <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.ReviewCompleted)
                                 </td>
                                 <td class="text-center">
-                                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                                    @Html.DisplayFor(modelItem => item.DateCompleted,"yyyy/MM/dd")
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ReviewResult)
@@ -524,16 +524,24 @@
                                 <td class="text-nowrap">
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Final Approvals"))
                                     {
-                                        @Html.ActionLink("Review","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                        if (item.ReviewCompleted != true)
+                                        {
+                                            @Html.ActionLink("Review","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Details","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                        }
+
                                         @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
-                                        if (item.ReviewResult != null && item.ReviewResult != "")
+                                        if (item.ReviewResult != null && item.ReviewResult != "" && item.ReviewCompleted != true)
                                         {
                                             @Html.ActionLink("Mark Complete","CompleteFinalReview","ChangeRequests",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-success ms-2", title="Must Fill Out 'Review Result' to be able to Complete Review"})
                                         }
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("Detail","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                        @Html.ActionLink("Details","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
                                     }
                                 </td>
                             </tr>
@@ -547,38 +555,38 @@
         @*  CLOSE OUT/COMPLETE TAB  ***************************************************************************************************************@
         @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveCloseoutComplete" id="nav-closeout-complete" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
-            <div class="text-nowrap">
+            <div class="text-nowrap text-center">
                 <h4 class="mt-5">Close-Out/Complete Change Request </h4>
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
                 @if (ViewBag.OpenPreImplementationTasks > 0)
                 {
-                    <div class="fw-bold text-danger my-3">
+                    <div class="fw-bold text-danger my-5">
                         Cannot Close-out/Complete Change Request.  There are outstanding Pre-Implementation non-closed Tasks outstanding!
                     </div>
-                }
+                }                
                 else
                 {
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Submitted for Implementation"))
                     {
-                        @Html.ActionLink("Close-Out/Complete","CloseoutComplete", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success"})
+                        @Html.ActionLink("Close-Out/Complete","CloseoutComplete", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
                     }
                 }
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})                
             </div>
         </div>
         @******************************************************************************************************************************************@
         @*  ATTACHMENTS TAB  **********************************************************************************************************************@
         @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveAttachments" id="nav-attachments" role="tabpanel" aria-labelledby="nav-attachments-tab">
-            <div class="text-nowrap">
-                <h4 class="mt-5">Attachments</h4>
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Attachments</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
 
                 @using (Html.BeginForm("SaveFile", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
                 {
-                    <div class="control-label fw-bold mt-5">
-                        <strong>Upload File to ChangeRequest</strong>
+                    <div class="control-label fw-bold mt-5 mb-2">
+                        <strong>Upload File to ChangeRequest:</strong>
                     </div>
                     <div class="form-group mb-3">
                         <div class="row">
@@ -631,6 +639,10 @@
                                 @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
                                 @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
                                 @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
+                                @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                                {
+                                    @Html.ActionLink("Delete","DeleteFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
+                                }
                                 @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
                             </td>
                         </tr>
@@ -643,9 +655,10 @@
         @*  TASKS TAB  ****************************************************************************************************************************@
         @******************************************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveTasks" id="nav-tasks" role="tabpanel" aria-labelledby="nav-tasks-tab">
-            <div class="text-nowrap">
-                <h4 class="mt-5">Tasks</h4>
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Tasks</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @Html.ActionLink("Create New","CreateTask", new {changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks"},new {@class="btn btn-success"})
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
             </div>
             <table class="table table-bordered table-striped mt-5">
@@ -710,6 +723,7 @@
                     }
                 </tbody>
             </table>
+            @Html.ActionLink("Create New","CreateTask", new {changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks"},new {@class="btn btn-success mt-3"})
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
         </div>
 
