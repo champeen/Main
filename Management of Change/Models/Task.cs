@@ -18,6 +18,7 @@ namespace Management_of_Change.Models
         public string AssignedToUser { get; set; }
         [Display(Name = "Assigned By User")]
         public string AssignedByUser { get; set; }
+        [MaxLength(100)]
         public string Title { get; set; }
         public string? Description { get; set; }
         [Display(Name = "Due Date")]

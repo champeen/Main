@@ -8,15 +8,18 @@
 
 <form asp-controller="Tasks" asp-action="Index">
     <div class="row mt-3">
-        <div class="col-7 text-start">
+        <div class="col-6 text-start">
             @*<a asp-action="Create">Create New</a>*@
             @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})
         </div>
-        <div class="col-2 fw-bold text-end">
+        <div class="col-3 text-center">
+            <input class="form-control" id="taskSearch" type="text" placeholder="Search..">
+        </div>
+        <div class="col-1 fw-bold text-end mt-2">
             Status:
         </div>
         <div class="col-2 text-start">
-            @Html.DropDownList("statusFilter",
+            @Html.DropDownList("taskStatusFilter",
                 new List<SelectListItem>{
                     new SelectListItem {Value="Open", Text="Open"},
                     new SelectListItem {Value="In-Progress", Text="In-Progress"},
@@ -24,12 +27,12 @@
                     new SelectListItem {Value="Complete", Text="Complete"},
                     new SelectListItem {Value="Cancelled", Text="Cancelled"},
                 },
-                "** All Tasks **",
-            new {@class = "form-control form-select" })
+                "All",
+            new {@class = "form-control form-select", @id="taskStatusFilter" })
         </div>
-        <div class="col-1 text-end">
-            <input type="submit" value="Filter" class="btn btn-primary" />
-        </div>
+@*        <div class="col-1 text-end">
+            <input type="submit" value="Filter" class="btn btn-primary float-start" />
+        </div>*@
     </div>
 </form>
 
@@ -66,7 +69,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="taskTable">
         @foreach (var item in Model)
         {
             <tr>
@@ -122,12 +125,39 @@
                         @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
                     }                    
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
-@*                    @if (item.DeletedDate == null)
+                    @if (item.DeletedDate == null)
                     {
                         @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger"})
-                    }*@
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<script>
+    $(document).ready(function () {
+
+        $("#changeRequestSearch").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#changeRequestTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+
+        $("#taskStatusFilter").change(function () {
+            var value = $(this).val().toLowerCase();
+            $("#taskTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            //$("#taskTable tr").find(data - type).each(function () {
+            //    if ($(this).text() != $("#statusFilter").val())
+            //        $(this).hide();
+            //    else
+            //        $(this).parent().show();
+            //    if ($("#taskStatusFilter").val() == "All")
+            //        $(this).show();
+            //});
+        });
+    });
+</script>

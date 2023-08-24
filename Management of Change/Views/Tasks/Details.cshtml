@@ -5,11 +5,10 @@
 }
 
 <h1>Task</h1>
-
+<h4 class="mt-5">Details</h4>
 <div>
     <div class="text-nowrap">
-        <h4 class="mt-5">Details</h4>
-        @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+        @*<a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
         <a class="mx-2" asp-action="Index">Back to List</a>*@
         @if (ViewBag.IsAdmin || ViewBag.Username == Model.AssignedByUser || ViewBag.Username == Model.AssignedToUser)
         {

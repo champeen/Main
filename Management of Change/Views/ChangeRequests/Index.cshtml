@@ -9,16 +9,21 @@
 
 <form asp-controller="ChangeRequests" asp-action="Index">
     <div class="row mt-3">
-        <div class="col-7 text-start">
+        <div class="col-6 text-start">
             @*<a asp-action="Create">Create New</a>*@
             @*            @Html.ActionLink("Create New","Create")*@
-            @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})
+            <span class="flex-nowrap">
+                @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})                
+            </span>
         </div>
-        <div class="col-2 fw-bold text-end mt-2">
+        <div class="col-3 text-center">
+            <input class="form-control" id="changeRequestSearch" type="text" placeholder="Search..">
+        </div>
+        <div class="col-1 fw-bold text-end mt-2">
             Status:
         </div>
         <div class="col-2 text-start">
-            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList),"All", new {@class = "form-control form-select" })
+            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList),"All", new {@class = "form-control form-select", @id="statusFilter"})
         </div>
         @*        <div class="col-2 fw-bold text-end">
         Another Filter:
@@ -26,9 +31,9 @@
         <div class="col-1 text-start">
         @Html.DropDownList("timestampFilter2", new SelectList(ViewBag.ActiveRecordList2), new {@class = "form-control" })
         </div>*@
-        <div class="col-1 text-start">
+@*        <div class="col-1 text-start">
             <input type="submit" value="Filter" class="btn btn-primary" />
-        </div>
+        </div>*@
     </div>
 </form>
 <table class="table table-bordered table-striped mt-5 ">
@@ -92,7 +97,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="changeRequestTable">
         @foreach (var item in Model)
         {
             <tr>
@@ -163,6 +168,8 @@
         }
     </tbody>
 </table>
+
+
 
 @*<div class="fw-bolder">
     BELOW IS TEST INFORMATION ONLY ** MJWII **

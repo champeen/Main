@@ -18,7 +18,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks
-        public async Task<IActionResult> Index(string statusFilter)
+        public async Task<IActionResult> Index(string taskStatusFilter)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -28,8 +28,8 @@ namespace Management_of_Change.Controllers
             var requests = from m in _context.Task
                            select m;
 
-            if (statusFilter != null)
-                requests = requests.Where(r => r.Status == statusFilter);
+            if (taskStatusFilter != null)
+                requests = requests.Where(r => r.Status == taskStatusFilter);
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
