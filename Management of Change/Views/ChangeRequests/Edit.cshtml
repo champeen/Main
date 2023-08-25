@@ -4,11 +4,31 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Change Request for @Html.DisplayFor(model => model.MOC_Number) </h1>
 
-<h4>Change Request for @Html.DisplayFor(model => model.MOC_Number) @Html.DisplayFor(model => model.Id)</h4>
+<h4>Edit</h4>
 <hr />
 <form asp-action="Edit">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </span>
+                <span class="mx-2">
+                    @*<a class="mx-2" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>*@
+                    @if (ViewBag.Tab == "Index")
+                    {
+                        @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Cancel","Details", new {id=@Model.Id}, new {@class="btn btn-secondary"})
+                    }
+                </span>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -28,7 +48,7 @@
             </div>*@
             <div class="form-group my-3">
                 <label asp-for="Change_Owner" class="control-label fw-bold"></label>
-                <input asp-for="Change_Owner" class="form-control" />
+                @Html.DropDownListFor(model => model.Change_Owner, new SelectList(ViewBag.Users,"Value","Text"), new { @class="form-control form-select"})
                 <span asp-validation-for="Change_Owner" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
@@ -37,21 +57,7 @@
                 @Html.DropDownListFor(model => model.Location_Site, new SelectList(ViewBag.SiteLocations), new { @class="form-control form-select"})
                 <span asp-validation-for="Location_Site" class="text-danger"></span>
             </div>
-            <div class="form-group my-3">
-                <label asp-for="Title_Change_Description" class="control-label fw-bold"></label>
-                <input asp-for="Title_Change_Description" class="form-control" />
-                <span asp-validation-for="Title_Change_Description" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="Scope_of_the_Change" class="control-label fw-bold"></label>
-                <input asp-for="Scope_of_the_Change" class="form-control" />
-                <span asp-validation-for="Scope_of_the_Change" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="Justification_of_the_Change" class="control-label fw-bold"></label>
-                <input asp-for="Justification_of_the_Change" class="form-control" />
-                <span asp-validation-for="Justification_of_the_Change" class="text-danger"></span>
-            </div>
+
             <div class="form-group my-3">
                 <label asp-for="Change_Level" class="control-label fw-bold"></label>
                 @*<input asp-for="Change_Level" class="form-control" />*@
@@ -64,19 +70,22 @@
                 @Html.DropDownListFor(model => model.Area_of_Change, new SelectList(ViewBag.ChangeAreas), new { @class="form-control form-select"})
                 <span asp-validation-for="Area_of_Change" class="text-danger"></span>
             </div>
+            <div class="form-group my-3">
+                <label asp-for="Raw_Material_Component_Numbers_Impacted" class="control-label fw-bold"></label>
+                <input asp-for="Raw_Material_Component_Numbers_Impacted" class="form-control" />
+                <span asp-validation-for="Raw_Material_Component_Numbers_Impacted" class="text-danger"></span>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="form-group my-3">
-                <label asp-for="Expiration_Date_Temporary" class="control-label fw-bold"></label>
-                <input asp-for="Expiration_Date_Temporary" class="form-control" />
-                <span asp-validation-for="Expiration_Date_Temporary" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
                 <label asp-for="Change_Status" class="control-label fw-bold"></label>
-                <input asp-for="Change_Status" class="form-control" />
+@*                <div>
+                    @Html.DisplayFor(model => model.Change_Status)
+                </div>*@
+                @Html.DropDownListFor(model => model.Change_Status, new SelectList(ViewBag.Status), new { @class="form-control form-select"})
                 <span asp-validation-for="Change_Status" class="text-danger"></span>
             </div>
-            @*            <div class="form-group">
+            @*<div class="form-group">
             <label asp-for="Request_Date" class="control-label"></label>
             <input asp-for="Request_Date" class="form-control" />
             <span asp-validation-for="Request_Date" class="text-danger"></span>
@@ -95,24 +104,53 @@
             </div>
             <div class="form-group my-3">
                 <label asp-for="Estimated_Completion_Date" class="control-label fw-bold"></label>
-                <input asp-for="Estimated_Completion_Date" class="form-control" />
+                <input asp-for="Estimated_Completion_Date" class="form-control" style="max-width:25%;"/>
                 <span asp-validation-for="Estimated_Completion_Date" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Raw_Material_Component_Numbers_Impacted" class="control-label fw-bold"></label>
-                <input asp-for="Raw_Material_Component_Numbers_Impacted" class="form-control" />
-                <span asp-validation-for="Raw_Material_Component_Numbers_Impacted" class="text-danger"></span>
+                <label asp-for="Expiration_Date_Temporary" class="control-label fw-bold"></label>
+                <input asp-for="Expiration_Date_Temporary" class="form-control" style="max-width:25%;"/>
+                <span asp-validation-for="Expiration_Date_Temporary" class="text-danger"></span>
             </div>
         </div>
     </div>
-    <div class="row my-3">
+    <div class="col-md-12">
+        <div class="form-group my-3">
+            <label asp-for="Title_Change_Description" class="control-label fw-bold"></label>
+            @Html.TextAreaFor(model => model.Title_Change_Description, new {@class = "form-control", @rows = 1 })
+            @*<input asp-for="Title_Change_Description" class="form-control" />*@
+            <span asp-validation-for="Title_Change_Description" class="text-danger"></span>
+        </div>
+        <div class="form-group my-3">
+            <label asp-for="Scope_of_the_Change" class="control-label fw-bold"></label>
+            @Html.TextAreaFor(model => model.Scope_of_the_Change, new {@class = "form-control", @rows = 3 })
+            @*<input asp-for="Scope_of_the_Change" class="form-control" />*@
+            <span asp-validation-for="Scope_of_the_Change" class="text-danger"></span>
+        </div>
+        <div class="form-group my-3">
+            <label asp-for="Justification_of_the_Change" class="control-label fw-bold"></label>
+            @Html.TextAreaFor(model => model.Justification_of_the_Change, new {@class = "form-control", @rows = 3 })
+            @*<input asp-for="Justification_of_the_Change" class="form-control" />*@
+            <span asp-validation-for="Justification_of_the_Change" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="row my-4">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
                 <span class="mx-2">
-                    <a class="mx-2" asp-action="Index">Cancel</a>
+                    @*<a class="mx-2" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>*@
+                    @*@Html.ActionLink("Cancel","Details",new {id=@Model.Id},new {@class="btn btn-secondary"})*@
+                    @if (ViewBag.Tab == "Index")
+                    {
+                        @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Cancel","Details",new {id=@Model.Id},new {@class="btn btn-secondary"})
+                    }
                 </span>
             </div>
         </div>

@@ -1,0 +1,99 @@
+﻿@model Management_of_Change.Models.ImplementationFinalApprovalResponse
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Implementation Final Approval Response</h1>
+
+<h4 class="mt-5">Edit</h4>
+
+<form asp-action="Edit">
+    <div class="form-group text-nowrap">
+        <input type="submit" value="Save" class="btn btn-primary me-2" />
+        @*<a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>*@
+        @Html.ActionLink("Cancel","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab="FinalApprovals"}, new {@class="btn btn-secondary"})
+    </div>
+    <hr />
+    <div class="row my-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-6">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ChangeRequestId" />
+            <input type="hidden" asp-for="Username" />
+            <input type="hidden" asp-for="ReviewCompleted"/>
+            <input type="hidden" asp-for="DateCompleted" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="ModifiedDate" />
+            <input type="hidden" asp-for="ModifiedUser" />
+            <input type="hidden" asp-for="DeletedDate" />
+            <input type="hidden" asp-for="DeletedUser" />
+            <div class="form-group my-3">
+                <label asp-for="ChangeType" class="control-label fw-bold"></label>
+                <input asp-for="ChangeType" class="form-control" readonly/>
+                <span asp-validation-for="ChangeType" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="FinalReviewType" class="control-label fw-bold"></label>
+                <input asp-for="FinalReviewType" class="form-control" readonly />
+                <span asp-validation-for="FinalReviewType" class="text-danger"></span>
+            </div>
+@*            <div class="form-group form-check mt-5">
+                <label class="form-check-label fw-bold">
+                    <input class="form-check-input" asp-for="ReviewCompleted" /> @Html.DisplayNameFor(model => model.ReviewCompleted)
+                </label>
+            </div>*@
+        </div>
+        <div class="col-md-6">
+            <div class="form-group my-3">
+                <label asp-for="Reviewer" class="control-label fw-bold"></label>
+                <input asp-for="Reviewer" class="form-control" readonly />
+                <span asp-validation-for="Reviewer" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ReviewerEmail" class="control-label fw-bold"></label>
+                <input asp-for="ReviewerEmail" class="form-control" readonly />
+                <span asp-validation-for="ReviewerEmail" class="text-danger"></span>
+            </div>
+@*            <div class="form-group my-3">
+                <label asp-for="DateCompleted" class="control-label fw-bold"></label>
+                <input asp-for="DateCompleted" class="form-control" />
+                <span asp-validation-for="DateCompleted" class="text-danger"></span>
+            </div>*@
+
+            @*<div class="form-group my-3">
+            <label asp-for="ChangeRequestId" class="control-label fw-bold"></label>
+            <select asp-for="ChangeRequestId" class="form-control" asp-items="ViewBag.ChangeRequestId"></select>
+            <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
+            </div>*@
+        </div>
+        <div class="col-12">
+            <div class="form-group my-3">
+                <label asp-for="ReviewResult" class="control-label fw-bold"></label>
+                @*<input asp-for="ReviewResult" class="form-control" />*@
+                @Html.TextAreaFor(model => model.ReviewResult, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="ReviewResult" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Comments" class="control-label fw-bold"></label>
+                @*<input asp-for="Comments" class="form-control" />*@
+                @Html.TextAreaFor(model => model.Comments, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group my-4">
+                <input type="submit" value="Save" class="btn btn-primary me-2" />
+                @*<a class="mx-2" asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Back to Change Request</a>*@
+                @Html.ActionLink("Cancel","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab="FinalApprovals"}, new {@class="btn btn-secondary"})
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
-using Management_of_Change.Migrations;
+using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
+//using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
-    public class ChangeAreasController : Controller
+    public class ChangeAreasController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public ChangeAreasController(Management_of_ChangeContext context)
+        public ChangeAreasController(Management_of_ChangeContext context) : base (context)
         {
             _context = context;
         }
@@ -23,7 +25,14 @@ namespace Management_of_Change.Controllers
         // GET: ChangeAreas
         public async Task<IActionResult> Index()
         {
-              return _context.ChangeArea != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ChangeArea != null ? 
                           View(await _context.ChangeArea.OrderBy(m => m.Order).ThenBy(m => m.Description).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ChangeArea'  is null.");
         }
@@ -31,11 +40,17 @@ namespace Management_of_Change.Controllers
         // GET: ChangeAreas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ChangeArea == null)
                 return NotFound();
 
-            var changeArea = await _context.ChangeArea
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var changeArea = await _context.ChangeArea.FirstOrDefaultAsync(m => m.Id == id);
 
             if (changeArea == null)
                 return NotFound();
@@ -46,10 +61,17 @@ namespace Management_of_Change.Controllers
         // GET: ChangeAreas/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             ChangeArea changeArea = new ChangeArea
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(changeArea);
@@ -62,6 +84,23 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            // Make sure duplicates are not entered...
+            List<ChangeArea> checkDupes = await _context.ChangeArea
+                .Where(m => m.Description == changeArea.Description)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Description", "Change Area already exists.");
+                return View(changeArea);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(changeArea);
@@ -74,6 +113,13 @@ namespace Management_of_Change.Controllers
         // GET: ChangeAreas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ChangeArea == null)
                 return NotFound();
 
@@ -92,11 +138,28 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != changeArea.Id)
                 return NotFound();
 
-            changeArea.ModifiedUser = "Michael Wilson";
-            changeArea.ModifiedDate = DateTime.Now;
+            // Make sure duplicates are not entered...
+            //List<ChangeArea> checkDupes = await _context.ChangeArea
+            //    .Where(m => m.Description == changeArea.Description)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Description", "Change Area already exists.");
+            //    return View(changeArea);
+            //}
+
+            changeArea.ModifiedUser = _username;
+            changeArea.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {
@@ -120,11 +183,17 @@ namespace Management_of_Change.Controllers
         // GET: ChangeAreas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ChangeArea == null)
                  return NotFound();
 
-            var changeArea = await _context.ChangeArea
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var changeArea = await _context.ChangeArea.FirstOrDefaultAsync(m => m.Id == id);
 
             if (changeArea == null)
                 return NotFound();
@@ -137,6 +206,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ChangeArea == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ChangeArea'  is null.");
 

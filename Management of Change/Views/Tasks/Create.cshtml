@@ -1,0 +1,142 @@
+﻿@model Management_of_Change.Models.Task
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Task</h1>
+
+<h4>Create</h4>
+<hr />
+<form asp-action="Create" asp-route-source="@ViewBag.Source">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </span>
+                <span class="mx-2">
+                    @if (ViewBag.Source == "Home")
+                    {
+                        @Html.ActionLink("Cancel","Index","Home",new {},new {@class="btn btn-secondary"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Cancel","Index",new {},new {@class="btn btn-secondary"})
+                    }
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col-md-12">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="AssignedByUser" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <div class="form-group my-3">
+                <div class="control-label fw-bold  mb-1">Change Request</div>
+                @*                <label  "Change Request" class="control-label fw-bold"></label>*@
+                @*<input asp-for="ChangeRequestId" class="form-control" />*@
+                @*@Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests), new { @class="form-control form-select"})*@
+                @Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests,"Value","Text"), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ImplementationType" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
+                @*<input asp-for="Status" class="form-control" />*@
+                @Html.DropDownListFor(model => model.ImplementationType,
+                new List<SelectListItem>{
+                new SelectListItem {Value="Pre", Text="Pre"},
+                new SelectListItem {Value="Post", Text="Post"}},
+                "-- select --",
+                new { @class="form-control form-select", @style="max-width:25%"})
+                <span asp-validation-for="ImplementationType" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Status" class="control-label fw-bold"></label><span class="text-danger mx-2 fst-italic">(required)</span>
+                @*<input asp-for="Status" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Status,
+                new List<SelectListItem>{
+                new SelectListItem {Value="Open", Text="Open"},
+                new SelectListItem {Value="In-Progress", Text="In-Progress"},
+                new SelectListItem {Value="On Hold", Text="On Hold"},
+                new SelectListItem {Value="Complete", Text="Complete"},
+                new SelectListItem {Value="Cancelled", Text="Cancelled"}},
+                "-- select --",
+                new { @class="form-control form-select", @style="max-width:25%"})
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="AssignedToUser" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
+                @Html.DropDownListFor(model => model.AssignedToUser, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:25%;"})
+                <span asp-validation-for="AssignedToUser" class="text-danger"></span>
+            </div>
+@*            <div class="form-group my-3">
+                <label asp-for="AssignedByUser" class="control-label fw-bold"></label>
+                <input asp-for="AssignedByUser" class="form-control" />
+                <span asp-validation-for="AssignedByUser" class="text-danger"></span>
+            </div>*@
+            <div class="form-group my-3">
+                <label asp-for="Title" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
+                @*<input asp-for="Description" class="form-control" />*@
+                @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="DueDate" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
+                <input asp-for="DueDate" class="form-control" style="max-width:10%" />
+                <span asp-validation-for="DueDate" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="CompletionDate" class="control-label fw-bold mb-1"></label>
+                <input asp-for="CompletionDate" class="form-control" style="max-width:10%" />
+                <span asp-validation-for="CompletionDate" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="CompletionNotes" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.CompletionNotes, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="CompletionNotes" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="OnHoldReason" class="control-label fw-bold mb-1"></label>
+                <input asp-for="OnHoldReason" class="form-control" />
+                <span asp-validation-for="OnHoldReason" class="text-danger"></span>
+            </div>
+            @*<div class="form-group my-3">
+                <label asp-for="ImpactAssessmentResponseAnswerId" class="control-label fw-bold"></label>
+                <select asp-for="ImpactAssessmentResponseAnswerId" class="form-control" asp-items="ViewBag.ImpactAssessmentResponseAnswerId"></select>
+            </div>*@
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <span class="mx-2">
+                        @if (ViewBag.Source == "Home")
+                        {
+                            @Html.ActionLink("Cancel","Index","Home",new {},new {@class="btn btn-secondary"})
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Cancel","Index",new {},new {@class="btn btn-secondary"})
+                        }
+                    </span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
-using Management_of_Change.Migrations;
+using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
+//using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
-    public class ProductLinesController : Controller
+    public class ProductLinesController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public ProductLinesController(Management_of_ChangeContext context)
+        public ProductLinesController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }
@@ -23,7 +25,14 @@ namespace Management_of_Change.Controllers
         // GET: ProductLines
         public async Task<IActionResult> Index()
         {
-              return _context.ProductLine != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ProductLine != null ? 
                           View(await _context.ProductLine.OrderBy(m => m.Order).ThenBy(m => m.Description).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ProductLine'  is null.");
         }
@@ -31,6 +40,13 @@ namespace Management_of_Change.Controllers
         // GET: ProductLines/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ProductLine == null)
                 return NotFound();
 
@@ -46,10 +62,17 @@ namespace Management_of_Change.Controllers
         // GET: ProductLines/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             ProductLine productLine = new ProductLine
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(productLine);
@@ -62,6 +85,23 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ProductLine productLine)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            // Make sure duplicates are not entered...
+            List<ProductLine> checkDupes = await _context.ProductLine
+                .Where(m => m.Description == productLine.Description)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Description", "Product Line already exists.");
+                return View(productLine);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(productLine);
@@ -74,6 +114,13 @@ namespace Management_of_Change.Controllers
         // GET: ProductLines/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ProductLine == null)
                 return NotFound();
 
@@ -91,11 +138,28 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ProductLine productLine)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != productLine.Id)
                 return NotFound();
 
-            productLine.ModifiedUser = "Michael Wilson";
-            productLine.ModifiedDate = DateTime.Now;
+            // Make sure duplicates are not entered...
+            //List<ProductLine> checkDupes = await _context.ProductLine
+            //    .Where(m => m.Description == productLine.Description)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Description", "Product Line already exists.");
+            //    return View(productLine);
+            //}
+
+            productLine.ModifiedUser = _username;
+            productLine.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {
@@ -119,6 +183,13 @@ namespace Management_of_Change.Controllers
         // GET: ProductLines/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.ProductLine == null)
                 return NotFound();
 
@@ -136,6 +207,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ProductLine == null)
                 return Problem("Entity set 'Management_of_ChangeContext.ProductLine'  is null.");
 

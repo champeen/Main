@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Management_of_Change.Models.ImplementationFinalApprovalResponse>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Implementation Final Approval Responses</h1>
+
+<p class="my-3">
+    <a asp-action="Create">Create New</a>
+    <span class="mx-5"><a asp-controller="Admin" asp-action="Index">Previous</a></span>
+</p>
+<table class="table table-bordered table-striped">
+    <thead class="table-primary">
+        <tr>
+            <th>
+                ImplementationFinalApprovalResponse
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeRequestId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FinalReviewType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Reviewer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReviewerEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReviewResult)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReviewCompleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCompleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Comments)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeRequestId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FinalReviewType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reviewer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewResult)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewCompleted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comments)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

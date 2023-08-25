@@ -3,5 +3,24 @@
 Add-Migration InitialCreate
 Update-Database
 
-Add-Migration Rating
-Update-Database
+TO DELETE ALL AND START OVER....
+
+DROP TABLE [dbo].[ChangeType];
+DROP TABLE [dbo].[GeneralMocQuestions]
+DROP TABLE [dbo].[FinalReviewType]
+DROP TABLE [dbo].[GeneralMocResponses]
+DROP TABLE [dbo].[ImpactAssessmentMatrix]
+DROP TABLE [dbo].[ImpactAssessmentResponse]
+DROP TABLE [dbo].[ImplementationFinalApprovalMatrix]
+DROP TABLE [dbo].[ImplementationFinalApprovalResponse]
+DROP TABLE [dbo].[ProductLine]
+DROP TABLE [dbo].[ResponseDropdownSelections]
+DROP TABLE [dbo].[ReviewType]
+DROP TABLE [dbo].[SiteLocation]
+DROP TABLE [dbo].[ChangeRequest]
+
+- delete everything from the database
+- Update-Database -Migration 0
+- Remove-Migration
+- Add-Migration Initialize
+- Update-Database

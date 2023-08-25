@@ -7,14 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
+using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
 
 namespace Management_of_Change.Controllers
 {
-    public class SiteLocationsController : Controller
+    public class SiteLocationsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public SiteLocationsController(Management_of_ChangeContext context)
+        public SiteLocationsController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }
@@ -22,7 +24,14 @@ namespace Management_of_Change.Controllers
         // GET: SiteLocations
         public async Task<IActionResult> Index()
         {
-              return _context.SiteLocation != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.SiteLocation != null ? 
                           View(await _context.SiteLocation.OrderBy(m => m.Order).ThenBy(m => m.Description).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.SiteLocation'  is null.");
         }
@@ -30,6 +39,13 @@ namespace Management_of_Change.Controllers
         // GET: SiteLocations/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.SiteLocation == null)
             {
                 return NotFound();
@@ -48,10 +64,17 @@ namespace Management_of_Change.Controllers
         // GET: SiteLocations/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             SiteLocation siteLocation = new SiteLocation
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(siteLocation);
@@ -64,6 +87,23 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] SiteLocation siteLocation)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            // Make sure duplicates are not entered...
+            List<SiteLocation> checkDupes = await _context.SiteLocation
+                .Where(m => m.Description == siteLocation.Description)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Description", "Site/Location already exists.");
+                return View(siteLocation);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(siteLocation);
@@ -76,6 +116,13 @@ namespace Management_of_Change.Controllers
         // GET: SiteLocations/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.SiteLocation == null)
             {
                 return NotFound();
@@ -96,11 +143,28 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] SiteLocation siteLocation)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != siteLocation.Id)
                 return NotFound();
 
-            siteLocation.ModifiedUser = "Michael Wilson";
-            siteLocation.ModifiedDate = DateTime.Now;
+            // Make sure duplicates are not entered...
+            //List<SiteLocation> checkDupes = await _context.SiteLocation
+            //    .Where(m => m.Description == siteLocation.Description)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Description", "Site/Location already exists.");
+            //    return View(siteLocation);
+            //}
+
+            siteLocation.ModifiedUser = _username;
+            siteLocation.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {
@@ -128,6 +192,13 @@ namespace Management_of_Change.Controllers
         // GET: SiteLocations/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.SiteLocation == null)
             {
                 return NotFound();
@@ -148,6 +219,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.SiteLocation == null)
             {
                 return Problem("Entity set 'Management_of_ChangeContext.SiteLocation'  is null.");

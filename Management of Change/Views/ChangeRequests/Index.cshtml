@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Management_of_Change.Models.ChangeRequest>
+@*@model Management_of_Change.Models.ChangeRequestViewModel*@
 
 @{
     ViewData["Title"] = "Index";
@@ -6,115 +7,295 @@
 
 <h1>Change Requests</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<form asp-controller="ChangeRequests" asp-action="Index">
+    <div class="row mt-3">
+        <div class="col-6 text-start">
+            @*<a asp-action="Create">Create New</a>*@
+            @*            @Html.ActionLink("Create New","Create")*@
+            <span class="flex-nowrap">
+                @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})                
+            </span>
+        </div>
+        <div class="col-3 text-center">
+            <input class="form-control" id="changeRequestSearch" type="text" placeholder="Search..">
+        </div>
+        <div class="col-1 fw-bold text-end mt-2">
+            Status:
+        </div>
+        <div class="col-2 text-start">
+            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList),"All", new {@class = "form-control form-select", @id="statusFilter"})
+        </div>
+        @*        <div class="col-2 fw-bold text-end">
+        Another Filter:
+        </div>
+        <div class="col-1 text-start">
+        @Html.DropDownList("timestampFilter2", new SelectList(ViewBag.ActiveRecordList2), new {@class = "form-control" })
+        </div>*@
+@*        <div class="col-1 text-start">
+            <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>*@
+    </div>
+</form>
+<table class="table table-bordered table-striped mt-5 ">
+    <thead class="align-top align-text-top table-primary">
         <tr>
             <th class="text-nowrap">
-                @Html.DisplayNameFor(model => model.MOC_Number)
+                MOC Number
+                @*@Html.DisplayNameFor(model => model.MOC_Number)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Change_Owner)
+                Title/Change Description
+                @*@Html.DisplayNameFor(model => model.Title_Change_Description)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Location_Site)
+                Change Owner
+                @*@Html.DisplayNameFor(model => model.Change_Owner)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title_Change_Description)
+                Change Status
+                @*@Html.DisplayNameFor(model => model.Change_Status)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Scope_of_the_Change)
+                Change Type
+                @*@Html.DisplayNameFor(model => model.Change_Type)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Justification_of_the_Change)
+                Change Level
+                @*@Html.DisplayNameFor(model => model.Change_Level)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Change_Status)
+                Location/Site
+                @*@Html.DisplayNameFor(model => model.Location_Site)*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Request_Date)
+                Area of Change
+                @*@Html.DisplayNameFor(model => model.Area_of_Change)*@
+            </th>
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Scope_of_the_Change)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Proudct_Line)
-            </th>
+            @Html.DisplayNameFor(model => model.Justification_of_the_Change)
+            </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.Change_Type)
+                Product Line
+                @*@Html.DisplayNameFor(model => model.Proudct_Line)*@
             </th>
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
+            </th>*@
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
+            </th>*@
+            @*            <th>
+            @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
+            </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Change_Level)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Area_of_Change)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
+                Request Date
+                @*@Html.DisplayNameFor(model => model.Request_Date)*@
             </th>
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="changeRequestTable">
         @foreach (var item in Model)
         {
             <tr>
                 <td class="text-nowrap">
-                    @Html.DisplayFor(modelItem => item.MOC_Number) @Html.DisplayFor(modelItem => item.Id)
+                    @Html.DisplayFor(modelItem => item.MOC_Number) || ID: @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td >
+                    @Html.DisplayFor(modelItem => item.Title_Change_Description)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Change_Owner)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Location_Site)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Scope_of_the_Change)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Justification_of_the_Change)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Change_Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Request_Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Proudct_Line)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Change_Type)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Raw_Material_Component_Numbers_Impacted)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Change_Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location_Site)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Area_of_Change)
                 </td>
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Scope_of_the_Change)
+            </td>
+            <td>
+            @Html.DisplayFor(modelItem => item.Justification_of_the_Change)
+            </td>*@
                 <td>
-                    @Html.DisplayFor(modelItem => item.Expiration_Date_Temporary)
+                    @Html.DisplayFor(modelItem => item.Proudct_Line)
+                </td>
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+            </td>*@
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Raw_Material_Component_Numbers_Impacted)
+            </td>*@
+                @*                <td>
+            @Html.DisplayFor(modelItem => item.Expiration_Date_Temporary)
+            </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.Request_Date)
                 </td>
                 <td class="text-nowrap">
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    @*                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" asp-route-tab="Details" class="btn btn-secondary">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>*@
+@*                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner) && (item.Change_Status == "Draft"))
+                    {
+                        @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
+                    }*@
+                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})             
+                    @if (ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner)
+                    {
+                        @if (item.DeletedDate == null && item.Change_Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
+                        {
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-2", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"})
+                            @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"></i>*@
+                        }
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+
+
+@*<div class="fw-bolder">
+    BELOW IS TEST INFORMATION ONLY ** MJWII **
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="fw-bold text-danger">FROM SERVER</div>
+        <div>
+            Environment.UserDomainName = @ViewBag.UserName2;
+        </div>
+        <div>
+            Environment.UserName = @ViewBag.UserName3;
+        </div>
+        <div>
+            Name = @ViewBag.UserName6;
+        </div>
+        <div>
+            Owner = @ViewBag.UserName7;
+        </div>
+        <div>
+            User = @ViewBag.UserName8;
+        </div>
+        <div>
+            AccessToken = @ViewBag.UserName9;
+        </div>
+        <div>
+            Actor = @ViewBag.UserName10;
+        </div>
+        <div>
+            AuthenticationType = @ViewBag.UserName11;
+        </div>
+        <div>
+            ImpersonationLevel = @ViewBag.UserName16;
+        </div>
+        <div>
+            IsAnonymous = @ViewBag.UserName17;
+        </div>
+        <div>
+            IsAuthenticated = @ViewBag.UserName18;
+        </div>
+        <div>
+            IsGuest = @ViewBag.UserName19;
+        </div>
+        <div>
+            IsSystem = @ViewBag.UserName20;
+        </div>
+        <div>
+            User.FindFirstValue(ClaimTypes.NameIdentifier) = @ViewBag.UserName26;
+        </div>
+        <div>
+            User.FindFirstValue(ClaimTypes.Name) = @ViewBag.UserName27;
+        </div>
+        <div>
+            User.Identity.Name = @ViewBag.UserName28;
+        </div>
+        <div>
+            Request.HttpContext.User.Identity.Name = @ViewBag.UserName29;
+        </div>
+        <div>
+            Environment.GetEnvironmentVariable("USERNAME") = @ViewBag.UserName30;
+        </div>
+        <div>
+            windowsPrincipal.Identity.Name = @ViewBag.UserName31;
+        </div>
+        <div>
+            New Iternary Operator = @ViewBag.UserName32;
+        </div>
+
+
+    </div>
+    <div class="col-6">
+        <div class="fw-bold text-danger">WHAT I GET LOCALLY</div>
+        <div>Environment.UserDomainName = AUBCORP;</div>
+        <div>
+            Environment.UserName = MJWilson;
+        </div>
+        <div>
+            Name = AUBCORP\MJWilson;
+        </div>
+        <div>
+            Owner = S-1-5-32-544;
+        </div>
+        <div>
+            User = S-1-5-21-2825809737-1480607278-3817146174-3309;
+        </div>
+        <div>
+            AccessToken = Microsoft.Win32.SafeHandles.SafeAccessTokenHandle;
+        </div>
+        <div>
+            Actor = ;
+        </div>
+        <div>
+            AuthenticationType = Kerberos;
+        </div>
+        <div>
+            ImpersonationLevel = None;
+        </div>
+        <div>
+            IsAnonymous = False;
+        </div>
+        <div>
+            IsAuthenticated = True;
+        </div>
+        <div>
+            IsGuest = False;
+        </div>
+        <div>
+            IsSystem = False;
+        </div>
+        <div>
+            User.FindFirstValue(ClaimTypes.NameIdentifier) = ;
+        </div>
+        <div>
+            User.FindFirstValue(ClaimTypes.Name) = ;
+        </div>
+        <div>
+            User.Identity.Name = ;
+        </div>
+        <div>
+            Request.HttpContext.User.Identity.Name = ;
+        </div>
+        <div>
+            Environment.GetEnvironmentVariable("USERNAME") = MJWilson;
+        </div>
+        <div>
+            windowsPrincipal.Identity.Name; = AUBCORP\MJWilson;
+        </div>
+    </div>*@
+

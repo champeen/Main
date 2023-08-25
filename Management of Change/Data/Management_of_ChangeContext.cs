@@ -13,6 +13,11 @@ namespace Management_of_Change.Data
             : base(options)
         {
         }
+        //protected override void OnModelCreating(ModelBuilder builder)
+        //{
+        //    builder.HasDefaultSchema("moc");
+        //    base.OnModelCreating(builder);
+        //}
 
         public DbSet<Management_of_Change.Models.ChangeRequest> ChangeRequest { get; set; } = default!;
 
@@ -20,7 +25,7 @@ namespace Management_of_Change.Data
 
         public DbSet<Management_of_Change.Models.ChangeLevel>? ChangeLevel { get; set; }
 
-        public DbSet<Management_of_Change.Models.ChangeStep>? ChangeStep { get; set; }
+        public DbSet<Management_of_Change.Models.ChangeStatus>? ChangeStatus { get; set; }
 
         public DbSet<Management_of_Change.Models.ResponseDropdownSelections>? ResponseDropdownSelections { get; set; }
 
@@ -31,5 +36,29 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.ChangeArea>? ChangeArea { get; set; }
 
         public DbSet<Management_of_Change.Models.GeneralMocQuestions>? GeneralMocQuestions { get; set; }
+
+        public DbSet<Management_of_Change.Models.GeneralMocResponses>? GeneralMocResponses { get; set; }
+
+        public DbSet<Management_of_Change.Models.ReviewType>? ReviewType { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentMatrix>? ImpactAssessmentMatrix { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentResponse>? ImpactAssessmentResponse { get; set; }
+
+        public DbSet<Management_of_Change.Models.FinalReviewType>? FinalReviewType { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImplementationFinalApprovalMatrix>? ImplementationFinalApprovalMatrix { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImplementationFinalApprovalResponse>? ImplementationFinalApprovalResponse { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentResponseQuestions>? ImpactAssessmentResponseQuestions { get; set; }
+
+        public DbSet<Management_of_Change.Models.ImpactAssessmentResponseAnswer>? ImpactAssessmentResponseAnswer { get; set; }
+
+        public DbSet<Management_of_Change.Models.Task>? Task { get; set; }
+        public DbSet<Management_of_Change.Models.__mst_employee>? __mst_employee { get; set; }
+        public DbSet<Management_of_Change.Models.AllowedAttachmentExtensions>? AllowedAttachmentExtensions { get; set; }
+        public DbSet<Management_of_Change.Models.Administrators>? Administrators { get; set; }
+        public DbSet<Management_of_Change.Models.EmailHistory>? EmailHistory { get; set; }
     }
 }

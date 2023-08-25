@@ -1,8 +1,183 @@
-﻿@{
+﻿@model Management_of_Change.ViewModels.DashboardViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+        <div>
+            @*<a asp-action="Create">Create New</a>*@
+            @Html.ActionLink("Create New Change Request","Create","ChangeRequests",new {source="Home"},new {@class="btn btn-success"})
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="text-center">
+            @*<h1 class="display-4">DASHBOARD</h1>*@
+            <p>Management of Change Dashboard for user: <span class="text-danger fw-bold">@ViewBag.UserDisplayName</span></p>
+        </div>
+    </div>
+    <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+        @Html.ActionLink("Create New Task","Create","Tasks",new {source="Home"},new {@class="btn btn-success"})
+    </div>
+</div>
+<div class="row">
+    <div class="col-3 p-3">
+        <div class="row">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Your Draft MOCs
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        MOC #
+                                        @*@Html.DisplayNameFor(model => model.MOC_Number)*@
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Change Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.DraftMocs)
+                                {
+                                <tr>
+                                    <td class="text-nowrap">
+                                            @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="GeneralMocQuestions", sourceScreen="Dashboard"},new {@class=""})
+                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
+                                    </td>
+                                    <td class="text-nowrap">
+                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 p-3">
+        <div class="row">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Your Incomplete Impact Assessment MOCs
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        MOC #
+                                        @*@Html.DisplayNameFor(model => model.MOC_Number)*@
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Change Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.IncompleteImpactAssessments)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", sourceScreen="Dashboard"},new {@class=""})
+                                            @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 p-3">
+        <div class="row">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Your Incomplete Final Approval MOCs
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        MOC #
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Change Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.IncompleteFinalApprovals)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="FinalApprovals", sourceScreen="Dashboard"},new {@class=""})
+                                            @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 p-3">
+        <div class="row">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Your Open MOC Tasks
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        Task #
+                                        @*@Html.DisplayNameFor(model => model.MOC_Number)*@
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Short Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OpenTasks)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink("Task# " + item.Id.ToString(),"Details","Tasks",new {id=@item.Id, tab="FinalApprovals", sourceScreen="Dashboard"},new {@class=""})
+                                            @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -1,0 +1,126 @@
+﻿@model Management_of_Change.Models.ImpactAssessmentResponse
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Impact Assessment Responses</h1>
+
+<h4>Edit</h4>
+<hr />
+<form asp-action="Edit">
+    <div class="row">
+        <div class="col-md-12">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ChangeRequestId" />
+            <input type="hidden" asp-for="Reviewer" />
+            <input type="hidden" asp-for="ReviewCompleted" />
+            <input type="hidden" asp-for="ReviewerEmail" />
+            <input type="hidden" asp-for="DateCompleted" />
+            <input type="hidden" asp-for="QuestionsAnswered" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="ModifiedDate" />
+            <input type="hidden" asp-for="ModifiedUser" />
+            <input type="hidden" asp-for="DeletedDate" />
+            <input type="hidden" asp-for="DeletedUser" />
+            <div class="form-group my-3">
+                <label asp-for="ChangeType" class="control-label fw-bold"></label>
+                <input asp-for="ChangeType" class="form-control" readonly style="width:50%" />
+                <span asp-validation-for="ChangeType" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ReviewType" class="control-label fw-bold"></label>
+                <input asp-for="ReviewType" class="form-control" readonly style="width:50%"/>
+                <span asp-validation-for="ReviewType" class="text-danger"></span>
+            </div>
+@*            <div class="form-group my-3">
+                <label asp-for="Reviewer" class="control-label fw-bold"></label>
+                <input asp-for="Reviewer" class="form-control" style="width:50%" />
+                <span asp-validation-for="Reviewer" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ReviewerEmail" class="control-label fw-bold"></label>
+                <input asp-for="ReviewerEmail" class="form-control" style="width:50%" />
+                <span asp-validation-for="ReviewerEmail" class="text-danger"></span>
+            </div>*@
+            <div class="form-group my-3">
+                <span class="fw-bold">Reviewer</span>
+                <input asp-for="Username" class="form-control" readonly style="width:50%" />
+                @*@Html.DropDownListFor(model => model.Username, new SelectList(ViewBag.Users,"Value","Text"), new { @class="form-control form-select", @style="max-width:25%;"})*@
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+@*            <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold">
+                    <input class="form-check-input" asp-for="ReviewCompleted" /> @Html.DisplayNameFor(model => model.ReviewCompleted)
+                </label>
+            </div>*@
+@*            <div class="form-group my-3">
+                <label asp-for="DateCompleted" class="control-label fw-bold"></label>
+                <input asp-for="DateCompleted" class="form-control" style="width:50%" />
+                <span asp-validation-for="DateCompleted" class="text-danger"></span>
+            </div>*@
+            <div class="form-group my-3">
+                <label asp-for="Comments" class="control-label fw-bold"></label>
+                @*<input asp-for="Comments" class="form-control" />*@
+                @Html.TextAreaFor(model => model.Comments, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+@*            <div class="form-group">
+                <label asp-for="ChangeRequestId" class="control-label"></label>
+                <input asp-for="ChangeRequestId" class="form-control"/>
+                <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
+            </div>*@
+            @*            <div class="form-group">
+            <label asp-for="CreatedUser" class="control-label"></label>
+            <input asp-for="CreatedUser" class="form-control" />
+            <span asp-validation-for="CreatedUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="CreatedDate" class="control-label"></label>
+            <input asp-for="CreatedDate" class="form-control" />
+            <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="ModifiedUser" class="control-label"></label>
+            <input asp-for="ModifiedUser" class="form-control" />
+            <span asp-validation-for="ModifiedUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="ModifiedDate" class="control-label"></label>
+            <input asp-for="ModifiedDate" class="form-control" />
+            <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="DeletedUser" class="control-label"></label>
+            <input asp-for="DeletedUser" class="form-control" />
+            <span asp-validation-for="DeletedUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="DeletedDate" class="control-label"></label>
+            <input asp-for="DeletedDate" class="form-control" />
+            <span asp-validation-for="DeletedDate" class="text-danger"></span>
+            </div>*@
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" asp-route-tab="@ViewBag.Tab" />
+                </span>
+                <span class="mx-2">
+                    @*<a asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Cancel</a>*@
+                    @Html.ActionLink("Cancel","Details","ChangeRequests",new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
+                </span>                
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

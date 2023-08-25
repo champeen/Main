@@ -10,8 +10,8 @@
     <a asp-action="Create">Create New</a>
     <span class="mx-5"><a asp-controller="Admin" asp-action="Index">Previous</a></span>
 </p>
-<table class="table">
-    <thead>
+<table class="table table-bordered table-striped">
+    <thead class="table-primary">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Description)

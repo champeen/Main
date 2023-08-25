@@ -1,0 +1,42 @@
+﻿@model Management_of_Change.Models.Administrators
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Administrators</h1>
+
+<h4>Edit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="ModifiedDate" />
+            <input type="hidden" asp-for="ModifiedUser" />
+            <input type="hidden" asp-for="DeletedDate" />
+            <input type="hidden" asp-for="DeletedUser" />
+            <div class="form-group my-3">
+                <label asp-for="Username" class="control-label fw-bold"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold">
+                    <input class="form-check-input" asp-for="Approver" /> @Html.DisplayNameFor(model => model.Approver)
+                </label>
+            </div>
+            <div class="form-group my-4">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a  class="mx-3" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

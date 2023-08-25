@@ -1,0 +1,25 @@
+﻿@model Management_of_Change.ViewModels.ErrorViewModel
+@{
+    ViewData["Title"] = "Unauthorized";
+}
+
+<h1 class="text-danger text-center">Not Authorized.</h1>
+<br/>
+<h4 class="">You are not authorized to view the requested page.  We apologize for the inconvenience. @Model.ErrorMessage <a asp-action="Index" asp-controller="ChangeRequests">Click Here</a> to return to Change Request listing.</h4>
+
+
+
+
+@*@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+<br/>
+<br />
+
+<h3>Unauthorized</h3>
+<p>
+    Username is unauthorized to access Change Management system.
+</p>*@

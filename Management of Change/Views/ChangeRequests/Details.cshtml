@@ -1,144 +1,734 @@
-﻿@model Management_of_Change.Models.ChangeRequest
+﻿@*@model Management_of_Change.Models.ChangeRequest*@
+@model Management_of_Change.ViewModels.ChangeRequestViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>ChangeRequest</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MOC_Number)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MOC_Number) @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Change_Owner)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Change_Owner)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Location_Site)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Location_Site)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Title_Change_Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Title_Change_Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Scope_of_the_Change)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Scope_of_the_Change)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Justification_of_the_Change)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Justification_of_the_Change)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Change_Level)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Change_Level)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Area_of_Change)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Area_of_Change)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Expiration_Date_Temporary)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Change_Status)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Change_Status)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Request_Date)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Request_Date)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Proudct_Line)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Proudct_Line)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Change_Type)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Change_Type)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Estimated_Completion_Date)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Raw_Material_Component_Numbers_Impacted)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedUser)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedUser)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedUser)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DeletedUser)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.DeletedDate)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DeletedDate)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col-4">
+        <h1>Change Request</h1>
+    </div>
+    <div class="col-8 text-end">
+        <h4>
+            <span class="fw-bold">
+                @Html.DisplayFor(model => model.ChangeRequest.MOC_Number)
+            </span>
+        </h4>
+        <h4>
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status):
+            <span class="text-success fw-bold">
+                @Html.DisplayFor(model => model.ChangeRequest.Change_Status)
+            </span>
+        </h4>
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <nav class="my-5">
+        <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled fw-bolder" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Impact Assessments
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled fw-bolder" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Final Approvals
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab5Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Close Out/Complete
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item ms-auto">
+                <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab" data-bs-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-item me-auto nav-link @Model.TabActiveTasks fw-bolder" id="nav-tasks-tab" data-bs-toggle="tab" href="#nav-tasks" role="tab" aria-controls="nav-profile" aria-selected="false">Tasks</a>
+            </li>
+
+        </ul>
+    </nav>
+
+    <div class="tab-content" id="nav-tabContent">
+        @******************************************************************************************************************************************@
+        @*  DETAIL TAB ****************************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="text-nowrap">
+                @*<h4 class="mt-5">Details</h4>*@
+                @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+                <a class="mx-2" asp-action="Index">Back to List</a>*@
+                <div class="row mt-5">
+                    <div class="col-6 text-start">
+                        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                        {
+                            @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                        }
+                        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                    </div>
+                    <div class="col-6 text-end">
+                        @if (@Model.ButtonSubmitForReview == true)
+                        {
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.MOC_Number)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.MOC_Number)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Owner)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Owner)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Status)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Location_Site)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Location_Site)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Level)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Level)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Area_of_Change)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Area_of_Change)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Type)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Type)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Proudct_Line)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Proudct_Line)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Request_Date)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Request_Date)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Estimated_Completion_Date)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Estimated_Completion_Date)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Expiration_Date_Temporary)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Expiration_Date_Temporary)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
+                </dd>
+                @*<hr />*@
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Title_Change_Description)
+                </dt>
+                <dd class="col-sm-10 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Title_Change_Description, new {@rows = 3})
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Justification_of_the_Change)
+                </dt>
+                <dd class="col-sm-10 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Justification_of_the_Change, new {@rows = 2})
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Scope_of_the_Change)
+                </dt>
+                <dd class="col-sm-10 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Scope_of_the_Change, new {@rows = 3})
+                </dd>
+                @*        <dt class="col-sm-2 my-2">&nbsp;</dt>
+                <dd class="col-sm-4 my-2">&nbsp;</dd>*@
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.CreatedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.CreatedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.CreatedDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.CreatedDate)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.ModifiedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.ModifiedDate)
+                </dd>
+                @*<hr />*@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.DeletedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.DeletedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.DeletedDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.DeletedDate)
+                </dd>
+                <hr />
+            </dl>
+            <div class="row">
+                <div class="col-6 text-start">
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                    {
+                        @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                    }
+                    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                </div>
+                <div class="col-6 text-end">
+                    @if (@Model.ButtonSubmitForReview == true)
+                    {
+                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                        {
+                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        @******************************************************************************************************************************************@
+        @*  GENERAL MOC QUESTIONS TAB  ************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
+            @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequest.Id }))
+            {
+                @*<h4 class="mt-5">General MOC Questions</h4>*@
+                <div class="row mt-5">
+                    <div class="col-6">
+                        <div class="text-nowrap">
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                            {
+                                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            }
+                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        @*<input type="submit" value="Submit for Review" class="btn btn-success" />*@
+                        @if (@Model.ButtonSubmitForReview == true)
+                        {
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                            }
+                        }
+                    </div>
+                </div>
+
+                @*@Html.HiddenFor(m => m.ChangeRequest)*@
+                @Html.HiddenFor(m => m.ChangeRequest.Id)
+                @*                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses)*@
+                @Html.HiddenFor(m => m.Tab3Disabled)
+                @Html.HiddenFor(m => m.Tab4Disabled)
+                @Html.HiddenFor(m => m.TabActiveImpactAssessments)
+                @Html.HiddenFor(m => m.TabActiveGeneralMocQuestions)
+                @Html.HiddenFor(m => m.TabActiveDetail)
+                <table class="table table-bordered table-striped mt-3">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                Question
+                            </th>
+                            <th>
+                                Response
+                            </th>
+                            @*<th></th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.ChangeRequest.GeneralMocResponses.Count; i++)
+                        {
+                            <tr>
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Id)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ChangeRequestId)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Question)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Order)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].CreatedUser)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].CreatedDate)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ModifiedUser)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ModifiedDate)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedUser)
+                                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedDate)
+                                <td>
+                                    @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Question)
+                                </td>
+                                <td>
+                                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                                    {
+                                        @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
+                            new SelectList(ViewBag.Responses), "--Select--",
+                            new { @class="form-control form-select"})
+                                    }
+                                    else
+                                    {
+                                        @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Response)
+                                    }
+                                </td>
+                            </tr>
+                            @*<td class="text-nowrap">*@
+                            @*@Html.ActionLink("Edit","Edit","GeneralMocResponses",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})*@
+                            @*<a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a></td>*@
+                        }
+                        @*@foreach (var item in Model.ChangeRequest.GeneralMocResponses)
+                    {
+                    <tr>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Question)
+                    </td>
+                    <td class="text-center">
+                    @Html.DropDownListFor(modelItem => item.Response, new SelectList(ViewBag.Responses), new { @class="form-control form-select"})
+                    </td>
+                    </tr>
+                    }*@
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="text-nowrap">
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                            {
+                                <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            }
+                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        @if (@Model.ButtonSubmitForReview == true)
+                        {
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-success text-end", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        @******************************************************************************************************************************************@
+        @*  IMPACT ASSESSMENT REVIEWS TAB  ********************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveImpactAssessments" id="nav-impact-assessment" role="tabpanel" aria-labelledby="nav-impact-assessment-tab">
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Change Evaluations - Impact Assessments</h4>*@
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            <table class="table table-bordered table-striped mt-3">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            Review Type
+                        </th>
+                        <th>
+                            Change Type
+                        </th>
+                        <th>
+                            Reviewer
+                        </th>
+@*                        <th>
+                            ReviewerEmail
+                        </th>*@
+                        <th class="text-center" style="width: 5%;">
+                            Review Completed
+                        </th>
+                        <th class="text-center" style="width: 5%;">
+                            Date Completed
+                        </th>
+                        <th>
+                            Comment
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.ChangeRequest.ImpactAssessmentResponses != null)
+                    {
+                        @foreach (var item in Model.ChangeRequest.ImpactAssessmentResponses)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReviewType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ChangeType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Reviewer)
+                                </td>
+@*                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                                </td>*@
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.ReviewCompleted)
+                                </td>
+                                    <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Comments)
+                                </td>
+                                <td class="text-nowrap">
+                                    @*                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.ReviewCompleted == false))
+                            {
+                            @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
+                            }*@
+                                    @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
+                                    {
+                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+        </div>
+        @******************************************************************************************************************************************@
+        @*  FINAL APPROVALS TAB  ******************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveFinalApprovals" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Implementation - Final Approvals </h4>*@
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped mt-3 ">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                Change Type
+                            </th>
+                            <th>
+                                Final Review Type
+                            </th>
+                            <th>
+                                Reviewer
+                            </th>
+@*                            <th>
+                                Reviewer Email
+                            </th>*@
+                            <th class="text-center" style="width: 5%;">
+                                Review Completed
+                            </th>
+                            <th class="text-center" style="width: 5%;">
+                                Date Completed
+                            </th>
+                            <th>
+                                Review Result
+                            </th>
+                            <th>
+                                Comment
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ChangeRequest.ImplementationFinalApprovalResponses)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ChangeType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FinalReviewType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Reviewer)
+                                </td>
+@*                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                                </td>*@
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.ReviewCompleted)
+                                </td>
+                                <td class="text-center">
+                                    @Html.DisplayFor(modelItem => item.DateCompleted,"yyyy/MM/dd")
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ReviewResult)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Comments)
+                                </td>
+                                <td class="text-nowrap">
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Final Approvals"))
+                                    {
+                                        if (item.ReviewCompleted != true)
+                                        {
+                                            @Html.ActionLink("Review","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Details","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                        }
+
+                                        @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                        if (item.ReviewResult != null && item.ReviewResult != "" && item.ReviewCompleted != true)
+                                        {
+                                            @Html.ActionLink("Mark Complete","CompleteFinalReview","ChangeRequests",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-success ms-2", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Details","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+        </div>
+        @******************************************************************************************************************************************@
+        @*  CLOSE OUT/COMPLETE TAB  ***************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveCloseoutComplete" id="nav-closeout-complete" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
+            <div class="text-nowrap text-center">
+                <h4 class="mt-5">Close-Out/Complete Change Request </h4>
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @if (ViewBag.OpenPreImplementationTasks > 0)
+                {
+                    <div class="fw-bold text-danger my-5">
+                        Cannot Close-out/Complete Change Request.  There are outstanding Pre-Implementation non-closed Tasks outstanding!
+                    </div>
+                }                
+                else
+                {
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Submitted for Implementation"))
+                    {
+                        @Html.ActionLink("Close-Out/Complete","CloseoutComplete", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
+                    }
+                }
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})                
+            </div>
+        </div>
+        @******************************************************************************************************************************************@
+        @*  ATTACHMENTS TAB  **********************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveAttachments" id="nav-attachments" role="tabpanel" aria-labelledby="nav-attachments-tab">
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Attachments</h4>*@
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+
+                @using (Html.BeginForm("SaveFile", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="control-label fw-bold mt-5 mb-2">
+                        <strong>Upload File to ChangeRequest:</strong>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-10">
+                                <input type="file" name="fileAttachment" class="form-control" />
+                                <div class="form-group text-danger fw-bold">
+                                    @*<input asp-for="FileAttachmentError" class="form-control" />*@
+                                    @Html.DisplayFor(m => m.FileAttachmentError)
+                                </div>
+
+                                @*<input type="hidden" asp-for="Error" />
+                            <span asp-validation-for="Error" class="text-danger"></span>*@
+                            </div>
+                            <div class="col-2">
+                                <input type="submit" value="Upload" class="form-control btn btn-success">
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <table class="table table-bordered table-striped mt-5">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            File Name
+                        </th>
+                        <th>
+                            Date Added
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Attachments)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Size)
+                            </td>
+                            <td>
+                                @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                                @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                                @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
+                                @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                                {
+                                    @Html.ActionLink("Delete","DeleteFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
+                                }
+                                @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+        </div>
+        @******************************************************************************************************************************************@
+        @*  TASKS TAB  ****************************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveTasks" id="nav-tasks" role="tabpanel" aria-labelledby="nav-tasks-tab">
+            <div class="text-nowrap mt-5">
+                @*<h4 class="mt-5">Tasks</h4>*@
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @Html.ActionLink("Create New","CreateTask", new {changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks"},new {@class="btn btn-success"})
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            <table class="table table-bordered table-striped mt-5">
+                <thead class="align-top table-primary">
+                    <tr>
+                        <th>
+                            Task#
+                        </th>
+                        <th>
+                            Implementation Type
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Assigned To
+                        </th>
+                        <th>
+                            Assigned By
+                        </th>
+                        <th>
+                            Due Date
+                        </th>
+                        <th>
+                            Completion Date
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Tasks)
+                    {
+                        <tr>
+                            <td>
+                                @*@Html.DisplayFor(modelItem => item.Id)*@
+                                @Html.ActionLink("Task#" + item.Id.ToString(),"Details","Tasks",new {id=@item.Id, tab="Tasks"},new {@class=""})
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ImplementationType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssignedToUser)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AssignedByUser)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DueDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CompletionDate)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.ActionLink("Create New","CreateTask", new {changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks"},new {@class="btn btn-success mt-3"})
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+        </div>
+
+    </div>
+</div>
+<div class="text-nowrap my-5">
+    @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@
 </div>

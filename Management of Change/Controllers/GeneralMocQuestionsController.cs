@@ -7,15 +7,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
-using Management_of_Change.Migrations;
+using Management_of_Change.Utilities;
+using Management_of_Change.ViewModels;
+//using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
-    public class GeneralMocQuestionsController : Controller
+    public class GeneralMocQuestionsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public GeneralMocQuestionsController(Management_of_ChangeContext context)
+        public GeneralMocQuestionsController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }
@@ -23,7 +25,14 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocQuestions
         public async Task<IActionResult> Index()
         {
-              return _context.GeneralMocQuestions != null ? 
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.GeneralMocQuestions != null ? 
                           View(await _context.GeneralMocQuestions.OrderBy(m => m.Order).ThenBy(m => m.Question).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.GeneralMocQuestions'  is null.");
         }
@@ -31,6 +40,13 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocQuestions/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.GeneralMocQuestions == null)
                 return NotFound();
 
@@ -46,10 +62,17 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocQuestions/Create
         public IActionResult Create()
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             GeneralMocQuestions generalMocQuestions = new GeneralMocQuestions
             {
-                CreatedUser = "Michael Wilson",
-                CreatedDate = DateTime.Now
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
             };
 
             return View(generalMocQuestions);
@@ -62,6 +85,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Question,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] GeneralMocQuestions generalMocQuestions)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (ModelState.IsValid)
             {
                 _context.Add(generalMocQuestions);
@@ -74,6 +104,13 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocQuestions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.GeneralMocQuestions == null)
                 return NotFound();
 
@@ -92,11 +129,18 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Question,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] GeneralMocQuestions generalMocQuestions)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != generalMocQuestions.Id)
                 return NotFound();
 
-            generalMocQuestions.ModifiedUser = "Michael Wilson";
-            generalMocQuestions.ModifiedDate = DateTime.Now;
+            generalMocQuestions.ModifiedUser = _username;
+            generalMocQuestions.ModifiedDate = DateTime.UtcNow;
 
             if (ModelState.IsValid)
             {
@@ -120,6 +164,13 @@ namespace Management_of_Change.Controllers
         // GET: GeneralMocQuestions/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || _context.GeneralMocQuestions == null)
                 return NotFound();
 
@@ -137,6 +188,13 @@ namespace Management_of_Change.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.GeneralMocQuestions == null)
                 return Problem("Entity set 'Management_of_ChangeContext.GeneralMocQuestions'  is null.");
 
