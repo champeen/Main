@@ -230,7 +230,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -254,6 +254,7 @@ namespace Management_of_Change.Controllers
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.Source = source;
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
@@ -266,7 +267,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
         {
             if (changeRequest.Estimated_Completion_Date == null)
                 ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
@@ -405,7 +406,10 @@ namespace Management_of_Change.Controllers
                 if (!Directory.Exists(Path.Combine(AttachmentDirectory, changeRequest.MOC_Number)))
                     path.Create();
 
-                return RedirectToAction("Details", new { id = changeRequest.Id });
+                if (source == "Home")
+                    return RedirectToAction("Index","Home", new {});
+                else
+                    return RedirectToAction("Details", new { id = changeRequest.Id });
             }
 
             // Persist Dropdown Selection Lists
@@ -418,6 +422,7 @@ namespace Management_of_Change.Controllers
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Source = source;
 
             return View(changeRequest);
         }

@@ -65,7 +65,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -105,6 +105,7 @@ namespace Management_of_Change.Controllers
                 users.Add(item);
             }
             ViewBag.Users = users;
+            ViewBag.Source = source;
 
             return View(task);
         }
@@ -114,12 +115,21 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (task.DueDate == null)
+                ModelState.AddModelError("DueDate", "Must Include a Completion Date");
+
+            if (task.DueDate < DateTime.Today)
+                ModelState.AddModelError("DueDate", "Date Cannot Be In The Past");
+
+            if (task.Status == "On Hold" && String.IsNullOrWhiteSpace(task.OnHoldReason))
+                ModelState.AddModelError("OnHoldReason", "If Task Status is 'On Hold', Reason is required.");
 
             if (ModelState.IsValid)
             {
@@ -148,8 +158,40 @@ namespace Management_of_Change.Controllers
                     _context.Add(emailHistory);
                 }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                if (source == "Home")
+                    return RedirectToAction("Index", "Home", new {});
+                else
+                    return RedirectToAction(nameof(Index));
             }
+
+            // Create Dropdown List of ChangeRequests...
+            var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
+            List<SelectListItem> requests = new List<SelectListItem>();
+            foreach (var request in requestList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Id.ToString(), Text = request.MOC_Number + " : " + request.Title_Change_Description };
+                requests.Add(item);
+            }
+            ViewBag.ChangeRequests = requests;
+
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+            ViewBag.Source = source;
             return View(task);
         }
 

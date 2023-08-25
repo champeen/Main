@@ -37,7 +37,7 @@ namespace Management_of_Change.Provider
             //_emailGeneralTo = emailGeneralTo;
         }
 
-        public void SendMessage(string subject, string body, string to, string cc, string bcc/*, string department, IFormFile? fileAttachment*/)
+        public async Task<bool> SendMessage(string subject, string body, string to, string cc, string bcc/*, string department, IFormFile? fileAttachment*/)
         {
             var smtpClient = new SmtpClient();
             smtpClient.Host = _emailUrl;
@@ -109,7 +109,9 @@ namespace Management_of_Change.Provider
             //else
             //    smtpClient.Send(mailMessage);
 
-            smtpClient.Send(mailMessage);
+            await smtpClient.SendMailAsync(mailMessage);
+
+            return true;
         }
     }
 }
