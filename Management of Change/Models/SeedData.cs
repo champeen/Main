@@ -443,18 +443,18 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         },
-                        new ChangeStatus
-                        {
-                            Status = "On Hold",
-                            Default = false,
-                            Order = "35",
-                            CreatedUser = "Johanna Jones",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
+                        //new ChangeStatus
+                        //{
+                        //    Status = "On Hold",
+                        //    Default = false,
+                        //    Order = "35",
+                        //    CreatedUser = "Johanna Jones",
+                        //    CreatedDate = DateTime.Now,
+                        //    ModifiedUser = null,
+                        //    ModifiedDate = null,
+                        //    DeletedUser = null,
+                        //    DeletedDate = null
+                        //},
                         new ChangeStatus
                         {
                             Status = "Killed",

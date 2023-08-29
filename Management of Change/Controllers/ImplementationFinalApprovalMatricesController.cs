@@ -31,9 +31,19 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _context.ImplementationFinalApprovalMatrix != null ? 
-                          View(await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ImplementationFinalApprovalMatrix'  is null.");
+            List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync();
+
+            foreach (var record in implementationFinalApprovalMatrix)
+            {
+                FinalReviewType finalReviewType = await _context.FinalReviewType.Where(m => m.Type == record.FinalReviewType).FirstOrDefaultAsync();
+                if (finalReviewType != null)
+                {
+                    record.ReviewerEmail = finalReviewType.Email;
+                    record.ReviewerName = finalReviewType.Reviewer;
+                    record.ReviewerUsername = finalReviewType.Username;
+                }
+            }
+            return View(implementationFinalApprovalMatrix);
         }
 
         // GET: ImplementationFinalApprovalMatrices/Details/5
@@ -114,6 +124,8 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.FinalReviewTypes = await _context.FinalReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             return View(implementationFinalApprovalMatrix);
         }
 
@@ -191,6 +203,8 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.FinalReviewTypes = await _context.FinalReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             return View(implementationFinalApprovalMatrix);
         }
 

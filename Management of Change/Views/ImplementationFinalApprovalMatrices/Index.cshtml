@@ -19,7 +19,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.FinalReviewType)
             </th>
-            @*            <th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReviewerName)
+            </th>
+            @*<th>
             @Html.DisplayNameFor(model => model.CreatedUser)
             </th>
             <th>
@@ -50,7 +53,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.FinalReviewType)
                 </td>
-                @*            <td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewerName)
+                </td>
+                @*<td>
             @Html.DisplayFor(modelItem => item.CreatedUser)
             </td>
             <td>

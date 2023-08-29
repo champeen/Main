@@ -24,7 +24,7 @@
             $("#statusFilter").change(function () {
                 var value = $(this).val().toLowerCase();
                 $("#changeRequestTable tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    $(this).toggle($(this.children[3]).text().toLowerCase().indexOf(value) > -1)
                 });
             });
 
@@ -38,7 +38,7 @@
             $("#taskStatusFilter").change(function () {
                 var value = $(this).val().toLowerCase();
                 $("#taskTable tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    $(this).toggle($(this.children[4]).text().toLowerCase().indexOf(value) > -1)
                 });
             });
         });
@@ -66,7 +66,9 @@
         <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 navbar-dark bg-primary text-white" @*style="z-index:1;"*@>
             <div class="container-fluid">
                 <div>
-                    <img src="~/ButterflyTran.png" class="img-fluid" alt="...">
+                    @*<img src="~/ButterflyTran.png" class="img-fluid" >*@
+                    <img src="~/HappyWings_PNG.png" class="img-fluid" width="48" height="48">
+                    
                 </div>
                 <div class="me-3 text-center">
                     <a class="nav-link text-light" asp-controller="Home" asp-action="Index">

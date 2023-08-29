@@ -131,6 +131,24 @@ namespace Management_of_Change.Controllers
             if (task.Status == "On Hold" && String.IsNullOrWhiteSpace(task.OnHoldReason))
                 ModelState.AddModelError("OnHoldReason", "If Task Status is 'On Hold', Reason is required.");
 
+            if (task.ChangeRequestId != null)
+            {
+                // cannot create a Task for a Change Request after it is at a certain status....
+                ChangeRequest changeRequest = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).FirstOrDefaultAsync();
+
+                if (changeRequest != null)
+                {
+                    if ((task.ImplementationType == "Pre") &&
+                        (changeRequest.Change_Status == "Submitted for Closeout" || changeRequest.Change_Status == "Closed"))
+                        ModelState.AddModelError("ChangeRequestId", "Task Status is beyond the stage to add a Pre Implementation Task.");
+                    if ((task.ImplementationType == "Post") &&
+                        (changeRequest.Change_Status == "Closed"))
+                        ModelState.AddModelError("ChangeRequestId", "Task Status is beyond the stage to add a Post Implementation Task.");
+                    if (changeRequest.Change_Status == "Killed")
+                        ModelState.AddModelError("ChangeRequestId", "Cannot Create a Task under a Cancelled Change Request.");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
@@ -202,9 +220,6 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
-
             if (id == null || _context.Task == null)
                 return NotFound();
 
@@ -212,6 +227,9 @@ namespace Management_of_Change.Controllers
 
             if (task == null)
                 return NotFound();
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             // Create Dropdown List of Change Requests...
             var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
@@ -263,12 +281,21 @@ namespace Management_of_Change.Controllers
             if (id != task.Id)
                 return NotFound();
 
-            task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
-            task.ModifiedUser = _username;
-            task.ModifiedDate = DateTime.UtcNow;
+            if (task.Status == "On Hold" && String.IsNullOrWhiteSpace(task.OnHoldReason))
+                ModelState.AddModelError("OnHoldReason", "If Task Status is 'On Hold', Reason is required.");
+
+            if (task.Status == "Complete" && task.CompletionDate == null)
+                ModelState.AddModelError("CompletionDate", "If Task Status is 'Complete', Completion Date is required.");
+
+            if (task.Status == "Complete" && String.IsNullOrWhiteSpace(task.CompletionNotes))
+                ModelState.AddModelError("CompletionNotes", "If Task Status is 'Complete', Completion Notes is required.");
+
 
             if (ModelState.IsValid)
             {
+                task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
+                task.ModifiedUser = _username;
+                task.ModifiedDate = DateTime.UtcNow;
                 try
                 {
                     _context.Update(task);
@@ -283,6 +310,42 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            // Create Dropdown List of Change Requests...
+            var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
+            List<SelectListItem> requests = new List<SelectListItem>();
+            foreach (var request in requestList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Id.ToString(), Text = request.MOC_Number + " : " + request.Title_Change_Description };
+                if (request.Id == task.ChangeRequestId)
+                    item.Selected = true;
+                requests.Add(item);
+            }
+            ViewBag.ChangeRequests = requests;
+
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+
+                if (user.onpremisessamaccountname == task.AssignedToUser)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            ViewBag.Users = users;
+
             return View(task);
         }
 

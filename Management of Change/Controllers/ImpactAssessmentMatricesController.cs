@@ -31,9 +31,19 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _context.ImpactAssessmentMatrix != null ? 
-                          View("Index", await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentMatrix'  is null.");
+            List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+
+            foreach (var record in impactAssessmentMatrix)
+            {
+                ReviewType reviewType = await _context.ReviewType.Where(m => m.Type == record.ReviewType).FirstOrDefaultAsync();
+                if (reviewType != null)
+                {
+                    record.ReviewerEmail = reviewType.Email;
+                    record.ReviewerName = reviewType.Reviewer;
+                    record.ReviewerUsername = reviewType.Username;
+                }                
+            }
+            return View(impactAssessmentMatrix);
         }
 
         // GET: ImpactAssessmentMatrices/Details/5
@@ -114,6 +124,8 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             return View(impactAssessmentMatrix);
         }
 
@@ -191,6 +203,8 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             return View(impactAssessmentMatrix);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Management_of_Change.Models
 {
@@ -10,5 +11,14 @@ namespace Management_of_Change.Models
         public string ChangeType { get; set; }
         [Display(Name = "Review Type")]
         public string ReviewType { get; set; }
+        [NotMapped]
+        [Display(Name = "Reviewer Name")]
+        public string? ReviewerName { get; set; }
+        [NotMapped]
+        [Display(Name = "Reviewer Email")]
+        public string? ReviewerEmail { get; set; }
+        [NotMapped]
+        [Display(Name = "Reviewer Username")]
+        public string? ReviewerUsername { get; set; }
     }
 }

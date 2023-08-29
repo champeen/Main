@@ -40,6 +40,16 @@ namespace Management_of_Change.Models
         [Display(Name = "Estimated Completion Date")]
         [DataType(DataType.Date)]
         public DateTime? Estimated_Completion_Date { get; set; }
+        [Display(Name = "Implementation Approval Date")]
+        [DataType(DataType.Date)]
+        public DateTime? Implementation_Approval_Date { get; set; }
+        [Display(Name = "Implementation Username")]
+        public string? Implementation_Username { get; set; }
+        [Display(Name = "Closeout Date")]
+        [DataType(DataType.Date)]
+        public DateTime? Closeout_Date { get; set; }
+        [Display(Name = "Closeout Username")]
+        public string? Closeout_Username { get; set; }
         [Display(Name = "Raw Materials/Component Numbers Impacted")]
         public string Raw_Material_Component_Numbers_Impacted {get; set;}
         public List<GeneralMocResponses>? GeneralMocResponses { get; set; }

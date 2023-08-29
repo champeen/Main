@@ -20,16 +20,16 @@
             <input type="hidden" asp-for="DeletedDate" />
             <input type="hidden" asp-for="DeletedUser" />
             <div class="form-group my-3">
-                <label asp-for="ReviewType" class="control-label fw-bold"></label>
-                @*<input asp-for="ReviewType" class="form-control" />*@
-                @Html.DropDownListFor(model => model.ReviewType, new SelectList(ViewBag.ReviewTypes), new { @class="form-control form-select"})
-                <span asp-validation-for="ReviewType" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
                 <label asp-for="ChangeType" class="control-label fw-bold"></label>
                 @*<input asp-for="ChangeType" class="form-control" />*@
                 @Html.DropDownListFor(model => model.ChangeType, new SelectList(ViewBag.ChangeTypes), new { @class="form-control form-select"})
                 <span asp-validation-for="ChangeType" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ReviewType" class="control-label fw-bold"></label>
+                @*<input asp-for="ReviewType" class="form-control" />*@
+                @Html.DropDownListFor(model => model.ReviewType, new SelectList(ViewBag.ReviewTypes), new { @class="form-control form-select"})
+                <span asp-validation-for="ReviewType" class="text-danger"></span>
             </div>
 @*            <div class="form-group">
                 <label asp-for="CreatedUser" class="control-label"></label>
@@ -63,7 +63,7 @@
             </div>*@
             <div class="form-group my-4">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a class="mx-3" asp-action="Index">Cancel</a>
+                <a class="mx-3 btn btn-secondary" asp-action="Index">Cancel</a>
             </div>
         </form>
     </div>

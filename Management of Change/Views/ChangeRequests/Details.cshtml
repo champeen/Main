@@ -35,21 +35,28 @@
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled fw-bolder" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
                     Impact Assessments
-                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete">
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete. All Impact Assessments must be complete to progress past this stage.">
                     </i>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled fw-bolder" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
                     Final Approvals
-                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete">
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete. Must complete 'Review Result' field in order to progress past this stage.">
                     </i>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab5Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
+                <a class="nav-link @Model.TabActiveImplementation @Model.Tab5Disabled fw-bolder" id="nav-implementation-tab" data-bs-toggle="tab" href="#nav-implementation" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Implementation
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete. All 'Pre Implementation' Tasks must be completed in order to progress past this stage.">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab6Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
                     Close Out/Complete
-                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete">
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete. All tasks, including 'Post Implementation', must be completed in order to close/complete this Change Request.">
                     </i>
                 </a>
             </li>
@@ -194,7 +201,32 @@
                 </dd>
                 @*        <dt class="col-sm-2 my-2">&nbsp;</dt>
                 <dd class="col-sm-4 my-2">&nbsp;</dd>*@
-                @*<hr />*@
+                <hr />
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Approval_Date)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Implementation_Approval_Date)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Closeout_Date)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Closeout_Date)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Username)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Implementation_Username)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Closeout_Username)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Closeout_Username)
+                </dd>
+                <hr />
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.CreatedUser)
                 </dt>
@@ -552,23 +584,58 @@
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
         @******************************************************************************************************************************************@
-        @*  CLOSE OUT/COMPLETE TAB  ***************************************************************************************************************@
+        @*  IMPLEMENTATION TAB  *******************************************************************************************************************@
         @******************************************************************************************************************************************@
-        <div class="tab-pane fade show @Model.TabActiveCloseoutComplete" id="nav-closeout-complete" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
+        <div class="tab-pane fade show @Model.TabActiveImplementation" id="nav-implementation" role="tabpanel" aria-labelledby="nav-implementation-tab">
             <div class="text-nowrap text-center">
-                <h4 class="mt-5">Close-Out/Complete Change Request </h4>
+                @*<h4 class="mt-5">Implementation</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
                 @if (ViewBag.OpenPreImplementationTasks > 0)
                 {
                     <div class="fw-bold text-danger my-5">
-                        Cannot Close-out/Complete Change Request.  There are outstanding Pre-Implementation non-closed Tasks outstanding!
+                        Cannot close Implementation.  There are open Pre-Implementation tasks!
                     </div>
-                }                
+                }
                 else
                 {
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Submitted for Implementation"))
                     {
+                        @Html.ActionLink("Close Implementation","CloseoutImplementation", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
+                    }
+                    @if (Model.ChangeRequest.Change_Status == "Submitted for Closeout" || Model.ChangeRequest.Change_Status == "Closed")
+                    {
+                        <div class="fw-bold text-success my-5">
+                            Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
+                        </div>
+                    }
+                }                
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+            </div>
+        </div>
+        @******************************************************************************************************************************************@
+        @*  CLOSE OUT/COMPLETE TAB  ***************************************************************************************************************@
+        @******************************************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveCloseoutComplete" id="nav-closeout-complete" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
+            <div class="text-nowrap text-center">
+                @*<h4 class="mt-5">Close-Out/Complete Change Request </h4>*@
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @if (ViewBag.OpenTasks > 0)
+                {
+                    <div class="fw-bold text-danger my-5">
+                        Cannot Close-out/Complete Change Request.  There are Open Tasks for this change Request.
+                    </div>
+                }                
+                else
+                {
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Submitted for Closeout"))
+                    {
                         @Html.ActionLink("Close-Out/Complete","CloseoutComplete", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
+                    }
+                    @if (Model.ChangeRequest.Change_Status == "Closed")
+                    {
+                        <div class="fw-bold text-success my-5">
+                            Change Request has been Closed/Completed by @Html.DisplayFor(Model => Model.ChangeRequest.Closeout_Username) on @Html.DisplayFor(Model =>  Model.ChangeRequest.Closeout_Date)
+                        </div>
                     }
                 }
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})                

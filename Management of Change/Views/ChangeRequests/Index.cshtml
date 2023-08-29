@@ -13,7 +13,7 @@
             @*<a asp-action="Create">Create New</a>*@
             @*            @Html.ActionLink("Create New","Create")*@
             <span class="flex-nowrap">
-                @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})                
+                @Html.ActionLink("Create New","Create",new {},new {@class="btn btn-primary"})
             </span>
         </div>
         <div class="col-3 text-center">
@@ -31,8 +31,8 @@
         <div class="col-1 text-start">
         @Html.DropDownList("timestampFilter2", new SelectList(ViewBag.ActiveRecordList2), new {@class = "form-control" })
         </div>*@
-@*        <div class="col-1 text-start">
-            <input type="submit" value="Filter" class="btn btn-primary" />
+        @*        <div class="col-1 text-start">
+        <input type="submit" value="Filter" class="btn btn-primary" />
         </div>*@
     </div>
 </form>
@@ -100,11 +100,11 @@
     <tbody id="changeRequestTable">
         @foreach (var item in Model)
         {
-            <tr>
+            <tr id="changeRequestStatus">
                 <td class="text-nowrap">
                     @Html.DisplayFor(modelItem => item.MOC_Number) || ID: @Html.DisplayFor(modelItem => item.Id)
                 </td>
-                <td >
+                <td>
                     @Html.DisplayFor(modelItem => item.Title_Change_Description)
                 </td>
                 <td>
@@ -150,11 +150,11 @@
                     @*                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id" asp-route-tab="Details" class="btn btn-secondary">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>*@
-@*                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner) && (item.Change_Status == "Draft"))
-                    {
-                        @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
-                    }*@
-                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})             
+                    @*                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner) && (item.Change_Status == "Draft"))
+                {
+                @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
+                }*@
+                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
                     @if (ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner)
                     {
                         @if (item.DeletedDate == null && item.Change_Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
