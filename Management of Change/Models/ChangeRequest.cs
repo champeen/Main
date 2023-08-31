@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.Contracts;
 using System.Security.AccessControl;
 
 namespace Management_of_Change.Models
@@ -37,6 +38,12 @@ namespace Management_of_Change.Models
         public string Proudct_Line { get; set; }
         [Display(Name = "Change Type")]
         public string Change_Type { get; set; }
+        [Display(Name = "PTN Number")]
+        public string? PTN_Number { get; set; }
+        [Display(Name = "Waiver Number")]
+        public string? Waiver_Number { get; set; }
+        [Display(Name = "CMT Number")]
+        public string? CMT_Number { get; set; }
         [Display(Name = "Estimated Completion Date")]
         [DataType(DataType.Date)]
         public DateTime? Estimated_Completion_Date { get; set; }

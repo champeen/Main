@@ -34,7 +34,7 @@
                 <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
             </div>*@
             <div class="form-group my-3">
-                <label asp-for="ImplementationType" class="control-label fw-bold"></label>
+                <label asp-for="ImplementationType" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
                 @*<input asp-for="Status" class="form-control" />*@
                 @Html.DropDownListFor(model => model.ImplementationType,
                 new List<SelectListItem>{
@@ -42,10 +42,10 @@
                 new SelectListItem {Value="Post", Text="Post"}},
                 "--Select One--",
                 new { @class="form-control form-select", @style="max-width:25%"})
-                <span asp-validation-for="ImplementationType" class="text-danger"></span>
+                <span asp-validation-for="ImplementationType" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Status" class="control-label fw-bold"></label>
+                <label asp-for="Status" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
                 @*<input asp-for="Status" class="form-control" />*@
                 @Html.DropDownListFor(model => model.Status,
                 new List<SelectListItem>{
@@ -56,12 +56,12 @@
                 new SelectListItem {Value="Cancelled", Text="Cancelled"}},
                 "--Select One--",
                 new { @class="form-control form-select", @style="max-width:25%"})
-                <span asp-validation-for="Status" class="text-danger"></span>
+                <span asp-validation-for="Status" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="AssignedToUser" class="control-label fw-bold"></label>
+                <label asp-for="AssignedToUser" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
                 @Html.DropDownListFor(model => model.AssignedToUser, new SelectList(ViewBag.Users,"Value","Text"),"--Select One--", new { @class="form-control form-select", @style="max-width:25%;"})
-                <span asp-validation-for="AssignedToUser" class="text-danger"></span>
+                <span asp-validation-for="AssignedToUser" class="text-danger fw-bold"></span>
             </div>
 @*            <div class="form-group my-3">
                 <label asp-for="AssignedByUser" class="control-label fw-bold"></label>
@@ -69,35 +69,35 @@
                 <span asp-validation-for="AssignedByUser" class="text-danger"></span>
             </div>*@
             <div class="form-group my-3">
-                <label asp-for="Title" class="control-label fw-bold"></label>
+                <label asp-for="Title" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
                 <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <span asp-validation-for="Title" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Description" class="control-label fw-bold"></label>
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
                 @*<input asp-for="Description" class="form-control" />*@
                 @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <span asp-validation-for="Description" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="DueDate" class="control-label fw-bold"></label>
+                <label asp-for="DueDate" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
                 <input asp-for="DueDate" class="form-control" style="max-width:10%" />
-                <span asp-validation-for="DueDate" class="text-danger"></span>
+                <span asp-validation-for="DueDate" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="CompletionDate" class="control-label fw-bold"></label>
+                <label asp-for="CompletionDate" class="control-label fw-bold mb-1"></label>
                 <input asp-for="CompletionDate" class="form-control" style="max-width:10%" />
-                <span asp-validation-for="CompletionDate" class="text-danger"></span>
+                <span asp-validation-for="CompletionDate" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="CompletionNotes" class="control-label fw-bold"></label>
+                <label asp-for="CompletionNotes" class="control-label fw-bold mb-1"></label>
                 @Html.TextAreaFor(model => model.CompletionNotes, new {@class = "form-control", @rows = 3 })
-                <span asp-validation-for="CompletionNotes" class="text-danger"></span>
+                <span asp-validation-for="CompletionNotes" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="OnHoldReason" class="control-label fw-bold"></label>
+                <label asp-for="OnHoldReason" class="control-label fw-bold mb-1"></label>
                 <input asp-for="OnHoldReason" class="form-control" />
-                <span asp-validation-for="OnHoldReason" class="text-danger"></span>
+                <span asp-validation-for="OnHoldReason" class="text-danger fw-bold"></span>
             </div>
             @*<div class="form-group my-3">
                 <label asp-for="ImpactAssessmentResponseAnswerId" class="control-label fw-bold"></label>

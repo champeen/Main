@@ -142,15 +142,15 @@ namespace Management_of_Change.Controllers
 
             changeRequestViewModel.ChangeRequest = changeRequest;
             changeRequestViewModel.Tasks = tasks;
-            // disable tab 3 if General MOC Responses have not been completed...
+            // disable tab 3 (ImpactAssessments) if General MOC Responses have not been completed...
             int countGMR = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
             changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" ? "disabled" : "";
-            // disable tab4 (final review) if any Impact Assessment Responses have not been completed...
+            // disable tab4 (Final Review) if any Impact Assessment Responses have not been completed...
             int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab4Disabled = countIAR > 0 ? "disabled" : "";
+            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") ? "disabled" : "";
             // disable tab5 (Implementation) if any Final Approvals have not been completed...
             int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab5Disabled = countFA > 0 ? "disabled" : "";
+            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" || changeRequestViewModel.ChangeRequest.Change_Status == "Submitted for Final Approvals") ? "disabled" : "";
             // disable tab6 (Closeout/Complete) if change request is not in status of "Submitted for Closeout" or "Closed"
             changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Submitted for Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
 
@@ -279,24 +279,27 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
         {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
             if (changeRequest.Estimated_Completion_Date == null)
                 ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
 
             if (changeRequest.Estimated_Completion_Date < DateTime.Today)
                 ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
 
+            if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
+                ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (ModelState.IsValid)
             {
-                // make sure valid Username
-                ErrorViewModel errorViewModel = CheckAuthorization();
-                if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
-                    return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
-
-                ViewBag.IsAdmin = _isAdmin;
-                ViewBag.Username = _username;
-
                 // add General MOC Questions
                 List<GeneralMocQuestions> questions = await _context.GeneralMocQuestions.OrderBy(m => m.Order).ToListAsync();
                 if (questions.Count > 0)
@@ -353,7 +356,11 @@ namespace Management_of_Change.Controllers
 
                         List<ImpactAssessmentResponseQuestions> IARQuestions = await _context.ImpactAssessmentResponseQuestions.Where(m => m.ReviewType == record.ReviewType).ToListAsync();
 
-                        if (IARQuestions != null && IARQuestions.Count > 0)
+                        // if there are no Impact Assessment questions, then set all answered as true
+                        if (IARQuestions == null || IARQuestions.Count == 0)
+                            record.QuestionsAnswered = true;
+                        // else, setup all the questions to be answered...
+                        else
                         {
                             foreach (var question in IARQuestions)
                             {
@@ -367,7 +374,7 @@ namespace Management_of_Change.Controllers
                                 };
                                 record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
                             }
-                        }
+                        } 
                     }
                 }
 
@@ -432,8 +439,6 @@ namespace Management_of_Change.Controllers
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
             ViewBag.Source = source;
 
             return View(changeRequest);
@@ -496,7 +501,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -505,6 +510,15 @@ namespace Management_of_Change.Controllers
 
             if (id != changeRequest.Id)
                 return NotFound();
+
+            if (changeRequest.Estimated_Completion_Date == null)
+                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
+
+            if (changeRequest.Estimated_Completion_Date < DateTime.Today)
+                ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
+
+            if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
+                ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
 
             changeRequest.ModifiedUser = _username;
             changeRequest.ModifiedDate = DateTime.UtcNow;
@@ -529,6 +543,38 @@ namespace Management_of_Change.Controllers
                 //else
                 return RedirectToAction("Details", new { id = id });
             }
+
+            // Persist Dropdown Selection Lists
+            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
+            ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
+            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+            ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            //ViewBag.Tab = tab;
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            // Create Dropdown List of Users...
+            var userList = await _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToListAsync();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+
+                if (user.onpremisessamaccountname == changeRequest.Change_Owner)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            ViewBag.Users = users;
             return View(changeRequest);
         }
 
@@ -835,8 +881,8 @@ namespace Management_of_Change.Controllers
                     foreach (var record in adminApproverList)
                     {
                         var admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
-                        string subject = @"Management of Change (MoC) - Close-Out/Complete Needed";
-                        string body = @"Your Close-Out/Complete of an MoC Change Request is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                        string subject = @"Management of Change (MoC) - Submitted for Implementation";
+                        string body = @"Change Request has been submitted for implementation. All pre-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
                         Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null);
 
                         EmailHistory emailHistory = new EmailHistory
@@ -882,6 +928,31 @@ namespace Management_of_Change.Controllers
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
 
+            // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
+            // TODO MJWII
+            var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+            foreach (var record in adminApproverList)
+            {
+                var admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
+                string subject = @"Management of Change (MoC) - Submitted for Closeout";
+                string body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null);
+
+                EmailHistory emailHistory = new EmailHistory
+                {
+                    Subject = subject,
+                    Body = body,
+                    SentToDisplayName = admin.displayname,
+                    SentToUsername = record.Username,
+                    SentToEmail = admin.mail,
+                    ChangeRequestId = changeRequest.Id,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedUser = _username
+                };
+                _context.Add(emailHistory);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "Implementation" });
         }
 
@@ -905,6 +976,26 @@ namespace Management_of_Change.Controllers
             changeRequest.Closeout_Date = DateTime.UtcNow;
             changeRequest.Closeout_Username = _username;
             _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            // Email the ChangeRequst Ownder that the change request has been closed
+            var owner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
+            string subject = @"Management of Change (MoC) - Change Request Completed/Closed";
+            string body = @"Change Request has been Closed-Out/Completed.<br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, owner.mail, null, null);
+
+            EmailHistory emailHistory = new EmailHistory
+            {
+                Subject = subject,
+                Body = body,
+                SentToDisplayName = owner.displayname,
+                SentToUsername = changeRequest.Change_Owner,
+                SentToEmail = owner.mail,
+                ChangeRequestId = changeRequest.Id,
+                CreatedDate = DateTime.UtcNow,
+                CreatedUser = _username
+            };
+            _context.Add(emailHistory);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "CloseoutComplete" });
@@ -952,6 +1043,9 @@ namespace Management_of_Change.Controllers
             }
             ViewBag.Users = users;
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             return View(task);
         }
 
@@ -990,6 +1084,9 @@ namespace Management_of_Change.Controllers
                         ModelState.AddModelError("ImplementationType", "Cannot Create a Task under a Cancelled Change Request.");
                 }
             }
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             if (ModelState.IsValid)
             {
