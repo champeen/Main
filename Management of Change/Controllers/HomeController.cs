@@ -42,7 +42,7 @@ namespace Management_of_Change.Controllers
             // Get all incomplete Impact Assessments assigned to user...
             List<ChangeRequest> changeRequestsIA = await _context.ChangeRequest
                 .Where(m => m.DeletedDate == null)
-                .Where(m => m.Change_Status == "Submitted for Impact Assessment Review")
+                .Where(m => m.Change_Status == "ImpactAssessmentReview")
                 .ToListAsync();
             foreach(var changeRequest in changeRequestsIA)
             {
@@ -57,7 +57,6 @@ namespace Management_of_Change.Controllers
                     impactAssessmentResponse.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer
                         .Where(m => m.ImpactAssessmentResponseId == impactAssessmentResponse.Id)
                         .ToListAsync();
-                    var blah = "blah";
                 }
             }
             dashboardVM.IncompleteImpactAssessments = changeRequestsIA.Where(m => m.ImpactAssessmentResponses.Count > 0).ToList();
@@ -65,7 +64,7 @@ namespace Management_of_Change.Controllers
             // Get all incomplete Final Approvals assigned to user...
             List<ChangeRequest> changeRequestsFA = await _context.ChangeRequest
                 .Where(m => m.DeletedDate == null)
-                .Where(m => m.Change_Status == "Submitted for Final Approvals")
+                .Where(m => m.Change_Status == "FinalApprovals")
                 .ToListAsync();
             foreach (var changeRequest in changeRequestsFA)
             {

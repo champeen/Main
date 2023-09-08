@@ -7,11 +7,16 @@ using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Diagnostics;
+using Management_of_Change.Provider;
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
     Initialization.Initialize(builder);
+
+    //var blah1 = Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject 1", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "michael.wilson@sksiltron.com;", null, null/*, "", null*/);
+    //var blah2 = Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject 2", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "jjjjmichael.wilsonjjjj@sksiltron.com;", null, null/*, "", null*/);
+    //var blah3 = Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject 3", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "michael.wilson@sksiltron.com;", null, null/*, "", null*/);
 
     // Test Sending Email
     //Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "michael.wilson@sksiltron.com;", null, null/*, "", null*/);
@@ -21,6 +26,7 @@ try
     //// Test Sending Teams Message
     //Initialization.TeamsErrorProvider.SendMessage("This is a test <br/><br/> EOM");
 
+    // Add services to the container.
     // USE SQL SERVER.....
     //builder.Services.AddDbContext<Management_of_ChangeContext>(options =>
     //    options.UseSqlServer(builder.Configuration.GetConnectionString("Management_of_ChangeContext") ?? throw new InvalidOperationException("Connection string 'Management_of_ChangeContext' not found.")));
@@ -28,10 +34,7 @@ try
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     ////builder.Services.AddDbContext<Management_of_ChangeContext>(options => options.UseNpgsql(Initialization.connectionString));
     builder.Services.AddDbContext<Management_of_ChangeContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLdev")));
-
-    // Add services to the container.
     builder.Services.AddControllersWithViews();
-
     builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
     var app = builder.Build();

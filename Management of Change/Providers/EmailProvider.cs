@@ -37,81 +37,77 @@ namespace Management_of_Change.Provider
             //_emailGeneralTo = emailGeneralTo;
         }
 
-        public async Task<bool> SendMessage(string subject, string body, string to, string cc, string bcc/*, string department, IFormFile? fileAttachment*/)
+        public async Task SendMessage(string subject, string body, string to, string cc, string bcc/*, string department, IFormFile? fileAttachment*/)
         {
-            var smtpClient = new SmtpClient();
-            smtpClient.Host = _emailUrl;
-            smtpClient.Port = _emailPort;
-            smtpClient.Credentials = new NetworkCredential(_emailUser, _emailPassword);
-            smtpClient.EnableSsl = true;
-
-            var mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress(_emailFrom);
-            if (to == null)
-                throw new Exception("To Email Address Cannot Be Null");
-
-            //switch (department)
-            //{
-            //    case "Sales":
-            //        to = to + ";" + _emailSalesTo;
-            //        break;
-            //    case "Procurement":
-            //        to = to + ";" + _emailProcurementTo;
-            //        break;
-            //    case "General":
-            //        to = to + ";" + _emailGeneralTo;
-            //        break;
-            //    default:
-            //        to = to + ";" + "Michael.Wilson@sksiltron.com";   // use myself for fallback temporarily
-            //        break;
-            //}
-
-            foreach (var curr_address in to.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+            using (var mailMessage = new MailMessage())
             {
-                MailAddress mytoAddress = new MailAddress(curr_address);
-                mailMessage.To.Add(mytoAddress);
-            }
+                mailMessage.From = new MailAddress(_emailFrom);
+                if (to == null)
+                    throw new Exception("To Email Address Cannot Be Null");
 
-            if (cc != null)
-            {
-                foreach (var curr_address in cc.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+                mailMessage.Subject = subject;
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+
+                foreach (var curr_address in to.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     MailAddress mytoAddress = new MailAddress(curr_address);
-                    mailMessage.CC.Add(mytoAddress);
+                    mailMessage.To.Add(mytoAddress);
                 }
-            }
 
-            if (bcc != null)
-            {
-                foreach (var curr_address in bcc.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+                if (cc != null)
                 {
-                    MailAddress mytoAddress = new MailAddress(curr_address);
-                    mailMessage.Bcc.Add(mytoAddress);
+                    foreach (var curr_address in cc.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        MailAddress mytoAddress = new MailAddress(curr_address);
+                        mailMessage.CC.Add(mytoAddress);
+                    }
+                }
+
+                if (bcc != null)
+                {
+                    foreach (var curr_address in bcc.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        MailAddress mytoAddress = new MailAddress(curr_address);
+                        mailMessage.Bcc.Add(mytoAddress);
+                    }
+                }
+
+                using (var smtpClient = new SmtpClient())
+                {                    
+                    smtpClient.Host = _emailUrl;
+                    smtpClient.Port = _emailPort;
+                    smtpClient.Credentials = new NetworkCredential(_emailUser, _emailPassword);
+                    smtpClient.EnableSsl = true;     
+
+                    //if (fileAttachment != null)
+                    //{
+                    //    using (var ms = new MemoryStream())
+                    //    {
+                    //        fileAttachment.CopyTo(ms);
+                    //        var fileBytes = ms.ToArray();
+                    //        mailMessage.Attachments.Add(new Attachment(new MemoryStream(fileBytes), fileAttachment.FileName, fileAttachment.ContentType));
+                    //        smtpClient.Send(mailMessage);
+                    //        //ms.Position = 0;
+                    //        //model.ContactUs_Sales.Attachments.Name = Utilities.Utilities.AddDateToFileName(fileAttachment.FileName);
+                    //    }
+                    //}
+                    //else
+                    //    smtpClient.Send(mailMessage);
+
+                    try
+                    {
+                        await smtpClient.SendMailAsync(mailMessage);
+                        
+                    }
+                    catch(Exception ex)
+                    {
+                        throw(ex);
+                    }
+                    
                 }
             }
-
-            mailMessage.Subject = subject;
-            mailMessage.Body = body;
-            mailMessage.IsBodyHtml = true;
-
-            //if (fileAttachment != null)
-            //{
-            //    using (var ms = new MemoryStream())
-            //    {
-            //        fileAttachment.CopyTo(ms);
-            //        var fileBytes = ms.ToArray();
-            //        mailMessage.Attachments.Add(new Attachment(new MemoryStream(fileBytes), fileAttachment.FileName, fileAttachment.ContentType));
-            //        smtpClient.Send(mailMessage);
-            //        //ms.Position = 0;
-            //        //model.ContactUs_Sales.Attachments.Name = Utilities.Utilities.AddDateToFileName(fileAttachment.FileName);
-            //    }
-            //}
-            //else
-            //    smtpClient.Send(mailMessage);
-
-            await smtpClient.SendMailAsync(mailMessage);
-
-            return true;
+            //return true;
         }
     }
 }

@@ -46,7 +46,15 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            ViewBag.StatusList = _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToList();
+            // Create Dropdown List of Status...
+            var statusList = await _context.ChangeStatus.OrderBy(m => m.Order).ToListAsync();
+            List<SelectListItem> statusDropdown = new List<SelectListItem>();
+            foreach (var status in statusList)
+            {
+                SelectListItem item = new SelectListItem { Value = status.Description, Text = status.Description};
+                statusDropdown.Add(item);
+            }
+            ViewBag.StatusList = statusDropdown;
 
             var requests = from m in _context.ChangeRequest
                            select m;
@@ -147,12 +155,12 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" ? "disabled" : "";
             // disable tab4 (Final Review) if any Impact Assessment Responses have not been completed...
             int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") ? "disabled" : "";
+            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview") ? "disabled" : "";
             // disable tab5 (Implementation) if any Final Approvals have not been completed...
             int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review" || changeRequestViewModel.ChangeRequest.Change_Status == "Submitted for Final Approvals") ? "disabled" : "";
-            // disable tab6 (Closeout/Complete) if change request is not in status of "Submitted for Closeout" or "Closed"
-            changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Submitted for Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
+            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
+            // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
+            changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
 
             changeRequestViewModel.TabActiveDetail = "";
             changeRequestViewModel.TabActiveGeneralMocQuestions = "";
@@ -257,6 +265,7 @@ namespace Management_of_Change.Controllers
             };
 
             changeRequest.Change_Status = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Status).FirstOrDefaultAsync();
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Description).FirstOrDefaultAsync();
 
             // Persist Dropdown Selection Lists
             ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
@@ -279,7 +288,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -501,7 +510,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -635,7 +644,8 @@ namespace Management_of_Change.Controllers
                 if (changeRequest == null)
                     return NotFound();
 
-                changeRequest.Change_Status = "Submitted for Final Approvals";
+                changeRequest.Change_Status = "FinalApprovals";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "FinalApprovals").Select(m => m.Description).FirstOrDefaultAsync();
                 changeRequest.ModifiedDate = DateTime.UtcNow;
                 changeRequest.ModifiedUser = _username;
                 _context.Update(changeRequest);
@@ -661,6 +671,8 @@ namespace Management_of_Change.Controllers
                         SentToEmail = record.ReviewerEmail,
                         ChangeRequestId = changeRequest.Id,
                         ImpactAssessmentResponseId = record.Id,
+                        Type = "ChangeRequest",
+                        Status = changeRequest.Change_Status,
                         CreatedDate = DateTime.UtcNow,
                         CreatedUser = _username
                     };
@@ -707,7 +719,8 @@ namespace Management_of_Change.Controllers
             changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
 
             // Update ChangeRequest...
-            changeRequest.Change_Status = "Submitted for Impact Assessment Review";
+            changeRequest.Change_Status = "ImpactAssessmentReview";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "ImpactAssessmentReview").Select(m => m.Description).FirstOrDefaultAsync();
             changeRequest.ModifiedUser = _username;
             changeRequest.ModifiedDate = DateTime.UtcNow;
             _context.Update(changeRequest);
@@ -729,6 +742,8 @@ namespace Management_of_Change.Controllers
                     SentToEmail = record.ReviewerEmail,
                     ChangeRequestId = changeRequest.Id,
                     ImpactAssessmentResponseId = record.Id,
+                    Type = "ChangeRequest",
+                    Status = changeRequest.Change_Status,
                     CreatedDate = DateTime.UtcNow,
                     CreatedUser = _username
                 };
@@ -780,6 +795,7 @@ namespace Management_of_Change.Controllers
             if (changeRequest != null)
             {
                 changeRequest.Change_Status = "Killed";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Killed").Select(m => m.Description).FirstOrDefaultAsync();
                 changeRequest.DeletedUser = _username;
                 changeRequest.DeletedDate = DateTime.UtcNow;
                 _context.Update(changeRequest);
@@ -869,7 +885,8 @@ namespace Management_of_Change.Controllers
                 var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == implementationFinalApprovalResponse.ChangeRequestId);
                 if (changeRequest != null)
                 {
-                    changeRequest.Change_Status = "Submitted for Implementation";
+                    changeRequest.Change_Status = "Implementation";
+                    changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Implementation").Select(m => m.Description).FirstOrDefaultAsync();
                     changeRequest.ModifiedDate = DateTime.UtcNow;
                     changeRequest.ModifiedUser = _username;
                     _context.Update(changeRequest);
@@ -893,6 +910,8 @@ namespace Management_of_Change.Controllers
                             SentToUsername = record.Username,
                             SentToEmail = admin.mail,
                             ChangeRequestId = changeRequest.Id,
+                            Type = "ChangeRequest",
+                            Status = changeRequest.Change_Status,
                             ImplementationFinalApprovalResponseId = implementationFinalApprovalResponse.Id,
                             CreatedDate = DateTime.UtcNow,
                             CreatedUser = _username
@@ -920,7 +939,8 @@ namespace Management_of_Change.Controllers
             if (changeRequest == null)
                 return NotFound();
 
-            changeRequest.Change_Status = "Submitted for Closeout";
+            changeRequest.Change_Status = "Closeout";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Closeout").Select(m => m.Description).FirstOrDefaultAsync();
             changeRequest.ModifiedUser = _username;
             changeRequest.ModifiedDate = DateTime.UtcNow;
             changeRequest.Implementation_Approval_Date = DateTime.UtcNow;
@@ -946,6 +966,8 @@ namespace Management_of_Change.Controllers
                     SentToUsername = record.Username,
                     SentToEmail = admin.mail,
                     ChangeRequestId = changeRequest.Id,
+                    Type = "ChangeRequest",
+                    Status = changeRequest.Change_Status,
                     CreatedDate = DateTime.UtcNow,
                     CreatedUser = _username
                 };
@@ -971,6 +993,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             changeRequest.Change_Status = "Closed";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Closed").Select(m => m.Description).FirstOrDefaultAsync();
             changeRequest.ModifiedUser = _username;
             changeRequest.ModifiedDate = DateTime.UtcNow;
             changeRequest.Closeout_Date = DateTime.UtcNow;
@@ -992,6 +1015,8 @@ namespace Management_of_Change.Controllers
                 SentToUsername = changeRequest.Change_Owner,
                 SentToEmail = owner.mail,
                 ChangeRequestId = changeRequest.Id,
+                Type = "ChangeRequest",
+                Status = changeRequest.Change_Status,
                 CreatedDate = DateTime.UtcNow,
                 CreatedUser = _username
             };
@@ -1075,7 +1100,7 @@ namespace Management_of_Change.Controllers
                 if (changeRequest != null)
                 {
                     if ((task.ImplementationType == "Pre") &&
-                        (changeRequest.Change_Status == "Submitted for Closeout" || changeRequest.Change_Status == "Closed"))
+                        (changeRequest.Change_Status == "Closeout" || changeRequest.Change_Status == "Closed"))
                         ModelState.AddModelError("ImplementationType", "Task Status is beyond the stage to add a Pre Implementation Task.");
                     if ((task.ImplementationType == "Post") &&
                         (changeRequest.Change_Status == "Closed"))
@@ -1109,6 +1134,9 @@ namespace Management_of_Change.Controllers
                         SentToUsername = toPerson.onpremisessamaccountname,
                         SentToEmail = toPerson.mail,
                         ChangeRequestId = task.ChangeRequestId,
+                        TaskId = task.Id,
+                        Type = "Task",
+                        Status = task.Status,
                         CreatedDate = DateTime.UtcNow,
                         CreatedUser = _username
                     };

@@ -31,6 +31,8 @@ namespace Management_of_Change.Models
         public DateTime? Expiration_Date_Temporary { get; set; }
         [Display(Name = "Status")]
         public string Change_Status { get; set; }
+        [Display(Name = "Status")]
+        public string Change_Status_Description { get; set; }
         [Display(Name = "Request Date")]
         [DataType(DataType.Date)]
         public DateTime Request_Date { get; set; }

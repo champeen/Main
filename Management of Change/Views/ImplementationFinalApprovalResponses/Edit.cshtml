@@ -71,6 +71,8 @@
         <div class="col-12">
             <div class="form-group my-3">
                 <label asp-for="ReviewResult" class="control-label fw-bold"></label>
+                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This field is required to complete your Final Approval on the previous page">
+                </i>
                 @*<input asp-for="ReviewResult" class="form-control" />*@
                 @Html.TextAreaFor(model => model.ReviewResult, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="ReviewResult" class="text-danger"></span>

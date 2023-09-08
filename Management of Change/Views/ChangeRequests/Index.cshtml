@@ -23,7 +23,7 @@
             Status:
         </div>
         <div class="col-2 text-start">
-            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList),"All", new {@class = "form-control form-select", @id="statusFilter"})
+            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList,"Value","Text"),"All", new {@class = "form-control form-select", @id="statusFilter"})
         </div>
         @*        <div class="col-2 fw-bold text-end">
         Another Filter:
@@ -111,7 +111,7 @@
                     @Html.DisplayFor(modelItem => item.Change_Owner)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Change_Status)
+                    @Html.DisplayFor(modelItem => item.Change_Status_Description)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Change_Type)
@@ -157,7 +157,7 @@
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
                     @if (ViewBag.IsAdmin == true || ViewBag.Username == item.Change_Owner)
                     {
-                        @if (item.DeletedDate == null && item.Change_Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
+                        @*@if (item.DeletedDate == null && item.Change_Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS*@
                         {
                             @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-2", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"})
                             @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"></i>*@

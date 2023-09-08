@@ -19,5 +19,7 @@ namespace Management_of_Change.Models
         public int? ImpactAssessmentResponseId { get; set; }
         public int? ImplementationFinalApprovalResponseId { get; set; }
         public int? TaskId { get; set; }
+        public string? Type { get; set; }
+        public string? Status { get; set; }
     }
 }

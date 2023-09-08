@@ -16,9 +16,9 @@
             </span>
         </h4>
         <h4>
-            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status):
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status_Description):
             <span class="text-success fw-bold">
-                @Html.DisplayFor(model => model.ChangeRequest.Change_Status)
+                @Html.DisplayFor(model => model.ChangeRequest.Change_Status_Description)
             </span>
         </h4>
     </div>
@@ -114,10 +114,10 @@
                 </dd>
                 @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status_Description)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Change_Status)
+                    @Html.DisplayFor(model => model.ChangeRequest.Change_Status_Description)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Location_Site)
@@ -487,12 +487,12 @@
                                     @Html.DisplayFor(modelItem => item.Comments)
                                 </td>
                                 <td class="text-nowrap">
-                                    @*@if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.ReviewCompleted == false))
+                                    @*@if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.ReviewCompleted == false))
                             {
                             @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
                             }*@
                                     @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
-                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Impact Assessment Review") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
                                         @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
                                     }
@@ -573,7 +573,7 @@
                                     @Html.DisplayFor(modelItem => item.Comments)
                                 </td>
                                 <td class="text-nowrap">
-                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "Submitted for Final Approvals"))
+                                    @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "FinalApprovals"))
                                     {
                                         if (item.ReviewCompleted != true)
                                         {
@@ -612,16 +612,16 @@
                 @if (ViewBag.OpenPreImplementationTasks > 0)
                 {
                     <div class="fw-bold text-danger my-5">
-                        Cannot close Implementation.  There are open Pre-Implementation tasks!
+                        Cannot close Implementation.  There are 'Open/In-Progress/On Hold' Pre-Implementation Tasks for this Change Request.
                     </div>
                 }
                 else
                 {
-                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Submitted for Implementation"))
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
                     {
                         @Html.ActionLink("Close Implementation","CloseoutImplementation", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
                     }
-                    @if (Model.ChangeRequest.Change_Status == "Submitted for Closeout" || Model.ChangeRequest.Change_Status == "Closed")
+                    @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
                     {
                         <div class="fw-bold text-success my-5">
                             Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
@@ -641,12 +641,12 @@
                 @if (ViewBag.OpenTasks > 0)
                 {
                     <div class="fw-bold text-danger my-5">
-                        Cannot Close-out/Complete Change Request.  There are Open Tasks for this change Request.
+                        Cannot Close-out/Complete Change Request.  There are 'Open/In-Progress/On Hold' Tasks for this Change Request.
                     </div>
                 }                
                 else
                 {
-                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Submitted for Closeout"))
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Closeout"))
                     {
                         @Html.ActionLink("Close-Out/Complete","CloseoutComplete", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
                     }

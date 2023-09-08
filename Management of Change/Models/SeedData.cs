@@ -30,6 +30,7 @@ namespace Management_of_Change.Models
                             Scope_of_the_Change = "Scope of the Change 1",
                             Justification_of_the_Change = "Justification of Change 1",
                             Change_Status = "Draft",
+                            Change_Status_Description = "Draft",
                             Request_Date = System.DateTime.Now,
                             Proudct_Line = "Product Line 1",
                             Change_Type = "Change Type 1",
@@ -39,7 +40,7 @@ namespace Management_of_Change.Models
                             Area_of_Change = "Area of Change 1",
                             Expiration_Date_Temporary = System.DateTime.Now.AddMonths(3),
                             CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
+                            CreatedDate = DateTime.UtcNow,
                             ModifiedUser = null,
                             ModifiedDate = null,
                             DeletedUser = null,
@@ -55,6 +56,7 @@ namespace Management_of_Change.Models
                             Scope_of_the_Change = "Scope of the Change 2",
                             Justification_of_the_Change = "Justification of Change 2",
                             Change_Status = "Killed",
+                            Change_Status_Description = "Killed",
                             Request_Date = System.DateTime.Now.AddYears(-2),
                             Proudct_Line = "Product Line 2",
                             Change_Type = "Change Type 2",
@@ -64,11 +66,11 @@ namespace Management_of_Change.Models
                             Area_of_Change = "Area of Change 2",
                             Expiration_Date_Temporary = null,
                             CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
+                            CreatedDate = DateTime.UtcNow,
                             ModifiedUser = "Fred Jones",
-                            ModifiedDate = DateTime.Now.AddMonths(-3),
+                            ModifiedDate = DateTime.UtcNow.AddMonths(-3),
                             DeletedUser = "Jesse Girl",
-                            DeletedDate = DateTime.Now.AddDays(-2)
+                            DeletedDate = DateTime.UtcNow.AddDays(-2)
                         },
 
                         new ChangeRequest
@@ -80,6 +82,7 @@ namespace Management_of_Change.Models
                             Scope_of_the_Change = "Scope of the Change 3",
                             Justification_of_the_Change = "Justification of Change 3",
                             Change_Status = "Draft",
+                            Change_Status_Description = "Draft",
                             Request_Date = System.DateTime.Now.AddMonths(-2),
                             Proudct_Line = "Product Line 3",
                             Change_Type = "Change Type 3",
@@ -89,7 +92,7 @@ namespace Management_of_Change.Models
                             Area_of_Change = "Area of Change 3",
                             Expiration_Date_Temporary = System.DateTime.Now.AddMonths(7),
                             CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
+                            CreatedDate = DateTime.UtcNow,
                             ModifiedUser = null,
                             ModifiedDate = null,
                             DeletedUser = null,
@@ -374,6 +377,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Draft",
+                            Description = "Draft",
                             Default = true,
                             Order = "05",
                             CreatedUser = "MJWilson",
@@ -385,7 +389,8 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Submitted for Impact Assessment Review",
+                            Status = "ImpactAssessmentReview",
+                            Description = "Submitted for Impact Assessment Review",
                             Default = false,
                             Order = "10",
                             CreatedUser = "Joe Jackson",
@@ -397,7 +402,8 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Awaiting Completion of Pre Implementation Tasks",
+                            Status = "FinalApprovals",
+                            Description = "Submitted for Final Approvals",
                             Default = false,
                             Order = "15",
                             CreatedUser = "Steve Smith",
@@ -409,7 +415,8 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Submitted for Final Approvals",
+                            Status = "Implementation",
+                            Description = "Submitted for Implementation",
                             Default = false,
                             Order = "20",
                             CreatedUser = "Fred Bear",
@@ -421,7 +428,8 @@ namespace Management_of_Change.Models
                         },
                         new ChangeStatus
                         {
-                            Status = "Submitted for Implementation",
+                            Status = "Closeout",
+                            Description = "Submitted for Closeout",
                             Default = false,
                             Order = "25",
                             CreatedUser = "Ken Jones",
@@ -434,6 +442,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Closed",
+                            Description = "Closed",
                             Default = false,
                             Order = "30",
                             CreatedUser = "Shelly Shelby",
@@ -458,6 +467,7 @@ namespace Management_of_Change.Models
                         new ChangeStatus
                         {
                             Status = "Killed",
+                            Description = "Killed",
                             Default = false,
                             Order = "40",
                             CreatedUser = "Johanna Jones",

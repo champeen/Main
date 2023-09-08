@@ -139,7 +139,7 @@ namespace Management_of_Change.Controllers
                 if (changeRequest != null)
                 {
                     if ((task.ImplementationType == "Pre") &&
-                        (changeRequest.Change_Status == "Submitted for Closeout" || changeRequest.Change_Status == "Closed"))
+                        (changeRequest.Change_Status == "Closeout" || changeRequest.Change_Status == "Closed"))
                         ModelState.AddModelError("ChangeRequestId", "Task Status is beyond the stage to add a Pre Implementation Task.");
                     if ((task.ImplementationType == "Post") &&
                         (changeRequest.Change_Status == "Closed"))
@@ -170,6 +170,9 @@ namespace Management_of_Change.Controllers
                         SentToUsername = toPerson.onpremisessamaccountname,
                         SentToEmail = toPerson.mail,
                         ChangeRequestId = task.ChangeRequestId,
+                        TaskId = task.Id,
+                        Type = "Task",
+                        Status = task.Status,
                         CreatedDate = DateTime.UtcNow,
                         CreatedUser = _username
                     };
@@ -425,6 +428,9 @@ namespace Management_of_Change.Controllers
                     SentToUsername = toPerson.onpremisessamaccountname,
                     SentToEmail = toPerson.mail,
                     ChangeRequestId = task.ChangeRequestId,
+                    TaskId = task.Id,
+                    Type = "Task",
+                    Status = task.Status,
                     CreatedDate = DateTime.UtcNow,
                     CreatedUser = _username
                 };

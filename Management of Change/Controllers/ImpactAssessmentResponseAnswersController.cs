@@ -205,11 +205,15 @@ namespace Management_of_Change.Controllers
                         .Where(m => m.Id == impactAssessmentResponseAnswer.ImpactAssessmentResponseId)
                         .FirstOrDefaultAsync();
 
-                    // get MOC Number this Task will belong to
-                    var mocNumber = await _context.ChangeRequest
+                    ChangeRequest changeRequest = await _context.ChangeRequest
                         .Where(m => m.Id == impactAssessmentResponse.ChangeRequestId)
-                        .Select(m => m.MOC_Number)
                         .FirstOrDefaultAsync();
+
+                    // get MOC Number this Task will belong to
+                    //var mocNumber = await _context.ChangeRequest
+                    //    .Where(m => m.Id == impactAssessmentResponse.ChangeRequestId)
+                    //    .Select(m => m.MOC_Number)
+                    //    .FirstOrDefaultAsync();
 
                     // see if a task for this ImpactAssessmentResponseAnswers already exists (add it if it doesnt)
                     Models.Task existingTask = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == impactAssessmentResponseAnswer.Id);
@@ -219,7 +223,7 @@ namespace Management_of_Change.Controllers
                         Models.Task task = new Models.Task
                         {
                             ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
-                            MocNumber = mocNumber,
+                            MocNumber = changeRequest.MOC_Number,
                             ImplementationType = impactAssessmentResponseAnswer.PreOrPostImplementation,
                             Status = "Open",
                             AssignedToUser = impactAssessmentResponseAnswer.ActionOwner,
@@ -250,6 +254,8 @@ namespace Management_of_Change.Controllers
                                 SentToEmail = toPerson.mail,
                                 ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
                                 ImpactAssessmentResponseId = impactAssessmentResponseAnswer.ImpactAssessmentResponseId,
+                                Type = "Task",
+                                Status = task.Status,
                                 CreatedDate = DateTime.UtcNow,
                                 CreatedUser = _username
                             };
@@ -313,7 +319,7 @@ namespace Management_of_Change.Controllers
                     //        ChangeRequest changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == impactAssessmentResponse.ChangeRequestId);
                     //        if (changeRequest != null)
                     //        {
-                    //            changeRequest.Change_Status = "Submitted for Final Approvals";
+                    //            changeRequest.Change_Status = "FinalApprovals";
                     //            changeRequest.ModifiedDate= DateTime.UtcNow;
                     //            changeRequest.ModifiedUser = _username;
                     //            _context.Update(changeRequest);

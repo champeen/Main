@@ -34,6 +34,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="MOC_Number" />
+            <input type="hidden" asp-for="Change_Status" />
             <input type="hidden" asp-for="Request_Date" />
             <input type="hidden" asp-for="Implementation_Approval_Date" />
             <input type="hidden" asp-for="Implementation_Username" />
@@ -83,7 +84,8 @@
         <div class="col-md-6">
             <div class="form-group my-3">
                 <label asp-for="Change_Status" class="control-label fw-bold mb-1"></label>
-                @Html.DropDownListFor(model => model.Change_Status, new SelectList(ViewBag.Status), new { @class="form-control form-select"})
+                <input asp-for="Change_Status_Description" class="form-control" readonly/>
+                @*@Html.DropDownListFor(model => model.Change_Status, new SelectList(ViewBag.Status), new { @class="form-control form-select"})*@
                 <span asp-validation-for="Change_Status" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">

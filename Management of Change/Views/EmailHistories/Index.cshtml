@@ -40,80 +40,93 @@
                 @Html.DisplayNameFor(model => model.TaskId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedUser)
+                @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            @*            <th>
+            @Html.DisplayNameFor(model => model.CreatedUser)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedUser)
+            @Html.DisplayNameFor(model => model.CreatedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
+            @Html.DisplayNameFor(model => model.ModifiedUser)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedUser)
+            @Html.DisplayNameFor(model => model.ModifiedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedDate)
+            @Html.DisplayNameFor(model => model.DeletedUser)
             </th>
+            <th>
+            @Html.DisplayNameFor(model => model.DeletedDate)
+            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SentToDisplayName)
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SentToDisplayName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SentToUsername)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SentToEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Body)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeRequestId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImpactAssessmentResponseId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImplementationFinalApprovalResponseId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaskId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                @*            <td>
+            @Html.DisplayFor(modelItem => item.CreatedUser)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SentToUsername)
+            @Html.DisplayFor(modelItem => item.CreatedDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SentToEmail)
+            @Html.DisplayFor(modelItem => item.ModifiedUser)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Subject)
+            @Html.DisplayFor(modelItem => item.ModifiedDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Body)
+            @Html.DisplayFor(modelItem => item.DeletedUser)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ChangeRequestId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImpactAssessmentResponseId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ImplementationFinalApprovalResponseId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TaskId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+            @Html.DisplayFor(modelItem => item.DeletedDate)
+            </td>*@
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
