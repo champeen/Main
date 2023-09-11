@@ -276,9 +276,18 @@ namespace Management_of_Change.Controllers
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.Source = source;
-
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+
+            // Create Dropdown List of PTN Numbers....
+            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
+            List<SelectListItem> ptns = new List<SelectListItem>();
+            foreach (var request in ptnList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+                ptns.Add(item);
+            }
+            ViewBag.PTNs = ptns;
 
             return View(changeRequest);
         }
@@ -450,6 +459,16 @@ namespace Management_of_Change.Controllers
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.Source = source;
 
+            // Create Dropdown List of PTN Numbers....
+            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
+            List<SelectListItem> ptns = new List<SelectListItem>();
+            foreach (var request in ptnList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+                ptns.Add(item);
+            }
+            ViewBag.PTNs = ptns;
+
             return View(changeRequest);
         }
 
@@ -480,6 +499,16 @@ namespace Management_of_Change.Controllers
             ViewBag.Tab = tab;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+
+            // Create Dropdown List of PTN Numbers....
+            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
+            List<SelectListItem> ptns = new List<SelectListItem>();
+            foreach (var request in ptnList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+                ptns.Add(item);
+            }
+            ViewBag.PTNs = ptns;
 
             // Create Dropdown List of Users...
             var userList = await _context.__mst_employee
@@ -564,6 +593,16 @@ namespace Management_of_Change.Controllers
             //ViewBag.Tab = tab;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+
+            // Create Dropdown List of PTN Numbers....
+            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
+            List<SelectListItem> ptns = new List<SelectListItem>();
+            foreach (var request in ptnList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+                ptns.Add(item);
+            }
+            ViewBag.PTNs = ptns;
 
             // Create Dropdown List of Users...
             var userList = await _context.__mst_employee

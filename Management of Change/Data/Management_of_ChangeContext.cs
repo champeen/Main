@@ -60,5 +60,6 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.AllowedAttachmentExtensions>? AllowedAttachmentExtensions { get; set; }
         public DbSet<Management_of_Change.Models.Administrators>? Administrators { get; set; }
         public DbSet<Management_of_Change.Models.EmailHistory>? EmailHistory { get; set; }
+        public DbSet<Management_of_Change.Models.PTN>? PTN { get; set; }
     }
 }

@@ -97,9 +97,10 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label asp-for="PTN_Number" class="control-label fw-bold mb-1"></label>
-                        <i class="bi bi-info-circle" style="color:purple;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please enter the PTN number(s)">
+                        <i class="bi bi-info-circle" style="color:purple;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please select the PTN number">
                         </i>
-                        <input asp-for="PTN_Number" class="form-control" />
+                        @*<input asp-for="PTN_Number" class="form-control" />*@
+                        @Html.DropDownListFor(model => model.PTN_Number, new SelectList(ViewBag.PTNs,"Value","Text"), "-- select --", new { @class="form-control form-select"})
                         <span asp-validation-for="PTN_Number" class="text-danger fw-bold"></span>
                     </div>
                 </div>
