@@ -21,6 +21,12 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        </div>
+    </div>
     <div class="row my-4">
         <div class="col-md-12">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

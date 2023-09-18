@@ -13,6 +13,61 @@ namespace Management_of_Change.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "__mst_employee",
+                columns: table => new
+                {
+                    displayname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    givenname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    surname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    jobtitle = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    mail = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    userprincipalname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    accountenabled = table.Column<bool>(type: "boolean", nullable: true),
+                    createddatetime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    onpremisesdomainname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    onpremisessamaccountname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
+                    onpremisessyncenabled = table.Column<bool>(type: "boolean", nullable: true),
+                    manager = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true)
+                },
+                constraints: table =>
+                {
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Administrators",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    Approver = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Administrators", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AllowedAttachmentExtensions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ExtensionName = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AllowedAttachmentExtensions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ChangeArea",
                 columns: table => new
                 {
@@ -62,17 +117,25 @@ namespace Management_of_Change.Migrations
                     MOC_Number = table.Column<string>(type: "text", nullable: true),
                     Change_Owner = table.Column<string>(type: "text", nullable: false),
                     Location_Site = table.Column<string>(type: "text", nullable: false),
-                    Title_Change_Description = table.Column<string>(type: "text", nullable: false),
+                    Title_Change_Description = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Scope_of_the_Change = table.Column<string>(type: "text", nullable: false),
                     Justification_of_the_Change = table.Column<string>(type: "text", nullable: false),
                     Change_Level = table.Column<string>(type: "text", nullable: false),
                     Area_of_Change = table.Column<string>(type: "text", nullable: false),
                     Expiration_Date_Temporary = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     Change_Status = table.Column<string>(type: "text", nullable: false),
+                    Change_Status_Description = table.Column<string>(type: "text", nullable: false),
                     Request_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Proudct_Line = table.Column<string>(type: "text", nullable: false),
                     Change_Type = table.Column<string>(type: "text", nullable: false),
-                    Estimated_Completion_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    PTN_Number = table.Column<string>(type: "text", nullable: true),
+                    Waiver_Number = table.Column<string>(type: "text", nullable: true),
+                    CMT_Number = table.Column<string>(type: "text", nullable: true),
+                    Estimated_Completion_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Implementation_Approval_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Implementation_Username = table.Column<string>(type: "text", nullable: true),
+                    Closeout_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Closeout_Username = table.Column<string>(type: "text", nullable: true),
                     Raw_Material_Component_Numbers_Impacted = table.Column<string>(type: "text", nullable: false),
                     CreatedUser = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -93,6 +156,8 @@ namespace Management_of_Change.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Status = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Default = table.Column<bool>(type: "boolean", nullable: false),
                     Order = table.Column<string>(type: "text", nullable: true),
                     CreatedUser = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -128,6 +193,35 @@ namespace Management_of_Change.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmailHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SentToDisplayName = table.Column<string>(type: "text", nullable: true),
+                    SentToUsername = table.Column<string>(type: "text", nullable: true),
+                    SentToEmail = table.Column<string>(type: "text", nullable: true),
+                    Subject = table.Column<string>(type: "text", nullable: true),
+                    Body = table.Column<string>(type: "text", nullable: true),
+                    ChangeRequestId = table.Column<int>(type: "integer", nullable: true),
+                    ImpactAssessmentResponseId = table.Column<int>(type: "integer", nullable: true),
+                    ImplementationFinalApprovalResponseId = table.Column<int>(type: "integer", nullable: true),
+                    TaskId = table.Column<int>(type: "integer", nullable: true),
+                    Type = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: true),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmailHistory", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "FinalReviewType",
                 columns: table => new
                 {
@@ -135,7 +229,8 @@ namespace Management_of_Change.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Type = table.Column<string>(type: "text", nullable: false),
                     Reviewer = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Username = table.Column<string>(type: "text", nullable: true),
                     Order = table.Column<string>(type: "text", nullable: true),
                     CreatedUser = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -251,6 +346,28 @@ namespace Management_of_Change.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PTN",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Enabled = table.Column<bool>(type: "boolean", nullable: false),
+                    Order = table.Column<string>(type: "text", nullable: true),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PTN", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ResponseDropdownSelections",
                 columns: table => new
                 {
@@ -278,7 +395,8 @@ namespace Management_of_Change.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Type = table.Column<string>(type: "text", nullable: false),
                     Reviewer = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    Username = table.Column<string>(type: "text", nullable: true),
                     Order = table.Column<string>(type: "text", nullable: true),
                     CreatedUser = table.Column<string>(type: "text", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -349,8 +467,9 @@ namespace Management_of_Change.Migrations
                     ReviewType = table.Column<string>(type: "text", nullable: false),
                     ChangeType = table.Column<string>(type: "text", nullable: false),
                     Reviewer = table.Column<string>(type: "text", nullable: true),
-                    ReviewerEmail = table.Column<string>(type: "text", nullable: false),
-                    Required = table.Column<bool>(type: "boolean", nullable: false),
+                    ReviewerEmail = table.Column<string>(type: "text", nullable: true),
+                    Username = table.Column<string>(type: "text", nullable: true),
+                    QuestionsAnswered = table.Column<bool>(type: "boolean", nullable: false),
                     ReviewCompleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateCompleted = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     Comments = table.Column<string>(type: "text", nullable: true),
@@ -382,7 +501,8 @@ namespace Management_of_Change.Migrations
                     ChangeType = table.Column<string>(type: "text", nullable: false),
                     FinalReviewType = table.Column<string>(type: "text", nullable: false),
                     Reviewer = table.Column<string>(type: "text", nullable: true),
-                    ReviewerEmail = table.Column<string>(type: "text", nullable: false),
+                    ReviewerEmail = table.Column<string>(type: "text", nullable: true),
+                    Username = table.Column<string>(type: "text", nullable: true),
                     ReviewResult = table.Column<string>(type: "text", nullable: true),
                     ReviewCompleted = table.Column<bool>(type: "boolean", nullable: false),
                     DateCompleted = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
@@ -452,7 +572,7 @@ namespace Management_of_Change.Migrations
                     Status = table.Column<string>(type: "text", nullable: false),
                     AssignedToUser = table.Column<string>(type: "text", nullable: false),
                     AssignedByUser = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     DueDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CompletionDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
@@ -513,6 +633,15 @@ namespace Management_of_Change.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "__mst_employee");
+
+            migrationBuilder.DropTable(
+                name: "Administrators");
+
+            migrationBuilder.DropTable(
+                name: "AllowedAttachmentExtensions");
+
+            migrationBuilder.DropTable(
                 name: "ChangeArea");
 
             migrationBuilder.DropTable(
@@ -523,6 +652,9 @@ namespace Management_of_Change.Migrations
 
             migrationBuilder.DropTable(
                 name: "ChangeType");
+
+            migrationBuilder.DropTable(
+                name: "EmailHistory");
 
             migrationBuilder.DropTable(
                 name: "FinalReviewType");
@@ -547,6 +679,9 @@ namespace Management_of_Change.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductLine");
+
+            migrationBuilder.DropTable(
+                name: "PTN");
 
             migrationBuilder.DropTable(
                 name: "ResponseDropdownSelections");

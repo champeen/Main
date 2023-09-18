@@ -5,9 +5,10 @@
 }
 
 <h1>Task</h1>
-<h4 class="mt-5">Edit</h4>
+<h4>Edit</h4>
+<hr />
 <form asp-action="Edit">
-    <div class="row ">
+    <div class="row my-4">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
@@ -22,7 +23,12 @@
             </div>
         </div>
     </div>
-    <hr />
+    <div class="row">
+        <div class="col-12">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-12">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

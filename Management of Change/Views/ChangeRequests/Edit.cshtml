@@ -30,6 +30,12 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-12">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-6">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -51,6 +57,12 @@
             <input asp-for="MOC_Number" class="form-control" readonly="readonly" />
             <span asp-validation-for="MOC_Number" class="text-danger"></span>
             </div>*@
+            <div class="form-group my-3">
+                <label asp-for="Change_Type" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Change_Type" class="form-control" readonly/>
+                @*@Html.DropDownListFor(model => model.Change_Type, new SelectList(ViewBag.Types), new { @class="form-control form-select"})*@
+                <span asp-validation-for="Change_Type" class="text-danger fw-bold"></span>
+            </div>
             <div class="form-group my-3">
                 <label asp-for="Change_Owner" class="control-label fw-bold mb-1"></label>
                 @Html.DropDownListFor(model => model.Change_Owner, new SelectList(ViewBag.Users,"Value","Text"), new { @class="form-control form-select"})
@@ -122,12 +134,6 @@
                         <span asp-validation-for="CMT_Number" class="text-danger fw-bold"></span>
                     </div>
                 </div>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="Change_Type" class="control-label fw-bold mb-1"></label>
-                @*<input asp-for="Change_Type" class="form-control" />*@
-                @Html.DropDownListFor(model => model.Change_Type, new SelectList(ViewBag.Types), new { @class="form-control form-select"})
-                <span asp-validation-for="Change_Type" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="Estimated_Completion_Date" class="control-label fw-bold mb-1"></label>

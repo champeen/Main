@@ -890,40 +890,40 @@ namespace Management_of_Change.Models
                             ModifiedDate = null,
                             DeletedUser = null,
                             DeletedDate = null
-                        },
-                        new GeneralMocQuestions
-                        {
-                            Question = "Is this change associated with a PTN?  If yes, please enter the PTN number(s) to the right.",
-                            Order = "50",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new GeneralMocQuestions
-                        {
-                            Question = "Does this change require the use of a waiver for the release of final product?  If so, please enter the waiver number(s) to the right.",
-                            Order = "55",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new GeneralMocQuestions
-                        {
-                            Question = "Is this change associated with a CMT (NOTE: all Level 1-3 changes require CMT)? If so, enter CMT number to the right and/or initiate CMT with CMT Leader.",
-                            Order = "60",
-                            CreatedUser = "Joe",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = "Ron",
-                            ModifiedDate = DateTime.Now,
-                            DeletedUser = "Fred",
-                            DeletedDate = DateTime.Now
                         }
+                        //new GeneralMocQuestions
+                        //{
+                        //    Question = "Is this change associated with a PTN?  If yes, please enter the PTN number(s) to the right.",
+                        //    Order = "50",
+                        //    CreatedUser = "MJWilson",
+                        //    CreatedDate = DateTime.Now,
+                        //    ModifiedUser = null,
+                        //    ModifiedDate = null,
+                        //    DeletedUser = null,
+                        //    DeletedDate = null
+                        //},
+                        //new GeneralMocQuestions
+                        //{
+                        //    Question = "Does this change require the use of a waiver for the release of final product?  If so, please enter the waiver number(s) to the right.",
+                        //    Order = "55",
+                        //    CreatedUser = "MJWilson",
+                        //    CreatedDate = DateTime.Now,
+                        //    ModifiedUser = null,
+                        //    ModifiedDate = null,
+                        //    DeletedUser = null,
+                        //    DeletedDate = null
+                        //},
+                        //new GeneralMocQuestions
+                        //{
+                        //    Question = "Is this change associated with a CMT (NOTE: all Level 1-3 changes require CMT)? If so, enter CMT number to the right and/or initiate CMT with CMT Leader.",
+                        //    Order = "60",
+                        //    CreatedUser = "Joe",
+                        //    CreatedDate = DateTime.Now,
+                        //    ModifiedUser = "Ron",
+                        //    ModifiedDate = DateTime.Now,
+                        //    DeletedUser = "Fred",
+                        //    DeletedDate = DateTime.Now
+                        //}
                     );
                     context.SaveChanges();
                 }
@@ -6041,108 +6041,113 @@ namespace Management_of_Change.Models
                     context.AllowedAttachmentExtensions.AddRange(
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "doc",
+                            ExtensionName = ".doc",
                             Description = "Microsoft Word document before Word 2007"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "docx",
+                            ExtensionName = ".docx",
                             Description = "Microsoft Word document"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "dot",
+                            ExtensionName = ".dot",
                             Description = "Microsoft Word template before Word 2007"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "dotx",
+                            ExtensionName = ".dotx",
                             Description = "Microsoft Word template"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "gif",
+                            ExtensionName = ".gif",
                             Description = "Graphical Interchange Format file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "jpeg",
+                            ExtensionName = ".jpeg",
                             Description = "Joint Photographic Experts Group photo file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "jpg",
+                            ExtensionName = ".jpg",
                             Description = "Joint Photographic Experts Group photo file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "ods",
+                            ExtensionName = ".ods",
                             Description = "OpenDocument Spreadsheet"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "pdf",
+                            ExtensionName = ".pdf",
                             Description = "Portable Document Format file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "png",
+                            ExtensionName = ".png",
                             Description = "Portable Network Graphics file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "ppt",
+                            ExtensionName = ".ppt",
                             Description = "Microsoft PowerPoint format before PowerPoint 2007"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "pptx",
+                            ExtensionName = ".pptx",
                             Description = "Microsoft PowerPoint presentation"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "psd",
+                            ExtensionName = ".psd",
                             Description = "Adobe Photoshop file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "rtf",
+                            ExtensionName = ".rtf",
                             Description = "Rich Text Format file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "tif",
+                            ExtensionName = ".tif",
                             Description = "Tagged Image Format file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "tiff",
+                            ExtensionName = ".tiff",
                             Description = "Tagged Image Format file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "txt",
+                            ExtensionName = ".txt",
                             Description = "Unformatted text file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "vsd",
+                            ExtensionName = ".vsd",
                             Description = "Microsoft Visio drawing before Visio 2013"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "vsdx",
+                            ExtensionName = ".vsdx",
                             Description = "Microsoft Visio drawing file"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "xls",
+                            ExtensionName = ".xls",
                             Description = "Microsoft Excel workbook before Excel 2007"
                         },
                         new AllowedAttachmentExtensions
                         {
-                            ExtensionName = "xlsx",
+                            ExtensionName = ".xlsx",
                             Description = "Microsoft Excel workbook after Excel 2007"
+                        },
+                        new AllowedAttachmentExtensions
+                        {
+                            ExtensionName = ".jmp",
+                            Description = ""
                         }
                     );
                     context.SaveChanges();

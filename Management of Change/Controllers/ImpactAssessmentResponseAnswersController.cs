@@ -239,7 +239,7 @@ namespace Management_of_Change.Controllers
 
                         // Send Email Out notifying the person who is assigned the task
                         string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
-                        string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>MoC Title: </strong>" + task.Title + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                        string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>MoC Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
                         var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                         if (toPerson != null)
                         {
@@ -333,7 +333,7 @@ namespace Management_of_Change.Controllers
                     //            foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
                     //            {
                     //                string subject = @"Management of Change (MoC) - Final Approval Needed";
-                    //                string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: http://appdevbaub01/</strong><br/><br/>";
+                    //                string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
                     //                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null);
 
                     //                EmailHistory emailHistory = new EmailHistory

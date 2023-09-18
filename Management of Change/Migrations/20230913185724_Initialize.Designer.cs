@@ -12,15 +12,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Management_of_Change.Migrations
 {
     [DbContext(typeof(Management_of_ChangeContext))]
-    [Migration("20230816172900_addApproverToAdmin")]
-    partial class addApproverToAdmin
+    [Migration("20230913185724_Initialize")]
+    partial class Initialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -177,6 +177,9 @@ namespace Management_of_Change.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("CMT_Number")
+                        .HasColumnType("text");
+
                     b.Property<string>("Change_Level")
                         .IsRequired()
                         .HasColumnType("text");
@@ -189,8 +192,18 @@ namespace Management_of_Change.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Change_Status_Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Change_Type")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("Closeout_Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Closeout_Username")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
@@ -206,11 +219,17 @@ namespace Management_of_Change.Migrations
                     b.Property<string>("DeletedUser")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("Estimated_Completion_Date")
+                    b.Property<DateTime?>("Estimated_Completion_Date")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("Expiration_Date_Temporary")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("Implementation_Approval_Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Implementation_Username")
+                        .HasColumnType("text");
 
                     b.Property<string>("Justification_of_the_Change")
                         .IsRequired()
@@ -227,6 +246,9 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PTN_Number")
                         .HasColumnType("text");
 
                     b.Property<string>("Proudct_Line")
@@ -246,6 +268,10 @@ namespace Management_of_Change.Migrations
 
                     b.Property<string>("Title_Change_Description")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Waiver_Number")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -275,6 +301,9 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -385,11 +414,17 @@ namespace Management_of_Change.Migrations
                     b.Property<string>("SentToUsername")
                         .HasColumnType("text");
 
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
                     b.Property<string>("Subject")
                         .HasColumnType("text");
 
                     b.Property<int?>("TaskId")
                         .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -609,6 +644,9 @@ namespace Management_of_Change.Migrations
 
                     b.Property<string>("ModifiedUser")
                         .HasColumnType("text");
+
+                    b.Property<bool>("QuestionsAnswered")
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("ReviewCompleted")
                         .HasColumnType("boolean");
@@ -851,6 +889,51 @@ namespace Management_of_Change.Migrations
                     b.ToTable("ImplementationFinalApprovalResponse");
                 });
 
+            modelBuilder.Entity("Management_of_Change.Models.PTN", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PTN");
+                });
+
             modelBuilder.Entity("Management_of_Change.Models.ProductLine", b =>
                 {
                     b.Property<int>("Id")
@@ -1085,7 +1168,8 @@ namespace Management_of_Change.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
