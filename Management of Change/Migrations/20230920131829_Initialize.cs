@@ -13,27 +13,6 @@ namespace Management_of_Change.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "__mst_employee",
-                columns: table => new
-                {
-                    displayname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    givenname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    surname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    jobtitle = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    mail = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    userprincipalname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    accountenabled = table.Column<bool>(type: "boolean", nullable: true),
-                    createddatetime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    onpremisesdomainname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    onpremisessamaccountname = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
-                    onpremisessyncenabled = table.Column<bool>(type: "boolean", nullable: true),
-                    manager = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true)
-                },
-                constraints: table =>
-                {
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Administrators",
                 columns: table => new
                 {
@@ -128,7 +107,7 @@ namespace Management_of_Change.Migrations
                     Request_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Proudct_Line = table.Column<string>(type: "text", nullable: false),
                     Change_Type = table.Column<string>(type: "text", nullable: false),
-                    PTN_Number = table.Column<string>(type: "text", nullable: true),
+                    PTN_Number = table.Column<string[]>(type: "text[]", nullable: false),
                     Waiver_Number = table.Column<string>(type: "text", nullable: true),
                     CMT_Number = table.Column<string>(type: "text", nullable: true),
                     Estimated_Completion_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
@@ -343,28 +322,6 @@ namespace Management_of_Change.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductLine", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PTN",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Enabled = table.Column<bool>(type: "boolean", nullable: false),
-                    Order = table.Column<string>(type: "text", nullable: true),
-                    CreatedUser = table.Column<string>(type: "text", nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
-                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    DeletedUser = table.Column<string>(type: "text", nullable: true),
-                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PTN", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -633,9 +590,6 @@ namespace Management_of_Change.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "__mst_employee");
-
-            migrationBuilder.DropTable(
                 name: "Administrators");
 
             migrationBuilder.DropTable(
@@ -679,9 +633,6 @@ namespace Management_of_Change.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductLine");
-
-            migrationBuilder.DropTable(
-                name: "PTN");
 
             migrationBuilder.DropTable(
                 name: "ResponseDropdownSelections");

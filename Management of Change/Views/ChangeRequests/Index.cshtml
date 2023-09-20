@@ -159,8 +159,8 @@
                     {
                         @if (item.DeletedDate == null && item.Change_Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
                         {
-                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-2", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"})
-                            @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Killed'"></i>*@
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-2", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Cancelled'"})
+                            @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Cancelled'"></i>*@
                         }
                     }
                 </td>
@@ -168,8 +168,6 @@
         }
     </tbody>
 </table>
-
-
 
 @*<div class="fw-bolder">
     BELOW IS TEST INFORMATION ONLY ** MJWII **

@@ -41,7 +41,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Change Type")]
         public string Change_Type { get; set; }
         [Display(Name = "PTN Number")]
-        public string? PTN_Number { get; set; }
+        public List<string>? PTN_Number { get; set; }
         [Display(Name = "Waiver Number")]
         public string? Waiver_Number { get; set; }
         [Display(Name = "CMT Number")]

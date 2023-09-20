@@ -144,7 +144,7 @@ namespace Management_of_Change.Controllers
                     if ((task.ImplementationType == "Post") &&
                         (changeRequest.Change_Status == "Closed"))
                         ModelState.AddModelError("ChangeRequestId", "Task Status is beyond the stage to add a Post Implementation Task.");
-                    if (changeRequest.Change_Status == "Killed")
+                    if (changeRequest.Change_Status == "Cancelled")
                         ModelState.AddModelError("ChangeRequestId", "Cannot Create a Task under a Cancelled Change Request.");
                 }
             }

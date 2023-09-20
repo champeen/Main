@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Management_of_Change.Migrations
 {
     [DbContext(typeof(Management_of_ChangeContext))]
-    [Migration("20230913185724_Initialize")]
+    [Migration("20230920131829_Initialize")]
     partial class Initialize
     {
         /// <inheritdoc />
@@ -248,8 +248,9 @@ namespace Management_of_Change.Migrations
                     b.Property<string>("ModifiedUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("PTN_Number")
-                        .HasColumnType("text");
+                    b.Property<string[]>("PTN_Number")
+                        .IsRequired()
+                        .HasColumnType("text[]");
 
                     b.Property<string>("Proudct_Line")
                         .IsRequired()
@@ -931,7 +932,10 @@ namespace Management_of_Change.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PTN");
+                    b.ToTable("PTN", t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.ProductLine", b =>
@@ -1226,7 +1230,10 @@ namespace Management_of_Change.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("character varying(150)");
 
-                    b.ToTable("__mst_employee");
+                    b.ToTable("__mst_employee", t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.GeneralMocResponses", b =>

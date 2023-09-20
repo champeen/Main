@@ -61,5 +61,13 @@ namespace Management_of_Change.Data
         public DbSet<Management_of_Change.Models.Administrators>? Administrators { get; set; }
         public DbSet<Management_of_Change.Models.EmailHistory>? EmailHistory { get; set; }
         public DbSet<Management_of_Change.Models.PTN>? PTN { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Ignore<__mst_employee>();
+            modelBuilder.Ignore<PTN>();
+            modelBuilder.Entity<__mst_employee>().Metadata.SetIsTableExcludedFromMigrations(true);
+            modelBuilder.Entity<PTN>().Metadata.SetIsTableExcludedFromMigrations(true);
+        }
     }
 }

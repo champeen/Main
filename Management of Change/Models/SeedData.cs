@@ -55,8 +55,8 @@ namespace Management_of_Change.Models
                             Title_Change_Description = "Furnace Door Change",
                             Scope_of_the_Change = "Scope of the Change 2",
                             Justification_of_the_Change = "Justification of Change 2",
-                            Change_Status = "Killed",
-                            Change_Status_Description = "Killed",
+                            Change_Status = "Cancelled",
+                            Change_Status_Description = "Cancelled",
                             Request_Date = System.DateTime.Now.AddYears(-2),
                             Proudct_Line = "Product Line 2",
                             Change_Type = "Change Type 2",
@@ -466,8 +466,8 @@ namespace Management_of_Change.Models
                         //},
                         new ChangeStatus
                         {
-                            Status = "Killed",
-                            Description = "Killed",
+                            Status = "Cancelled",
+                            Description = "Cancelled",
                             Default = false,
                             Order = "40",
                             CreatedUser = "Johanna Jones",
