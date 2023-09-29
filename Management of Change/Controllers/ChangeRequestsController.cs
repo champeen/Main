@@ -110,6 +110,7 @@ namespace Management_of_Change.Controllers
                 .Where(m => m.ChangeRequestId == id)
                 .OrderBy(m => m.ReviewType)
                 .ThenBy(m => m.ChangeType)
+                .ThenByDescending(m => m.ChangeArea)
                 .ToListAsync();
 
             // Get all the Impact Assessment Responses Questions/Answers associated with this request...
@@ -215,7 +216,7 @@ namespace Management_of_Change.Controllers
             else
                 changeRequestViewModel.ButtonSubmitForReview = false;
 
-            // Get all attachments
+            // Get all attachments    \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
             // Get the directory
             DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number));
 
@@ -792,7 +793,6 @@ namespace Management_of_Change.Controllers
             //changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
             // OLD CODE END
 
-            // MOVE THIS CODE TO WHERE YOU MARK CHANGE REQUEST GENERAL MOC QUESTIONS COMPLETE
             // add Impact Assessment Responses
             List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix
                 .Where(m => m.ChangeType == changeRequest.Change_Type)
@@ -804,13 +804,17 @@ namespace Management_of_Change.Controllers
                 changeRequest.ImpactAssessmentResponses = new List<ImpactAssessmentResponse>();
                 foreach (var assessment in impactAssessmentMatrix)
                 {
-                    ReviewType review = _context.ReviewType.Where(m => m.Type == assessment.ReviewType).FirstOrDefault();
-                    if (review != null)
+                    // Get ALL Review Types setup for this Change Type ...
+                    List<ReviewType> reviews = await _context.ReviewType
+                        .Where(rt => (rt.Type == assessment.ReviewType && rt.ChangeArea == null) || (rt.Type == assessment.ReviewType && rt.ChangeArea == changeRequest.Area_of_Change))                        
+                        .ToListAsync();
+                    foreach (var review in reviews)
                     {
                         ImpactAssessmentResponse response = new ImpactAssessmentResponse
                         {
                             ReviewType = assessment.ReviewType,
                             ChangeType = assessment.ChangeType,
+                            ChangeArea = review.ChangeArea,
                             Reviewer = review.Reviewer,
                             ReviewerEmail = review.Email,
                             Username = review.Username,
@@ -881,7 +885,6 @@ namespace Management_of_Change.Controllers
                     }
                 }
             }
-            // MOVE THIS CODE TO WHERE YOU MARK CHANGE REQUEST GENERAL MOC QUESTIONS COMPLETE
 
             // Update ChangeRequest...
             changeRequest.Change_Status = "ImpactAssessmentReview";

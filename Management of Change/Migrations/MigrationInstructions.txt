@@ -19,7 +19,11 @@ DROP TABLE [dbo].[ReviewType]
 DROP TABLE [dbo].[SiteLocation]
 DROP TABLE [dbo].[ChangeRequest]
 
-- delete everything from the database
+******************************************************************************************************************************************
+DO NOT DELETE TABLES __mst_employee OR PTN OR __EFMigrationHistory (delete records from this one though) from the database !!!!!!!!!!!!
+*******************************************************************************************************************************************
+
+- delete everything from the database (except above 2 tables, and just clear out '__EFMigrationsHistory' - dont drop it)
 - Update-Database -Migration 0
 - Remove-Migration
 - Add-Migration Initialize

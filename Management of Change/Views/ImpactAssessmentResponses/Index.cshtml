@@ -19,6 +19,9 @@
                 @Html.DisplayNameFor(model => model.ChangeType)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ChangeArea)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Reviewer)
             </th>
             <th>
@@ -37,35 +40,39 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReviewType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangeType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reviewer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReviewerEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReviewCompleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCompleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comments)
-            </td>
-            <td class="text-nowrap">
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeArea)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reviewer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewCompleted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comments)
+                </td>
+                <td class="text-nowrap">
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

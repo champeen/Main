@@ -7,6 +7,7 @@ namespace Management_of_Change.Models
         [Key]
         public int Id { get; set; }
         public string Type { get; set; }
+        public string? ChangeArea { get; set; }
         public string? Reviewer { get; set; }
         [EmailAddress]
         public string? Email { get; set; }

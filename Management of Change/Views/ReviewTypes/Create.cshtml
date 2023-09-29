@@ -20,8 +20,13 @@
                 <span asp-validation-for="Type" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
+                <span class="fw-bold">Change Area</span>
+                @Html.DropDownListFor(model => model.ChangeArea, new SelectList(ViewBag.ChangeAreas), "-- select --", new { @class="form-control form-select", @style="max-width:25%;"})
+                <span asp-validation-for="ChangeArea" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
                 <span class="fw-bold">Reviewer</span>
-                @Html.DropDownListFor(model => model.Username, new SelectList(ViewBag.Users,"Value","Text"), new { @class="form-control form-select", @style="max-width:25%;"})
+                @Html.DropDownListFor(model => model.Username, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:25%;"})
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
@@ -36,7 +41,7 @@
             </div>*@
             <div class="form-group my-4">
                 <input type="submit" value="Create" class="btn btn-primary" />
-                <a class="mx-3" asp-action="Index">Cancel</a>
+                <a class="mx-3 btn btn-secondary" asp-action="Index">Cancel</a>
             </div>
         </form>
     </div>

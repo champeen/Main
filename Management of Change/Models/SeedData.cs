@@ -8,7 +8,7 @@ using Management_of_Change.Utilities;
 
 namespace Management_of_Change.Models
 {
-    public static class SeedData 
+    public static class SeedData
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
@@ -37,7 +37,7 @@ namespace Management_of_Change.Models
                             Estimated_Completion_Date = System.DateTime.Now.AddYears(1),
                             Raw_Material_Component_Numbers_Impacted = "Raw Materials Component Numbers Impacted 1",
                             Change_Level = "Change Level 1",
-                            Area_of_Change = "Area of Change 1",
+                            Area_of_Change = "Growing",
                             Expiration_Date_Temporary = System.DateTime.Now.AddMonths(3),
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.UtcNow,
@@ -63,7 +63,7 @@ namespace Management_of_Change.Models
                             Estimated_Completion_Date = System.DateTime.Now.AddYears(2),
                             Raw_Material_Component_Numbers_Impacted = "Raw Materials Component Numbers Impacted 2",
                             Change_Level = "Change Level 2",
-                            Area_of_Change = "Area of Change 2",
+                            Area_of_Change = "Fabrication",
                             Expiration_Date_Temporary = null,
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.UtcNow,
@@ -89,7 +89,7 @@ namespace Management_of_Change.Models
                             Estimated_Completion_Date = System.DateTime.Now.AddMonths(1),
                             Raw_Material_Component_Numbers_Impacted = "Raw Materials Component Numbers Impacted 3",
                             Change_Level = "Change Level 3",
-                            Area_of_Change = "Area of Change 3",
+                            Area_of_Change = "Grinding",
                             Expiration_Date_Temporary = System.DateTime.Now.AddMonths(7),
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.UtcNow,
@@ -481,7 +481,7 @@ namespace Management_of_Change.Models
                     context.SaveChanges();
                 }
 
-                // Look for any Change Status.....
+                // Look for any Dropdown Response Selections.....
                 if (!context.ResponseDropdownSelections.Any())
                 {
                     context.ResponseDropdownSelections.AddRange(
@@ -506,17 +506,6 @@ namespace Management_of_Change.Models
                             ModifiedDate = null,
                             DeletedUser = null,
                             DeletedDate = null
-                        },
-                        new ResponseDropdownSelections
-                        {
-                            Response = "N/A",
-                            Order = "15",
-                            CreatedUser = "Steve Smith",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = "Randy Radar",
-                            ModifiedDate = DateTime.Now,
-                            DeletedUser = "Lisa Matthews",
-                            DeletedDate = DateTime.Now
                         }
                     );
                     context.SaveChanges();
@@ -687,7 +676,7 @@ namespace Management_of_Change.Models
                     context.ChangeArea.AddRange(
                         new ChangeArea
                         {
-                            Description = "Growth",
+                            Description = "Growing",
                             Order = "05",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -698,7 +687,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeArea
                         {
-                            Description = "Fab",
+                            Description = "Fabrication",
                             Order = "10",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -709,18 +698,18 @@ namespace Management_of_Change.Models
                         },
                         new ChangeArea
                         {
-                            Description = "Grind",
+                            Description = "MWS",
                             Order = "15",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = "Joe Jackson",
                             ModifiedDate = DateTime.Now,
-                            DeletedUser = "Jackson Browne",
-                            DeletedDate = DateTime.Now
+                            DeletedUser = null,
+                            DeletedDate = null
                         },
                         new ChangeArea
                         {
-                            Description = "Polish",
+                            Description = "Grinding",
                             Order = "20",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -731,7 +720,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeArea
                         {
-                            Description = "Clean & Metrology",
+                            Description = "Polishing",
                             Order = "25",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -742,7 +731,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeArea
                         {
-                            Description = "Epi",
+                            Description = "Cleaning",
                             Order = "30",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -753,7 +742,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeArea
                         {
-                            Description = "Sort & Package",
+                            Description = "Packaging",
                             Order = "35",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -764,7 +753,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeArea
                         {
-                            Description = "Disposition",
+                            Description = "EPI",
                             Order = "40",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -775,7 +764,7 @@ namespace Management_of_Change.Models
                         },
                         new ChangeArea
                         {
-                            Description = "Other",
+                            Description = "Metrology",
                             Order = "45",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -935,6 +924,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Device Expert",
+                            ChangeArea = null,
+                            Username = "gchung",
                             Reviewer = "Gil Chung",
                             Email = "gil.chung@sksiltron.com",
                             Order = "05",
@@ -948,6 +939,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Environmental",
+                            ChangeArea = null,
+                            Username = "dsbennett",
                             Reviewer = "Danny Bennett",
                             Email = "Danny.Bennett@sksiltron.com",
                             Order = "10",
@@ -961,19 +954,825 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Equipment",
-                            Reviewer = "Equipment Reviewer Person",
-                            Email = "Equipment_Reviewer@sksiltron.com",
+                            ChangeArea = "Cleaning",
+                            Username = "HJLee",
+                            Reviewer = "Hu Lee",
+                            Email = "Hu.Lee@sksiltron.com",
                             Order = "15",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = "Joe Jackson",
                             ModifiedDate = DateTime.Now,
-                            DeletedUser = "Jackson Browne",
-                            DeletedDate = DateTime.Now
+                            DeletedUser = null,
+                            DeletedDate = null
                         },
                         new ReviewType
                         {
+                            Type = "Equipment",
+                            ChangeArea = "Cleaning",
+                            Username = "jjhook",
+                            Reviewer = "Jonathon Hook",
+                            Email = "jonathon.hook@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Cleaning",
+                            Username = "OBAdeyem",
+                            Reviewer = "Seye Adeyemi",
+                            Email = "seye.adeyemi@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Cleaning",
+                            Username = "BHKim",
+                            Reviewer = "Baek Kim",
+                            Email = "Baek.Kim@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "EPI",
+                            Username = "JPMurphy",
+                            Reviewer = "Jonas P. Murphy",
+                            Email = "Jonas.Murphy@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "EPI",
+                            Username = "SMJohnso",
+                            Reviewer = "Sam Johnson",
+                            Email = "Sam.Johnson@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "EPI",
+                            Username = "tbkarim",
+                            Reviewer = "Taskin Karim",
+                            Email = "taskin.karim@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Fabrication",
+                            Username = "JMWeilan",
+                            Reviewer = "Jen Weiland",
+                            Email = "Jen.Weiland@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Fabrication",
+                            Username = "RRTurvey",
+                            Reviewer = "Ross Turvey",
+                            Email = "Ross.Turvey@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Grinding",
+                            Username = "BHelmrei",
+                            Reviewer = "Ben Helmreich",
+                            Email = "Ben.Helmreich@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Grinding",
+                            Username = "cabuesin",
+                            Reviewer = "Chad Buesing",
+                            Email = "chad.buesing@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Grinding",
+                            Username = "dadittma",
+                            Reviewer = "Dan Dittmar",
+                            Email = "Daniel.Dittmar@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Grinding",
+                            Username = "JMWeilan",
+                            Reviewer = "Jen Weiland",
+                            Email = "Jen.Weiland@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Grinding",
+                            Username = "mejones",
+                            Reviewer = "Mitchell Jones",
+                            Email = "Mitchell.Jones@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Grinding",
+                            Username = "PJLepeck",
+                            Reviewer = "Paula Lepecki",
+                            Email = "Paula.Lepecki@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Growing",
+                            Username = "cabuesin",
+                            Reviewer = "Chad Buesing",
+                            Email = "chad.buesing@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Growing",
+                            Username = "HJLee",
+                            Reviewer = "Hu Lee",
+                            Email = "Hu.Lee@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Growing",
+                            Username = "SMMcKenn",
+                            Reviewer = "Sean McKenna",
+                            Email = "Sean.McKenna@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Metrology",
+                            Username = "ASOUKHOJ",
+                            Reviewer = "Andrey Soukhojak",
+                            Email = "andrey.soukhojak@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Metrology",
+                            Username = "BHKim",
+                            Reviewer = "Baek Kim",
+                            Email = "Baek.Kim@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Metrology",
+                            Username = "gchung",
+                            Reviewer = "Gil Chung",
+                            Email = "gil.chung@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Metrology",
+                            Username = "OBAdeyem",
+                            Reviewer = "Seye Adeyemi",
+                            Email = "seye.adeyemi@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "MWS",
+                            Username = "dadittma",
+                            Reviewer = "Dan Dittmar",
+                            Email = "Daniel.Dittmar@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "MWS",
+                            Username = "JMWeilan",
+                            Reviewer = "Jen Weiland",
+                            Email = "Jen.Weiland@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "MWS",
+                            Username = "mejones",
+                            Reviewer = "Mitchell Jones",
+                            Email = "Mitchell.Jones@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Packaging",
+                            Username = "jjhook",
+                            Reviewer = "Jonathon Hook",
+                            Email = "jonathon.hook@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Packaging",
+                            Username = "OBAdeyem",
+                            Reviewer = "Seye Adeyemi",
+                            Email = "seye.adeyemi@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Polishing",
+                            Username = "dadittma",
+                            Reviewer = "Dan Dittmar",
+                            Email = "Daniel.Dittmar@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Equipment",
+                            ChangeArea = "Polishing",
+                            Username = "JPMurphy",
+                            Reviewer = "Jonas P. Murphy",
+                            Email = "Jonas.Murphy@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Cleaning",
+                            Username = "HJLee",
+                            Reviewer = "Hu Lee",
+                            Email = "Hu.Lee@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Cleaning",
+                            Username = "jjhook",
+                            Reviewer = "Jonathon Hook",
+                            Email = "jonathon.hook@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Cleaning",
+                            Username = "OBAdeyem",
+                            Reviewer = "Seye Adeyemi",
+                            Email = "seye.adeyemi@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Cleaning",
+                            Username = "BHKim",
+                            Reviewer = "Baek Kim",
+                            Email = "Baek.Kim@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "EPI",
+                            Username = "JPMurphy",
+                            Reviewer = "Jonas P. Murphy",
+                            Email = "Jonas.Murphy@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "EPI",
+                            Username = "SMJohnso",
+                            Reviewer = "Sam Johnson",
+                            Email = "Sam.Johnson@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "EPI",
+                            Username = "tbkarim",
+                            Reviewer = "Taskin Karim",
+                            Email = "taskin.karim@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Fabrication",
+                            Username = "JMWeilan",
+                            Reviewer = "Jen Weiland",
+                            Email = "Jen.Weiland@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Fabrication",
+                            Username = "RRTurvey",
+                            Reviewer = "Ross Turvey",
+                            Email = "Ross.Turvey@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Grinding",
+                            Username = "BHelmrei",
+                            Reviewer = "Ben Helmreich",
+                            Email = "Ben.Helmreich@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Grinding",
+                            Username = "cabuesin",
+                            Reviewer = "Chad Buesing",
+                            Email = "chad.buesing@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Grinding",
+                            Username = "dadittma",
+                            Reviewer = "Dan Dittmar",
+                            Email = "Daniel.Dittmar@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Grinding",
+                            Username = "JMWeilan",
+                            Reviewer = "Jen Weiland",
+                            Email = "Jen.Weiland@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Grinding",
+                            Username = "mejones",
+                            Reviewer = "Mitchell Jones",
+                            Email = "Mitchell.Jones@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Grinding",
+                            Username = "PJLepeck",
+                            Reviewer = "Paula Lepecki",
+                            Email = "Paula.Lepecki@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Growing",
+                            Username = "cabuesin",
+                            Reviewer = "Chad Buesing",
+                            Email = "chad.buesing@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Growing",
+                            Username = "HJLee",
+                            Reviewer = "Hu Lee",
+                            Email = "Hu.Lee@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Growing",
+                            Username = "SMMcKenn",
+                            Reviewer = "Sean McKenna",
+                            Email = "Sean.McKenna@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Metrology",
+                            Username = "ASOUKHOJ",
+                            Reviewer = "Andrey Soukhojak",
+                            Email = "andrey.soukhojak@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Metrology",
+                            Username = "BHKim",
+                            Reviewer = "Baek Kim",
+                            Email = "Baek.Kim@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Metrology",
+                            Username = "gchung",
+                            Reviewer = "Gil Chung",
+                            Email = "gil.chung@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Metrology",
+                            Username = "OBAdeyem",
+                            Reviewer = "Seye Adeyemi",
+                            Email = "seye.adeyemi@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "MWS",
+                            Username = "dadittma",
+                            Reviewer = "Dan Dittmar",
+                            Email = "Daniel.Dittmar@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "MWS",
+                            Username = "JMWeilan",
+                            Reviewer = "Jen Weiland",
+                            Email = "Jen.Weiland@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "MWS",
+                            Username = "mejones",
+                            Reviewer = "Mitchell Jones",
+                            Email = "Mitchell.Jones@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Packaging",
+                            Username = "jjhook",
+                            Reviewer = "Jonathon Hook",
+                            Email = "jonathon.hook@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Packaging",
+                            Username = "OBAdeyem",
+                            Reviewer = "Seye Adeyemi",
+                            Email = "seye.adeyemi@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Polishing",
+                            Username = "dadittma",
+                            Reviewer = "Dan Dittmar",
+                            Email = "Daniel.Dittmar@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        }, new ReviewType
+                        {
+                            Type = "Maintenance & Reliability",
+                            ChangeArea = "Polishing",
+                            Username = "JPMurphy",
+                            Reviewer = "Jonas P. Murphy",
+                            Email = "Jonas.Murphy@sksiltron.com",
+                            Order = "15",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.Now,
+                            ModifiedUser = "Joe Jackson",
+                            ModifiedDate = DateTime.Now,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+
+                        new ReviewType
+                        {
                             Type = "Health & IH",
+                            ChangeArea = null,
+                            Username = "TLDubey",
                             Reviewer = "Tammy Dubey",
                             Email = "Tammy.Dubey@sksiltron.com",
                             Order = "20",
@@ -987,8 +1786,10 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "HR",
-                            Reviewer = "Tiffany Kukla",
-                            Email = "Tiffany.Kukla@sksiltron.com",
+                            ChangeArea = null,
+                            Username = "KASchoen",
+                            Reviewer = "Karie Schoenmeyer",
+                            Email = "karie.schoenmeyer@sksiltron.com",
                             Order = "25",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -1000,6 +1801,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "IT",
+                            ChangeArea = null,
+                            Username = "NHSampan",
                             Reviewer = "Nagesh Sampangi",
                             Email = "Nagesh.Sampangi@sksiltron.com",
                             Order = "30",
@@ -1010,24 +1813,28 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         },
-                        new ReviewType
-                        {
-                            Type = "Maintenance & Reliability",
-                            Reviewer = "EquipmentOwner",
-                            Email = "EquipmentOwner@sksiltron.com",
-                            Order = "35",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
+                        //new ReviewType
+                        //{
+                        //    Type = "Maintenance & Reliability",
+                        //    ChangeArea = null,
+                        //    Username = "",
+                        //    Reviewer = "",
+                        //    Email = "",
+                        //    Order = "35",
+                        //    CreatedUser = "MJWilson",
+                        //    CreatedDate = DateTime.Now,
+                        //    ModifiedUser = null,
+                        //    ModifiedDate = null,
+                        //    DeletedUser = null,
+                        //    DeletedDate = null
+                        //},
                         new ReviewType
                         {
                             Type = "Operations - General",
-                            Reviewer = "Brandon Rohde",
-                            Email = "Brandon.Rohde@sksiltron.com",
+                            ChangeArea = null,
+                            Username = "KWLau",
+                            Reviewer = "Ken Lau",
+                            Email = "Ken.Lau@sksiltron.com",
                             Order = "40",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -1039,6 +1846,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Operations - EPI",
+                            ChangeArea = null,
+                            Username = "JWU",
                             Reviewer = "Jim Wu",
                             Email = "Jim.Wu@sksiltron.com",
                             Order = "45",
@@ -1052,6 +1861,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Personal Safety",
+                            ChangeArea = null,
+                            Username = "JWWelke",
                             Reviewer = "Jason Welke",
                             Email = "Jason.Welke@sksiltron.com",
                             Order = "50",
@@ -1065,6 +1876,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Process Control & Engineering - Growth Equipment",
+                            ChangeArea = null,
+                            Username = "alex.kim",
                             Reviewer = "Alex Kim",
                             Email = "Alex.Kim@sksiltron.com",
                             Order = "55",
@@ -1078,6 +1891,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Process Control & Engineering - Growth Process",
+                            ChangeArea = null,
+                            Username = "sungchul.baek",
                             Reviewer = "Sungchul Baek",
                             Email = "Sungchul.Baek@sksiltron.com",
                             Order = "60",
@@ -1091,6 +1906,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Process Control & Engineering - Wafering",
+                            ChangeArea = null,
+                            Username = "Sungpyo.Jung",
                             Reviewer = "Sungpyo Jung",
                             Email = "Sungpyo.Jung@sksiltron.com",
                             Order = "65",
@@ -1104,8 +1921,10 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Process Control & Engineering - Controls",
-                            Reviewer = "Jeff Wood",
-                            Email = "Jeff.Wood@sksiltron.com",
+                            ChangeArea = null,
+                            Username = "gmspence",
+                            Reviewer = "Garrett Spencer",
+                            Email = "Garrett.Spencer@sksiltron.com",
                             Order = "70",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -1117,6 +1936,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Process Safety",
+                            ChangeArea = null,
+                            Username = "RTRalph",
                             Reviewer = "Ryan Ralph",
                             Email = "Ryan.Ralph@sksiltron.com",
                             Order = "75",
@@ -1130,6 +1951,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Production Planning",
+                            ChangeArea = null,
+                            Username = "smgoss",
                             Reviewer = "Stacey Goss",
                             Email = "Stacey.Goss@sksiltron.com",
                             Order = "80",
@@ -1143,8 +1966,10 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Quality",
-                            Reviewer = "Marvin Lee",
-                            Email = "Marvin.Lee@sksiltron.com",
+                            ChangeArea = null,
+                            Username = "CMoon",
+                            Reviewer = "Michael Moon",
+                            Email = "Michael.Moon@sksiltron.com",
                             Order = "85",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -1156,6 +1981,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Research & Development",
+                            ChangeArea = null,
+                            Username = "icmannin",
                             Reviewer = "Ian Manning",
                             Email = "ian.manning@sksiltron.com",
                             Order = "90",
@@ -1169,6 +1996,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Supply Chain",
+                            ChangeArea = null,
+                            Username = "HBMccrea",
                             Reviewer = "Howard McCready",
                             Email = "howard.mccready@sksiltron.com",
                             Order = "95",
@@ -1182,6 +2011,8 @@ namespace Management_of_Change.Models
                         new ReviewType
                         {
                             Type = "Training",
+                            ChangeArea = null,
+                            Username = "jagooch",
                             Reviewer = "Jennifer Gooch",
                             Email = "Jennifer.Gooch@sksiltron.com",
                             Order = "98",

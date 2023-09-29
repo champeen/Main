@@ -97,7 +97,7 @@ namespace Management_of_Change.Provider
 
                     try
                     {
-                        await smtpClient.SendMailAsync(mailMessage);
+                        // MJWII await smtpClient.SendMailAsync(mailMessage);
                         
                     }
                     catch(Exception ex)

@@ -24,7 +24,7 @@
             $("#statusFilter").change(function () {
                 var value = $(this).val().toLowerCase();
                 $("#changeRequestTable tr").filter(function () {
-                    $(this).toggle($(this.children[3]).text().toLowerCase().indexOf(value) > -1)
+                    $(this).toggle($(this.children[2]).text().toLowerCase().indexOf(value) > -1)
                 });
             });
 
@@ -93,7 +93,10 @@
                         @if (ViewBag.IsAdmin == true)
                         {
                             <li class="nav-item mx-3 ms-auto">
-                                <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">Admin</a>
+                                <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">
+                                    <i class="bi bi-person-fill-add" data-bs-toggle="tooltip" data-bs-html="true" >
+                                    </i>
+                                    Admin</a>
                             </li>
                         }
                     </ul>

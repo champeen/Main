@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -7,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Management_of_Change.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialize : Migration
+    public partial class initialize : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -107,7 +108,7 @@ namespace Management_of_Change.Migrations
                     Request_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Proudct_Line = table.Column<string>(type: "text", nullable: false),
                     Change_Type = table.Column<string>(type: "text", nullable: false),
-                    PTN_Number = table.Column<string[]>(type: "text[]", nullable: false),
+                    PTN_Number = table.Column<List<string>>(type: "text[]", nullable: true),
                     Waiver_Number = table.Column<string>(type: "text", nullable: true),
                     CMT_Number = table.Column<string>(type: "text", nullable: true),
                     Estimated_Completion_Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),

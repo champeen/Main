@@ -439,14 +439,17 @@
                         <th>
                             Review Type
                         </th>
+                        @*                         <th>
+                        Change Type
+                        </th> *@
                         <th>
-                            Change Type
+                            Area of Change
                         </th>
                         <th>
                             Reviewer
                         </th>
-@*                        <th>
-                            ReviewerEmail
+                        @*                        <th>
+                        ReviewerEmail
                         </th>*@
                         <th class="text-center" style="width: 5%;">
                             Review Completed
@@ -470,18 +473,21 @@
                                     @Html.DisplayFor(modelItem => item.ReviewType)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.ChangeType)
+                                    @Html.DisplayFor(modelItem => item.ChangeArea)
                                 </td>
+                                @*                                 <td>
+                        @Html.DisplayFor(modelItem => item.ChangeType)
+                        </td> *@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Reviewer)
                                 </td>
-@*                                <td>
-                                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
-                                </td>*@
+                                @*                                <td>
+                        @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                        </td>*@
                                 <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.ReviewCompleted)
                                 </td>
-                                    <td class="text-center">
+                                <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.DateCompleted)
                                 </td>
                                 <td>
@@ -527,8 +533,8 @@
                             <th>
                                 Reviewer
                             </th>
-@*                            <th>
-                                Reviewer Email
+                            @*                            <th>
+                            Reviewer Email
                             </th>*@
                             <th class="text-center" style="width: 5%;">
                                 Review Completed
@@ -558,9 +564,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Reviewer)
                                 </td>
-@*                                <td>
-                                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
-                                </td>*@
+                                @*                                <td>
+                            @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                            </td>*@
                                 <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.ReviewCompleted)
                                 </td>
@@ -628,7 +634,7 @@
                             Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
                         </div>
                     }
-                }                
+                }
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
             </div>
         </div>
@@ -644,7 +650,7 @@
                     <div class="fw-bold text-danger my-5">
                         Cannot Close-out/Complete Change Request.  There are 'Open/In-Progress/On Hold' Tasks for this Change Request.
                     </div>
-                }                
+                }
                 else
                 {
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Closeout"))
@@ -658,7 +664,7 @@
                         </div>
                     }
                 }
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})                
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
             </div>
         </div>
         @******************************************************************************************************************@

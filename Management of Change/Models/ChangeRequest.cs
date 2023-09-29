@@ -60,7 +60,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Closeout Username")]
         public string? Closeout_Username { get; set; }
         [Display(Name = "Raw Materials/Component Numbers Impacted")]
-        public string Raw_Material_Component_Numbers_Impacted {get; set;}
+        public string? Raw_Material_Component_Numbers_Impacted {get; set;}
         public List<GeneralMocResponses>? GeneralMocResponses { get; set; }
         public List<ImpactAssessmentResponse>? ImpactAssessmentResponses { get; set; }
         public List<ImplementationFinalApprovalResponse>? ImplementationFinalApprovalResponses { get; set; }

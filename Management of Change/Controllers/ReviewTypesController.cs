@@ -32,7 +32,7 @@ namespace Management_of_Change.Controllers
             ViewBag.Username = _username;
 
             return _context.ReviewType != null ? 
-                          View(await _context.ReviewType.OrderBy(m => m.Order).ThenBy(m => m.Type).ToListAsync()) :
+                          View(await _context.ReviewType.OrderBy(m => m.Type).ThenBy(m => m.ChangeArea).ThenBy(m => m.Reviewer).ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.ReviewType'  is null.");
         }
 
@@ -74,6 +74,9 @@ namespace Management_of_Change.Controllers
                 CreatedDate = DateTime.UtcNow
             };
 
+            // Create Dropdown List of ChangeAreas...
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+
             //// Create Dropdown List of Users...
             //var userList = await _context.__mst_employee
             //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
@@ -100,7 +103,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Type,Order,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
+        public async Task<IActionResult> Create([Bind("Id,Type,ChangeArea,Order,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -111,7 +114,7 @@ namespace Management_of_Change.Controllers
 
             // Make sure duplicates are not entered...
             List<ReviewType> checkDupes = await _context.ReviewType
-                .Where(m => m.Type == reviewType.Type)
+                .Where(m => m.Type == reviewType.Type && m.ChangeArea == reviewType.ChangeArea && m.Username == reviewType.Username)
                 .ToListAsync();
             if (checkDupes.Count > 0)
                 ModelState.AddModelError("Type", "Review Type already exists.");
@@ -140,22 +143,11 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Create Dropdown List of ChangeAreas...
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+
             // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            ViewBag.Users = getUserList();
 
             return View(reviewType);
         }
@@ -177,6 +169,9 @@ namespace Management_of_Change.Controllers
 
             if (reviewType == null)
                 return NotFound();
+
+            // Create Dropdown List of ChangeAreas...
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
 
             //// Create Dropdown List of Users...
             //var userList = await _context.__mst_employee
@@ -206,7 +201,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,Order,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Type,ChangeArea,Order,Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ReviewType reviewType)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -220,7 +215,7 @@ namespace Management_of_Change.Controllers
 
             // Make sure duplicates are not entered...
             List<ReviewType> checkDupes = await _context.ReviewType
-                .Where(m => m.Type == reviewType.Type && m.Id != reviewType.Id)
+                .Where(m => m.Type == reviewType.Type && m.Id != reviewType.Id && m.ChangeArea == reviewType.ChangeArea && m.Username == reviewType.Username)
                 .ToListAsync();
             if (checkDupes.Count > 0)
                 ModelState.AddModelError("Type", "Review Type already exists.");
@@ -260,6 +255,9 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            // Create Dropdown List of ChangeAreas...
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
 
             //// Create Dropdown List of Users...
             //var userList = await _context.__mst_employee

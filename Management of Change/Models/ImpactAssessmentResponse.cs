@@ -12,6 +12,8 @@ namespace Management_of_Change.Models
         public string ReviewType { get; set; }
         [Display(Name = "Change Type")]
         public string ChangeType { get; set; }
+        [Display(Name = "Change Area")]
+        public string? ChangeArea {  get; set; }
         public string? Reviewer { get; set; }
         [Display(Name = "Reviewer Email")]
         [EmailAddress]

@@ -48,13 +48,14 @@
                 @*@Html.DisplayNameFor(model => model.Title_Change_Description)*@
             </th>
             <th>
-                Change Owner
-                @*@Html.DisplayNameFor(model => model.Change_Owner)*@
-            </th>
-            <th>
                 Change Status
                 @*@Html.DisplayNameFor(model => model.Change_Status)*@
             </th>
+            <th>
+                Change Owner
+                @*@Html.DisplayNameFor(model => model.Change_Owner)*@
+            </th>
+
             <th>
                 Change Type
                 @*@Html.DisplayNameFor(model => model.Change_Type)*@
@@ -108,10 +109,10 @@
                     @Html.DisplayFor(modelItem => item.Title_Change_Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Change_Owner)
+                    @Html.DisplayFor(modelItem => item.Change_Status_Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Change_Status_Description)
+                    @Html.DisplayFor(modelItem => item.Change_Owner)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Change_Type)
