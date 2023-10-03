@@ -270,10 +270,10 @@ namespace Management_of_Change.Controllers
             changeRequest.Change_Status = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Status).FirstOrDefaultAsync();
             changeRequest.Change_Status_Description = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Description).FirstOrDefaultAsync();
 
-            // Persist Dropdown Selection Lists
-            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
             //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
-            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.Types = getChangeTypes();
+            ViewBag.Levels = getChangeLevels();
+            ViewBag.PTNs = getPtnNumbers();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -281,16 +281,6 @@ namespace Management_of_Change.Controllers
             ViewBag.Source = source;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
-
-            // Create Dropdown List of PTN Numbers....
-            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
-            List<SelectListItem> ptns = new List<SelectListItem>();
-            foreach (var request in ptnList)
-            {
-                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
-                ptns.Add(item);
-            }
-            ViewBag.PTNs = ptns;
 
             return View(changeRequest);
         }
@@ -339,97 +329,6 @@ namespace Management_of_Change.Controllers
                     }
                 }
 
-                // MOVE THIS CODE TO WHERE YOU MARK CHANGE REQUEST GENERAL MOC QUESTIONS COMPLETE
-                //// add Impact Assessment Responses
-                //List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix
-                //    .Where(m => m.ChangeType == changeRequest.Change_Type)
-                //    .OrderBy(m => m.ReviewType)
-                //    .ThenBy(m => m.ChangeType)
-                //    .ToListAsync();
-                //if (impactAssessmentMatrix.Count > 0)
-                //{
-                //    changeRequest.ImpactAssessmentResponses = new List<ImpactAssessmentResponse>();
-                //    foreach (var assessment in impactAssessmentMatrix)
-                //    {
-                //        ReviewType review = _context.ReviewType.Where(m => m.Type == assessment.ReviewType).FirstOrDefault();
-                //        if (review != null)
-                //        {
-                //            ImpactAssessmentResponse response = new ImpactAssessmentResponse
-                //            {
-                //                ReviewType = assessment.ReviewType,
-                //                ChangeType = assessment.ChangeType,
-                //                Reviewer = review.Reviewer,
-                //                ReviewerEmail = review.Email,
-                //                Username = review.Username,
-                //                CreatedUser = _username,
-                //                CreatedDate = DateTime.UtcNow
-                //            };
-                //            changeRequest.ImpactAssessmentResponses.Add(response);
-                //        }
-                //    }
-                //}
-
-                //// add Impact Assessment Response Quesion/Answers
-                //if (changeRequest.ImpactAssessmentResponses != null && changeRequest.ImpactAssessmentResponses.Count > 0)
-                //{
-                //    foreach (var record in changeRequest.ImpactAssessmentResponses)
-                //    {
-                //        record.ImpactAssessmentResponseAnswers = new List<ImpactAssessmentResponseAnswer>();
-
-                //        List<ImpactAssessmentResponseQuestions> IARQuestions = await _context.ImpactAssessmentResponseQuestions.Where(m => m.ReviewType == record.ReviewType).ToListAsync();
-
-                //        // if there are no Impact Assessment questions, then set all answered as true
-                //        if (IARQuestions == null || IARQuestions.Count == 0)
-                //            record.QuestionsAnswered = true;
-                //        // else, setup all the questions to be answered...
-                //        else
-                //        {
-                //            foreach (var question in IARQuestions)
-                //            {
-                //                ImpactAssessmentResponseAnswer rec = new ImpactAssessmentResponseAnswer
-                //                {
-                //                    ReviewType = record.ReviewType,
-                //                    Question = question.Question,
-                //                    Order = question.Order,
-                //                    CreatedUser = _username,
-                //                    CreatedDate = DateTime.UtcNow
-                //                };
-                //                record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
-                //            }
-                //        } 
-                //    }
-                //}
-
-                //// add Implementation Final Approval Responses
-                //List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix
-                //    .Where(m => m.ChangeType == changeRequest.Change_Type)
-                //    .OrderBy(m => m.FinalReviewType)
-                //    .ThenBy(m => m.ChangeType)
-                //    .ToListAsync();
-                //if (implementationFinalApprovalMatrix.Count > 0)
-                //{
-                //    changeRequest.ImplementationFinalApprovalResponses = new List<ImplementationFinalApprovalResponse>();
-                //    foreach (var assessment in implementationFinalApprovalMatrix)
-                //    {
-                //        FinalReviewType review = _context.FinalReviewType.Where(m => m.Type == assessment.FinalReviewType).FirstOrDefault();
-                //        if (review != null)
-                //        {
-                //            ImplementationFinalApprovalResponse response = new ImplementationFinalApprovalResponse
-                //            {
-                //                FinalReviewType = assessment.FinalReviewType,
-                //                ChangeType = assessment.ChangeType,
-                //                Reviewer = review.Reviewer,
-                //                ReviewerEmail = review.Email,
-                //                Username = review.Username,
-                //                CreatedUser = _username,
-                //                CreatedDate = DateTime.UtcNow
-                //            };
-                //            changeRequest.ImplementationFinalApprovalResponses.Add(response);
-                //        }
-                //    }
-                //}
-                // MOVE THIS CODE TO WHERE YOU MARK CHANGE REQUEST GENERAL MOC QUESTIONS COMPLETE
-
                 // Mark would like the MOC_Number to be in the format "MOC-YYMMDD(seq)"
                 string mocNumber = "";
                 for (int i = 1; i < 10000; i++)
@@ -456,24 +355,15 @@ namespace Management_of_Change.Controllers
             }
 
             // Persist Dropdown Selection Lists
-            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
+            ViewBag.Types = getChangeTypes();
+            ViewBag.Levels = getChangeLevels();
+            ViewBag.PTNs = getPtnNumbers();
             //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
-            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.Source = source;
-
-            // Create Dropdown List of PTN Numbers....
-            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
-            List<SelectListItem> ptns = new List<SelectListItem>();
-            foreach (var request in ptnList)
-            {
-                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
-                ptns.Add(item);
-            }
-            ViewBag.PTNs = ptns;
 
             return View(changeRequest);
         }
@@ -495,9 +385,11 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Persist Dropdown Selection Lists
-            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
+            ViewBag.Types = getChangeTypes();
+            ViewBag.Levels = getChangeLevels();
+            ViewBag.PTNs = getPtnNumbers();
+            ViewBag.Users = getUserList();
             ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
-            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -505,39 +397,6 @@ namespace Management_of_Change.Controllers
             ViewBag.Tab = tab;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
-
-            // Create Dropdown List of PTN Numbers....
-            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
-            List<SelectListItem> ptns = new List<SelectListItem>();            
-            foreach (var request in ptnList)
-            {                
-                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
-                //if (changeRequest?.PTN_Number?.Count > 0 && changeRequest.PTN_Number.Contains(request.Name))
-                //    item.Selected = true;
-                ptns.Add(item);
-            }
-            ViewBag.PTNs = new MultiSelectList(ptns, "Value", "Text", changeRequest.PTN_Number?.ToArray());
-
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-
-                if (user.onpremisessamaccountname == changeRequest.Change_Owner)
-                    item.Selected = true;
-                users.Add(item);
-            }
-            ViewBag.Users = users;
-
 
             return View(changeRequest);
         }
@@ -591,7 +450,10 @@ namespace Management_of_Change.Controllers
             }
 
             // Persist Dropdown Selection Lists
-            ViewBag.Levels = await _context.ChangeLevel.OrderBy(m => m.Order).Select(m => m.Level).ToListAsync();
+            ViewBag.Types = getChangeTypes();
+            ViewBag.Levels = getChangeLevels();
+            ViewBag.PTNs = getPtnNumbers();
+            ViewBag.Users = getUserList();
             ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
             ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
@@ -602,37 +464,6 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            // Create Dropdown List of PTN Numbers....
-            var ptnList = await _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToListAsync();
-            List<SelectListItem> ptns = new List<SelectListItem>();
-            foreach (var request in ptnList)
-            {
-                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
-                //if (changeRequest?.PTN_Number?.Count > 0 && changeRequest.PTN_Number.Contains(request.Name))
-                //    item.Selected = true;
-                ptns.Add(item);
-            }
-            ViewBag.PTNs = new MultiSelectList(ptns, "Value", "Text", changeRequest.PTN_Number?.ToArray());
-
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-
-                if (user.onpremisessamaccountname == changeRequest.Change_Owner)
-                    item.Selected = true;
-                users.Add(item);
-            }
-            ViewBag.Users = users;
             return View(changeRequest);
         }
 
@@ -772,26 +603,6 @@ namespace Management_of_Change.Controllers
             var changeRequest = await _context.ChangeRequest.FindAsync(id);
             if (changeRequest == null)
                 return NotFound();
-
-            // OLD CODE
-            //// Get all the General MOC Responses associated with this request...
-            //changeRequest.GeneralMocResponses = await _context.GeneralMocResponses.Where(m => m.ChangeRequestId == id).ToListAsync();
-
-            //// Get all the Impact Assessment Responses associated with this request...
-            //changeRequest.ImpactAssessmentResponses = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
-
-            //// Get all the Impact Assessment Responses Questions/Answers associated with this request...
-            //if (changeRequest.ImpactAssessmentResponses.Any())
-            //{
-            //    foreach (var record in changeRequest.ImpactAssessmentResponses)
-            //    {
-            //        record.ImpactAssessmentResponseAnswers = await _context.ImpactAssessmentResponseAnswer.Where(m => m.ImpactAssessmentResponseId == record.Id).ToListAsync();
-            //    }
-            //}
-
-            //// Get all the Final Approval Responses associated with this request...
-            //changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse.Where(m => m.ChangeRequestId == id).ToListAsync();
-            // OLD CODE END
 
             // add Impact Assessment Responses
             List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix
@@ -1186,32 +997,7 @@ namespace Management_of_Change.Controllers
                 CreatedDate = DateTime.UtcNow
             };
 
-            //// Create Dropdown List of ChangeRequests...
-            //var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
-            //List<SelectListItem> requests = new List<SelectListItem>();
-            //foreach (var request in requestList)
-            //{
-            //    SelectListItem item = new SelectListItem { Value = request.Id.ToString(), Text = request.MOC_Number + " : " + request.Title_Change_Description };
-            //    requests.Add(item);
-            //}
-            //ViewBag.ChangeRequests = requests;
-
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            ViewBag.Users = getUserList();
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
@@ -1292,22 +1078,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction("Details", "ChangeRequests", new { Id = task.ChangeRequestId, Tab = "Tasks" });
             }
 
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            ViewBag.Users = getUserList();
 
             return View(task);
         }

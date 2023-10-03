@@ -168,7 +168,46 @@ namespace Management_of_Change.Utilities
             }
             return users;
 
-        } 
+        }
+        
+        public List<SelectListItem> getChangeTypes()
+        {
+            var changeTypeList = _context.ChangeType.OrderBy(m => m.Order).ThenBy(m => m.Type).ToList();
+            List<SelectListItem> changeTypes = new List<SelectListItem>();
+            foreach (var changeType in changeTypeList)
+            {
+                string text = changeType.Type + "\u00A0\u00A0\u00A0 : \u00A0\u00A0\u00A0" + changeType.Description;
+                SelectListItem item = new SelectListItem { Value = changeType.Type, Text = text.Substring(0, text.Length > 200 ? 200 : text.Length) };
+                changeTypes.Add(item);
+            }
+            return changeTypes;
+        }
+
+        public List<SelectListItem> getChangeLevels()
+        {
+            var changeLevelList = _context.ChangeLevel.OrderBy(m => m.Order).ThenBy(m => m.Level).ToList();
+            List<SelectListItem> changeLevels = new List<SelectListItem>();
+            foreach (var changeLevel in changeLevelList)
+            {
+                string text = changeLevel.Level + "\u00A0\u00A0\u00A0 : \u00A0\u00A0\u00A0" + changeLevel.Description;
+                SelectListItem item = new SelectListItem { Value = changeLevel.Level, Text = text.Substring(0, text.Length > 200 ? 200 : text.Length) };
+                changeLevels.Add(item);
+            }
+            return changeLevels;
+        }
+
+        public List<SelectListItem> getPtnNumbers()
+        {
+            var ptnList = _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToList();
+            List<SelectListItem> ptns = new List<SelectListItem>();
+            foreach (var request in ptnList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+                ptns.Add(item);
+            }
+            return ptns;
+        }
+
 
     }
 }

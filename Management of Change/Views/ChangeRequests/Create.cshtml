@@ -29,23 +29,22 @@
     </div>
     <div class="row">
         <div class="col-12">
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Change_Status" />
             <input type="hidden" asp-for="Change_Status_Description" />
             <input type="hidden" asp-for="Change_Owner" />
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
             <div class="form-group my-3">
                 <label asp-for="Change_Type" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @*<input asp-for="Change_Type" class="form-control" />*@
-                @Html.DropDownListFor(model => model.Change_Type, new SelectList(ViewBag.Types), "-- select --", new { @class="form-control form-select"})
+                @Html.DropDownListFor(model => model.Change_Type, new SelectList(ViewBag.Types, "Value", "Text"), "-- select --", new { @class="form-control form-select"})
                 <span asp-validation-for="Change_Type" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
@@ -55,8 +54,6 @@
                 @Html.DropDownListFor(model => model.Area_of_Change, new SelectList(ViewBag.ChangeAreas), "-- select --", new { @class="form-control form-select"})
                 <span asp-validation-for="Area_of_Change" class="text-danger fw-bold"></span>
             </div>
-        </div>
-        <div class="col-md-2">
             <div class="form-group my-3">
                 <label asp-for="Location_Site" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -67,16 +64,34 @@
                 <label asp-for="Change_Level" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @*<input asp-for="Change_Level" class="form-control" />*@
-                @Html.DropDownListFor(model => model.Change_Level, new SelectList(ViewBag.Levels), "-- select --", new { @class="form-control form-select"})
+                @Html.DropDownListFor(model => model.Change_Level, new SelectList(ViewBag.Levels, "Value", "Text"), "-- select --", new { @class="form-control form-select"})
                 <span asp-validation-for="Change_Level" class="text-danger fw-bold"></span>
             </div>
-        </div>
-        <div class="col-md-2">
             <div class="form-group my-3">
                 <label asp-for="Proudct_Line" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @Html.DropDownListFor(model => model.Proudct_Line, new SelectList(ViewBag.ProductLines), "-- select --", new { @class="form-control form-select"})
                 <span asp-validation-for="Proudct_Line" class="text-danger fw-bold"></span>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group my-3">
+                <label asp-for="Estimated_Completion_Date" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <input asp-for="Estimated_Completion_Date" class="form-control" onclick="this.showPicker()" />
+                <span asp-validation-for="Estimated_Completion_Date" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Expiration_Date_Temporary" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Expiration_Date_Temporary" class="form-control" onclick="this.showPicker()" />
+                <span asp-validation-for="Expiration_Date_Temporary" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Waiver_Number" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-info-circle-fill" style="color:darkorange;" data-bs-toggle="tooltip" data-bs-html="true" title="Does this change require the use of a waiver for the release of final product? If so, please enter the waiver number(s)">
+                </i>
+                <input asp-for="Waiver_Number" class="form-control" />
+                <span asp-validation-for="Waiver_Number" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="CMT_Number" class="control-label fw-bold mb-1"></label>
@@ -84,15 +99,6 @@
                 </i>
                 <input asp-for="CMT_Number" class="form-control" />
                 <span asp-validation-for="CMT_Number" class="text-danger fw-bold"></span>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group my-3">
-                <label asp-for="Waiver_Number" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-info-circle-fill" style="color:darkorange;" data-bs-toggle="tooltip" data-bs-html="true" title="Does this change require the use of a waiver for the release of final product? If so, please enter the waiver number(s)">
-                </i>
-                <input asp-for="Waiver_Number" class="form-control" />
-                <span asp-validation-for="Waiver_Number" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="PTN_Number" class="control-label fw-bold mb-1"></label>
@@ -104,22 +110,9 @@
                 <span asp-validation-for="PTN_Number" class="text-danger fw-bold"></span>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="form-group my-3">
-                <label asp-for="Estimated_Completion_Date" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                <input asp-for="Estimated_Completion_Date" class="form-control" />
-                <span asp-validation-for="Estimated_Completion_Date" class="text-danger fw-bold"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="Expiration_Date_Temporary" class="control-label fw-bold mb-1"></label>
-                <input asp-for="Expiration_Date_Temporary" class="form-control" />
-                <span asp-validation-for="Expiration_Date_Temporary" class="text-danger fw-bold"></span>
-            </div>
-        </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-12">
             <div class="form-group my-3">
                 <label asp-for="Title_Change_Description" class="control-label fw-bold mb-1" title="Max 100 characters"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -134,8 +127,6 @@
                 @*<input asp-for="Justification_of_the_Change" class="form-control" />*@
                 <span asp-validation-for="Justification_of_the_Change" class="text-danger fw-bold"></span>
             </div>
-        </div>
-        <div class="col-md-6">
             <div class="form-group my-3">
                 <label asp-for="Scope_of_the_Change" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
