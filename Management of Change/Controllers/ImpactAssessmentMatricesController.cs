@@ -46,6 +46,30 @@ namespace Management_of_Change.Controllers
             return View(impactAssessmentMatrix);
         }
 
+        public async Task<IActionResult> IndexHelp()
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+
+            foreach (var record in impactAssessmentMatrix)
+            {
+                ReviewType reviewType = await _context.ReviewType.Where(m => m.Type == record.ReviewType).FirstOrDefaultAsync();
+                if (reviewType != null)
+                {
+                    record.ReviewerEmail = reviewType.Email;
+                    record.ReviewerName = reviewType.Reviewer;
+                    record.ReviewerUsername = reviewType.Username;
+                }
+            }
+            return View(impactAssessmentMatrix);
+        }
+
         // GET: ImpactAssessmentMatrices/Details/5
         public async Task<IActionResult> Details(int? id)
         {

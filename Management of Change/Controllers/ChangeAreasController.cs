@@ -37,6 +37,20 @@ namespace Management_of_Change.Controllers
                           Problem("Entity set 'Management_of_ChangeContext.ChangeArea'  is null.");
         }
 
+        public async Task<IActionResult> IndexHelp()
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ChangeArea != null ?
+                          View(await _context.ChangeArea.OrderBy(m => m.Order).ThenBy(m => m.Description).ToListAsync()) :
+                          Problem("Entity set 'Management_of_ChangeContext.ChangeArea'  is null.");
+        }
+
         // GET: ChangeAreas/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -37,6 +37,20 @@ namespace Management_of_Change.Controllers
                           Problem("Entity set 'Management_of_ChangeContext.ChangeLevel'  is null.");
         }
 
+        public async Task<IActionResult> IndexHelp()
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _context.ChangeLevel != null ?
+                          View(await _context.ChangeLevel.OrderBy(m => m.Order).ThenBy(m => m.Level).ToListAsync()) :
+                          Problem("Entity set 'Management_of_ChangeContext.ChangeLevel'  is null.");
+        }
+
         // GET: ChangeLevels/Details/5
         public async Task<IActionResult> Details(int? id)
         {

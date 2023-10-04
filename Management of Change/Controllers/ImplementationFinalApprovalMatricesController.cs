@@ -46,6 +46,30 @@ namespace Management_of_Change.Controllers
             return View(implementationFinalApprovalMatrix);
         }
 
+        public async Task<IActionResult> IndexHelp()
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync();
+
+            foreach (var record in implementationFinalApprovalMatrix)
+            {
+                FinalReviewType finalReviewType = await _context.FinalReviewType.Where(m => m.Type == record.FinalReviewType).FirstOrDefaultAsync();
+                if (finalReviewType != null)
+                {
+                    record.ReviewerEmail = finalReviewType.Email;
+                    record.ReviewerName = finalReviewType.Reviewer;
+                    record.ReviewerUsername = finalReviewType.Username;
+                }
+            }
+            return View(implementationFinalApprovalMatrix);
+        }
+
         // GET: ImplementationFinalApprovalMatrices/Details/5
         public async Task<IActionResult> Details(int? id)
         {

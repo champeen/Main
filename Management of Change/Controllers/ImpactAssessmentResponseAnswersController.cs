@@ -295,65 +295,6 @@ namespace Management_of_Change.Controllers
                         _context.Update(impactAssessmentResponse);
                         await _context.SaveChangesAsync();
                     }
-
-                    //if (!found)
-                    //{
-                    //    if (impactAssessmentResponse != null)
-                    //    {
-                    //        impactAssessmentResponse.ReviewCompleted = true;
-                    //        impactAssessmentResponse.DateCompleted = DateTime.UtcNow;
-                    //        impactAssessmentResponse.ModifiedUser= _username;
-                    //        impactAssessmentResponse.ModifiedDate= DateTime.UtcNow;
-                    //        _context.Update(impactAssessmentResponse);
-                    //        await _context.SaveChangesAsync();
-                    //    }
-
-                    //    // see if all of this ChangeRequests ImpactAssessmentResponses are complete.  If so, promote/change status of the ChangeRequest...
-                    //    bool foundIAR = await _context.ImpactAssessmentResponse
-                    //        .Where(m => m.ChangeRequestId == impactAssessmentResponse.ChangeRequestId)
-                    //        .Where(m => m.ReviewCompleted != true)
-                    //        .AnyAsync();
-
-                    //    if (!foundIAR) 
-                    //    {
-                    //        ChangeRequest changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == impactAssessmentResponse.ChangeRequestId);
-                    //        if (changeRequest != null)
-                    //        {
-                    //            changeRequest.Change_Status = "FinalApprovals";
-                    //            changeRequest.ModifiedDate= DateTime.UtcNow;
-                    //            changeRequest.ModifiedUser = _username;
-                    //            _context.Update(changeRequest);
-                    //            await _context.SaveChangesAsync();
-
-                    //            changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
-                    //                .Where(m => m.ChangeRequestId == changeRequest.Id)
-                    //                .ToListAsync();
-
-                    //            // Email All Users ImpactResponse Review/Approval links...
-                    //            foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
-                    //            {
-                    //                string subject = @"Management of Change (MoC) - Final Approval Needed";
-                    //                string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-                    //                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null);
-
-                    //                EmailHistory emailHistory = new EmailHistory
-                    //                {
-                    //                    Subject = subject,
-                    //                    Body = body,
-                    //                    SentToDisplayName = record.Reviewer,
-                    //                    SentToUsername = record.Username,
-                    //                    SentToEmail = record.ReviewerEmail,
-                    //                    ChangeRequestId = changeRequest.Id,
-                    //                    ImpactAssessmentResponseId = record.Id,
-                    //                    CreatedDate = DateTime.UtcNow,
-                    //                    CreatedUser = _username
-                    //                };
-                    //                _context.Add(emailHistory);
-                    //                await _context.SaveChangesAsync();
-                    //            }
-                    //        }
-                    //    }
-                    //}
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -365,25 +306,27 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction("Details", "ImpactAssessmentResponses", new { Id = impactAssessmentResponseAnswer.ImpactAssessmentResponseId });
             }
             
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                if (user.onpremisessamaccountname == impactAssessmentResponseAnswer.ActionOwner)
-                    item.Selected = true;
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            //// Create Dropdown List of Users...
+            //var userList = await _context.__mst_employee
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+            //    .Where(m => m.accountenabled == true)
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+            //    .OrderBy(m => m.displayname)
+            //    .ThenBy(m => m.onpremisessamaccountname)
+            //    .ToListAsync();
+            //List<SelectListItem> users = new List<SelectListItem>();
+            //foreach (var user in userList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+            //    if (user.onpremisessamaccountname == impactAssessmentResponseAnswer.ActionOwner)
+            //        item.Selected = true;
+            //    users.Add(item);
+            //}
+            //ViewBag.Users = users;
+            ViewBag.Users = getUserList(impactAssessmentResponseAnswer.ActionOwner);
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+
             return View(impactAssessmentResponseAnswer);
         }
 

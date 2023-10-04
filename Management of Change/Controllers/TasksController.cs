@@ -88,23 +88,7 @@ namespace Management_of_Change.Controllers
                 requests.Add(item);
             }
             ViewBag.ChangeRequests = requests;
-
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            ViewBag.Users = getUserList();
             ViewBag.Source = source;
 
             return View(task);
@@ -195,24 +179,9 @@ namespace Management_of_Change.Controllers
                 SelectListItem item = new SelectListItem { Value = request.Id.ToString(), Text = request.MOC_Number + " : " + request.Title_Change_Description };
                 requests.Add(item);
             }
-            ViewBag.ChangeRequests = requests;
 
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            ViewBag.ChangeRequests = requests;
+            ViewBag.Users = getUserList();
             ViewBag.Source = source;
             return View(task);
         }
@@ -246,26 +215,7 @@ namespace Management_of_Change.Controllers
                 requests.Add(item);
             }
             ViewBag.ChangeRequests = requests;
-
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-
-                if (user.onpremisessamaccountname == task.AssignedToUser)
-                    item.Selected = true;
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            ViewBag.Users = getUserList(task.AssignedToUser);
 
             return View(task);
         }
@@ -329,26 +279,7 @@ namespace Management_of_Change.Controllers
                 requests.Add(item);
             }
             ViewBag.ChangeRequests = requests;
-
-            // Create Dropdown List of Users...
-            var userList = await _context.__mst_employee
-                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-                .Where(m => m.accountenabled == true)
-                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-                .OrderBy(m => m.displayname)
-                .ThenBy(m => m.onpremisessamaccountname)
-                .ToListAsync();
-            List<SelectListItem> users = new List<SelectListItem>();
-            foreach (var user in userList)
-            {
-                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-
-                if (user.onpremisessamaccountname == task.AssignedToUser)
-                    item.Selected = true;
-                users.Add(item);
-            }
-            ViewBag.Users = users;
+            ViewBag.Users = getUserList(task.AssignedToUser);
 
             return View(task);
         }

@@ -489,9 +489,6 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "GeneralMocQuestions" });
         }
 
-
-
-
         // GET: ChangeRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

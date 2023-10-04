@@ -6,9 +6,9 @@
 
 <h1>Review Types</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-    <span class="mx-5"><a asp-controller="Admin" asp-action="Index">Previous</a></span>
+<p class="mt-5">
+    @* <a asp-action="Create">Create New</a> *@
+    <span class=""><a asp-controller="Help" asp-action="Index" class="btn btn-secondary">Previous</a></span>
 </p>
 <table class="table table-bordered table-striped">
     <thead class="table-primary">
@@ -33,7 +33,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Order)
             </th>
-            <th></th>
+            @* <th></th> *@
         </tr>
     </thead>
     <tbody>
@@ -58,11 +58,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Order)
                 </td>
-                <td>
+@*                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                </td> *@
             </tr>
         }
     </tbody>
