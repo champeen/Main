@@ -69,8 +69,8 @@ namespace Management_of_Change.Models
                             CreatedDate = DateTime.UtcNow,
                             ModifiedUser = "Fred Jones",
                             ModifiedDate = DateTime.UtcNow.AddMonths(-3),
-                            DeletedUser = "Jesse Girl",
-                            DeletedDate = DateTime.UtcNow.AddDays(-2)
+                            DeletedUser = null,
+                            DeletedDate = null
                         },
 
                         new ChangeRequest
@@ -271,20 +271,8 @@ namespace Management_of_Change.Models
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
                             ModifiedDate = null,
-                            DeletedUser = "Mean Joe",
-                            DeletedDate = DateTime.Now.AddYears(-1)
-                        },
-                        new ChangeType
-                        {
-                            Type = "RND Recipe Transfer",
-                            Description = "?",
-                            Order = "75",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = "Mean Joe",
-                            DeletedDate = DateTime.Now.AddYears(-1)
+                            DeletedUser = null,
+                            DeletedDate = null
                         },
                         new ChangeType
                         {
@@ -2234,18 +2222,7 @@ namespace Management_of_Change.Models
                         new ImpactAssessmentMatrix
                         {
                             ReviewType = "Device Expert",
-                            ChangeType = "RND Recipe Transfer",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Device Expert",
-                            ChangeType = "Supplied Material\t",
+                            ChangeType = "Supplied Material",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -2477,17 +2454,6 @@ namespace Management_of_Change.Models
                         {
                             ReviewType = "Equipment",
                             ChangeType = "Recipe",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Equipment",
-                            ChangeType = "RND Recipe Transfer",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -2904,17 +2870,6 @@ namespace Management_of_Change.Models
                         },
                         new ImpactAssessmentMatrix
                         {
-                            ReviewType = "Operations - General",
-                            ChangeType = "RND Recipe Transfer",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
                             ReviewType = "Operations - EPI",
                             ChangeType = "EHS System",
                             CreatedUser = "MJWilson",
@@ -3038,17 +2993,6 @@ namespace Management_of_Change.Models
                         {
                             ReviewType = "Operations - EPI",
                             ChangeType = "Recipe",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Operations - EPI",
-                            ChangeType = "RND Recipe Transfer",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -3276,17 +3220,6 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Process Control & Engineering - Growth Equipment",
-                            ChangeType = "RND Recipe Transfer",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
                        new ImpactAssessmentMatrix
                        {
                            ReviewType = "Process Control & Engineering - Growth Process",
@@ -3368,17 +3301,6 @@ namespace Management_of_Change.Models
                         {
                             ReviewType = "Process Control & Engineering - Growth Process",
                             ChangeType = "Recipe",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Process Control & Engineering - Growth Process",
-                            ChangeType = "RND Recipe Transfer",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -3474,17 +3396,6 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Process Control & Engineering - Wafering",
-                            ChangeType = "RND Recipe Transfer",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
                        new ImpactAssessmentMatrix
                        {
                            ReviewType = "Process Control & Engineering - Controls",
@@ -3566,17 +3477,6 @@ namespace Management_of_Change.Models
                         {
                             ReviewType = "Process Control & Engineering - Controls",
                             ChangeType = "Recipe",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Process Control & Engineering - Controls",
-                            ChangeType = "RND Recipe Transfer",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,
@@ -3939,17 +3839,6 @@ namespace Management_of_Change.Models
                         new ImpactAssessmentMatrix
                         {
                             ReviewType = "Quality",
-                            ChangeType = "RND Recipe Transfer",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Quality",
                             ChangeType = "Supplied Material",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
@@ -4061,17 +3950,6 @@ namespace Management_of_Change.Models
                         {
                             ReviewType = "Research & Development",
                             ChangeType = "Recipe",
-                            CreatedUser = "MJWilson",
-                            CreatedDate = DateTime.Now,
-                            ModifiedUser = null,
-                            ModifiedDate = null,
-                            DeletedUser = null,
-                            DeletedDate = null
-                        },
-                        new ImpactAssessmentMatrix
-                        {
-                            ReviewType = "Research & Development",
-                            ChangeType = "RND Recipe Transfer",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,
                             ModifiedUser = null,

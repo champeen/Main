@@ -80,7 +80,7 @@
             </div>
             <div class="form-group my-3">
                 <label asp-for="CMT_Number" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-info-circle-fill" style="color:darkorange;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a CMT (NOTE: all Level 1-3 changes require CMT)? If so, enter CMT number and/or initiate CMT with CMT Leader.">
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a CMT (NOTE: all Level 1-3 changes require CMT)? If so, enter CMT number and/or initiate CMT with CMT Leader.">
                 </i>
                 <input asp-for="CMT_Number" class="form-control" />
                 <span asp-validation-for="CMT_Number" class="text-danger fw-bold"></span>
@@ -89,14 +89,14 @@
         <div class="col-md-3">
             <div class="form-group my-3">
                 <label asp-for="Waiver_Number" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-info-circle-fill" style="color:darkorange;" data-bs-toggle="tooltip" data-bs-html="true" title="Does this change require the use of a waiver for the release of final product? If so, please enter the waiver number(s)">
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Does this change require the use of a waiver for the release of final product? If so, please enter the waiver number(s)">
                 </i>
                 <input asp-for="Waiver_Number" class="form-control" />
                 <span asp-validation-for="Waiver_Number" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="PTN_Number" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-info-circle-fill" style="color:darkorange;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please select the PTN number(s)">
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please select the PTN number(s)">
                 </i>
                 @*<input asp-for="PTN_Number" class="form-control" />*@
                 @Html.DropDownListFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text"), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select Users", size=2 })

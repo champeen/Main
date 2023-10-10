@@ -207,7 +207,11 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.PTN_Number)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.PTN_Number)
+                    @foreach (var ptn in Model.ChangeRequest.PTN_Number)
+                    {
+                        @ptn <span>&nbsp;</span>
+                    }
+                    @* @Html.DisplayFor(model => model.ChangeRequest.PTN_Number) *@
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Waiver_Number)

@@ -71,9 +71,7 @@
         <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 navbar-dark bg-primary text-white" @*style="z-index:1;"*@>
             <div class="container-fluid">
                 <div>
-                    @*<img src="~/ButterflyTran.png" class="img-fluid" >*@
                     <img src="~/HappyWings_PNG.png" class="img-fluid" width="48" height="48">
-                    
                 </div>
                 <div class="me-3 text-center">
                     <a class="nav-link text-light" asp-controller="Home" asp-action="Index">
@@ -90,12 +88,25 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item mx-3">
-                            <a class="nav-link text-light" asp-controller="ChangeRequests" asp-action="Index">Change Requests</a>
+                            <a class="nav-link text-light" asp-controller="ChangeRequests" asp-action="Index">
+                                @* <i class="bi bi-book"></i> *@
+                                Change Requests
+                            </a>
                         </li>
                         <li class="nav-item mx-3">
-                            <a class="nav-link text-white" asp-controller="Tasks" asp-action="Index">Tasks</a>
+                            <a class="nav-link text-white" asp-controller="Tasks" asp-action="Index">
+                                @* <i class="bi bi-list-task" ></i> *@
+                                Tasks
+                            </a>
                         </li>
-                        <li class="nav-item mx-3 ms-auto">
+                        <li class="nav-item mx-3 ms-lg-auto">
+                            <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank">
+                                <i class="bi bi-diagram-2-fill" data-bs-toggle="tooltip" data-bs-html="true">
+                                </i>
+                                MoC Process Flow
+                            </a>
+                        </li>
+                        <li class="nav-item mx-3">
                             <a class="nav-link text-light" asp-controller="Help" asp-action="Index" target="_blank">
                                 <i class="bi bi-question-circle-fill" data-bs-toggle="tooltip" data-bs-html="true">
                                 </i>
@@ -106,7 +117,7 @@
                         {
                             <li class="nav-item mx-3">
                                 <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">
-                                    <i class="bi bi-person-fill-add" data-bs-toggle="tooltip" data-bs-html="true" >
+                                    <i class="bi bi-person-fill-add" data-bs-toggle="tooltip" data-bs-html="true">
                                     </i>
                                     Admin
                                 </a>
