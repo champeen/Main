@@ -368,6 +368,38 @@ namespace Management_of_Change.Controllers
             return View(changeRequest);
         }
 
+        public async Task<IActionResult> Clone(int id)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ChangeRequest changeRequest = new ChangeRequest
+            {
+                Change_Owner = _username,
+                CreatedUser = _username,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            changeRequest.Change_Status = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Status).FirstOrDefaultAsync();
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Description).FirstOrDefaultAsync();
+
+            //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
+            ViewBag.Types = getChangeTypes();
+            ViewBag.Levels = getChangeLevels();
+            ViewBag.PTNs = getPtnNumbers();
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+            ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.Source = source;
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return View(changeRequest);
+        }
+
         // GET: ChangeRequests/Edit/5
         public async Task<IActionResult> Edit(int? id, string tab = "Details")
         {
@@ -902,13 +934,15 @@ namespace Management_of_Change.Controllers
             await _context.SaveChangesAsync();
 
             // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
-            // TODO MJWII
             var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+            __mst_employee admin = new __mst_employee();
+            string subject;
+            string body;
             foreach (var record in adminApproverList)
             {
-                var admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
-                string subject = @"Management of Change (MoC) - Submitted for Closeout";
-                string body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+                admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
+                subject = @"Management of Change (MoC) - Submitted for Closeout";
+                body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null);
 
                 EmailHistory emailHistory = new EmailHistory
@@ -927,6 +961,51 @@ namespace Management_of_Change.Controllers
                 _context.Add(emailHistory);
                 await _context.SaveChangesAsync();
             }
+
+            // Create a task for the ChangeRequest Owner to notify Administrator when ChangeRequest has been fully implemented
+            Models.Task task = new Models.Task
+            {
+                ChangeRequestId = changeRequest.Id,
+                MocNumber = changeRequest.MOC_Number,
+                ImplementationType = @"Post",
+                Status = @"Open",
+                AssignedByUser = changeRequest.Change_Owner,
+                AssignedToUser = changeRequest.Change_Owner,
+                Title = @"Implementation Completion Notification",
+                Description = @"Notify MoC admin when this MoC is completely implemented.",
+                DueDate = DateTime.UtcNow.AddMonths(1),
+                CreatedUser = changeRequest.Change_Owner,
+                CreatedDate = DateTime.UtcNow
+            };
+            _context.Add(task);
+            await _context.SaveChangesAsync();
+
+            // Send Email Out notifying the person who is assigned the task
+            subject = @"Management of Change (MoC) - Task Assigned.";
+            body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Task Description: </strong>" + task.Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+            if (toPerson != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+
+                EmailHistory emailHistory = new EmailHistory
+                {
+                    Subject = subject,
+                    Body = body,
+                    SentToDisplayName = toPerson.displayname,
+                    SentToUsername = toPerson.onpremisessamaccountname,
+                    SentToEmail = toPerson.mail,
+                    ChangeRequestId = task.ChangeRequestId,
+                    TaskId = task.Id,
+                    Type = "Task",
+                    Status = task.Status,
+                    CreatedDate = DateTime.UtcNow,
+                    CreatedUser = task.CreatedUser
+                };
+                _context.Add(emailHistory);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "Implementation" });
         }
 
@@ -954,7 +1033,7 @@ namespace Management_of_Change.Controllers
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
 
-            // Email the ChangeRequst Ownder that the change request has been closed
+            // Email the ChangeRequst Owner that the change request has been closed
             var owner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
             string subject = @"Management of Change (MoC) - Change Request Completed/Closed";
             string body = @"Change Request has been Closed-Out/Completed.<br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";

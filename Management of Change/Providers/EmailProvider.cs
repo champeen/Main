@@ -102,8 +102,7 @@ namespace Management_of_Change.Provider
                     catch(Exception ex)
                     {
                         throw(ex);
-                    }
-                    
+                    }                    
                 }
             }
             //return true;

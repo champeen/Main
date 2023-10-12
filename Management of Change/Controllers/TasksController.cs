@@ -141,7 +141,7 @@ namespace Management_of_Change.Controllers
 
                 // Send Email Out notifying the person who is assigned the task
                 string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
-                string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>MoC Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+                string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
                 var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                 if (toPerson != null)
                 {
@@ -244,9 +244,9 @@ namespace Management_of_Change.Controllers
             if (task.Status == "Complete" && String.IsNullOrWhiteSpace(task.CompletionNotes))
                 ModelState.AddModelError("CompletionNotes", "If Task Status is 'Complete', Completion Notes is required.");
 
-
             if (ModelState.IsValid)
             {
+                var originalTaskStatus = await _context.Task.Where(m => m.Id == task.Id).Select(m => m.Status).FirstOrDefaultAsync();
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
                 task.ModifiedUser = _username;
                 task.ModifiedDate = DateTime.UtcNow;
@@ -254,6 +254,37 @@ namespace Management_of_Change.Controllers
                 {
                     _context.Update(task);
                     await _context.SaveChangesAsync();
+
+                    // if status was changed to "Complete" then email task creator that it is now complete
+                    if (originalTaskStatus != task.Status && task.Status == "Complete")
+                    {
+                        // Send Email Out notifying the person who is assigned the task
+                        string subject = @"Management of Change (MoC) - Task has been completed.";
+                        string body = @"A Management of Change task has been completed.  The task is listed under your Change Request, in the Tasks tab. <br/><br/>
+                            <strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+                        var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+                        var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.CreatedUser).FirstOrDefaultAsync();
+                        if (toPerson != null)
+                        {
+                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null);
+
+                            EmailHistory emailHistory = new EmailHistory
+                            {
+                                Subject = subject,
+                                Body = body,
+                                SentToDisplayName = toPerson.displayname,
+                                SentToUsername = toPerson.onpremisessamaccountname,
+                                SentToEmail = toPerson.mail,                                
+                                ChangeRequestId = task.ChangeRequestId,
+                                TaskId = task.Id,
+                                Type = "Task",
+                                Status = task.Status,
+                                CreatedDate = DateTime.UtcNow,
+                                CreatedUser = _username
+                            };
+                            _context.Add(emailHistory);
+                        }
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -346,7 +377,7 @@ namespace Management_of_Change.Controllers
 
             // Send Email Out notifying the person who is assigned the task
             string subject = @"Management of Change (MoC) - Impact Assessment Response Task Reminder.";
-            string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>MoC Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+            string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
             var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
             if (toPerson != null)
             {

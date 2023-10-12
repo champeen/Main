@@ -7,7 +7,12 @@
 
 <div class="row">
     <div class="col-4">
-        <h1>Change Request</h1>
+        <h1 style="display:inline">
+            Change Request
+            <span class="ms-2" title="Create New MoC based on this MoC.  Include all Details and General MoC Questions only. Status will be set to 'Draft' and ChangeOwner will be you.">
+                @Html.ActionLink("Clone","Clone",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-success align-middle"})
+            </span>
+        </h1>
     </div>
     <div class="col-8 text-end">
         <h4>
@@ -206,12 +211,15 @@
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.PTN_Number)
                 </dt>
-                <dd class="col-sm-4 my-1">
+                <dd class="col-sm-4 my-1"
+                @if (Model.ChangeRequest.PTN_Number != null)
+                {
                     @foreach (var ptn in Model.ChangeRequest.PTN_Number)
                     {
-                        @ptn <span>&nbsp;</span>
+                                                <span>@ptn&nbsp;</span>
                     }
                     @* @Html.DisplayFor(model => model.ChangeRequest.PTN_Number) *@
+                }
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Waiver_Number)

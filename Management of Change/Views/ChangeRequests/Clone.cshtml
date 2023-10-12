@@ -1,0 +1,175 @@
+﻿@model Management_of_Change.Models.ChangeRequest
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Change Request</h1>
+<h4>Create</h4>
+<hr />
+<form asp-action="Create" asp-route-source="@ViewBag.Source">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </span>
+                <span class="mx-2">
+                    @if (ViewBag.Source == "Home")
+                    {
+                        @Html.ActionLink("Cancel","Index","Home",new {},new {@class="btn btn-secondary"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Cancel","Index",new {},new {@class="btn btn-secondary"})
+                    }
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <input type="hidden" asp-for="Change_Status" />
+            <input type="hidden" asp-for="Change_Status_Description" />
+            <input type="hidden" asp-for="Change_Owner" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group my-3">
+                <label asp-for="Change_Type" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @*<input asp-for="Change_Type" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Change_Type, new SelectList(ViewBag.Types, "Value", "Value"), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="Change_Type" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Area_of_Change" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @*<input asp-for="Area_of_Change" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Area_of_Change, new SelectList(ViewBag.ChangeAreas), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="Area_of_Change" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Location_Site" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.DropDownListFor(model => model.Location_Site, new SelectList(ViewBag.SiteLocations), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="Location_Site" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Change_Level" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @*<input asp-for="Change_Level" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Change_Level, new SelectList(ViewBag.Levels,"Value","Value"), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="Change_Level" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Proudct_Line" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.DropDownListFor(model => model.Proudct_Line, new SelectList(ViewBag.ProductLines), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="Proudct_Line" class="text-danger fw-bold"></span>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group my-3">
+                <label asp-for="Estimated_Completion_Date" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="The date the change is needed or is estimated to be completed (i.e. MOC closed). Provide adequate time as this is used for measuring MOC metrics">
+                </i>
+                <input asp-for="Estimated_Completion_Date" class="form-control" onclick="this.showPicker()" />
+                <span asp-validation-for="Estimated_Completion_Date" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Expiration_Date_Temporary" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Expiration_Date_Temporary" class="form-control" onclick="this.showPicker()" />
+                <span asp-validation-for="Expiration_Date_Temporary" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Waiver_Number" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Does this change require the use of a waiver for the release of final product? If so, please enter the waiver number(s)">
+                </i>
+                <input asp-for="Waiver_Number" class="form-control" />
+                <span asp-validation-for="Waiver_Number" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="CMT_Number" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a CMT (NOTE: all Level 1-3 changes require CMT)? If so, enter CMT number and/or initiate CMT with CMT Leader.">
+                </i>
+                <input asp-for="CMT_Number" class="form-control" />
+                <span asp-validation-for="CMT_Number" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PTN_Number" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please select the PTN number(s). If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
+                </i>
+                @*<input asp-for="PTN_Number" class="form-control" />*@
+                @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text", Model.PTN_Number), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select Users", size=2 })
+                @* @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs, "Value","Text", Model.PTN_Number), new { @class = "form-control from-select", multiple="multiple", data_placeholder = "Select Users", size=20}) *@
+                <span asp-validation-for="PTN_Number" class="text-danger fw-bold"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group my-3">
+                <label asp-for="Title_Change_Description" class="control-label fw-bold mb-1" title="Max 100 characters"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.TextAreaFor(model => model.Title_Change_Description, new {@class = "form-control", @rows = 2 })
+                @* <input asp-for="Title_Change_Description" class="form-control" /> *@
+                <span asp-validation-for="Title_Change_Description" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Justification_of_the_Change" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="“Why” the change is needed. Ensure the reason for change as well as any documentation/data is provided to justify the change">
+                </i>
+                @Html.TextAreaFor(model => model.Justification_of_the_Change, new {@class = "form-control", @rows = 2 })
+                @*<input asp-for="Justification_of_the_Change" class="form-control" />*@
+                <span asp-validation-for="Justification_of_the_Change" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Scope_of_the_Change" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Outlines the “Who, What, Where, When, and How” of the change. Ensure adequate documentation/data is provided to quantify the change">
+                </i>
+                @Html.TextAreaFor(model => model.Scope_of_the_Change, new {@class = "form-control", @rows = 2 })
+                @*<input asp-for="Scope_of_the_Change" class="form-control" />*@
+                <span asp-validation-for="Scope_of_the_Change" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Raw_Material_Component_Numbers_Impacted" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="Raw_Material_Component_Numbers_Impacted" class="form-control" /> *@
+                @Html.TextAreaFor(model => model.Raw_Material_Component_Numbers_Impacted, new {@class = "form-control", @rows = 2 })
+                <span asp-validation-for="Raw_Material_Component_Numbers_Impacted" class="text-danger fw-bold"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="text-nowrap">
+                <span class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </span>
+                <span class="mx-2">
+                    @if (ViewBag.Source == "Home")
+                    {
+                        @Html.ActionLink("Cancel","Index","Home",new {},new {@class="btn btn-secondary"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Cancel","Index",new {},new {@class="btn btn-secondary"})
+                    }
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
