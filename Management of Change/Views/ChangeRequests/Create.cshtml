@@ -117,7 +117,7 @@
                 <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please select the PTN number(s). If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
                 </i>
                 @*<input asp-for="PTN_Number" class="form-control" />*@
-                @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text", Model.PTN_Number), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select Users", size=2 })
+                @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text", Model.PTN_Number), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select Users", size=5 })
                 @* @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs, "Value","Text", Model.PTN_Number), new { @class = "form-control from-select", multiple="multiple", data_placeholder = "Select Users", size=20}) *@
                 <span asp-validation-for="PTN_Number" class="text-danger fw-bold"></span>
             </div>
