@@ -76,7 +76,10 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return View("Index", await requests.OrderBy(r => r.Id).ToListAsync());
+            return View("Index", await requests
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.Estimated_Completion_Date)
+                .ToListAsync());
         }
 
         // GET: ChangeRequests/Details/5
@@ -90,8 +93,7 @@ namespace Management_of_Change.Controllers
             if (id == null || _context.ChangeRequest == null)
                 return NotFound();
 
-            var changeRequest = await _context.ChangeRequest
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == id);
 
             if (changeRequest == null)
                 return NotFound();
@@ -290,7 +292,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -368,22 +370,30 @@ namespace Management_of_Change.Controllers
             return View(changeRequest);
         }
 
-        public async Task<IActionResult> Clone(int id)
+        public async Task<IActionResult> Clone(int id, string? tab = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            ChangeRequest changeRequest = new ChangeRequest
-            {
-                Change_Owner = _username,
-                CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
-            };
+            if (id == null || id == 0)
+                return View("Index");
 
-            changeRequest.Change_Status = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Status).FirstOrDefaultAsync();
-            changeRequest.Change_Status_Description = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Description).FirstOrDefaultAsync();
+            ChangeRequest changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == id);
+            if (changeRequest == null)
+                return View("Index");
+
+            changeRequest.Change_Status = "Draft";
+            changeRequest.Change_Owner = _username;
+            changeRequest.Estimated_Completion_Date = null;
+            changeRequest.CreatedUser = _username;
+            changeRequest.CreatedDate = DateTime.UtcNow;
+            changeRequest.ModifiedDate = null;
+            changeRequest.ModifiedUser = null;
+            changeRequest.DeletedDate = null;
+            changeRequest.DeletedUser = null;
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
 
             //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
             ViewBag.Types = getChangeTypes();
@@ -393,11 +403,95 @@ namespace Management_of_Change.Controllers
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
-            ViewBag.Source = source;
+            ViewBag.Source = "Home";
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+            ViewBag.ClonedId = id;
+
+            return View(changeRequest);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CloneCreate([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, int clonedId, string source = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (changeRequest.Estimated_Completion_Date == null)
+                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
+
+            if (changeRequest.Estimated_Completion_Date < DateTime.Today)
+                ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
+
+            if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
+                ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
+
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return View(changeRequest);
+            if (ModelState.IsValid)
+            {
+                // add General MOC Questions
+                List<GeneralMocResponses> oldResponses = await _context.GeneralMocResponses.Where(m => m.ChangeRequestId == clonedId).ToListAsync();
+                if (oldResponses.Count > 0)
+                {
+                    changeRequest.GeneralMocResponses = new List<GeneralMocResponses>();
+                    foreach (var oldResponse in oldResponses)
+                    {
+                        GeneralMocResponses response = new GeneralMocResponses
+                        {
+                            ChangeRequestId = clonedId,
+                            Question = oldResponse.Question,
+                            Response = oldResponse.Response,
+                            Order = oldResponse.Order,
+                            CreatedUser = _username,
+                            CreatedDate = DateTime.UtcNow
+                        };
+                        changeRequest.GeneralMocResponses.Add(response);
+                    }
+                }
+
+                // Mark would like the MOC_Number to be in the format "MOC-YYMMDD(seq)"
+                string mocNumber = "";
+                for (int i = 1; i < 10000; i++)
+                {
+                    mocNumber = "MOC-" + DateTime.Now.ToString("yyMMdd") + "-" + i.ToString();
+                    ChangeRequest record = await _context.ChangeRequest
+                        .FirstOrDefaultAsync(m => m.MOC_Number == mocNumber);
+                    if (record == null)
+                        break;
+                }
+                changeRequest.MOC_Number = mocNumber;
+                changeRequest.Request_Date = DateTime.Now.Date;
+                _context.Add(changeRequest);
+                await _context.SaveChangesAsync();
+
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number)))
+                    path.Create();
+
+                if (source == "Home")
+                    return RedirectToAction("Index", "Home", new { });
+                else
+                    return RedirectToAction("Details", new { id = changeRequest.Id });
+            }
+
+            // Persist Dropdown Selection Lists
+            ViewBag.Types = getChangeTypes();
+            ViewBag.Levels = getChangeLevels();
+            ViewBag.PTNs = getPtnNumbers();
+            //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
+            ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
+            ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
+            ViewBag.Source = "Home";
+            ViewBag.ClonedId = clonedId;
+
+            return View("Clone", changeRequest);
         }
 
         // GET: ChangeRequests/Edit/5
@@ -438,7 +532,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -739,7 +833,7 @@ namespace Management_of_Change.Controllers
             {
                 string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
                 string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
 
                 EmailHistory emailHistory = new EmailHistory
                 {
@@ -813,7 +907,7 @@ namespace Management_of_Change.Controllers
                 {
                     string subject = @"Management of Change (MoC) - Final Approval Needed";
                     string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null);
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
 
                     EmailHistory emailHistory = new EmailHistory
                     {
@@ -885,7 +979,7 @@ namespace Management_of_Change.Controllers
                         var admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
                         string subject = @"Management of Change (MoC) - Submitted for Implementation";
                         string body = @"Change Request has been submitted for implementation. All pre-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-                        Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null);
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null, changeRequest.Priority);
 
                         EmailHistory emailHistory = new EmailHistory
                         {
@@ -943,7 +1037,7 @@ namespace Management_of_Change.Controllers
                 admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
                 subject = @"Management of Change (MoC) - Submitted for Closeout";
                 body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null, changeRequest.Priority);
 
                 EmailHistory emailHistory = new EmailHistory
                 {
@@ -969,6 +1063,7 @@ namespace Management_of_Change.Controllers
                 MocNumber = changeRequest.MOC_Number,
                 ImplementationType = @"Post",
                 Status = @"Open",
+                Priority = changeRequest.Priority,
                 AssignedByUser = changeRequest.Change_Owner,
                 AssignedToUser = changeRequest.Change_Owner,
                 Title = @"Implementation Completion Notification",
@@ -986,7 +1081,7 @@ namespace Management_of_Change.Controllers
             var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
             if (toPerson != null)
             {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
 
                 EmailHistory emailHistory = new EmailHistory
                 {
@@ -1037,7 +1132,7 @@ namespace Management_of_Change.Controllers
             var owner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
             string subject = @"Management of Change (MoC) - Change Request Completed/Closed";
             string body = @"Change Request has been Closed-Out/Completed.<br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-            Initialization.EmailProviderSmtp.SendMessage(subject, body, owner.mail, null, null);
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, owner.mail, null, null, changeRequest.Priority);
 
             EmailHistory emailHistory = new EmailHistory
             {
@@ -1083,7 +1178,7 @@ namespace Management_of_Change.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateTask([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> CreateTask([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,Priority,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -1132,7 +1227,7 @@ namespace Management_of_Change.Controllers
                 var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                 if (toPerson != null)
                 {
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
 
                     EmailHistory emailHistory = new EmailHistory
                     {
@@ -1153,7 +1248,6 @@ namespace Management_of_Change.Controllers
                 }                
                 return RedirectToAction("Details", "ChangeRequests", new { Id = task.ChangeRequestId, Tab = "Tasks" });
             }
-
             ViewBag.Users = getUserList();
 
             return View(task);

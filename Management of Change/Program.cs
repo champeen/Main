@@ -92,7 +92,8 @@ catch (Exception ex)
             "INNER EXCEPTION: " + ex.InnerException,
         "michael.wilson@sksiltron.com;",
         null,
-        null);
+        null,
+        "High");
         //"",
         //null);
 }

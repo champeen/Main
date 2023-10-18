@@ -34,7 +34,7 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return View("Index", await requests.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync());
+            return View("Index", await requests.OrderBy(m => m.Priority).ThenBy(m => m.DueDate).ToListAsync());
 
             //return _context.Task != null ?
             //            View(await _context.Task.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync()) :
@@ -99,7 +99,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task, string source = null)
+        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,Priority,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -145,7 +145,7 @@ namespace Management_of_Change.Controllers
                 var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                 if (toPerson != null)
                 {
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
 
                     EmailHistory emailHistory = new EmailHistory
                     {
@@ -225,7 +225,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,Priority,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -266,7 +266,7 @@ namespace Management_of_Change.Controllers
                         var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.CreatedUser).FirstOrDefaultAsync();
                         if (toPerson != null)
                         {
-                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null);
+                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null, task.Priority);
 
                             EmailHistory emailHistory = new EmailHistory
                             {
@@ -381,7 +381,7 @@ namespace Management_of_Change.Controllers
             var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
             if (toPerson != null)
             {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
 
                 EmailHistory emailHistory = new EmailHistory
                 {

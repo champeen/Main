@@ -37,6 +37,8 @@ namespace Management_of_Change.Controllers
                 .Where(m => m.DeletedDate == null)
                 .Where(m => m.Change_Owner == username)
                 .Where(m => m.Change_Status == "Draft")
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.Estimated_Completion_Date)
                 .ToListAsync();
 
             // Get all incomplete Impact Assessments assigned to user...
@@ -59,7 +61,11 @@ namespace Management_of_Change.Controllers
                         .ToListAsync();
                 }
             }
-            dashboardVM.IncompleteImpactAssessments = changeRequestsIA.Where(m => m.ImpactAssessmentResponses.Count > 0).ToList();
+            dashboardVM.IncompleteImpactAssessments = changeRequestsIA
+                .Where(m => m.ImpactAssessmentResponses.Count > 0)
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.Estimated_Completion_Date)
+                .ToList();
 
             // Get all incomplete Final Approvals assigned to user...
             List<ChangeRequest> changeRequestsFA = await _context.ChangeRequest
@@ -74,13 +80,18 @@ namespace Management_of_Change.Controllers
                     .Where(m => m.ReviewCompleted == false)
                     .ToListAsync();
             }
-            dashboardVM.IncompleteFinalApprovals = changeRequestsFA.Where(m => m.ImplementationFinalApprovalResponses.Count > 0).ToList();
+            dashboardVM.IncompleteFinalApprovals = changeRequestsFA
+                .Where(m => m.ImplementationFinalApprovalResponses.Count > 0)
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.Estimated_Completion_Date)
+                .ToList();
 
             // Get all the Open/In Progress Tasks associated with the user...
             dashboardVM.OpenTasks = await _context.Task
                 .Where(m => m.Status == "Open" || m.Status == "In-Progress")
                 .Where(m => m.AssignedToUser == username)
-                .OrderBy(m => m.DueDate)
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.DueDate)
                 .ToListAsync();
 
             return View(dashboardVM);

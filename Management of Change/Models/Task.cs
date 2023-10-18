@@ -14,6 +14,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Implementation Type")]
         public string ImplementationType { get; set; }
         public string Status { get; set; }
+        public string? Priority { get; set; }
         [Display(Name = "Assigned To User")]
         public string AssignedToUser { get; set; }
         [Display(Name = "Assigned By User")]

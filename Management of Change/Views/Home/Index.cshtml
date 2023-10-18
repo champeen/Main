@@ -44,15 +44,20 @@
                             <tbody>
                                 @foreach (var item in Model.DraftMocs)
                                 {
-                                <tr>
-                                    <td class="text-nowrap">
+                                    <tr>
+                                        <td class="text-nowrap">
                                             @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="GeneralMocQuestions", sourceScreen="Dashboard"},new {@class=""})
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                </tr>
+                                            @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @if (item.Priority == "High")
+                                            {
+                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
+                                            }
+
+                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -90,6 +95,10 @@
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
+                                            @if (item.Priority == "High")
+                                            {
+                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
+                                            }
                                             @Html.DisplayFor(modelItem => item.Title_Change_Description)
                                         </td>
                                     </tr>
@@ -129,6 +138,10 @@
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
+                                            @if (item.Priority == "High")
+                                            {
+                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
+                                            }
                                             @Html.DisplayFor(modelItem => item.Title_Change_Description)
                                         </td>
                                     </tr>
@@ -169,6 +182,10 @@
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
+                                            @if (item.Priority == "High")
+                                            {
+                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
+                                            }
                                             @Html.DisplayFor(modelItem => item.Title)
                                         </td>
                                     </tr>

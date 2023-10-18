@@ -37,7 +37,7 @@ namespace Management_of_Change.Provider
             //_emailGeneralTo = emailGeneralTo;
         }
 
-        public async Task SendMessage(string subject, string body, string to, string cc, string bcc/*, string department, IFormFile? fileAttachment*/)
+        public async Task SendMessage(string subject, string body, string to, string cc, string bcc, string? priority = "Normal"/*, string department, IFormFile? fileAttachment*/)
         {
             using (var mailMessage = new MailMessage())
             {
@@ -48,6 +48,12 @@ namespace Management_of_Change.Provider
                 mailMessage.Subject = "TEST - " + subject;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
+                if (priority == "High")
+                {
+                    mailMessage.Priority = MailPriority.High;
+                    mailMessage.Subject = "HIGH PRIORITY: " + mailMessage.Subject;
+                    mailMessage.Body = @"<strong style=""color:Red"">HIGH PRIORITY!</strong><br/><br/>" + mailMessage.Body;
+                }                   
 
                 foreach (var curr_address in to.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
                 {

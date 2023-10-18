@@ -16,6 +16,11 @@
             <input asp-for="MocNumber" class="form-control" />
             <span asp-validation-for="MocNumber" class="text-danger fw-bold"></span>
         </div>
+        <div class="form-group my-3">
+            <label asp-for="CancelReason" class="control-label fw-bold mb-1"></label>
+            <input asp-for="CancelReason" class="form-control" />
+            <span asp-validation-for="CancelReason" class="text-danger fw-bold"></span>
+        </div>
         @*     <dl class="row">
         <dt class = "col-sm-2">
         @Html.DisplayNameFor(model => model.MocNumber)

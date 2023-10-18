@@ -73,6 +73,17 @@
                 <span asp-validation-for="Status" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
+                <label asp-for="Priority" class="control-label fw-bold"></label><span class="text-danger mx-2 fst-italic">(required)</span>
+                @*<input asp-for="Status" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Priority,
+                new List<SelectListItem>{
+                new SelectListItem {Value="Low", Text="Low"},
+                new SelectListItem {Value="Normal", Text="Normal", Selected=true},
+                new SelectListItem {Value="High", Text="High"}},                
+                new { @class="form-control form-select", @style="max-width:25%"})
+                <span asp-validation-for="Priority" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
                 <label asp-for="AssignedToUser" class="control-label fw-bold mb-1"></label><span class="text-danger mx-2 fst-italic">(required)</span>
                 @Html.DropDownListFor(model => model.AssignedToUser, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:25%;"})
                 <span asp-validation-for="AssignedToUser" class="text-danger fw-bold"></span>

@@ -32,7 +32,8 @@ namespace Management_of_Change.Models
         [Display(Name = "Status")]
         public string Change_Status { get; set; }
         [Display(Name = "Status")]
-        public string Change_Status_Description { get; set; }
+        public string Change_Status_Description { get; set; }        
+        public string? Priority { get; set; }
         [Display(Name = "Request Date")]
         [DataType(DataType.Date)]
         public DateTime Request_Date { get; set; }
@@ -59,6 +60,13 @@ namespace Management_of_Change.Models
         public DateTime? Closeout_Date { get; set; }
         [Display(Name = "Closeout Username")]
         public string? Closeout_Username { get; set; }
+        [DataType(DataType.Date)]
+        [Display(Name = "Cancel Date")]
+        public DateTime? Cancel_Date { get; set; }
+        [Display(Name = "Cancel Username")]
+        public string? Cancel_Username { get; set; }
+        [Display(Name = "Cancel Reason")]
+        public string? Cancel_Reason { get; set; }
         [Display(Name = "Raw Materials/Component Numbers Impacted")]
         public string? Raw_Material_Component_Numbers_Impacted {get; set;}
         public List<GeneralMocResponses>? GeneralMocResponses { get; set; }

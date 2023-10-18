@@ -20,18 +20,18 @@
         </div>
         <div class="col-2 text-start">
             @Html.DropDownList("taskStatusFilter",
-                new List<SelectListItem>{
-                    new SelectListItem {Value="Open", Text="Open"},
-                    new SelectListItem {Value="In-Progress", Text="In-Progress"},
-                    new SelectListItem {Value="On Hold", Text="On Hold"},
-                    new SelectListItem {Value="Complete", Text="Complete"},
-                    new SelectListItem {Value="Cancelled", Text="Cancelled"},
-                },
-                "All",
+            new List<SelectListItem>{
+            new SelectListItem {Value="Open", Text="Open"},
+            new SelectListItem {Value="In-Progress", Text="In-Progress"},
+            new SelectListItem {Value="On Hold", Text="On Hold"},
+            new SelectListItem {Value="Complete", Text="Complete"},
+            new SelectListItem {Value="Cancelled", Text="Cancelled"},
+            },
+            "All",
             new {@class = "form-control form-select", @id="taskStatusFilter" })
         </div>
-@*        <div class="col-1 text-end">
-            <input type="submit" value="Filter" class="btn btn-primary float-start" />
+        @*        <div class="col-1 text-end">
+        <input type="submit" value="Filter" class="btn btn-primary float-start" />
         </div>*@
     </div>
 </form>
@@ -82,25 +82,28 @@
                         @Html.DisplayFor(modelItem => item.MocNumber)
                     else
                         @Html.ActionLink(item.MocNumber,"Details","ChangeRequests",new {id=@item.ChangeRequestId, tab="Tasks"},new {@class=""})
-
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ImplementationType)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AssignedToUser)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.AssignedByUser)
-                    </td>
+                        @if (item.Priority == "High")
+                        {
+                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
+                        }
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedToUser)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedByUser)
+                </td>
 
-                    @if (DateTime.Now > item.DueDate && item.CompletionDate == null)
+                @if (DateTime.Now > item.DueDate && item.CompletionDate == null)
                 {
                     <td class="fw-bolder text-danger">
                         @Html.DisplayFor(modelItem => item.DueDate)
@@ -123,12 +126,12 @@
                     @if (ViewBag.IsAdmin || ViewBag.Username == item.AssignedByUser || ViewBag.Username == item.AssignedToUser)
                     {
                         @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Index"},new {@class="btn btn-primary"})
-                    }                    
+                    }
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
-@*                    @if (item.DeletedDate == null)
-                    {
-                        @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger"})
-                    }*@
+                    @*                    @if (item.DeletedDate == null)
+                {
+                @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger"})
+                }*@
                 </td>
             </tr>
         }

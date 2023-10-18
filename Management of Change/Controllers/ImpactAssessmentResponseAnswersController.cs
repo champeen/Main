@@ -226,6 +226,7 @@ namespace Management_of_Change.Controllers
                             MocNumber = changeRequest.MOC_Number,
                             ImplementationType = impactAssessmentResponseAnswer.PreOrPostImplementation,
                             Status = "Open",
+                            Priority = changeRequest.Priority,
                             AssignedToUser = impactAssessmentResponseAnswer.ActionOwner,
                             AssignedByUser = _username,
                             Title = impactAssessmentResponseAnswer.Title,
@@ -243,7 +244,7 @@ namespace Management_of_Change.Controllers
                         var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                         if (toPerson != null)
                         {
-                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null);
+                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
 
                             EmailHistory emailHistory = new EmailHistory
                             {

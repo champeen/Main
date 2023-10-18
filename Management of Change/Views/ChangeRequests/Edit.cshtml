@@ -51,6 +51,9 @@
             <input type="hidden" asp-for="Implementation_Username" />
             <input type="hidden" asp-for="Closeout_Date" />
             <input type="hidden" asp-for="Closeout_Username" />
+            <input type="hidden" asp-for="Cancel_Username" />
+            <input type="hidden" asp-for="Cancel_Date" />
+            <input type="hidden" asp-for="Cancel_Reason" />
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
             <input type="hidden" asp-for="ModifiedDate" />
@@ -61,6 +64,16 @@
     </div>
     <div class="row">
         <div class="col-6">
+            <div class="form-group my-3">
+                <label asp-for="Priority" class="control-label fw-bold"></label>
+                @*<input asp-for="Status" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Priority,
+                new List<SelectListItem>{
+                new SelectListItem {Value="Normal", Text="Normal", Selected=true},
+                new SelectListItem {Value="High", Text="High"}},
+                new { @class="form-control form-select"})
+                <span asp-validation-for="Priority" class="text-danger fw-bold"></span>
+            </div>
             <div class="form-group my-3">
                 <label asp-for="Change_Type" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
