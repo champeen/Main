@@ -300,7 +300,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             if (changeRequest.Estimated_Completion_Date == null)
-                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
+                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Valid Completion Date");
 
             if (changeRequest.Estimated_Completion_Date < DateTime.Today)
                 ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
@@ -421,7 +421,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             if (changeRequest.Estimated_Completion_Date == null)
-                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
+                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Valid Completion Date");
 
             if (changeRequest.Estimated_Completion_Date < DateTime.Today)
                 ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
@@ -543,7 +543,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             if (changeRequest.Estimated_Completion_Date == null)
-                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Completion Date");
+                ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Valid Completion Date");
 
             // Dont check completion date on edit because if it was orignally put in fine, keep the original date pristine, dont make them have to change it!
             //if (changeRequest.Estimated_Completion_Date < DateTime.Today)
@@ -581,7 +581,6 @@ namespace Management_of_Change.Controllers
             ViewBag.PTNs = getPtnNumbers();
             ViewBag.Users = getUserList();
             ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
-            ViewBag.Types = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -1186,7 +1185,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             if (task.DueDate == null)
-                ModelState.AddModelError("DueDate", "Must Include a Completion Date");
+                ModelState.AddModelError("DueDate", "Must Include a Valid Completion Date");
 
             if (task.DueDate < DateTime.Today)
                 ModelState.AddModelError("DueDate", "Date Cannot Be In The Past");

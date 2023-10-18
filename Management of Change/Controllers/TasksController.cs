@@ -107,7 +107,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             if (task.DueDate == null)
-                ModelState.AddModelError("DueDate", "Must Include a Completion Date");
+                ModelState.AddModelError("DueDate", "Must Include a Valid Due Date");
 
             if (task.DueDate < DateTime.Today)
                 ModelState.AddModelError("DueDate", "Date Cannot Be In The Past");

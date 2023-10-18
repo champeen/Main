@@ -32,7 +32,6 @@
             <div class="form-group">
                 <label asp-for="Change_Status" class="control-label fw-bold"></label>
                 <input asp-for="Change_Status_Description" class="form-control" readonly />
-                @*@Html.DropDownListFor(model => model.Change_Status, new SelectList(ViewBag.Status), new { @class="form-control form-select"})*@
                 <span asp-validation-for="Change_Status" class="text-danger fw-bold"></span>
             </div>
         </div>
