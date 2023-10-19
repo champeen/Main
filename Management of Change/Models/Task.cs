@@ -12,7 +12,7 @@ namespace Management_of_Change.Models
         [Display(Name = "MOC Number")]
         public string? MocNumber { get; set; }
         [Display(Name = "Implementation Type")]
-        public string ImplementationType { get; set; }
+        public string? ImplementationType { get; set; }
         public string Status { get; set; }
         public string? Priority { get; set; }
         [Display(Name = "Assigned To User")]

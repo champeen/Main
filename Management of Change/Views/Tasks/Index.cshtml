@@ -103,7 +103,19 @@
                     @Html.DisplayFor(modelItem => item.AssignedByUser)
                 </td>
 
-                @if (DateTime.Now > item.DueDate && item.CompletionDate == null)
+                @if (DateTime.Now > item.DueDate && item.Status == "Open")
+                {
+                    <td class="fw-bolder text-danger">
+                        @Html.DisplayFor(modelItem => item.DueDate)
+                    </td>
+                }
+                else if (DateTime.Now > item.DueDate && item.Status == "In-Progress")
+                {
+                    <td class="fw-bolder text-danger">
+                        @Html.DisplayFor(modelItem => item.DueDate)
+                    </td>
+                }
+                else if (DateTime.Now > item.DueDate && item.Status == "On Hold")
                 {
                     <td class="fw-bolder text-danger">
                         @Html.DisplayFor(modelItem => item.DueDate)

@@ -56,7 +56,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SentToDisplayName,SentToUsername,SentToEmail,Subject,Body,ChangeRequestId,ImpactAssessmentResponseId,ImplementationFinalApprovalResponseId,TaskId,Type,Status,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] EmailHistory emailHistory)
+        public async Task<IActionResult> Create([Bind("Id,Priority,SentToDisplayName,SentToUsername,SentToEmail,Subject,Body,ChangeRequestId,ImpactAssessmentResponseId,ImplementationFinalApprovalResponseId,TaskId,Type,Status,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] EmailHistory emailHistory)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SentToDisplayName,SentToUsername,SentToEmail,Subject,Body,ChangeRequestId,ImpactAssessmentResponseId,ImplementationFinalApprovalResponseId,TaskId,Type,Status,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] EmailHistory emailHistory)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Priority,SentToDisplayName,SentToUsername,SentToEmail,Subject,Body,ChangeRequestId,ImpactAssessmentResponseId,ImplementationFinalApprovalResponseId,TaskId,Type,Status,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] EmailHistory emailHistory)
         {
             if (id != emailHistory.Id)
             {

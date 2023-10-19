@@ -7,6 +7,7 @@ namespace Management_of_Change.Models
     {
         [Key]
         public int Id { get; set; }
+        public string? Priority { get; set; }
         [DisplayName("Sent To Name")]
         public string? SentToDisplayName { get; set; }
         [DisplayName("Sent To Username")]

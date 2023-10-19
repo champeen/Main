@@ -39,6 +39,9 @@
                                     <th class="text-nowrap">
                                         Title/Change Description
                                     </th>
+                                    <th class="text-nowrap">
+                                        Estimated Completion Date
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,6 +60,18 @@
 
                                             @Html.DisplayFor(modelItem => item.Title_Change_Description)
                                         </td>
+                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -84,6 +99,9 @@
                                     <th class="text-nowrap">
                                         Title/Change Description
                                     </th>
+                                    <th class="text-nowrap">
+                                        Estimated Completion Date
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -101,6 +119,18 @@
                                             }
                                             @Html.DisplayFor(modelItem => item.Title_Change_Description)
                                         </td>
+                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -127,6 +157,9 @@
                                     <th class="text-nowrap">
                                         Title/Change Description
                                     </th>
+                                    <th class="text-nowrap">
+                                        Estimated Completion Date
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -144,6 +177,18 @@
                                             }
                                             @Html.DisplayFor(modelItem => item.Title_Change_Description)
                                         </td>
+                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -171,6 +216,9 @@
                                     <th class="text-nowrap">
                                         Title/Short Description
                                     </th>
+                                    <th class="text-nowrap">
+                                        Due Date
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -188,6 +236,30 @@
                                             }
                                             @Html.DisplayFor(modelItem => item.Title)
                                         </td>
+                                        @if (DateTime.Now > item.DueDate && item.Status == "Open")
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.DueDate)
+                                            </td>
+                                        }
+                                        else if (DateTime.Now > item.DueDate && item.Status == "In-Progress")
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.DueDate)
+                                            </td>
+                                        }
+                                        else if (DateTime.Now > item.DueDate && item.Status == "On Hold")
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.DueDate)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.DueDate)
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             </tbody>

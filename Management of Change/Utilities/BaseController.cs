@@ -208,6 +208,30 @@ namespace Management_of_Change.Utilities
             return ptns;
         }
 
-
+        public EmailHistory AddEmailHistory(string? priority, string? subject, string? body, string? sentToDisplayName, string? sentToUsername, string? sentToEmail, int? changeRequestId, int? impactAssessmentResponseId, int? implementationFinalApprovalResponseId, int? taskId, string? type, string? status, DateTime createdDate, string? username)
+        {
+            EmailHistory emailHistory = new EmailHistory
+            {
+                Priority = priority,
+                Subject = subject,
+                Body = body,
+                SentToDisplayName = sentToDisplayName,
+                SentToUsername = sentToUsername,
+                SentToEmail = sentToEmail,
+                ChangeRequestId = changeRequestId,
+                ImpactAssessmentResponseId = impactAssessmentResponseId,
+                ImplementationFinalApprovalResponseId = implementationFinalApprovalResponseId,
+                TaskId = taskId,
+                Type = type,
+                Status = status,
+                CreatedDate = createdDate,
+                CreatedUser = username
+            };
+            _context.Add(emailHistory);
+            _context.SaveChanges();
+            return emailHistory;
+            //_context.Add(emailHistory);
+            //await _context.SaveChangesAsync();
+        }
     }
 }

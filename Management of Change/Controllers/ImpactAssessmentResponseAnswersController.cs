@@ -245,23 +245,25 @@ namespace Management_of_Change.Controllers
                         if (toPerson != null)
                         {
                             Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
+                            AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, impactAssessmentResponse.ChangeRequestId, impactAssessmentResponseAnswer.ImpactAssessmentResponseId, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
 
-                            EmailHistory emailHistory = new EmailHistory
-                            {
-                                Subject = subject,
-                                Body = body,
-                                SentToDisplayName = toPerson.displayname,
-                                SentToUsername = toPerson.onpremisessamaccountname,
-                                SentToEmail = toPerson.mail,
-                                ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
-                                ImpactAssessmentResponseId = impactAssessmentResponseAnswer.ImpactAssessmentResponseId,
-                                Type = "Task",
-                                Status = task.Status,
-                                CreatedDate = DateTime.UtcNow,
-                                CreatedUser = _username
-                            };
-                            _context.Add(emailHistory);
-                            await _context.SaveChangesAsync();
+                            //EmailHistory emailHistory = new EmailHistory
+                            //{
+                            //    Priority = task.Priority,
+                            //    Subject = subject,
+                            //    Body = body,
+                            //    SentToDisplayName = toPerson.displayname,
+                            //    SentToUsername = toPerson.onpremisessamaccountname,
+                            //    SentToEmail = toPerson.mail,
+                            //    ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
+                            //    ImpactAssessmentResponseId = impactAssessmentResponseAnswer.ImpactAssessmentResponseId,
+                            //    Type = "Task",
+                            //    Status = task.Status,
+                            //    CreatedDate = DateTime.UtcNow,
+                            //    CreatedUser = _username
+                            //};
+                            //_context.Add(emailHistory);
+                            //await _context.SaveChangesAsync();
                         }
                     }                     
                 }

@@ -115,6 +115,9 @@ namespace Management_of_Change.Controllers
             if (task.Status == "On Hold" && String.IsNullOrWhiteSpace(task.OnHoldReason))
                 ModelState.AddModelError("OnHoldReason", "If Task Status is 'On Hold', Reason is required.");
 
+            if (task.ChangeRequestId != null && task.ImplementationType == null)
+                ModelState.AddModelError("ImplementationType", "If task is part of a Change Request, Implementation Type is required.");
+
             if (task.ChangeRequestId != null)
             {
                 // cannot create a Task for a Change Request after it is at a certain status....
@@ -146,23 +149,25 @@ namespace Management_of_Change.Controllers
                 if (toPerson != null)
                 {
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
+                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
 
-                    EmailHistory emailHistory = new EmailHistory
-                    {
-                        Subject = subject,
-                        Body = body,
-                        SentToDisplayName = toPerson.displayname,
-                        SentToUsername = toPerson.onpremisessamaccountname,
-                        SentToEmail = toPerson.mail,
-                        ChangeRequestId = task.ChangeRequestId,
-                        TaskId = task.Id,
-                        Type = "Task",
-                        Status = task.Status,
-                        CreatedDate = DateTime.UtcNow,
-                        CreatedUser = _username
-                    };
-                    _context.Add(emailHistory);
-                    await _context.SaveChangesAsync();
+                    //EmailHistory emailHistory = new EmailHistory
+                    //{
+                    //    Priority = task.Priority,
+                    //    Subject = subject,
+                    //    Body = body,
+                    //    SentToDisplayName = toPerson.displayname,
+                    //    SentToUsername = toPerson.onpremisessamaccountname,
+                    //    SentToEmail = toPerson.mail,
+                    //    ChangeRequestId = task.ChangeRequestId,
+                    //    TaskId = task.Id,
+                    //    Type = "Task",
+                    //    Status = task.Status,
+                    //    CreatedDate = DateTime.UtcNow,
+                    //    CreatedUser = _username
+                    //};
+                    //_context.Add(emailHistory);
+                    //await _context.SaveChangesAsync();
                 }                
 
                 if (source == "Home")
@@ -244,6 +249,9 @@ namespace Management_of_Change.Controllers
             if (task.Status == "Complete" && String.IsNullOrWhiteSpace(task.CompletionNotes))
                 ModelState.AddModelError("CompletionNotes", "If Task Status is 'Complete', Completion Notes is required.");
 
+            if (task.ChangeRequestId != null && task.ImplementationType == null)
+                ModelState.AddModelError("ImplementationType", "If task is part of a Change Request, Implementation Type is required.");
+
             if (ModelState.IsValid)
             {
                 var originalTaskStatus = await _context.Task.Where(m => m.Id == task.Id).Select(m => m.Status).FirstOrDefaultAsync();
@@ -267,22 +275,24 @@ namespace Management_of_Change.Controllers
                         if (toPerson != null)
                         {
                             Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null, task.Priority);
+                            AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
 
-                            EmailHistory emailHistory = new EmailHistory
-                            {
-                                Subject = subject,
-                                Body = body,
-                                SentToDisplayName = toPerson.displayname,
-                                SentToUsername = toPerson.onpremisessamaccountname,
-                                SentToEmail = toPerson.mail,                                
-                                ChangeRequestId = task.ChangeRequestId,
-                                TaskId = task.Id,
-                                Type = "Task",
-                                Status = task.Status,
-                                CreatedDate = DateTime.UtcNow,
-                                CreatedUser = _username
-                            };
-                            _context.Add(emailHistory);
+                            //EmailHistory emailHistory = new EmailHistory
+                            //{
+                            //    Priority = task.Priority,
+                            //    Subject = subject,
+                            //    Body = body,
+                            //    SentToDisplayName = toPerson.displayname,
+                            //    SentToUsername = toPerson.onpremisessamaccountname,
+                            //    SentToEmail = toPerson.mail,                                
+                            //    ChangeRequestId = task.ChangeRequestId,
+                            //    TaskId = task.Id,
+                            //    Type = "Task",
+                            //    Status = task.Status,
+                            //    CreatedDate = DateTime.UtcNow,
+                            //    CreatedUser = _username
+                            //};
+                            //_context.Add(emailHistory);
                         }
                     }
                 }
@@ -382,25 +392,25 @@ namespace Management_of_Change.Controllers
             if (toPerson != null)
             {
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-
-                EmailHistory emailHistory = new EmailHistory
-                {
-                    Subject = subject,
-                    Body = body,
-                    SentToDisplayName = toPerson.displayname,
-                    SentToUsername = toPerson.onpremisessamaccountname,
-                    SentToEmail = toPerson.mail,
-                    ChangeRequestId = task.ChangeRequestId,
-                    TaskId = task.Id,
-                    Type = "Task",
-                    Status = task.Status,
-                    CreatedDate = DateTime.UtcNow,
-                    CreatedUser = _username
-                };
-                _context.Add(emailHistory);
+                var emailHistory = AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
+                //EmailHistory emailHistory = new EmailHistory
+                //{
+                //    Priority = task.Priority,
+                //    Subject = subject,
+                //    Body = body,
+                //    SentToDisplayName = toPerson.displayname,
+                //    SentToUsername = toPerson.onpremisessamaccountname,
+                //    SentToEmail = toPerson.mail,
+                //    ChangeRequestId = task.ChangeRequestId,
+                //    TaskId = task.Id,
+                //    Type = "Task",
+                //    Status = task.Status,
+                //    CreatedDate = DateTime.UtcNow,
+                //    CreatedUser = _username
+                //};
+                //_context.Add(emailHistory);
             }
-
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { id = id });
         }
     }
