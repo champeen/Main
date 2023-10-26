@@ -1,12 +1,8 @@
 ﻿@*@model Management_of_Change.Models.ChangeRequest*@
 @model Management_of_Change.ViewModels.ChangeRequestViewModel
-
 @{
     ViewData["Title"] = "Details";
 }
-
-
-
 <div class="row">
     <div class="col-4">
         <h1 style="display:inline">
@@ -93,6 +89,7 @@
                             @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
                         }
                         @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                        @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Detail"}, new {@class="btn btn-success"})
                     </div>
                     <div class="col-6 text-end">
                         @if (@Model.ButtonSubmitForReview == true)
@@ -321,6 +318,7 @@
                         @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
                     }
                     @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                    @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Detail"}, new {@class="btn btn-success"})
                 </div>
                 <div class="col-6 text-end">
                     @if (@Model.ButtonSubmitForReview == true)
@@ -348,6 +346,7 @@
                                 <input type="submit" value="Save Changes" class="btn btn-primary" />
                             }
                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
+                            @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
                         </div>
                     </div>
                     <div class="col-6 text-end">
@@ -425,6 +424,7 @@
                                 <input type="submit" value="Save Changes" class="btn btn-primary" />
                             }
                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                            @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
                         </div>
                     </div>
                     <div class="col-6 text-end">

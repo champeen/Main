@@ -69,5 +69,7 @@ namespace Management_of_Change.Data
             modelBuilder.Entity<__mst_employee>().Metadata.SetIsTableExcludedFromMigrations(true);
             modelBuilder.Entity<PTN>().Metadata.SetIsTableExcludedFromMigrations(true);
         }
+
+        public DbSet<Management_of_Change.Models.AdditionalImpactAssessmentReviewers>? AdditionalImpactAssessmentReviewers { get; set; }
     }
 }
