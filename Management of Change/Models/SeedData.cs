@@ -869,7 +869,6 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         },
-                        //  Equipment  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         new ReviewType
                         {
                             Type = "Equipment",
@@ -1274,7 +1273,6 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         },
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         new ReviewType
                         {
                             Type = "Maintenance & Reliability",
@@ -1679,12 +1677,6 @@ namespace Management_of_Change.Models
                             DeletedUser = null,
                             DeletedDate = null
                         },
-
-                        new ReviewType
-                        {
-                            Type = "Maintenance & Reliability",
-
-                        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         new ReviewType
                         {
                             Type = "Health & IH",
@@ -1943,7 +1935,6 @@ namespace Management_of_Change.Models
                     );
                     context.SaveChanges();
                 }
-
                 // Look for any FinalReviewTypes.....
                 if (!context.FinalReviewType.Any())
                 {
