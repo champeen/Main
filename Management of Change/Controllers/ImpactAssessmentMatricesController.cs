@@ -35,13 +35,35 @@ namespace Management_of_Change.Controllers
 
             foreach (var record in impactAssessmentMatrix)
             {
-                ReviewType reviewType = await _context.ReviewType.Where(m => m.Type == record.ReviewType).FirstOrDefaultAsync();
-                if (reviewType != null)
+                List<ReviewType> reviewTypes = await _context.ReviewType.Where(m => m.Type == record.ReviewType).OrderByDescending(m => m.ChangeArea).ToListAsync();
+                foreach (var rec in reviewTypes)
                 {
-                    record.ReviewerEmail = reviewType.Email;
-                    record.ReviewerName = reviewType.Reviewer;
-                    record.ReviewerUsername = reviewType.Username;
-                }                
+                    if (string.IsNullOrEmpty(record.ReviewerName))
+                    {
+                        if (rec.Reviewer != null)
+                            record.ReviewerName = rec.Reviewer;
+                        if (rec.Username != null)
+                            record.ReviewerUsername = rec.Username;
+                        if (rec.Email != null)
+                            record.ReviewerEmail = rec.Email;
+                    }                        
+                    else
+                    {
+                        if (rec.Reviewer != null)
+                            record.ReviewerName = record.ReviewerName + ", " + rec.Reviewer;
+                        if (rec.Username != null)
+                            record.ReviewerUsername = record.ReviewerUsername + ", " + rec.Username;
+                        if (rec.Email != null)
+                            record.ReviewerEmail = record.ReviewerUsername + ", " + rec.Email;
+                    }                        
+                }
+                //ReviewType reviewType = await _context.ReviewType.Where(m => m.Type == record.ReviewType).FirstOrDefaultAsync();
+                //if (reviewType != null)
+                //{
+                //    record.ReviewerEmail = reviewType.Email;
+                //    record.ReviewerName = reviewType.Reviewer;
+                //    record.ReviewerUsername = reviewType.Username;
+                //}                
             }
             return View(impactAssessmentMatrix);
         }
@@ -59,12 +81,27 @@ namespace Management_of_Change.Controllers
 
             foreach (var record in impactAssessmentMatrix)
             {
-                ReviewType reviewType = await _context.ReviewType.Where(m => m.Type == record.ReviewType).FirstOrDefaultAsync();
-                if (reviewType != null)
+                List<ReviewType> reviewTypes = await _context.ReviewType.Where(m => m.Type == record.ReviewType).OrderByDescending(m => m.ChangeArea).ToListAsync();
+                foreach (var rec in reviewTypes)
                 {
-                    record.ReviewerEmail = reviewType.Email;
-                    record.ReviewerName = reviewType.Reviewer;
-                    record.ReviewerUsername = reviewType.Username;
+                    if (string.IsNullOrEmpty(record.ReviewerName))
+                    {
+                        if (rec.Reviewer != null)
+                            record.ReviewerName = rec.Reviewer;
+                        if (rec.Username != null)
+                            record.ReviewerUsername = rec.Username;
+                        if (rec.Email != null)
+                            record.ReviewerEmail = rec.Email;
+                    }
+                    else
+                    {
+                        if (rec.Reviewer != null)
+                            record.ReviewerName = record.ReviewerName + ", " + rec.Reviewer;
+                        if (rec.Username != null)
+                            record.ReviewerUsername = record.ReviewerUsername + ", " + rec.Username;
+                        if (rec.Email != null)
+                            record.ReviewerEmail = record.ReviewerUsername + ", " + rec.Email;
+                    }
                 }
             }
             return View(impactAssessmentMatrix);

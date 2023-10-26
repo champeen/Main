@@ -53,7 +53,7 @@ try
     app.MapControllerRoute(
         name: "default",
         //pattern: "{controller=ChangeRequests}/{action=Index}/{id?}");
-        pattern: "{controller=Home}/{action=Index}/{id?}");
+        pattern: "{controller=Home}/{action=Index}/{id?}/{rec?}");
 
     app.Run();
 }

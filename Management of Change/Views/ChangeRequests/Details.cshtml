@@ -5,6 +5,8 @@
     ViewData["Title"] = "Details";
 }
 
+
+
 <div class="row">
     <div class="col-4">
         <h1 style="display:inline">
@@ -473,9 +475,12 @@
                 <tbody>
                     @if (Model.ChangeRequest.ImpactAssessmentResponses != null)
                     {
+                        int i = 0;
                         @foreach (var item in Model.ChangeRequest.ImpactAssessmentResponses)
                         {
-                            <tr>
+                            i = i + 1;
+                            string recId = "record" + i.ToString();
+                            <tr id="@recId" >
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ReviewType)
                                 </td>
@@ -502,7 +507,7 @@
                                     @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
-                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
+                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", rec=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
                                     }
                                 </td>
                             </tr>
@@ -512,6 +517,7 @@
             </table>
             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         </div>
+
         @******************************************************************************************************************@
         @*  FINAL APPROVALS TAB  ******************************************************************************************@
         @******************************************************************************************************************@
@@ -813,3 +819,11 @@
 <div class="text-nowrap my-5">
     @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@
 </div>
+
+<script>
+    $(document).ready(function () {
+        var anchor = document.getElementById('@Model.IArecord');
+        anchor.scrollIntoView(true);
+    });
+</script>
+

@@ -134,14 +134,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
 <div class="text-nowrap">
     <h4 class="mt-5">Impact Assessment Response Answers</h4>
     <div class="mt-4">
@@ -188,9 +180,12 @@
         </tr>
     </thead>
     <tbody>
+        @{int i = 0;}
         @foreach (var item in Model.ImpactAssessmentResponse.ImpactAssessmentResponseAnswers)
         {
-            <tr>
+            i = i + 1;
+            string recId = "record" + i.ToString();
+            <tr id="@recId">
                 @*<td>
             @Html.DisplayFor(modelItem => item.ImpactAssessmentResponseId)
             </td>
@@ -228,7 +223,7 @@
                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ImpactAssessmentResponse.Username) && Model.ChangeRequest.Change_Status == "ImpactAssessmentReview" && Model.ImpactAssessmentResponse.ReviewCompleted == false)
                     {
                         @Html.ActionLink("Edit","Edit", "ImpactAssessmentResponseAnswers", new {id=@item.Id, tab=""}, new {@class="btn btn-primary"})
-                        @Html.ActionLink("No Action Needed","MarkNoAction", "ImpactAssessmentResponses", new {id=@item.Id, tab=""}, new {@class="btn btn-primary ms-2"})
+                        @Html.ActionLink("No Action Needed","MarkNoAction", "ImpactAssessmentResponses", new {id=@item.Id, tab="", rec=recId}, new {@class="btn btn-primary ms-2"})
                     }
                     else
                     {
@@ -245,4 +240,9 @@
 </table>
 
 @Html.ActionLink("Back to Change Request","Details", "ChangeRequests", new {id=@Model.ImpactAssessmentResponse?.ChangeRequestId, tab="ImpactAssessments"}, new {@class="btn btn-secondary"})
-
+<script>
+    $(document).ready(function () {
+        var anchor = document.getElementById('@Model.IARrecord');
+        anchor.scrollIntoView(true);
+    });
+</script>

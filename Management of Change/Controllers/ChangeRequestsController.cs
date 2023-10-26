@@ -75,7 +75,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string rec = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -240,9 +240,12 @@ namespace Management_of_Change.Controllers
             }
             changeRequestViewModel.Attachments = attachments.OrderBy(m => m.Name).ToList();
 
+            //changeRequestViewModel.rec = "." + rec;
+            changeRequestViewModel.IArecord = rec;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
+            //return View("Details" + (string.IsNullOrEmpty(rec) ? "" : "#" + rec), changeRequestViewModel);
             return View(changeRequestViewModel);
         }
 
@@ -849,7 +852,7 @@ namespace Management_of_Change.Controllers
         }
 
         // This closes out 'ImpactAssessments' and moves to 'FinalApprovals' stage
-        public async Task<IActionResult> MarkImpactAssessmentComplete(int id, string tab = "ImpactAssessments")
+        public async Task<IActionResult> MarkImpactAssessmentComplete(int id, string tab = "ImpactAssessments", string rec = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -922,7 +925,7 @@ namespace Management_of_Change.Controllers
                     //await _context.SaveChangesAsync();
                 }
             }
-            return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "ImpactAssessments" });
+            return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "ImpactAssessments", rec = rec });
         }
 
         // This closes out 'FinalApprovals' and moves to 'Implementation' phase

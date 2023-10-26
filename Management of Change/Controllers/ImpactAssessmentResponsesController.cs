@@ -37,7 +37,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ImpactAssessmentResponses/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? rec = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -71,6 +71,8 @@ namespace Management_of_Change.Controllers
                 Models.Task task = await _context.Task.FirstOrDefaultAsync(m => m.ImpactAssessmentResponseAnswerId == record.Id);
                 record.Task = task;
             }
+
+            impactAssessmentResponseVM.IARrecord = rec;
 
             return View(impactAssessmentResponseVM);
         }
@@ -254,7 +256,7 @@ namespace Management_of_Change.Controllers
             return (_context.ImpactAssessmentResponse?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> MarkNoAction(int id)
+        public async Task<IActionResult> MarkNoAction(int id, string? rec = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -301,7 +303,7 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToAction("Details", new { Id = impactAssessmentResponseAnswer.ImpactAssessmentResponseId });
+            return RedirectToAction("Details", new { Id = impactAssessmentResponseAnswer.ImpactAssessmentResponseId, rec=rec });
         }
     }
 }

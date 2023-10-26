@@ -19,6 +19,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ReviewType)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReviewerName)
+            </th>
             @* <th></th> *@
         </tr>
     </thead>
@@ -31,6 +34,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReviewType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewerName)
                 </td>
 @*                 <td class="text-nowrap">
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
