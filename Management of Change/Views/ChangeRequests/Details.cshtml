@@ -87,9 +87,10 @@
                         @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                         {
                             @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                            @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success ms-1"})
                         }
                         @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
-                        @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Detail"}, new {@class="btn btn-success"})
+
                     </div>
                     <div class="col-6 text-end">
                         @if (@Model.ButtonSubmitForReview == true)
@@ -316,9 +317,9 @@
                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                     {
                         @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
+                        @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success ms-1"})
                     }
                     @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
-                    @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Detail"}, new {@class="btn btn-success"})
                 </div>
                 <div class="col-6 text-end">
                     @if (@Model.ButtonSubmitForReview == true)
@@ -344,9 +345,9 @@
                             @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                             {
                                 <input type="submit" value="Save Changes" class="btn btn-primary" />
+                                @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
                             }
                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
-                            @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
                         </div>
                     </div>
                     <div class="col-6 text-end">
@@ -422,9 +423,9 @@
                             @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                             {
                                 <input type="submit" value="Save Changes" class="btn btn-primary" />
+                                @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
                             }
                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
-                            @Html.ActionLink("Additional Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
                         </div>
                     </div>
                     <div class="col-6 text-end">

@@ -3,71 +3,82 @@
 @{
     ViewData["Title"] = "Create";
 }
-
-<h1>Create</h1>
-
-<h4>AdditionalImpactAssessmentReviewers</h4>
+<h1>Additional ImpactAssessment Reviewers</h1>
+<h4 class="mt-5">Create</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<form asp-action="Create" asp-route-changeRequestId="@Model.ChangeRequestId" asp-route-tab="@ViewBag.Tab">
+    <div class="row my-4">
+        <div class="col-md-4">
+            <input type="hidden" asp-for="ChangeRequestId" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ChangeRequestId" class="control-label"></label>
-                <input asp-for="ChangeRequestId" class="form-control" />
-                <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
+            @*             <div class="form-group">
+            <label asp-for="ChangeRequestId" class="control-label"></label>
+            <input asp-for="ChangeRequestId" class="form-control" />
+            <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <span class="control-label fw-bold mb-1">Reviewer</span>
+                @Html.DropDownListFor(model => model.Reviewer, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="Reviewer" class="text-danger"></span>
             </div>
-            <div class="form-group">
+@*             <div class="form-group">
                 <label asp-for="Reviewer" class="control-label"></label>
                 <input asp-for="Reviewer" class="form-control" />
                 <span asp-validation-for="Reviewer" class="text-danger"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="ReviewType" class="control-label fw-bold mb-1"></label>
+                @*<input asp-for="ReviewType" class="form-control" />*@
+                @Html.DropDownListFor(model => model.ReviewType, new SelectList(ViewBag.ReviewTypes), new { @class="form-control form-select"})
+                <span asp-validation-for="ReviewType" class="text-danger"></span>
             </div>
-            <div class="form-group">
+@*             <div class="form-group my-3">
                 <label asp-for="ReviewType" class="control-label"></label>
                 <input asp-for="ReviewType" class="form-control" />
                 <span asp-validation-for="ReviewType" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="CreatedUser" class="control-label"></label>
+            <input asp-for="CreatedUser" class="form-control" />
+            <span asp-validation-for="CreatedUser" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedUser" class="control-label"></label>
-                <input asp-for="CreatedUser" class="form-control" />
-                <span asp-validation-for="CreatedUser" class="text-danger"></span>
+            <label asp-for="CreatedDate" class="control-label"></label>
+            <input asp-for="CreatedDate" class="form-control" />
+            <span asp-validation-for="CreatedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            <label asp-for="ModifiedUser" class="control-label"></label>
+            <input asp-for="ModifiedUser" class="form-control" />
+            <span asp-validation-for="ModifiedUser" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ModifiedUser" class="control-label"></label>
-                <input asp-for="ModifiedUser" class="form-control" />
-                <span asp-validation-for="ModifiedUser" class="text-danger"></span>
+            <label asp-for="ModifiedDate" class="control-label"></label>
+            <input asp-for="ModifiedDate" class="form-control" />
+            <span asp-validation-for="ModifiedDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+            <label asp-for="DeletedUser" class="control-label"></label>
+            <input asp-for="DeletedUser" class="form-control" />
+            <span asp-validation-for="DeletedUser" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DeletedUser" class="control-label"></label>
-                <input asp-for="DeletedUser" class="form-control" />
-                <span asp-validation-for="DeletedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedDate" class="control-label"></label>
-                <input asp-for="DeletedDate" class="form-control" />
-                <span asp-validation-for="DeletedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <label asp-for="DeletedDate" class="control-label"></label>
+            <input asp-for="DeletedDate" class="form-control" />
+            <span asp-validation-for="DeletedDate" class="text-danger"></span>
+            </div> *@
+            <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                @Html.ActionLink("Back to List","Index", new {changeRequestId=Model.ChangeRequestId,tab=ViewBag.Tab}, new {@class="btn btn-secondary ms-2"})
             </div>
-        </form>
+
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+</form>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
