@@ -37,14 +37,90 @@ namespace Management_of_Change.Controllers
             vm.ChangeRequestId = changeRequestId;
             vm.AdditionalImpactAssessmentReviewers = await _context.AdditionalImpactAssessmentReviewers
                 .Where(m => m.ChangeRequestId == changeRequestId)
+                .OrderBy(m => m.ReviewType)
+                .ThenBy(m => m.Reviewer)
                 .ToListAsync();
 
-            // get list of available equipment reviewers...
+            // Get ChangeRequest
+            ChangeRequest changeRequest = await _context.ChangeRequest.FindAsync(changeRequestId);
+            if (changeRequest == null)
+                return RedirectToAction("Details", "ChangeRequests", new { id = changeRequestId, tab = tab });
 
+            // See if ChangeRequestType requires 'Equipment' ReviewType Reviewers...
+            List<ImpactAssessmentMatrix> equipmentReviewTypes = await _context.ImpactAssessmentMatrix
+                .Where(m => m.ChangeType == changeRequest.Change_Type && m.ReviewType == "Equipment")
+                .OrderBy(m => m.ReviewerUsername)
+                .ToListAsync();
+            vm.EquipmentReviewerRequired = false;
+            vm.EquipmentReviewers = new List<AdditionalImpactAssessmentReviewers>();
+            if (equipmentReviewTypes.Any())
+            {
+                vm.EquipmentReviewerRequired = true;
+                // get available to select from....
+                List<ReviewType> equipmentReviewers = new List<ReviewType>();
+                if (changeRequest.Area_of_Change == "Other")
+                {
+                    equipmentReviewers = await _context.ReviewType.Where(m => m.Type == "Equipment").ToListAsync();
+                }
+                else
+                {
+                    equipmentReviewers = await _context.ReviewType.Where(m => m.Type == "Equipment" && m.ChangeArea == changeRequest.Area_of_Change).ToListAsync();
+                }
+                foreach (var record in equipmentReviewers)
+                {
+                    var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Equipment" && m.Reviewer == record.Username).ToListAsync();
+                    if (!found.Any())
+                    {
+                        AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
+                        {
+                            ChangeRequestId = changeRequestId,
+                            ReviewType = record.Type,
+                            Reviewer = record.Username,
+                            ReviewerEmail = record.Email,
+                            ReviewerName = record.Reviewer
+                        };
+                        vm.EquipmentReviewers.Add(rec);
+                    }
+                }
+            }
 
-            // get list of available maintenance reviewers...
-
-
+            // See if ChangeRequestType requires 'Maintenance & Reliability' ReviewType Reviewers...
+            List<ImpactAssessmentMatrix> maintenanceReviewTypes = await _context.ImpactAssessmentMatrix
+                .Where(m => m.ChangeType == changeRequest.Change_Type && m.ReviewType == "Maintenance & Reliability")
+                .OrderBy(m => m.ReviewerUsername)
+                .ToListAsync();
+            vm.MaintenanceReviewerRequired = false;
+            vm.MaintenanceReviewers = new List<AdditionalImpactAssessmentReviewers>();
+            if (maintenanceReviewTypes.Any())
+            {
+                vm.MaintenanceReviewerRequired = true;
+                // get available to select from....
+                List<ReviewType> maintenanceReviewers = new List<ReviewType>();
+                if (changeRequest.Area_of_Change == "Other")
+                {
+                    maintenanceReviewers = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability").ToListAsync();
+                }
+                else
+                {
+                    maintenanceReviewers = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability" && m.ChangeArea == changeRequest.Area_of_Change).ToListAsync();
+                }
+                foreach (var record in maintenanceReviewers)
+                {
+                    var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Maintenance & Reliability" && m.Reviewer == record.Username).ToListAsync();
+                    if (!found.Any())
+                    {
+                        AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
+                        {
+                            ChangeRequestId = changeRequestId,
+                            ReviewType = record.Type,
+                            Reviewer = record.Username,
+                            ReviewerEmail = record.Email,
+                            ReviewerName = record.Reviewer
+                        };
+                        vm.MaintenanceReviewers.Add(rec);
+                    }
+                }
+            }
             return View(vm);
         }
 
@@ -69,7 +145,6 @@ namespace Management_of_Change.Controllers
 
             if (id == null || _context.AdditionalImpactAssessmentReviewers == null)
                 return NotFound();
-
 
             var additionalImpactAssessmentReviewers = await _context.AdditionalImpactAssessmentReviewers
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -107,7 +182,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,Reviewer,ReviewType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] AdditionalImpactAssessmentReviewers additionalImpactAssessmentReviewers, int changeRequestId, string tab)
+        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,Reviewer,ReviewerName,ReviewerEmail,ReviewType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] AdditionalImpactAssessmentReviewers additionalImpactAssessmentReviewers, int changeRequestId, string tab)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -120,15 +195,23 @@ namespace Management_of_Change.Controllers
                 .ToListAsync();
             if (checkDupes.Count > 0)
             {
-                ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).ToListAsync();
-                ViewBag.Users = getUserList();
-                ViewBag.IsAdmin = _isAdmin;
-                ViewBag.Username = _username;
-                ViewBag.Tab = tab;
-                additionalImpactAssessmentReviewers.ChangeRequestId = changeRequestId;
                 ModelState.AddModelError("Reviewer", "Reviewer and Review Type combination already exist.");
                 ModelState.AddModelError("ReviewType", "Reviewer and Review Type combination already exist.");
-                return View(additionalImpactAssessmentReviewers);
+            }
+
+            // Get Reviewers Name and Email.....
+            __mst_employee reviewer = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == additionalImpactAssessmentReviewers.Reviewer).FirstOrDefaultAsync();
+            if (reviewer == null)
+                ModelState.AddModelError("Reviewer", "Reviewer not found.");
+            else
+            {
+                if (reviewer.mail == null)
+                    ModelState.AddModelError("Reviewer", "Reviewer does not have a valid email address in Active Directory.");
+                else
+                {
+                    additionalImpactAssessmentReviewers.ReviewerEmail = reviewer.mail;
+                    additionalImpactAssessmentReviewers.ReviewerName = reviewer.displayname;
+                }
             }
 
             if (ModelState.IsValid)
@@ -174,7 +257,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,Reviewer,ReviewType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] AdditionalImpactAssessmentReviewers additionalImpactAssessmentReviewers, int changeRequestId, string tab)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,Reviewer,ReviewerName,ReviewerEmail,ReviewType,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] AdditionalImpactAssessmentReviewers additionalImpactAssessmentReviewers, int changeRequestId, string tab)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -193,13 +276,23 @@ namespace Management_of_Change.Controllers
                 .ToListAsync();
             if (checkDupes.Count > 0)
             {
-                ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).ToListAsync();
-                ViewBag.Users = getUserList();
-                ViewBag.Tab = tab;
-                additionalImpactAssessmentReviewers.ChangeRequestId = changeRequestId;
                 ModelState.AddModelError("Reviewer", "Reviewer and Review Type combination already exist.");
                 ModelState.AddModelError("ReviewType", "Reviewer and Review Type combination already exist.");
-                return View(additionalImpactAssessmentReviewers);
+            }
+
+            // Get Reviewers Name and Email.....
+            __mst_employee reviewer = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == additionalImpactAssessmentReviewers.Reviewer).FirstOrDefaultAsync();
+            if (reviewer == null)
+                ModelState.AddModelError("Reviewer", "Reviewer not found.");
+            else
+            {
+                if (reviewer.mail == null)
+                    ModelState.AddModelError("Reviewer", "Reviewer does not have a valid email address in Active Directory.");
+                else
+                {
+                    additionalImpactAssessmentReviewers.ReviewerEmail = reviewer.mail;
+                    additionalImpactAssessmentReviewers.ReviewerName = reviewer.displayname;
+                }
             }
 
             if (ModelState.IsValid)
@@ -277,6 +370,25 @@ namespace Management_of_Change.Controllers
         private bool AdditionalImpactAssessmentReviewersExists(int id)
         {
             return (_context.AdditionalImpactAssessmentReviewers?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> Add(int changeRequestId, string reviewType, string reviewer, string tab)
+        {
+            AdditionalImpactAssessmentReviewers additionalImpactAssessmentReviewers = new AdditionalImpactAssessmentReviewers();
+
+            // Get Reviewers Name and Email.....
+            __mst_employee reviewerRec = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == reviewer).FirstOrDefaultAsync();
+            additionalImpactAssessmentReviewers.Reviewer = reviewer;
+            additionalImpactAssessmentReviewers.ReviewerEmail = reviewerRec.mail;
+            additionalImpactAssessmentReviewers.ReviewerName = reviewerRec.displayname;
+            additionalImpactAssessmentReviewers.ChangeRequestId = changeRequestId;
+            additionalImpactAssessmentReviewers.ReviewType = reviewType;
+            additionalImpactAssessmentReviewers.CreatedUser = _username;
+            additionalImpactAssessmentReviewers.CreatedDate = DateTime.UtcNow;
+
+            _context.Add(additionalImpactAssessmentReviewers);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index), new { changeRequestId = changeRequestId, tab = tab });
         }
     }
 }

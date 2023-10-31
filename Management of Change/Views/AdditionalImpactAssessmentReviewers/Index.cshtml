@@ -3,63 +3,196 @@
     ViewData["Title"] = "Index";
 }
 <h1>Additional Impact Assessment Reviewers</h1>
+
 <p class="mt-5">
-    @* <a asp-action="Create">Create New</a> *@
-    @Html.ActionLink("Add More","Create", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-success"})
     @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})
 </p>
 
+<div class="row">
+    @*  List of Impact Reviewers for Equipment - 1 from this list may be required  *@
+    @if (Model.EquipmentReviewerRequired == true)
+    {
+        <div class="col-6">
+            <div>
+                <h4>Equipment Reviewers - at least 1 required</h4>
+            </div>
+            <table class="table table-bordered table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            Review Type
+                        </th>
+                        <th>
+                            Reviewer Username
+                        </th>
+                        <th>
+                            Reviewer Name
+                        </th>
+                        <th>
+                            Reviewer Email
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.EquipmentReviewers)
+                    {
+                        <tr>
+                            @*             <td>
+                    @Html.DisplayFor(modelItem => item.ChangeRequestId)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                    </td> *@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Reviewer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewerName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                            </td>
+                            <td class="text-nowrap mt-3">
+                                @Html.ActionLink("Add","Add", new {changeRequestId=Model.ChangeRequestId, item.ReviewType, item.Reviewer, tab=Model.Tab}, new {@class="btn btn-primary"})
+                                @* @Html.ActionLink("Details","Details", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab, id=item.Id}, new {@class="btn btn-secondary"}) *@
+                                @*                        @Html.ActionLink("Remove","Delete", new {id=item.Id, changeRequestId=Model.ChangeRequestId, tab=Model.Tab}, new {@class="btn btn-danger"})
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>    *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
-@*  List of Impact Reviewers for Equipment - 1 from this list may be required  *@
-
+    @*  List of Impact Reviewers for Maintenance & Reliability - 1 from this list may be required  *@
+    @if (Model.MaintenanceReviewerRequired == true)
+    {
+        <div class="col-6">
+            <div>
+                <h4>Maintenance & Reliability Reviewers - at least 1 required</h4>
+            </div>
+            <table class="table table-bordered table-striped">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            Review Type
+                        </th>
+                        <th>
+                            Reviewer Username
+                        </th>
+                        <th>
+                            Reviewer Name
+                        </th>
+                        <th>
+                            Reviewer Email
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.MaintenanceReviewers)
+                    {
+                        <tr>
+                            @*             <td>
+                    @Html.DisplayFor(modelItem => item.ChangeRequestId)
+                    </td>
+                    <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                    </td> *@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Reviewer)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewerName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                            </td>
+                            <td class="text-nowrap mt-3">
+                                @Html.ActionLink("Add","Add", new {changeRequestId=Model.ChangeRequestId, item.ReviewType, item.Reviewer, tab=Model.Tab}, new {@class="btn btn-primary"})
+                                @* @Html.ActionLink("Details","Details", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab, id=item.Id}, new {@class="btn btn-secondary"}) *@
+                                @*                        @Html.ActionLink("Remove","Delete", new {id=item.Id, changeRequestId=Model.ChangeRequestId, tab=Model.Tab}, new {@class="btn btn-danger"})
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>    *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
 
 @*  List of Additional Impact Assessment Reviewers  *@
-<div>
-    <h4>Listing - Will be added to Impact Assessment Reviews</h4>
+<div class="mt-5">
+    <h4>Master Listing - Will be added to Impact Assessment Reviews</h4>
 </div>
+<p class="mt-5">
+    @* <a asp-action="Create">Create New</a> *@
+    @Html.ActionLink("Add More","Create", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-success"})
+    @* @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"}) *@
+</p>
 <table class="table table-bordered table-striped">
     <thead class="table-primary">
         <tr>
             <th>
-                Change Request Id
+                Review Type
             </th>
             <th>
-                Id
+                Reviewer Username
             </th>
             <th>
-                Reviewer
+                Reviewer Name
             </th>
             <th>
-                ReviewType
+                Reviewer Email
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.AdditionalImpactAssessmentReviewers) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChangeRequestId)
+        @foreach (var item in Model.AdditionalImpactAssessmentReviewers)
+        {
+            <tr>
+                @*             <td>
+            @Html.DisplayFor(modelItem => item.ChangeRequestId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reviewer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReviewType)
-            </td>
-            <td class="text-nowrap mt-3">
-                    @Html.ActionLink("Edit","Edit", new {id=item.Id, changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-primary"})
+            @Html.DisplayFor(modelItem => item.Id)
+            </td> *@
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Reviewer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewerEmail)
+                </td>
+                <td class="text-nowrap mt-3">
+                    @* @Html.ActionLink("Edit","Edit", new {id=item.Id, changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-primary"}) *@
                     @* @Html.ActionLink("Details","Details", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab, id=item.Id}, new {@class="btn btn-secondary"}) *@
-                    @Html.ActionLink("Delete","Delete", new {id=item.Id, changeRequestId=Model.ChangeRequestId, tab=Model.Tab}, new {@class="btn btn-danger"})
-@*                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    @Html.ActionLink("Remove","Delete", new {id=item.Id, changeRequestId=Model.ChangeRequestId, tab=Model.Tab}, new {@class="btn btn-danger"})
+                    @*                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>    *@                 
-            </td>
-        </tr>}
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>    *@
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-@Html.ActionLink("Add More","Create", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-success"})
 @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})

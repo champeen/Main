@@ -10,6 +10,8 @@
     <div class="row my-4">
         <div class="col-md-4">
             <input type="hidden" asp-for="ChangeRequestId" />
+            <input type="hidden" asp-for="ReviewerName" />
+            <input type="hidden" asp-for="ReviewerEmail" />
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
