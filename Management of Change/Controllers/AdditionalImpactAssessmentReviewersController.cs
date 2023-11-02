@@ -46,81 +46,79 @@ namespace Management_of_Change.Controllers
             if (changeRequest == null)
                 return RedirectToAction("Details", "ChangeRequests", new { id = changeRequestId, tab = tab });
 
-            // See if ChangeRequestType requires 'Equipment' ReviewType Reviewers...
-            List<ImpactAssessmentMatrix> equipmentReviewTypes = await _context.ImpactAssessmentMatrix
-                .Where(m => m.ChangeType == changeRequest.Change_Type && m.ReviewType == "Equipment")
-                .OrderBy(m => m.ReviewerUsername)
-                .ToListAsync();
-            vm.EquipmentReviewerRequired = false;
-            vm.EquipmentReviewers = new List<AdditionalImpactAssessmentReviewers>();
-            if (equipmentReviewTypes.Any())
-            {
-                vm.EquipmentReviewerRequired = true;
-                // get available to select from....
-                List<ReviewType> equipmentReviewers = new List<ReviewType>();
-                if (changeRequest.Area_of_Change == "Other")
-                {
-                    equipmentReviewers = await _context.ReviewType.Where(m => m.Type == "Equipment").ToListAsync();
-                }
-                else
-                {
-                    equipmentReviewers = await _context.ReviewType.Where(m => m.Type == "Equipment" && m.ChangeArea == changeRequest.Area_of_Change).ToListAsync();
-                }
-                foreach (var record in equipmentReviewers)
-                {
-                    var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Equipment" && m.Reviewer == record.Username).ToListAsync();
-                    if (!found.Any())
-                    {
-                        AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
-                        {
-                            ChangeRequestId = changeRequestId,
-                            ReviewType = record.Type,
-                            Reviewer = record.Username,
-                            ReviewerEmail = record.Email,
-                            ReviewerName = record.Reviewer
-                        };
-                        vm.EquipmentReviewers.Add(rec);
-                    }
-                }
-            }
+            //// See if ChangeRequestType requires 'Equipment' ReviewType Reviewers...
+            //List<ImpactAssessmentMatrix> equipmentReviewTypes = await _context.ImpactAssessmentMatrix
+            //    .Where(m => m.ChangeType == changeRequest.Change_Type && m.ReviewType == "Equipment")
+            //    .ToListAsync();
+            //vm.EquipmentReviewerRequired = false;
+            //vm.EquipmentReviewers = new List<AdditionalImpactAssessmentReviewers>();
+            //if (equipmentReviewTypes.Any())
+            //{
+            //    vm.EquipmentReviewerRequired = true;
+            //    // get available to select from....
+            //    List<ReviewType> equipmentReviewers = new List<ReviewType>();
+            //    if (changeRequest.Area_of_Change == "Other")
+            //    {
+            //        equipmentReviewers = await _context.ReviewType.Where(m => m.Type == "Equipment").ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        equipmentReviewers = await _context.ReviewType.Where(m => m.Type == "Equipment" && m.ChangeArea == changeRequest.Area_of_Change).ToListAsync();
+            //    }
+            //    foreach (var record in equipmentReviewers)
+            //    {
+            //        var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Equipment" && m.Reviewer == record.Username).ToListAsync();
+            //        if (!found.Any())
+            //        {
+            //            AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
+            //            {
+            //                ChangeRequestId = changeRequestId,
+            //                ReviewType = record.Type,
+            //                Reviewer = record.Username,
+            //                ReviewerEmail = record.Email,
+            //                ReviewerName = record.Reviewer
+            //            };
+            //            vm.EquipmentReviewers.Add(rec);
+            //        }
+            //    }
+            //}
 
-            // See if ChangeRequestType requires 'Maintenance & Reliability' ReviewType Reviewers...
-            List<ImpactAssessmentMatrix> maintenanceReviewTypes = await _context.ImpactAssessmentMatrix
-                .Where(m => m.ChangeType == changeRequest.Change_Type && m.ReviewType == "Maintenance & Reliability")
-                .OrderBy(m => m.ReviewerUsername)
-                .ToListAsync();
-            vm.MaintenanceReviewerRequired = false;
-            vm.MaintenanceReviewers = new List<AdditionalImpactAssessmentReviewers>();
-            if (maintenanceReviewTypes.Any())
-            {
-                vm.MaintenanceReviewerRequired = true;
-                // get available to select from....
-                List<ReviewType> maintenanceReviewers = new List<ReviewType>();
-                if (changeRequest.Area_of_Change == "Other")
-                {
-                    maintenanceReviewers = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability").ToListAsync();
-                }
-                else
-                {
-                    maintenanceReviewers = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability" && m.ChangeArea == changeRequest.Area_of_Change).ToListAsync();
-                }
-                foreach (var record in maintenanceReviewers)
-                {
-                    var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Maintenance & Reliability" && m.Reviewer == record.Username).ToListAsync();
-                    if (!found.Any())
-                    {
-                        AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
-                        {
-                            ChangeRequestId = changeRequestId,
-                            ReviewType = record.Type,
-                            Reviewer = record.Username,
-                            ReviewerEmail = record.Email,
-                            ReviewerName = record.Reviewer
-                        };
-                        vm.MaintenanceReviewers.Add(rec);
-                    }
-                }
-            }
+            //// See if ChangeRequestType requires 'Maintenance & Reliability' ReviewType Reviewers...
+            //List<ImpactAssessmentMatrix> maintenanceReviewTypes = await _context.ImpactAssessmentMatrix
+            //    .Where(m => m.ChangeType == changeRequest.Change_Type && m.ReviewType == "Maintenance & Reliability")
+            //    .ToListAsync();
+            //vm.MaintenanceReviewerRequired = false;
+            //vm.MaintenanceReviewers = new List<AdditionalImpactAssessmentReviewers>();
+            //if (maintenanceReviewTypes.Any())
+            //{
+            //    vm.MaintenanceReviewerRequired = true;
+            //    // get available to select from....
+            //    List<ReviewType> maintenanceReviewers = new List<ReviewType>();
+            //    if (changeRequest.Area_of_Change == "Other")
+            //    {
+            //        maintenanceReviewers = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability").ToListAsync();
+            //    }
+            //    else
+            //    {
+            //        maintenanceReviewers = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability" && m.ChangeArea == changeRequest.Area_of_Change).ToListAsync();
+            //    }
+            //    foreach (var record in maintenanceReviewers)
+            //    {
+            //        var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Maintenance & Reliability" && m.Reviewer == record.Username).ToListAsync();
+            //        if (!found.Any())
+            //        {
+            //            AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
+            //            {
+            //                ChangeRequestId = changeRequestId,
+            //                ReviewType = record.Type,
+            //                Reviewer = record.Username,
+            //                ReviewerEmail = record.Email,
+            //                ReviewerName = record.Reviewer
+            //            };
+            //            vm.MaintenanceReviewers.Add(rec);
+            //        }
+            //    }
+            //}
             return View(vm);
         }
 

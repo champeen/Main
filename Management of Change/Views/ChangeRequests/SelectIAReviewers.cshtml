@@ -1,0 +1,161 @@
+﻿@model Management_of_Change.Models.AdditionalImpactAssessmentReviewersVM
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Additional Impact Assessment Reviewers</h1>
+
+@using (Html.BeginForm("SubmitForReview2", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequestId }))
+{
+    @Html.HiddenFor(m => m.AdditionalImpactAssessmentReviewers)
+    @Html.HiddenFor(m => m.ChangeRequestId)
+    @Html.HiddenFor(m => m.ChangeRequest.Id)
+    @Html.HiddenFor(m => m.ChangeRequest)
+    @Html.HiddenFor(m => m.Tab)
+    @Html.HiddenFor(m => m.EquipmentReviewerRequired)
+    @Html.HiddenFor(m => m.MaintenanceReviewerRequired)
+
+    @if (Model.ErrorMessage != null)
+    {
+        <div class="text-danger mt-5">
+            <h4>@Model.ErrorMessage</h4>
+        </div>
+    }
+
+    <p class="mt-5">
+        <input type="submit" value="Save Changes" class="btn btn-primary" />
+        @Html.ActionLink("Cancel","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})
+    </p>
+
+    <div class="row">
+        @* List of Impact Reviewers for Equipment - 1 from this list may be required  *@
+        @if (Model.EquipmentReviewerRequired == true)
+        {
+            <div class="col-6">
+                <div>
+                    <h4>Equipment Reviewers - at least 1 required</h4>
+                </div>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                Select
+                            </th>
+                            <th>
+                                Review Type
+                            </th>
+                            <th>
+                                Reviewer Username
+                            </th>
+                            <th>
+                                Reviewer Name
+                            </th>
+                            <th>
+                                Reviewer Email
+                            </th>
+                            @* <th></th> *@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* @foreach (var item in Model.EquipmentReviewers) *@
+                        @for (int i = 0; i < Model.EquipmentReviewers.Count; i++)
+                        {
+                            <tr>
+                                @Html.HiddenFor(m => m.EquipmentReviewers[i].ReviewType)
+                                @Html.HiddenFor(m => m.EquipmentReviewers[i].Reviewer)
+                                @Html.HiddenFor(m => m.EquipmentReviewers[i].ReviewerName)
+                                @Html.HiddenFor(m => m.EquipmentReviewers[i].ReviewerEmail)
+                                <td>
+                                    @* @Html.CheckBoxFor(modelItem => item.Selected?) *@
+                                    @* <input type="checkbox" name="@Model.EquipmentReviewers[i].Selected" /> *@
+                                    @Html.EditorFor(m => m.EquipmentReviewers[i].Selected)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.EquipmentReviewers[i].ReviewType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.EquipmentReviewers[i].Reviewer)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.EquipmentReviewers[i].ReviewerName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.EquipmentReviewers[i].ReviewerEmail)
+                                </td>
+                                @* <td class="text-nowrap mt-3">
+                    @Html.ActionLink("Add","Add", new {changeRequestId=Model.ChangeRequestId, item.ReviewType, item.Reviewer, tab=Model.Tab}, new {@class="btn btn-primary"})
+                    </td> *@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        @* List of Impact Reviewers for Maintenance & Reliability - 1 from this list may be required  *@
+        @if (Model.MaintenanceReviewerRequired == true)
+        {
+            <div class="col-6">
+                <div>
+                    <h4>Maintenance & Reliability Reviewers - at least 1 required</h4>
+                </div>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                Select
+                            </th>
+                            <th>
+                                Review Type
+                            </th>
+                            <th>
+                                Reviewer Username
+                            </th>
+                            <th>
+                                Reviewer Name
+                            </th>
+                            <th>
+                                Reviewer Email
+                            </th>
+                            @* <th></th> *@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @* @foreach (var item in Model.MaintenanceReviewers) *@
+                        @for (int i = 0; i < Model.MaintenanceReviewers.Count; i++)
+                        {
+                            <tr>
+                                @Html.HiddenFor(m => m.MaintenanceReviewers[i].ReviewType)
+                                @Html.HiddenFor(m => m.MaintenanceReviewers[i].Reviewer)
+                                @Html.HiddenFor(m => m.MaintenanceReviewers[i].ReviewerName)
+                                @Html.HiddenFor(m => m.MaintenanceReviewers[i].ReviewerEmail)
+                                <td>
+                                    @* <input type="checkbox" name="item.Selected" /> *@
+                                    @Html.CheckBoxFor(m => m.MaintenanceReviewers[i].Selected)
+                                    @* @Html.DisplayFor(modelItem => item.Selected) *@
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.MaintenanceReviewers[i].ReviewType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.MaintenanceReviewers[i].Reviewer)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.MaintenanceReviewers[i].ReviewerName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.MaintenanceReviewers[i].ReviewerEmail)
+                                </td>
+                                @*  <td class="text-nowrap mt-3">
+                    @Html.ActionLink("Add","Add", new {changeRequestId=Model.ChangeRequestId, item.ReviewType, item.Reviewer, tab=Model.Tab}, new {@class="btn btn-primary"})
+                    </td> *@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+    <input type="submit" value="Save Changes" class="btn btn-primary" />
+    @* @Html.ActionLink("Save","Create", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-success"}) *@
+    @Html.ActionLink("Cancel","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})
+}

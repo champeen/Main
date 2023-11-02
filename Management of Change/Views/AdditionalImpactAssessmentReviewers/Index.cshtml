@@ -4,12 +4,12 @@
 }
 <h1>Additional Impact Assessment Reviewers</h1>
 
-<p class="mt-5">
+@* <p class="mt-5">
     @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})
-</p>
+</p> *@
 
-<div class="row">
-    @*  List of Impact Reviewers for Equipment - 1 from this list may be required  *@
+@* <div class="row">
+    @*  List of Impact Reviewers for Equipment - 1 from this list may be required  
     @if (Model.EquipmentReviewerRequired == true)
     {
         <div class="col-6">
@@ -38,12 +38,6 @@
                     @foreach (var item in Model.EquipmentReviewers)
                     {
                         <tr>
-                            @*             <td>
-                    @Html.DisplayFor(modelItem => item.ChangeRequestId)
-                    </td>
-                    <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                    </td> *@
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReviewType)
                             </td>
@@ -58,11 +52,6 @@
                             </td>
                             <td class="text-nowrap mt-3">
                                 @Html.ActionLink("Add","Add", new {changeRequestId=Model.ChangeRequestId, item.ReviewType, item.Reviewer, tab=Model.Tab}, new {@class="btn btn-primary"})
-                                @* @Html.ActionLink("Details","Details", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab, id=item.Id}, new {@class="btn btn-secondary"}) *@
-                                @*                        @Html.ActionLink("Remove","Delete", new {id=item.Id, changeRequestId=Model.ChangeRequestId, tab=Model.Tab}, new {@class="btn btn-danger"})
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>    *@
                             </td>
                         </tr>
                     }
@@ -71,7 +60,7 @@
         </div>
     }
 
-    @*  List of Impact Reviewers for Maintenance & Reliability - 1 from this list may be required  *@
+    @*  List of Impact Reviewers for Maintenance & Reliability - 1 from this list may be required  
     @if (Model.MaintenanceReviewerRequired == true)
     {
         <div class="col-6">
@@ -100,12 +89,6 @@
                     @foreach (var item in Model.MaintenanceReviewers)
                     {
                         <tr>
-                            @*             <td>
-                    @Html.DisplayFor(modelItem => item.ChangeRequestId)
-                    </td>
-                    <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                    </td> *@
                             <td>
                                 @Html.DisplayFor(modelItem => item.ReviewType)
                             </td>
@@ -120,11 +103,6 @@
                             </td>
                             <td class="text-nowrap mt-3">
                                 @Html.ActionLink("Add","Add", new {changeRequestId=Model.ChangeRequestId, item.ReviewType, item.Reviewer, tab=Model.Tab}, new {@class="btn btn-primary"})
-                                @* @Html.ActionLink("Details","Details", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab, id=item.Id}, new {@class="btn btn-secondary"}) *@
-                                @*                        @Html.ActionLink("Remove","Delete", new {id=item.Id, changeRequestId=Model.ChangeRequestId, tab=Model.Tab}, new {@class="btn btn-danger"})
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>    *@
                             </td>
                         </tr>
                     }
@@ -132,15 +110,16 @@
             </table>
         </div>
     }
-</div>
+</div> *@
 
 @*  List of Additional Impact Assessment Reviewers  *@
 <div class="mt-5">
     <h4>Master Listing - Will be added to Impact Assessment Reviews</h4>
 </div>
-<p class="mt-5">
+<p class="mt-1">
     @* <a asp-action="Create">Create New</a> *@
     @Html.ActionLink("Add More","Create", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-success"})
+    @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})
     @* @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"}) *@
 </p>
 <table class="table table-bordered table-striped">
@@ -165,12 +144,6 @@
         @foreach (var item in Model.AdditionalImpactAssessmentReviewers)
         {
             <tr>
-                @*             <td>
-            @Html.DisplayFor(modelItem => item.ChangeRequestId)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.Id)
-            </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.ReviewType)
                 </td>
@@ -195,4 +168,5 @@
         }
     </tbody>
 </table>
+@Html.ActionLink("Add More","Create", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-success"})
 @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})
