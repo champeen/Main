@@ -14,6 +14,7 @@ namespace Management_of_Change.Models
         public string? ReviewerEmail { get; set; }
         [Display(Name = "Review Type")]
         public string ReviewType { get; set; }
+        public string? ReviewArea { get; set; }
         public bool Selected { get; set; }
     }
 }

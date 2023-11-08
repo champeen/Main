@@ -196,7 +196,9 @@
                     @Html.DisplayFor(modelItem => item.ReviewType)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Question)
+                    @* @Html.DisplayFor(modelItem => item.Question) *@
+                    @Html.Raw(item.Question)
+                    @* <a href="~/Documents/MoC-New Equipment Checklist.xlsx" target="_blank" >click me homey</a> *@
                 </td>
                 @*<td>
             @Html.DisplayFor(modelItem => item.Order)

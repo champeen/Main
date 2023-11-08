@@ -46,7 +46,7 @@ namespace Management_of_Change.Controllers
             List<SelectListItem> statusDropdown = new List<SelectListItem>();
             foreach (var status in statusList)
             {
-                SelectListItem item = new SelectListItem { Value = status.Description, Text = status.Description};
+                SelectListItem item = new SelectListItem { Value = status.Description, Text = status.Description };
                 statusDropdown.Add(item);
             }
             ViewBag.StatusList = statusDropdown;
@@ -288,7 +288,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source=null)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -301,8 +301,8 @@ namespace Management_of_Change.Controllers
             if (changeRequest.Estimated_Completion_Date < DateTime.Today)
                 ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
 
-            if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
-                ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
+            //if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
+            //    ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
@@ -347,7 +347,7 @@ namespace Management_of_Change.Controllers
                     path.Create();
 
                 if (source == "Home")
-                    return RedirectToAction("Index","Home", new {});
+                    return RedirectToAction("Index", "Home", new { });
                 else
                     return RedirectToAction("Details", new { id = changeRequest.Id });
             }
@@ -422,8 +422,8 @@ namespace Management_of_Change.Controllers
             if (changeRequest.Estimated_Completion_Date < DateTime.Today)
                 ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
 
-            if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
-                ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
+            //if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
+            //    ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
@@ -545,8 +545,8 @@ namespace Management_of_Change.Controllers
             //if (changeRequest.Estimated_Completion_Date < DateTime.Today)
             //    ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
 
-            if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
-                ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
+            //if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
+            //    ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
 
             if (ModelState.IsValid)
             {
@@ -599,6 +599,9 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
             {
                 record.ModifiedUser = _username;
@@ -642,6 +645,9 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (_context.ChangeRequest == null)
             {
                 return Problem("Entity set 'Management_of_ChangeContext.ChangeRequest' is null.");
@@ -656,7 +662,7 @@ namespace Management_of_Change.Controllers
                 _context.Update(changeRequest);
                 await _context.SaveChangesAsync();
                 //_context.ChangeRequest.Remove(changeRequest);
-            }            
+            }
             return RedirectToAction(nameof(Index));
         }
 
@@ -696,9 +702,15 @@ namespace Management_of_Change.Controllers
         }
 
         public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
-        {
+        {            
             byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
             return File(fileBytes, "application/x-msdownload", fileName);
+        }
+
+        public async Task<IActionResult> DownloadNewEquipmentChecklist(int id)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(@"wwwroot\Documents\MoC-New Equipment Checklist.xlsx");
+            return File(fileBytes, "application/x-msdownload", @"MoC-New Equipment Checklist.xlsx");
         }
 
         public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
@@ -708,11 +720,14 @@ namespace Management_of_Change.Controllers
         }
 
         // This closes out 'GeneralMocQuestions' and moves to 'ImpactAssessments' stage
-        public async Task<IActionResult> SubmitForReview(int id, string tab, ChangeRequestViewModel changeRequestViewModel)
+        public async Task<IActionResult> SubmitForReview(int id, string tab, string errorMessage = null)/* ChangeRequestViewModel changeRequestViewModel)*/
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             if (id == null || id == 0)
                 return NotFound();
@@ -726,22 +741,39 @@ namespace Management_of_Change.Controllers
             vm.Tab = tab;
             vm.ChangeRequestId = id;
             vm.ChangeRequest = changeRequest;
-            vm.EquipmentReviewerRequired = false;
-            vm.MaintenanceReviewerRequired = false;
+            vm.EquipmentReviewerRequired = "No";
+            vm.MaintenanceReviewerRequired = "No";
+            vm.ErrorMessage = errorMessage;
 
             // See if Change Request requires an 'Equipment' Impact Assessment Reviewer...
             List<ImpactAssessmentMatrix> equipmentReviewTypes = await _context.ImpactAssessmentMatrix
                 .Where(m => m.ChangeType == changeRequest.Change_Type && m.ReviewType == "Equipment")
-                .ToListAsync();            
+                .ToListAsync();
             vm.EquipmentReviewers = new List<AdditionalImpactAssessmentReviewers>();
             if (equipmentReviewTypes.Any())
             {
-                // see if there is already an equipment reviewer....
-                var foundReviewer = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Equipment" && m.ChangeRequestId == id).ToListAsync();
-                if (foundReviewer.Count == 0)
-                {
-                    vm.EquipmentReviewerRequired = true;
+                vm.EquipmentReviewerRequired = "Yes";
+                var additionalReviewers = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Equipment" && m.ChangeRequestId == id).ToListAsync();
 
+                // see if there is already an equipment reviewer assigned that would be one of the base impact reviewers....
+                foreach (var additionalReviewer in additionalReviewers)
+                {
+                    if (changeRequest.Area_of_Change == "Other")
+                    {
+                        List<ReviewType> found = await _context.ReviewType.Where(m => m.Type == "Equipment" && m.Username == additionalReviewer.Reviewer).ToListAsync();
+                        if (found.Count > 0)
+                            vm.EquipmentReviewerRequired = "No";
+                    }
+                    else
+                    {
+                        List<ReviewType> found = await _context.ReviewType.Where(m => m.Type == "Equipment" && m.ChangeArea == additionalReviewer.ReviewArea && m.Username == additionalReviewer.Reviewer).ToListAsync();
+                        if (found.Count > 0)
+                            vm.EquipmentReviewerRequired = "No";
+                    }
+                }
+
+                if (vm.EquipmentReviewerRequired != null && vm.EquipmentReviewerRequired == "Yes")
+                {
                     // get available to select from....
                     List<ReviewType> equipmentReviewers = new List<ReviewType>();
                     if (changeRequest.Area_of_Change == "Other")
@@ -754,13 +786,14 @@ namespace Management_of_Change.Controllers
                     }
                     foreach (var record in equipmentReviewers)
                     {
-                        var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Equipment" && m.Reviewer == record.Username).ToListAsync();
+                        var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Equipment" && m.Reviewer == record.Username && m.ChangeRequestId == changeRequest.Id).ToListAsync();
                         if (!found.Any())
                         {
                             AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
                             {
                                 ChangeRequestId = changeRequest.Id,
                                 ReviewType = record.Type,
+                                ReviewArea = changeRequest.Area_of_Change,
                                 Reviewer = record.Username,
                                 ReviewerEmail = record.Email,
                                 ReviewerName = record.Reviewer,
@@ -779,12 +812,28 @@ namespace Management_of_Change.Controllers
             vm.MaintenanceReviewers = new List<AdditionalImpactAssessmentReviewers>();
             if (maintenanceReviewTypes.Any())
             {
-                // see if there is already an equipment reviewer....
-                var foundReviewer = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Maintenance & Reliability" && m.ChangeRequestId == id).ToListAsync();
-                if (foundReviewer.Count == 0)
-                {
-                    vm.MaintenanceReviewerRequired = true;
+                vm.MaintenanceReviewerRequired = "Yes";
+                var additionalReviewers = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Maintenance & Reliability" && m.ChangeRequestId == id).ToListAsync();
 
+                // see if there is already a Maintenance & Reliability reviewer assigned that would be one of the base impact reviewers....
+                foreach (var additionalReviewer in additionalReviewers)
+                {
+                    if (changeRequest.Area_of_Change == "Other")
+                    {
+                        List<ReviewType> found = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability" && m.Username == additionalReviewer.Reviewer).ToListAsync();
+                        if (found.Count > 0)
+                            vm.MaintenanceReviewerRequired = "No";
+                    }
+                    else
+                    {
+                        List<ReviewType> found = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability" && m.ChangeArea == additionalReviewer.ReviewArea && m.Username == additionalReviewer.Reviewer).ToListAsync();
+                        if (found.Count > 0)
+                            vm.MaintenanceReviewerRequired = "No";
+                    }
+                }
+
+                if (vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "Yes")
+                {
                     // get available to select from....
                     List<ReviewType> maintenanceReviewers = new List<ReviewType>();
                     if (changeRequest.Area_of_Change == "Other")
@@ -795,18 +844,19 @@ namespace Management_of_Change.Controllers
                     {
                         maintenanceReviewers = await _context.ReviewType.Where(m => m.Type == "Maintenance & Reliability" && m.ChangeArea == changeRequest.Area_of_Change).ToListAsync();
                     }
-                    foreach (var record in maintenanceReviewers)
+                    foreach (var record2 in maintenanceReviewers)
                     {
-                        var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Maintenance & Reliability" && m.Reviewer == record.Username).ToListAsync();
+                        var found = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ReviewType == "Maintenance & Reliability" && m.Reviewer == record2.Username && m.ChangeRequestId == changeRequest.Id).ToListAsync();
                         if (!found.Any())
                         {
                             AdditionalImpactAssessmentReviewers rec = new AdditionalImpactAssessmentReviewers
                             {
                                 ChangeRequestId = changeRequest.Id,
-                                ReviewType = record.Type,
-                                Reviewer = record.Username,
-                                ReviewerEmail = record.Email,
-                                ReviewerName = record.Reviewer,
+                                ReviewType = record2.Type,
+                                ReviewArea = changeRequest.Area_of_Change,
+                                Reviewer = record2.Username,
+                                ReviewerEmail = record2.Email,
+                                ReviewerName = record2.Reviewer,
                                 Selected = false
                             };
                             vm.MaintenanceReviewers.Add(rec);
@@ -816,157 +866,155 @@ namespace Management_of_Change.Controllers
             }
 
             // If either an 'Equipment' reviewer or 'Maintenance & Reliability' reviewer are needed, we need to go to a new screen and add them first before closing out.
-            if (vm.EquipmentReviewerRequired || vm.MaintenanceReviewerRequired)
-                return View("SelectIAReviewers",vm);
+            if ((vm.EquipmentReviewerRequired != null && vm.EquipmentReviewerRequired == "Yes") || (vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "Yes"))
+            {
+                //vm.EquipmentReviewerRequired = "No";
+                return View("SelectIAReviewers", vm);
+            }
+                
 
             // Close-out Draft and go to Impact Assessment Review...
             return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
 
+            //// add Impact Assessment Responses
+            //List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix
+            //    .Where(m => m.ChangeType == changeRequest.Change_Type)
+            //    .OrderBy(m => m.ReviewType)
+            //    .ThenBy(m => m.ChangeType)
+            //    .ToListAsync();
+            //if (impactAssessmentMatrix.Count > 0)
+            //{
+            //    changeRequest.ImpactAssessmentResponses = new List<ImpactAssessmentResponse>();
+            //    foreach (var assessment in impactAssessmentMatrix)
+            //    {
+            //        // Get ALL Review Types setup for this Change Type ...
+            //        List<ReviewType> reviews = await _context.ReviewType
+            //            .Where(rt => (rt.Type == assessment.ReviewType && rt.ChangeArea == null) || (rt.Type == assessment.ReviewType && rt.ChangeArea == changeRequest.Area_of_Change))
+            //            .ToListAsync();
+            //        foreach (var review in reviews)
+            //        {
+            //            ImpactAssessmentResponse response = new ImpactAssessmentResponse
+            //            {
+            //                ReviewType = assessment.ReviewType,
+            //                ChangeType = assessment.ChangeType,
+            //                ChangeArea = review.ChangeArea,
+            //                Reviewer = review.Reviewer,
+            //                ReviewerEmail = review.Email,
+            //                Username = review.Username,
+            //                CreatedUser = _username,
+            //                CreatedDate = DateTime.UtcNow
+            //            };
+            //            changeRequest.ImpactAssessmentResponses.Add(response);
+            //        }
+            //    }
+            //}
 
+            //// add Impact Assessment Response Quesion/Answers
+            //if (changeRequest.ImpactAssessmentResponses != null && changeRequest.ImpactAssessmentResponses.Count > 0)
+            //{
+            //    foreach (var record in changeRequest.ImpactAssessmentResponses)
+            //    {
+            //        record.ImpactAssessmentResponseAnswers = new List<ImpactAssessmentResponseAnswer>();
 
+            //        List<ImpactAssessmentResponseQuestions> IARQuestions = await _context.ImpactAssessmentResponseQuestions.Where(m => m.ReviewType == record.ReviewType).ToListAsync();
 
+            //        // if there are no Impact Assessment questions, then set all answered as true
+            //        if (IARQuestions == null || IARQuestions.Count == 0)
+            //            record.QuestionsAnswered = true;
+            //        // else, setup all the questions to be answered...
+            //        else
+            //        {
+            //            foreach (var question in IARQuestions)
+            //            {
+            //                ImpactAssessmentResponseAnswer rec = new ImpactAssessmentResponseAnswer
+            //                {
+            //                    ReviewType = record.ReviewType,
+            //                    Question = question.Question,
+            //                    Order = question.Order,
+            //                    CreatedUser = _username,
+            //                    CreatedDate = DateTime.UtcNow
+            //                };
+            //                record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
+            //            }
+            //        }
+            //    }
+            //}
 
+            //// add Implementation Final Approval Responses
+            //List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix
+            //    .Where(m => m.ChangeType == changeRequest.Change_Type)
+            //    .OrderBy(m => m.FinalReviewType)
+            //    .ThenBy(m => m.ChangeType)
+            //    .ToListAsync();
+            //if (implementationFinalApprovalMatrix.Count > 0)
+            //{
+            //    changeRequest.ImplementationFinalApprovalResponses = new List<ImplementationFinalApprovalResponse>();
+            //    foreach (var assessment in implementationFinalApprovalMatrix)
+            //    {
+            //        FinalReviewType review = _context.FinalReviewType.Where(m => m.Type == assessment.FinalReviewType).FirstOrDefault();
+            //        if (review != null)
+            //        {
+            //            ImplementationFinalApprovalResponse response = new ImplementationFinalApprovalResponse
+            //            {
+            //                FinalReviewType = assessment.FinalReviewType,
+            //                ChangeType = assessment.ChangeType,
+            //                Reviewer = review.Reviewer,
+            //                ReviewerEmail = review.Email,
+            //                Username = review.Username,
+            //                CreatedUser = _username,
+            //                CreatedDate = DateTime.UtcNow
+            //            };
+            //            changeRequest.ImplementationFinalApprovalResponses.Add(response);
+            //        }
+            //    }
+            //}
 
-            // add Impact Assessment Responses
-            List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix
-                .Where(m => m.ChangeType == changeRequest.Change_Type)
-                .OrderBy(m => m.ReviewType)
-                .ThenBy(m => m.ChangeType)
-                .ToListAsync();
-            if (impactAssessmentMatrix.Count > 0)
-            {
-                changeRequest.ImpactAssessmentResponses = new List<ImpactAssessmentResponse>();
-                foreach (var assessment in impactAssessmentMatrix)
-                {
-                    // Get ALL Review Types setup for this Change Type ...
-                    List<ReviewType> reviews = await _context.ReviewType
-                        .Where(rt => (rt.Type == assessment.ReviewType && rt.ChangeArea == null) || (rt.Type == assessment.ReviewType && rt.ChangeArea == changeRequest.Area_of_Change))                        
-                        .ToListAsync();
-                    foreach (var review in reviews)
-                    {
-                        ImpactAssessmentResponse response = new ImpactAssessmentResponse
-                        {
-                            ReviewType = assessment.ReviewType,
-                            ChangeType = assessment.ChangeType,
-                            ChangeArea = review.ChangeArea,
-                            Reviewer = review.Reviewer,
-                            ReviewerEmail = review.Email,
-                            Username = review.Username,
-                            CreatedUser = _username,
-                            CreatedDate = DateTime.UtcNow
-                        };
-                        changeRequest.ImpactAssessmentResponses.Add(response);
-                    }
-                }
-            }
+            //// Update ChangeRequest...
+            //changeRequest.Change_Status = "ImpactAssessmentReview";
+            //changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "ImpactAssessmentReview").Select(m => m.Description).FirstOrDefaultAsync();
+            //changeRequest.ModifiedUser = _username;
+            //changeRequest.ModifiedDate = DateTime.UtcNow;
+            //_context.Update(changeRequest);
+            //await _context.SaveChangesAsync();
 
-            // add Impact Assessment Response Quesion/Answers
-            if (changeRequest.ImpactAssessmentResponses != null && changeRequest.ImpactAssessmentResponses.Count > 0)
-            {
-                foreach (var record in changeRequest.ImpactAssessmentResponses)
-                {
-                    record.ImpactAssessmentResponseAnswers = new List<ImpactAssessmentResponseAnswer>();
+            //// Email All Users ImpactResponse Review/Approval links...
+            //foreach (var record in changeRequest.ImpactAssessmentResponses)
+            //{
+            //    string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
+            //    string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+            //    Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
+            //    AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
 
-                    List<ImpactAssessmentResponseQuestions> IARQuestions = await _context.ImpactAssessmentResponseQuestions.Where(m => m.ReviewType == record.ReviewType).ToListAsync();
-
-                    // if there are no Impact Assessment questions, then set all answered as true
-                    if (IARQuestions == null || IARQuestions.Count == 0)
-                        record.QuestionsAnswered = true;
-                    // else, setup all the questions to be answered...
-                    else
-                    {
-                        foreach (var question in IARQuestions)
-                        {
-                            ImpactAssessmentResponseAnswer rec = new ImpactAssessmentResponseAnswer
-                            {
-                                ReviewType = record.ReviewType,
-                                Question = question.Question,
-                                Order = question.Order,
-                                CreatedUser = _username,
-                                CreatedDate = DateTime.UtcNow
-                            };
-                            record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
-                        }
-                    }
-                }
-            }
-
-            // add Implementation Final Approval Responses
-            List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix
-                .Where(m => m.ChangeType == changeRequest.Change_Type)
-                .OrderBy(m => m.FinalReviewType)
-                .ThenBy(m => m.ChangeType)
-                .ToListAsync();
-            if (implementationFinalApprovalMatrix.Count > 0)
-            {
-                changeRequest.ImplementationFinalApprovalResponses = new List<ImplementationFinalApprovalResponse>();
-                foreach (var assessment in implementationFinalApprovalMatrix)
-                {
-                    FinalReviewType review = _context.FinalReviewType.Where(m => m.Type == assessment.FinalReviewType).FirstOrDefault();
-                    if (review != null)
-                    {
-                        ImplementationFinalApprovalResponse response = new ImplementationFinalApprovalResponse
-                        {
-                            FinalReviewType = assessment.FinalReviewType,
-                            ChangeType = assessment.ChangeType,
-                            Reviewer = review.Reviewer,
-                            ReviewerEmail = review.Email,
-                            Username = review.Username,
-                            CreatedUser = _username,
-                            CreatedDate = DateTime.UtcNow
-                        };
-                        changeRequest.ImplementationFinalApprovalResponses.Add(response);
-                    }
-                }
-            }
-
-            // Update ChangeRequest...
-            changeRequest.Change_Status = "ImpactAssessmentReview";
-            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "ImpactAssessmentReview").Select(m => m.Description).FirstOrDefaultAsync();
-            changeRequest.ModifiedUser = _username;
-            changeRequest.ModifiedDate = DateTime.UtcNow;
-            _context.Update(changeRequest);
-            await _context.SaveChangesAsync();
-
-            // Email All Users ImpactResponse Review/Approval links...
-            foreach (var record in changeRequest.ImpactAssessmentResponses)
-            {
-                string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
-                string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
-                AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
-
-                //EmailHistory emailHistory = new EmailHistory
-                //{
-                //    Priority = changeRequest.Priority,
-                //    Subject = subject,
-                //    Body = body,
-                //    SentToDisplayName = record.Reviewer,
-                //    SentToUsername = record.Username,
-                //    SentToEmail = record.ReviewerEmail,
-                //    ChangeRequestId = changeRequest.Id,
-                //    ImpactAssessmentResponseId = record.Id,
-                //    Type = "ChangeRequest",
-                //    Status = changeRequest.Change_Status,
-                //    CreatedDate = DateTime.UtcNow,
-                //    CreatedUser = _username
-                //};
-                //_context.Add(emailHistory);
-                //await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("Details", new { id = id, tab = "GeneralMocQuestions" });
+            //    //EmailHistory emailHistory = new EmailHistory
+            //    //{
+            //    //    Priority = changeRequest.Priority,
+            //    //    Subject = subject,
+            //    //    Body = body,
+            //    //    SentToDisplayName = record.Reviewer,
+            //    //    SentToUsername = record.Username,
+            //    //    SentToEmail = record.ReviewerEmail,
+            //    //    ChangeRequestId = changeRequest.Id,
+            //    //    ImpactAssessmentResponseId = record.Id,
+            //    //    Type = "ChangeRequest",
+            //    //    Status = changeRequest.Change_Status,
+            //    //    CreatedDate = DateTime.UtcNow,
+            //    //    CreatedUser = _username
+            //    //};
+            //    //_context.Add(emailHistory);
+            //    //await _context.SaveChangesAsync();
+            //}
+            //return RedirectToAction("Details", new { id = id, tab = "GeneralMocQuestions" });
         }
-
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitForReview2(int id, [Bind("AdditionalImpactAssessmentReviewers, ChangeRequestId, ChangeRequest, Tab, EquipmentReviewerRequired, MaintenanceReviewerRequired, EquipmentReviewers, MaintenanceReviewers, ChangeRequest")] AdditionalImpactAssessmentReviewersVM vm)
         {
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             vm.ErrorMessage = null;
-            if (vm.EquipmentReviewerRequired == true)
+            if (vm.EquipmentReviewerRequired != null && vm.EquipmentReviewerRequired == "Yes")
             {
                 List<AdditionalImpactAssessmentReviewers> reviewers = new List<AdditionalImpactAssessmentReviewers>();
                 foreach (var record in vm.EquipmentReviewers)
@@ -977,24 +1025,24 @@ namespace Management_of_Change.Controllers
                         {
                             ChangeRequestId = vm.ChangeRequestId,
                             ReviewType = record.ReviewType,
+                            ReviewArea = record.ReviewArea,
                             Reviewer = record.Reviewer,
                             ReviewerEmail = record.ReviewerEmail,
                             ReviewerName = record.ReviewerName,
                             CreatedDate = DateTime.UtcNow,
                             CreatedUser = _username
                         };
-                        reviewers.Add(reviewer);
-                        vm.EquipmentReviewerRequired = false;
+                        _context.AdditionalImpactAssessmentReviewers.Add(reviewer);
+                        vm.EquipmentReviewerRequired = "No";
                     }
                 }
-                if (vm.EquipmentReviewerRequired == false)
+                if (vm.EquipmentReviewerRequired != null || vm.EquipmentReviewerRequired == "No")
                 {
-                    _context.Update(reviewers);
                     await _context.SaveChangesAsync();
                 }
             }
 
-            if (vm.MaintenanceReviewerRequired == true)
+            if (vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "Yes")
             {
                 List<AdditionalImpactAssessmentReviewers> reviewers = new List<AdditionalImpactAssessmentReviewers>();
                 foreach (var record in vm.MaintenanceReviewers)
@@ -1005,33 +1053,35 @@ namespace Management_of_Change.Controllers
                         {
                             ChangeRequestId = vm.ChangeRequestId,
                             ReviewType = record.ReviewType,
+                            ReviewArea = record.ReviewArea,
                             Reviewer = record.Reviewer,
                             ReviewerEmail = record.ReviewerEmail,
                             ReviewerName = record.ReviewerName,
                             CreatedDate = DateTime.UtcNow,
                             CreatedUser = _username
                         };
-                        reviewers.Add(reviewer);
-                        vm.MaintenanceReviewerRequired = false;
+                        _context.AdditionalImpactAssessmentReviewers.Add(reviewer);
+                        vm.MaintenanceReviewerRequired = "No";
                     }
                 }
-                if (vm.MaintenanceReviewerRequired == false)
+                if (vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "No")
                 {
-                    _context.Update(reviewers);
                     await _context.SaveChangesAsync();
                 }
             }
 
             // make sure if 1 reviewer is still required, that they have selected one...
-            if (vm.EquipmentReviewerRequired == true && vm.MaintenanceReviewerRequired == true)
+            if (vm.EquipmentReviewerRequired != null && vm.EquipmentReviewerRequired == "Yes" && vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "Yes")
                 vm.ErrorMessage = @"At least 1 Equipment Reviewer and 1 Maintenance Reviewer is required.";
-            else if (vm.EquipmentReviewerRequired == true)
+            else if (vm.EquipmentReviewerRequired != null && vm.EquipmentReviewerRequired == "Yes")
                 vm.ErrorMessage = @"At least 1 Equipment Reviewer is required.";
-            else if (vm.MaintenanceReviewerRequired == true)
+            else if (vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "Yes")
                 vm.ErrorMessage = @"At least 1 Maintenance Reviewer is required.";
 
             if (vm.ErrorMessage != null)
-                return View("SelectIAReviewers", vm);
+                //return View("SelectIAReviewers", vm);
+                return RedirectToAction("SubmitForReview", new { id = vm.ChangeRequestId, tab = vm.Tab, errorMessage = vm.ErrorMessage });
+            
 
             // Close-out Draft and go to Impact Assessment Review...
             return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
@@ -1041,6 +1091,9 @@ namespace Management_of_Change.Controllers
 
         public async Task<IActionResult> CloseDraft(int changeRequestId, string tab)
         {
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             ChangeRequest changeRequest = await _context.ChangeRequest.FindAsync(changeRequestId);
 
             // add Impact Assessment Responses
@@ -1072,15 +1125,34 @@ namespace Management_of_Change.Controllers
                             CreatedDate = DateTime.UtcNow
                         };
                         changeRequest.ImpactAssessmentResponses.Add(response);
+                        await _context.SaveChangesAsync();
                     }
                 }
             }
 
             // add AdditonalImpactAssessmentReviewers ...
             List<AdditionalImpactAssessmentReviewers> reviewers = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ChangeRequestId == changeRequestId).ToListAsync();
-
-
-
+            foreach (var review in reviewers)
+            {
+                // Make Sure the combination of Reviewer & ReviewType is not already added !!!!!
+                var found = await _context.ImpactAssessmentResponse.Where(m => m.ReviewType == review.ReviewType && m.Reviewer == review.Reviewer && m.ChangeRequestId == changeRequest.Id).ToListAsync();
+                if (found.Count == 0)
+                {
+                    ImpactAssessmentResponse response = new ImpactAssessmentResponse
+                    {
+                        ChangeRequestId = changeRequest.Id,
+                        ChangeType = changeRequest.Change_Type,
+                        ReviewType = review.ReviewType,                        
+                        Reviewer = review.ReviewerName,
+                        ReviewerEmail = review.ReviewerEmail,
+                        Username = review.Reviewer,
+                        CreatedUser = _username,
+                        CreatedDate = DateTime.UtcNow
+                    };
+                    changeRequest.ImpactAssessmentResponses.Add(response);
+                    await _context.SaveChangesAsync();
+                }
+            }            
 
             // add Impact Assessment Response Quesion/Answers
             if (changeRequest.ImpactAssessmentResponses != null && changeRequest.ImpactAssessmentResponses.Count > 0)
@@ -1108,6 +1180,7 @@ namespace Management_of_Change.Controllers
                                 CreatedDate = DateTime.UtcNow
                             };
                             record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
+                            await _context.SaveChangesAsync();
                         }
                     }
                 }
@@ -1138,6 +1211,7 @@ namespace Management_of_Change.Controllers
                             CreatedDate = DateTime.UtcNow
                         };
                         changeRequest.ImplementationFinalApprovalResponses.Add(response);
+                        await _context.SaveChangesAsync();
                     }
                 }
             }
@@ -1150,44 +1224,47 @@ namespace Management_of_Change.Controllers
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
 
-            // Email All Users ImpactResponse Review/Approval links...
-            foreach (var record in changeRequest.ImpactAssessmentResponses)
+            if (changeRequest.ImpactAssessmentResponses != null)
             {
-                string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
-                string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
-                AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
+                // Email All Users ImpactResponse Review/Approval links...
+                foreach (var record in changeRequest.ImpactAssessmentResponses)
+                {
+                    string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
+                    string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
 
-                //EmailHistory emailHistory = new EmailHistory
-                //{
-                //    Priority = changeRequest.Priority,
-                //    Subject = subject,
-                //    Body = body,
-                //    SentToDisplayName = record.Reviewer,
-                //    SentToUsername = record.Username,
-                //    SentToEmail = record.ReviewerEmail,
-                //    ChangeRequestId = changeRequest.Id,
-                //    ImpactAssessmentResponseId = record.Id,
-                //    Type = "ChangeRequest",
-                //    Status = changeRequest.Change_Status,
-                //    CreatedDate = DateTime.UtcNow,
-                //    CreatedUser = _username
-                //};
-                //_context.Add(emailHistory);
-                //await _context.SaveChangesAsync();
+                    //EmailHistory emailHistory = new EmailHistory
+                    //{
+                    //    Priority = changeRequest.Priority,
+                    //    Subject = subject,
+                    //    Body = body,
+                    //    SentToDisplayName = record.Reviewer,
+                    //    SentToUsername = record.Username,
+                    //    SentToEmail = record.ReviewerEmail,
+                    //    ChangeRequestId = changeRequest.Id,
+                    //    ImpactAssessmentResponseId = record.Id,
+                    //    Type = "ChangeRequest",
+                    //    Status = changeRequest.Change_Status,
+                    //    CreatedDate = DateTime.UtcNow,
+                    //    CreatedUser = _username
+                    //};
+                    //_context.Add(emailHistory);
+                    //await _context.SaveChangesAsync();
+                }
             }
-
-
-
-            return RedirectToAction("Details", new { changeRequestId = changeRequestId, tab = tab });
+            return RedirectToAction("Details", new { id = changeRequestId, tab = "ImpactAssessments" });
         }
 
-            // This closes out 'ImpactAssessments' and moves to 'FinalApprovals' stage
-            public async Task<IActionResult> MarkImpactAssessmentComplete(int id, string tab = "ImpactAssessments", string rec = null)
+        // This closes out 'ImpactAssessments' and moves to 'FinalApprovals' stage
+        public async Task<IActionResult> MarkImpactAssessmentComplete(int id, string tab = "ImpactAssessments", string rec = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             if (id == null || id == 0)
                 return NotFound();
@@ -1266,6 +1343,9 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || id == 0)
                 return NotFound();
 
@@ -1340,6 +1420,9 @@ namespace Management_of_Change.Controllers
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             if (id == null || id == 0)
                 return NotFound();
@@ -1446,6 +1529,9 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id == null || id == 0)
                 return NotFound();
 
@@ -1506,10 +1592,8 @@ namespace Management_of_Change.Controllers
             };
 
             ViewBag.Users = getUserList();
-
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
-
             return View(task);
         }
 
@@ -1521,6 +1605,9 @@ namespace Management_of_Change.Controllers
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
 
             if (task.DueDate == null)
                 ModelState.AddModelError("DueDate", "Must Include a Valid Completion Date");
@@ -1551,9 +1638,6 @@ namespace Management_of_Change.Controllers
                         ModelState.AddModelError("ImplementationType", "Cannot Create a Task under a Cancelled Change Request.");
                 }
             }
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
 
             if (ModelState.IsValid)
             {
@@ -1587,7 +1671,7 @@ namespace Management_of_Change.Controllers
                     //};
                     //_context.Add(emailHistory);
                     //await _context.SaveChangesAsync();
-                }                
+                }
                 return RedirectToAction("Details", "ChangeRequests", new { Id = task.ChangeRequestId, Tab = "Tasks" });
             }
             ViewBag.Users = getUserList();

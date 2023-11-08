@@ -24,8 +24,8 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            if (!_isAdmin)
-                return RedirectToAction("Unauthorized", "Home", new { message = "Must be setup as an Administrator to have access." });
+            //if (!_isAdmin)
+            //    return RedirectToAction("Unauthorized", "Home", new { message = "Must be setup as an Administrator to have access." });
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;

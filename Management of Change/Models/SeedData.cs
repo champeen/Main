@@ -39,7 +39,7 @@ namespace Management_of_Change.Models
                             Raw_Material_Component_Numbers_Impacted = "Raw Materials Component Numbers Impacted 1",
                             PTN_Number = new List<string> {"PTN-5774-1","PTN-6476-2"},
                             Waiver_Number = "Test Waiver Number",
-                            CMT_Number = "Test CMT Number",
+                            //CMT_Number = "Test CMT Number",
                             Request_Date = System.DateTime.UtcNow,                           
                             Estimated_Completion_Date = System.DateTime.Now.AddYears(1), 
                             Expiration_Date_Temporary = System.DateTime.Now.AddMonths(3),
@@ -684,6 +684,17 @@ namespace Management_of_Change.Models
                         {
                             Description = "Metrology",
                             Order = "45",
+                            CreatedUser = "MJWilson",
+                            CreatedDate = DateTime.UtcNow,
+                            ModifiedUser = null,
+                            ModifiedDate = null,
+                            DeletedUser = null,
+                            DeletedDate = null
+                        },
+                        new ChangeArea
+                        {
+                            Description = "Other",
+                            Order = "50",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.UtcNow,
                             ModifiedUser = null,
@@ -4983,7 +4994,7 @@ namespace Management_of_Change.Models
                         new ImpactAssessmentResponseQuestions
                         {
                             ReviewType = "Equipment",
-                            Question = "If the change is for new equipment, review and complete the 'New Equipment Checklist' as necessary",
+                            Question = "If the change is for new equipment, review and complete the  <a href=\"../../Documents/MoC-New Equipment Checklist.xlsx\" target=\"_blank\" ><b>New Equipment Checklist</b></a> as necessary",
                             Order = "10",
                             CreatedUser = "MJWilson",
                             CreatedDate = DateTime.Now,

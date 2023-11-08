@@ -88,7 +88,7 @@ namespace Management_of_Change.Controllers
                 CreatedDate = DateTime.UtcNow
             };
 
-            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
 
             return View(impactAssessmentResponseQuestions);
         }
@@ -134,7 +134,7 @@ namespace Management_of_Change.Controllers
             if (impactAssessmentResponseQuestions == null)
                 return NotFound();
 
-            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
 
             return View(impactAssessmentResponseQuestions);
         }
@@ -175,6 +175,7 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
             return View(impactAssessmentResponseQuestions);
         }
 

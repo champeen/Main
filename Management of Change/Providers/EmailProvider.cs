@@ -103,7 +103,7 @@ namespace Management_of_Change.Provider
 
                     try
                     {
-                        await smtpClient.SendMailAsync(mailMessage);
+ //                       await smtpClient.SendMailAsync(mailMessage);
                     }
                     catch(Exception ex)
                     {

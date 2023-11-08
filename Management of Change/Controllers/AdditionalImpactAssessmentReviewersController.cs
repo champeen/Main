@@ -186,10 +186,14 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             // Make sure duplicates are not entered...
             List<AdditionalImpactAssessmentReviewers> checkDupes = await _context.AdditionalImpactAssessmentReviewers
                 .Where(m => m.Reviewer == additionalImpactAssessmentReviewers.Reviewer)
                 .Where(m => m.ReviewType == additionalImpactAssessmentReviewers.ReviewType)
+                .Where(m => m.ChangeRequestId == changeRequestId)
                 .ToListAsync();
             if (checkDupes.Count > 0)
             {
@@ -218,10 +222,8 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new { changeRequestId = changeRequestId, tab = tab });
             }
-            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).ToListAsync();
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
             ViewBag.Users = getUserList();
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
             ViewBag.Tab = tab;
             additionalImpactAssessmentReviewers.ChangeRequestId = changeRequestId;
             return View(additionalImpactAssessmentReviewers);
@@ -241,7 +243,7 @@ namespace Management_of_Change.Controllers
             if (additionalImpactAssessmentReviewers == null)
                 return NotFound();
 
-            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).ToListAsync();
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
             ViewBag.Users = getUserList();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
@@ -271,6 +273,7 @@ namespace Management_of_Change.Controllers
             List<AdditionalImpactAssessmentReviewers> checkDupes = await _context.AdditionalImpactAssessmentReviewers
                 .Where(m => m.Reviewer == additionalImpactAssessmentReviewers.Reviewer)
                 .Where(m => m.ReviewType == additionalImpactAssessmentReviewers.ReviewType)
+                .Where(m => m.ChangeRequestId == changeRequestId)
                 .ToListAsync();
             if (checkDupes.Count > 0)
             {
@@ -311,7 +314,7 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index), new { changeRequestId = changeRequestId, tab = tab });
             }
-            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).ToListAsync();
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
             ViewBag.Users = getUserList();
             ViewBag.Tab = tab;
             additionalImpactAssessmentReviewers.ChangeRequestId = changeRequestId;
@@ -372,6 +375,9 @@ namespace Management_of_Change.Controllers
 
         public async Task<IActionResult> Add(int changeRequestId, string reviewType, string reviewer, string tab)
         {
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             AdditionalImpactAssessmentReviewers additionalImpactAssessmentReviewers = new AdditionalImpactAssessmentReviewers();
 
             // Get Reviewers Name and Email.....

@@ -8,7 +8,8 @@
         <h1 style="display:inline">
             Change Request
             <span class="ms-2" title="Create New MoC based on this MoC.  Include all Details and General MoC Questions only. Status will be set to 'Draft' and ChangeOwner will be you.">
-                @Html.ActionLink("Clone","Clone",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-success align-middle"})
+                @Html.ActionLink("Clone","Clone", new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-success align-middle"})
+                @Html.ActionLink("Download New Equipment Checklist","DownloadNewEquipmentChecklist","ChangeRequests", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-secondary", title="Download 'New Equipment Checklist' Spreadsheet to Download Folder"})
             </span>
         </h1>
     </div>
@@ -171,11 +172,24 @@
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.ChangeRequest.Location_Site)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.CMT_Number)
+                @*                 <dt class="col-sm-2 my-1 text-end">
+                @Html.DisplayNameFor(model => model.ChangeRequest.CMT_Number)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.CMT_Number)
+                @Html.DisplayFor(model => model.ChangeRequest.CMT_Number)
+                </dd> *@
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.PTN_Number)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @if (Model.ChangeRequest.PTN_Number != null)
+                    {
+                        @foreach (var ptn in Model.ChangeRequest.PTN_Number)
+                        {
+                            <span>@ptn&nbsp;</span>
+                        }
+                        @* @Html.DisplayFor(model => model.ChangeRequest.PTN_Number) *@
+                    }
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Change_Level)
@@ -183,19 +197,8 @@
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.ChangeRequest.Change_Level)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.PTN_Number)
-                </dt>
-                <dd class="col-sm-4 my-1"
-                @if (Model.ChangeRequest.PTN_Number != null)
-                {
-                    @foreach (var ptn in Model.ChangeRequest.PTN_Number)
-                    {
-                        <span>@ptn&nbsp;</span>
-                    }
-                    @* @Html.DisplayFor(model => model.ChangeRequest.PTN_Number) *@
-                }
-                </dd>
+                <dt class="col-sm-2 my-1 text-end"></dt>
+                <dd class="col-sm-4 my-1"></dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Proudct_Line)
                 </dt>
@@ -396,7 +399,7 @@
                                 @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedUser)
                                 @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedDate)
                                 <td>
-                                    @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Question)
+                                    @Html.Raw(m.ChangeRequest.GeneralMocResponses[i].Question)
                                 </td>
                                 <td>
                                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
@@ -481,7 +484,7 @@
                         {
                             i = i + 1;
                             string recId = "record" + i.ToString();
-                            <tr id="@recId" >
+                            <tr id="@recId">
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ReviewType)
                                 </td>

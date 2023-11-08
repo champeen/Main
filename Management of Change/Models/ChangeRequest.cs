@@ -45,8 +45,8 @@ namespace Management_of_Change.Models
         public List<string>? PTN_Number { get; set; }
         [Display(Name = "Waiver Number")]
         public string? Waiver_Number { get; set; }
-        [Display(Name = "CMT Number")]
-        public string? CMT_Number { get; set; }
+        //[Display(Name = "CMT Number")]
+        //public string? CMT_Number { get; set; }
         [Display(Name = "Estimated Completion Date")]
         [DataType(DataType.Date)]
         public DateTime? Estimated_Completion_Date { get; set; }

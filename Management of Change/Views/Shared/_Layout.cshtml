@@ -41,6 +41,14 @@
                     $(this).toggle($(this.children[4]).text().toLowerCase().indexOf(value) > -1)
                 });
             });
+
+            $("#changeTypeSearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#impactAssessmentMatrixTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
         });
     </script>
     <style>

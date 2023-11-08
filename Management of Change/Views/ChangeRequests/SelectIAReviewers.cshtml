@@ -7,6 +7,8 @@
 @using (Html.BeginForm("SubmitForReview2", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequestId }))
 {
     @Html.HiddenFor(m => m.AdditionalImpactAssessmentReviewers)
+@*     @Html.HiddenFor(m => m.EquipmentReviewers)
+    @Html.HiddenFor(m => m.MaintenanceReviewers) *@
     @Html.HiddenFor(m => m.ChangeRequestId)
     @Html.HiddenFor(m => m.ChangeRequest.Id)
     @Html.HiddenFor(m => m.ChangeRequest)
@@ -28,7 +30,7 @@
 
     <div class="row">
         @* List of Impact Reviewers for Equipment - 1 from this list may be required  *@
-        @if (Model.EquipmentReviewerRequired == true)
+        @if (Model.EquipmentReviewerRequired != null && Model.EquipmentReviewerRequired == "Yes")
         {
             <div class="col-6">
                 <div>
@@ -42,6 +44,9 @@
                             </th>
                             <th>
                                 Review Type
+                            </th>
+                            <th>
+                                Change Area
                             </th>
                             <th>
                                 Reviewer Username
@@ -61,6 +66,7 @@
                         {
                             <tr>
                                 @Html.HiddenFor(m => m.EquipmentReviewers[i].ReviewType)
+                                @Html.HiddenFor(m => m.EquipmentReviewers[i].ReviewArea)
                                 @Html.HiddenFor(m => m.EquipmentReviewers[i].Reviewer)
                                 @Html.HiddenFor(m => m.EquipmentReviewers[i].ReviewerName)
                                 @Html.HiddenFor(m => m.EquipmentReviewers[i].ReviewerEmail)
@@ -71,6 +77,9 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(m => m.EquipmentReviewers[i].ReviewType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.EquipmentReviewers[i].ReviewArea)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(m => m.EquipmentReviewers[i].Reviewer)
@@ -92,7 +101,7 @@
         }
 
         @* List of Impact Reviewers for Maintenance & Reliability - 1 from this list may be required  *@
-        @if (Model.MaintenanceReviewerRequired == true)
+        @if (Model.MaintenanceReviewerRequired != null && Model.MaintenanceReviewerRequired == "Yes")
         {
             <div class="col-6">
                 <div>
@@ -106,6 +115,9 @@
                             </th>
                             <th>
                                 Review Type
+                            </th>
+                            <th>
+                                Change Area
                             </th>
                             <th>
                                 Reviewer Username
@@ -125,6 +137,7 @@
                         {
                             <tr>
                                 @Html.HiddenFor(m => m.MaintenanceReviewers[i].ReviewType)
+                                @Html.HiddenFor(m => m.MaintenanceReviewers[i].ReviewArea)
                                 @Html.HiddenFor(m => m.MaintenanceReviewers[i].Reviewer)
                                 @Html.HiddenFor(m => m.MaintenanceReviewers[i].ReviewerName)
                                 @Html.HiddenFor(m => m.MaintenanceReviewers[i].ReviewerEmail)
@@ -135,6 +148,9 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(m => m.MaintenanceReviewers[i].ReviewType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => m.MaintenanceReviewers[i].ReviewArea)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(m => m.MaintenanceReviewers[i].Reviewer)

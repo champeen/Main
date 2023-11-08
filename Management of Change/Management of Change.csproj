@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Attachments\" />
+    <Folder Include="wwwroot\Documents\" />
   </ItemGroup>
 
 </Project>
