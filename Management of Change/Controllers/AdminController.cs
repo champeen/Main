@@ -63,6 +63,9 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (string.IsNullOrWhiteSpace(cancelChangeRequest.MocNumber))
             {
                 ModelState.AddModelError("MocNumber", "MoC Number is Required");
@@ -86,9 +89,6 @@ namespace Management_of_Change.Controllers
             changeRequest.Cancel_Date = DateTime.UtcNow;
             changeRequest.Cancel_Reason = cancelChangeRequest.CancelReason;
             //cancelChangeRequest.ChangeRequest = changeRequest;
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
 
             return View(changeRequest);
         }

@@ -399,7 +399,7 @@
                                 @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedUser)
                                 @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedDate)
                                 <td>
-                                    @Html.Raw(m.ChangeRequest.GeneralMocResponses[i].Question)
+                                    @Html.Raw(Model.ChangeRequest.GeneralMocResponses[i].Question)
                                 </td>
                                 <td>
                                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))

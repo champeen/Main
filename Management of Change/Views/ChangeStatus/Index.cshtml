@@ -6,10 +6,12 @@
 
 <h1>Change Status</h1>
 
-<p>
-    @* <a asp-action="Create">Create New</a> *@
-    <span class="mx-5"><a asp-controller="Admin" asp-action="Index">Previous</a></span>
-</p>
+<div class="row mt-5 mb-3">
+    <div class="col-12">
+        @* <a asp-action="Create">Create New</a> *@
+        <span class=""><a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Back</a></span>
+    </div>
+</div>
 <table class="table table-bordered table-striped">
     <thead class="table-primary">
         <tr>
@@ -89,17 +91,3 @@
         }
     </tbody>
 </table>
-
-<div class="fw-bold">
-    ORIGINAL STATUS
-</div>
-<div>Change Proposal	</div>
-<div>Change Evaluation</div>
-<div>Implementation	</div>
-<div>Verification</div>
-<div>On Hold	</div>
-<div>Closed	</div>
-<div>Cancelled	</div>
-<br/>
-<br/>
-Awaiting Completion of Pre Implementation Tasks
