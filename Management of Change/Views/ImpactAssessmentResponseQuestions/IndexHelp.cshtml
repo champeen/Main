@@ -6,10 +6,23 @@
 
 <h1>Impact Assessment Response Questions</h1>
 
-<p class="mt-5">
-    @* <a asp-action="Create">Create New</a> *@
-    <span class=""><a asp-controller="Help" asp-action="Index" class="btn btn-secondary">Back</a></span>
-</p>
+<form asp-controller="ImpactAssessmentResponseQuestions" asp-action="IndexHelp">
+    <div class="row mt-5 mb-3">
+        <div class="col-8">
+            @* <a asp-action="Create">Create New</a> *@
+            <span class=""><a asp-controller="Help" asp-action="Index" class="btn btn-secondary">Back</a></span>
+        </div>
+        <div class="col-1 text-end fw-bold mt-2">
+            Review Type
+        </div>
+        <div class="col-2 text-end">
+            @Html.DropDownList("typeFilter", new SelectList(ViewBag.ReviewTypes),"All", new {@class = "form-control form-select", @id="reviewTypeFilter"})
+        </div>
+        <div class="col-1 text-start">
+            <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
 <table class="table table-bordered table-striped">
     <thead class="table-primary">
         <tr>
@@ -19,66 +32,61 @@
             <th>
                 @Html.DisplayNameFor(model => model.Question)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order)
-            </th>
-@*            <th>
-                @Html.DisplayNameFor(model => model.CreatedUser)
+            @*            <th>
+            @Html.DisplayNameFor(model => model.CreatedUser)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+            @Html.DisplayNameFor(model => model.CreatedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedUser)
+            @Html.DisplayNameFor(model => model.ModifiedUser)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
+            @Html.DisplayNameFor(model => model.ModifiedDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedUser)
+            @Html.DisplayNameFor(model => model.DeletedUser)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DeletedDate)
+            @Html.DisplayNameFor(model => model.DeletedDate)
             </th>*@
             @* <th></th> *@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReviewType)
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReviewType)
+                </td>
+                <td>
+                    @Html.Raw(item.Question)
+                </td>
+                @*            <td>
+            @Html.DisplayFor(modelItem => item.CreatedUser)
             </td>
             <td>
-                @Html.Raw(item.Question)
+            @Html.DisplayFor(modelItem => item.CreatedDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Order)
-            </td>
-@*            <td>
-                @Html.DisplayFor(modelItem => item.CreatedUser)
+            @Html.DisplayFor(modelItem => item.ModifiedUser)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
+            @Html.DisplayFor(modelItem => item.ModifiedDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModifiedUser)
+            @Html.DisplayFor(modelItem => item.DeletedUser)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ModifiedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedDate)
+            @Html.DisplayFor(modelItem => item.DeletedDate)
             </td>*@
-@*             <td class="text-nowrap">
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @*             <td class="text-nowrap">
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td> *@
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>

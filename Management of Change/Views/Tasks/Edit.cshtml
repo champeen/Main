@@ -5,10 +5,9 @@
 }
 
 <h1>Task</h1>
-<h4>Edit</h4>
-<hr />
+<h4 class="mt-5">Edit</h4>
 <form asp-action="Edit">
-    <div class="row my-4">
+    <div class="row">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
@@ -29,6 +28,7 @@
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
         </div>
     </div>
+    <hr />
     <div class="row">
         <div class="col-md-12">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

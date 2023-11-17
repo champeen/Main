@@ -45,7 +45,7 @@ namespace Management_of_Change.Provider
                 if (to == null)
                     throw new Exception("To Email Address Cannot Be Null");
 
-                mailMessage.Subject = "TEST - " + subject;
+                mailMessage.Subject = subject;
                 mailMessage.Body = body;
                 mailMessage.IsBodyHtml = true;
                 if (priority == "High")
@@ -53,13 +53,17 @@ namespace Management_of_Change.Provider
                     mailMessage.Priority = MailPriority.High;
                     mailMessage.Subject = "HIGH PRIORITY: " + mailMessage.Subject;
                     mailMessage.Body = @"<strong style=""color:Red"">HIGH PRIORITY!</strong><br/><br/>" + mailMessage.Body;
-                }                   
+                }
 
+                // MJWII UNCOMMENT DIRECTLY BELOW, COMMENT OUT FAR BELOW !!!!!
                 foreach (var curr_address in to.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     MailAddress mytoAddress = new MailAddress(curr_address);
                     mailMessage.To.Add(mytoAddress);
                 }
+                // MJWII TAKE BELOW OUT, ABOVE UNCOMMENT  !!!!
+                //MailAddress mytoAddress2 = new MailAddress("Mark.Bushong@sksiltron.com");
+                //mailMessage.To.Add(mytoAddress2);
 
                 if (cc != null)
                 {
@@ -80,11 +84,11 @@ namespace Management_of_Change.Provider
                 }
 
                 using (var smtpClient = new SmtpClient())
-                {                    
+                {
                     smtpClient.Host = _emailUrl;
                     smtpClient.Port = _emailPort;
                     smtpClient.Credentials = new NetworkCredential(_emailUser, _emailPassword);
-                    smtpClient.EnableSsl = true;     
+                    smtpClient.EnableSsl = true;
 
                     //if (fileAttachment != null)
                     //{
@@ -101,14 +105,7 @@ namespace Management_of_Change.Provider
                     //else
                     //    smtpClient.Send(mailMessage);
 
-                    try
-                    {
- //                       await smtpClient.SendMailAsync(mailMessage);
-                    }
-                    catch(Exception ex)
-                    {
-                        throw(ex);
-                    }                    
+                    await smtpClient.SendMailAsync(mailMessage);
                 }
             }
             //return true;

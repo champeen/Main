@@ -22,7 +22,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ReviewTypes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string typeFilter = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -30,13 +30,18 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
 
-            return _context.ReviewType != null ? 
-                          View(await _context.ReviewType.OrderBy(m => m.Type).ThenBy(m => m.ChangeArea).ThenBy(m => m.Reviewer).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ReviewType'  is null.");
+            List<ReviewType> reviewTypes = new List<ReviewType>();
+            if (typeFilter == null)
+                reviewTypes = await _context.ReviewType.OrderBy(m => m.Type).ThenBy(m => m.ChangeArea).ThenBy(m => m.Reviewer).ToListAsync();
+            else
+                reviewTypes = await _context.ReviewType.Where(m => m.Type == typeFilter).OrderBy(m => m.Type).ThenBy(m => m.ChangeArea).ThenBy(m => m.Reviewer).ToListAsync();
+
+            return View(reviewTypes);
         }
 
-        public async Task<IActionResult> IndexHelp()
+        public async Task<IActionResult> IndexHelp(string typeFilter = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -44,10 +49,15 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
 
-            return _context.ReviewType != null ?
-                          View(await _context.ReviewType.OrderBy(m => m.Type).ThenBy(m => m.ChangeArea).ThenBy(m => m.Reviewer).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ReviewType'  is null.");
+            List<ReviewType> reviewTypes = new List<ReviewType>();
+            if (typeFilter == null)
+                reviewTypes = await _context.ReviewType.OrderBy(m => m.Type).ThenBy(m => m.ChangeArea).ThenBy(m => m.Reviewer).ToListAsync();
+            else
+                reviewTypes = await _context.ReviewType.Where(m => m.Type == typeFilter).OrderBy(m => m.Type).ThenBy(m => m.ChangeArea).ThenBy(m => m.Reviewer).ToListAsync();
+
+            return View(reviewTypes);
         }
 
         // GET: ReviewTypes/Details/5

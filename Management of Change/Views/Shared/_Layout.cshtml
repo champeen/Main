@@ -27,7 +27,14 @@
                     $(this).toggle($(this.children[2]).text().toLowerCase().indexOf(value) > -1)
                 });
             });
-
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // $("#reviewTypeFilter").change(function () {
+            //     var value = $(this).val().toLowerCase();
+            //     $("#reviewTypeTable tr").filter(function () {
+            //         $(this).toggle($(this.children[0]).text().toLowerCase() === value)
+            //     });
+            // });
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
             $("#taskSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $("#taskTable tr").filter(function () {
@@ -42,9 +49,30 @@
                 });
             });
 
-            $("#changeTypeSearch").on("keyup", function () {
+            $("#searchIAM").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $("#impactAssessmentMatrixTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            $("#searchIAMHelp").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#impactAssessmentMatrixHelpTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            $("#changeTypeSearchIFAM").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#FinalApprovalMatrixTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            $("#changeTypeSearchIARQ").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#ImpactAssessmentResponseQuestionsTable tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });

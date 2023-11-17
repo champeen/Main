@@ -159,6 +159,9 @@ namespace Management_of_Change.Controllers
             if (String.IsNullOrWhiteSpace(implementationFinalApprovalResponse.ReviewerEmail))
                 ModelState.AddModelError("Username", "Employee record has a blank Email");
 
+            if (String.IsNullOrWhiteSpace(implementationFinalApprovalResponse.ReviewResult))
+                ModelState.AddModelError("ReviewResult", "Review Result Required");
+
             if (ModelState.IsValid)
             {
                 implementationFinalApprovalResponse.ModifiedUser = _username;

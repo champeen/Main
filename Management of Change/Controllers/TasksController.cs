@@ -144,7 +144,8 @@ namespace Management_of_Change.Controllers
 
                 // Send Email Out notifying the person who is assigned the task
                 string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
-                string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+                string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
                 var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                 if (toPerson != null)
                 {
@@ -269,7 +270,7 @@ namespace Management_of_Change.Controllers
                         // Send Email Out notifying the person who is assigned the task
                         string subject = @"Management of Change (MoC) - Task has been completed.";
                         string body = @"A Management of Change task has been completed.  The task is listed under your Change Request, in the Tasks tab. <br/><br/>
-                            <strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+                            <strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
                         var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                         var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.CreatedUser).FirstOrDefaultAsync();
                         if (toPerson != null)
@@ -387,7 +388,7 @@ namespace Management_of_Change.Controllers
 
             // Send Email Out notifying the person who is assigned the task
             string subject = @"Management of Change (MoC) - Impact Assessment Response Task Reminder.";
-            string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Link: " + Initialization.WebsiteUrl + @" </strong><br/><br/>";
+            string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
             var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
             if (toPerson != null)
             {

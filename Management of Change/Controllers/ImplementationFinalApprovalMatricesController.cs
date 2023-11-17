@@ -46,7 +46,7 @@ namespace Management_of_Change.Controllers
             return View(implementationFinalApprovalMatrix);
         }
 
-        public async Task<IActionResult> IndexHelp()
+        public async Task<IActionResult> IndexHelp(string changeTypeFilter = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -54,8 +54,13 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).OrderBy(m => m).ToListAsync();
 
-            List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync();
+            List<ImplementationFinalApprovalMatrix> implementationFinalApprovalMatrix = new List<ImplementationFinalApprovalMatrix>();
+            if (changeTypeFilter == null)
+                implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync();
+            else
+                implementationFinalApprovalMatrix = await _context.ImplementationFinalApprovalMatrix.Where(m => m.ChangeType == changeTypeFilter).OrderBy(m => m.ChangeType).ThenBy(m => m.FinalReviewType).ToListAsync();
 
             foreach (var record in implementationFinalApprovalMatrix)
             {

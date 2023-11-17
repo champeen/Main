@@ -22,7 +22,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ImpactAssessmentMatrices
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string changeTypeFilter = null, string reviewTypeFilter = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -30,8 +30,18 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
+            ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).OrderBy(m => m).ToListAsync();
 
-            List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            List<ImpactAssessmentMatrix> impactAssessmentMatrix = new List<ImpactAssessmentMatrix>();
+            if (changeTypeFilter == null && reviewTypeFilter == null)
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            else if (changeTypeFilter != null && reviewTypeFilter == null)
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.Where(m => m.ChangeType == changeTypeFilter).OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            else if (changeTypeFilter == null && reviewTypeFilter != null)
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.Where(m => m.ReviewType == reviewTypeFilter).OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            else
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.Where(m => m.ChangeType == changeTypeFilter && m.ReviewType == reviewTypeFilter).OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
 
             foreach (var record in impactAssessmentMatrix)
             {
@@ -68,7 +78,7 @@ namespace Management_of_Change.Controllers
             return View(impactAssessmentMatrix);
         }
 
-        public async Task<IActionResult> IndexHelp()
+        public async Task<IActionResult> IndexHelp(string changeTypeFilter = null, string reviewTypeFilter = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -76,8 +86,18 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
+            ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).OrderBy(m => m).ToListAsync();
 
-            List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            List<ImpactAssessmentMatrix> impactAssessmentMatrix = new List<ImpactAssessmentMatrix>();
+            if (changeTypeFilter == null && reviewTypeFilter == null)
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            else if (changeTypeFilter != null && reviewTypeFilter == null)
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.Where(m => m.ChangeType == changeTypeFilter).OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            else if (changeTypeFilter == null && reviewTypeFilter != null)
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.Where(m => m.ReviewType == reviewTypeFilter).OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
+            else
+                impactAssessmentMatrix = await _context.ImpactAssessmentMatrix.Where(m => m.ChangeType == changeTypeFilter && m.ReviewType == reviewTypeFilter).OrderBy(m => m.ChangeType).ThenBy(m => m.ReviewType).ToListAsync();
 
             foreach (var record in impactAssessmentMatrix)
             {

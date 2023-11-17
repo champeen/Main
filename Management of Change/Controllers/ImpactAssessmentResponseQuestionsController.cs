@@ -36,7 +36,7 @@ namespace Management_of_Change.Controllers
                           Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentResponseQuestions'  is null.");
         }
 
-        public async Task<IActionResult> IndexHelp()
+        public async Task<IActionResult> IndexHelp(string typeFilter = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -44,10 +44,15 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
 
-            return _context.ImpactAssessmentResponseQuestions != null ?
-                          View(await _context.ImpactAssessmentResponseQuestions.OrderBy(m => m.ReviewType).ThenBy(m => m.Order).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ImpactAssessmentResponseQuestions'  is null.");
+            List<ImpactAssessmentResponseQuestions> questions = new List<ImpactAssessmentResponseQuestions>();
+            if (typeFilter == null)
+                questions = await _context.ImpactAssessmentResponseQuestions.OrderBy(m => m.ReviewType).ThenBy(m => m.Order).ToListAsync();
+            else
+                questions = await _context.ImpactAssessmentResponseQuestions.Where(m => m.ReviewType == typeFilter).OrderBy(m => m.ReviewType).ThenBy(m => m.Order).ToListAsync();
+
+            return View(questions);
         }
 
         // GET: ImpactAssessmentResponseQuestions/Details/5

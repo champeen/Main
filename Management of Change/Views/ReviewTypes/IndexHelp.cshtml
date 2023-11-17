@@ -6,10 +6,23 @@
 
 <h1>Review Types</h1>
 
-<p class="mt-5">
-    @* <a asp-action="Create">Create New</a> *@
-    <span class=""><a asp-controller="Help" asp-action="Index" class="btn btn-secondary">Back</a></span>
-</p>
+<form asp-controller="ReviewTypes" asp-action="IndexHelp">
+    <div class="row mt-5 mb-3">
+        <div class="col-8">
+            @* <a asp-action="Create">Create New</a> *@
+            <span class=""><a asp-controller="Help" asp-action="Index" class="btn btn-secondary">Back</a></span>
+        </div>
+        <div class="col-1 text-end fw-bold mt-2">
+            Review Type
+        </div>
+        <div class="col-2 text-end">
+            @Html.DropDownList("typeFilter", new SelectList(ViewBag.ReviewTypes),"All", new {@class = "form-control form-select", @id="reviewTypeFilter"})
+        </div>
+        <div class="col-1 text-start">
+            <input type="submit" value="Filter" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
 <table class="table table-bordered table-striped">
     <thead class="table-primary">
         <tr>
@@ -29,9 +42,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Order)
             </th>
             @* <th></th> *@
         </tr>
@@ -55,14 +65,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Order)
-                </td>
-@*                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td> *@
+                @*                 <td>
+            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td> *@
             </tr>
         }
     </tbody>
