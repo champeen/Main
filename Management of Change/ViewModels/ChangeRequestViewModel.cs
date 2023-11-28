@@ -6,6 +6,13 @@ namespace Management_of_Change.ViewModels
         public ChangeRequest? ChangeRequest { get; set; }
         public List<Attachment>? Attachments { get; set; }
         public List<Models.Task> Tasks { get; set; }
+        public __mst_employee employee { get; set; }
+        public string? ImplementationDisplayName { get; set; }
+        public string? CloseoutDisplayName { get; set; }
+        public string? CancelDisplayName { get; set; }
+        public string? CreatUserDisplayName { get; set; }
+        public string? ModifiedUserDisplayName { get; set; }
+        public string? DeletedUserDisplayName { get; set; }
         public string? Tab3Disabled { get; set; }
         public string? Tab4Disabled { get; set; }
         public string? Tab5Disabled { get; set; }

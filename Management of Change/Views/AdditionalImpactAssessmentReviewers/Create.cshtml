@@ -72,8 +72,8 @@
             <span asp-validation-for="DeletedDate" class="text-danger"></span>
             </div> *@
             <div class="form-group mt-3">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                @Html.ActionLink("Back to List","Index", new {changeRequestId=Model.ChangeRequestId,tab=ViewBag.Tab}, new {@class="btn btn-secondary ms-2"})
+                <input type="submit" value="Create" class="btn btn-success" />
+                @Html.ActionLink("Cancel","Index", new {changeRequestId=Model.ChangeRequestId,tab=ViewBag.Tab}, new {@class="btn btn-secondary ms-2"})
             </div>
 
         </div>

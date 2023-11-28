@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Management_of_Change.Migrations
 {
     [DbContext(typeof(Management_of_ChangeContext))]
-    partial class Management_of_ChangeContextModelSnapshot : ModelSnapshot
+    [Migration("20231122151504_addUserFields")]
+    partial class addUserFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,12 +248,6 @@ namespace Management_of_Change.Migrations
 
                     b.Property<string>("Change_Owner")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Change_Owner_Email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Change_Owner_FullName")
                         .HasColumnType("text");
 
                     b.Property<string>("Change_Status")

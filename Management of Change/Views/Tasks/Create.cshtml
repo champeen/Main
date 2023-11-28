@@ -124,6 +124,11 @@
                 <input asp-for="OnHoldReason" class="form-control" />
                 <span asp-validation-for="OnHoldReason" class="text-danger fw-bold"></span>
             </div>
+            <div class="form-group my-3">
+                <label asp-for="CancelledReason" class="control-label fw-bold mb-1"></label>
+                <input asp-for="CancelledReason" class="form-control" />
+                <span asp-validation-for="CancelledReason" class="text-danger fw-bold"></span>
+            </div>
             @*<div class="form-group my-3">
                 <label asp-for="ImpactAssessmentResponseAnswerId" class="control-label fw-bold"></label>
                 <select asp-for="ImpactAssessmentResponseAnswerId" class="form-control" asp-items="ViewBag.ImpactAssessmentResponseAnswerId"></select>

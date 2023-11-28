@@ -41,7 +41,7 @@ namespace Management_of_Change.Utilities
                 if (userDisplayName == null)
                 {
                     userDisplayName = _context.__mst_employee
-                        .Where(m => m.onpremisessamaccountname == userName)
+                        .Where(m => m.onpremisessamaccountname == _username)
                         .Where(m => m.accountenabled == true)
                         .Where(m => !String.IsNullOrWhiteSpace(m.mail))
                         .Select(m => m.displayname)
@@ -58,7 +58,7 @@ namespace Management_of_Change.Utilities
                 if (isAuthorized == null)
                 {
                     var found = _context.__mst_employee
-                        .Where(m => m.onpremisessamaccountname == userName)    // User Name logged in matches one in the database
+                        .Where(m => m.onpremisessamaccountname == _username)    // User Name logged in matches one in the database
                         .Where(m => m.accountenabled == true)                   // Account is enabled
                         .Where(m => !String.IsNullOrWhiteSpace(m.mail))         // There is an email address
                         .Any();
@@ -77,9 +77,9 @@ namespace Management_of_Change.Utilities
                 }
                 else
                     if (isAuthorized == true)
-                        return true;
-                    else
-                        return false;
+                    return true;
+                else
+                    return false;
             }
         }
 
@@ -106,9 +106,9 @@ namespace Management_of_Change.Utilities
                 }
                 else
                     if (isAdmin == true)
-                        return true;
-                    else
-                        return false;
+                    return true;
+                else
+                    return false;
             }
         }
 
@@ -128,7 +128,7 @@ namespace Management_of_Change.Utilities
 
         public BaseController(ILogger<AdminController> logger)
         {
-            
+
         }
 
         public BaseController()
@@ -169,7 +169,7 @@ namespace Management_of_Change.Utilities
             return users;
 
         }
-        
+
         public List<SelectListItem> getChangeTypes()
         {
             var changeTypeList = _context.ChangeType.OrderBy(m => m.Order).ThenBy(m => m.Type).ToList();
@@ -232,6 +232,19 @@ namespace Management_of_Change.Utilities
             return emailHistory;
             //_context.Add(emailHistory);
             //await _context.SaveChangesAsync();
+        }
+
+        public string? getUserDisplayName(string username = null)
+        {
+            if (username == null)
+                return null;
+
+            return _context.__mst_employee
+            .Where(m => m.onpremisessamaccountname == username)
+            .Where(m => m.accountenabled == true)
+            .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+            .Select(m => m.displayname)
+            .FirstOrDefault();
         }
     }
 }

@@ -97,12 +97,11 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AssignedToUser)
+                    @Html.DisplayFor(modelItem => item.AssignedToUserFullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AssignedByUser)
+                    @Html.DisplayFor(modelItem => item.AssignedByUserFullName)
                 </td>
-
                 @if (DateTime.Now > item.DueDate && item.Status == "Open")
                 {
                     <td class="fw-bolder text-danger">
@@ -127,7 +126,6 @@
                         @Html.DisplayFor(modelItem => item.DueDate)
                     </td>
                 }
-
                 <td>
                     @Html.DisplayFor(modelItem => item.CompletionDate)
                 </td>

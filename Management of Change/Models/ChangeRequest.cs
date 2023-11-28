@@ -13,6 +13,10 @@ namespace Management_of_Change.Models
         public string? MOC_Number { get; set; }
         [Display(Name = "Change Owner")]
         public string Change_Owner { get; set; }
+        [Display(Name = "Change Owner Full Name")]
+        public string? Change_Owner_FullName { get; set; }
+        [Display(Name = "Change Owner Email")]
+        public string? Change_Owner_Email { get; set; }
         [Display(Name = "Location/Site")]
         public string Location_Site { get; set; }
         [Display(Name = "Title/Change Description")]

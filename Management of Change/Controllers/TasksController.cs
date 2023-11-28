@@ -31,10 +31,12 @@ namespace Management_of_Change.Controllers
             if (taskStatusFilter != null)
                 requests = requests.Where(r => r.Status == taskStatusFilter);
 
+            var taskList = await requests.OrderBy(m => m.Priority).ThenBy(m => m.DueDate).ToListAsync();
+
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return View("Index", await requests.OrderBy(m => m.Priority).ThenBy(m => m.DueDate).ToListAsync());
+            return View("Index", taskList);
 
             //return _context.Task != null ?
             //            View(await _context.Task.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync()) :
@@ -60,6 +62,9 @@ namespace Management_of_Change.Controllers
             ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.CreatedUserDisplayName = getUserDisplayName(task.CreatedUser);
+            ViewBag.ModifiedUserDisplayName = getUserDisplayName(task.ModifiedUser);
+            ViewBag.DeletedUserDisplayName = getUserDisplayName(task.DeletedUser);
 
             return View(task);
         }
@@ -99,7 +104,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,Priority,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task, string source = null)
+        public async Task<IActionResult> Create([Bind("Id,ChangeRequestId,ImplementationType,MocNumber,Status,Priority,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,CancelledReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -114,6 +119,9 @@ namespace Management_of_Change.Controllers
 
             if (task.Status == "On Hold" && String.IsNullOrWhiteSpace(task.OnHoldReason))
                 ModelState.AddModelError("OnHoldReason", "If Task Status is 'On Hold', Reason is required.");
+
+            if (task.Status == "Cancelled" && String.IsNullOrWhiteSpace(task.CancelledReason))
+                ModelState.AddModelError("CancelledReason", "If Task Status is 'Cancelled', Reason is required.");
 
             if (task.ChangeRequestId != null && task.ImplementationType == null)
                 ModelState.AddModelError("ImplementationType", "If task is part of a Change Request, Implementation Type is required.");
@@ -139,6 +147,17 @@ namespace Management_of_Change.Controllers
             if (ModelState.IsValid)
             {
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
+
+                // get assigned-to person info....
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+                task.AssignedToUserFullName = toPerson.displayname;
+                task.AssignedToUserEmail = toPerson.mail;
+
+                // get assigned-by person info....
+                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedByUser).FirstOrDefaultAsync();
+                task.AssignedByUserFullName = fromPerson.displayname;
+                task.AssignedByUserEmail = fromPerson.mail;
+
                 _context.Add(task);
                 await _context.SaveChangesAsync();
 
@@ -146,7 +165,6 @@ namespace Management_of_Change.Controllers
                 string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
                 string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
-                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
                 if (toPerson != null)
                 {
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
@@ -169,10 +187,10 @@ namespace Management_of_Change.Controllers
                     //};
                     //_context.Add(emailHistory);
                     //await _context.SaveChangesAsync();
-                }                
+                }
 
                 if (source == "Home")
-                    return RedirectToAction("Index", "Home", new {});
+                    return RedirectToAction("Index", "Home", new { });
                 else
                     return RedirectToAction(nameof(Index));
             }
@@ -231,7 +249,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,Priority,AssignedToUser,AssignedByUser,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,Priority,AssignedToUser,AssignedToUserFullName,AssignedToUserEmail,AssignedByUser,AssignedByUserFullName,AssignedByUserEmail,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,CancelledReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -250,6 +268,9 @@ namespace Management_of_Change.Controllers
             if (task.Status == "Complete" && String.IsNullOrWhiteSpace(task.CompletionNotes))
                 ModelState.AddModelError("CompletionNotes", "If Task Status is 'Complete', Completion Notes is required.");
 
+            if (task.Status == "Cancelled" && String.IsNullOrWhiteSpace(task.CancelledReason))
+                ModelState.AddModelError("CancelledReason", "If Task Status is 'Cancelled', Reason is required.");
+
             if (task.ChangeRequestId != null && task.ImplementationType == null)
                 ModelState.AddModelError("ImplementationType", "If task is part of a Change Request, Implementation Type is required.");
 
@@ -257,52 +278,49 @@ namespace Management_of_Change.Controllers
             {
                 var originalTaskStatus = await _context.Task.Where(m => m.Id == task.Id).Select(m => m.Status).FirstOrDefaultAsync();
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
+                // get assigned-to person info....
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+                task.AssignedToUserFullName = toPerson.displayname;
+                task.AssignedToUserEmail = toPerson.mail;
+                // get assigned-by person info....
+                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedByUser).FirstOrDefaultAsync();
+                task.AssignedByUserFullName = fromPerson.displayname;
+                task.AssignedByUserEmail = fromPerson.mail;
                 task.ModifiedUser = _username;
                 task.ModifiedDate = DateTime.UtcNow;
-                try
-                {
-                    _context.Update(task);
-                    await _context.SaveChangesAsync();
+                _context.Update(task);
+                await _context.SaveChangesAsync();
 
-                    // if status was changed to "Complete" then email task creator that it is now complete
-                    if (originalTaskStatus != task.Status && task.Status == "Complete")
-                    {
-                        // Send Email Out notifying the person who is assigned the task
-                        string subject = @"Management of Change (MoC) - Task has been completed.";
-                        string body = @"A Management of Change task has been completed.  The task is listed under your Change Request, in the Tasks tab. <br/><br/>
+                // if status was changed to "Complete" then email task creator that it is now complete
+                if (originalTaskStatus != task.Status && task.Status == "Complete")
+                {
+                    // Send Email Out notifying the person who is assigned the task
+                    string subject = @"Management of Change (MoC) - Task has been completed.";
+                    string body = @"A Management of Change task has been completed.  The task is listed under your Change Request, in the Tasks tab. <br/><br/>
                             <strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-                        var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
-                        var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.CreatedUser).FirstOrDefaultAsync();
-                        if (toPerson != null)
-                        {
-                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null, task.Priority);
-                            AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
+                    var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.CreatedUser).FirstOrDefaultAsync();
+                    if (toPerson != null)
+                    {
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null, task.Priority);
+                        AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
 
-                            //EmailHistory emailHistory = new EmailHistory
-                            //{
-                            //    Priority = task.Priority,
-                            //    Subject = subject,
-                            //    Body = body,
-                            //    SentToDisplayName = toPerson.displayname,
-                            //    SentToUsername = toPerson.onpremisessamaccountname,
-                            //    SentToEmail = toPerson.mail,                                
-                            //    ChangeRequestId = task.ChangeRequestId,
-                            //    TaskId = task.Id,
-                            //    Type = "Task",
-                            //    Status = task.Status,
-                            //    CreatedDate = DateTime.UtcNow,
-                            //    CreatedUser = _username
-                            //};
-                            //_context.Add(emailHistory);
-                        }
+                        //EmailHistory emailHistory = new EmailHistory
+                        //{
+                        //    Priority = task.Priority,
+                        //    Subject = subject,
+                        //    Body = body,
+                        //    SentToDisplayName = toPerson.displayname,
+                        //    SentToUsername = toPerson.onpremisessamaccountname,
+                        //    SentToEmail = toPerson.mail,                                
+                        //    ChangeRequestId = task.ChangeRequestId,
+                        //    TaskId = task.Id,
+                        //    Type = "Task",
+                        //    Status = task.Status,
+                        //    CreatedDate = DateTime.UtcNow,
+                        //    CreatedUser = _username
+                        //};
+                        //_context.Add(emailHistory);
                     }
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaskExists(task.Id))
-                        return NotFound();
-                    else
-                        throw;
                 }
                 return RedirectToAction(nameof(Index));
             }

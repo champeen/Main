@@ -65,15 +65,14 @@
                 </a>
             </li>
             <li class="nav-item ms-auto">
-                <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab" data-bs-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments</a>
+                <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab" data-bs-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments (@Model.Attachments.Count.ToString())</a>
             </li>
             <li class="nav-item">
-                <a class="nav-item me-auto nav-link @Model.TabActiveTasks fw-bolder" id="nav-tasks-tab" data-bs-toggle="tab" href="#nav-tasks" role="tab" aria-controls="nav-profile" aria-selected="false">Tasks</a>
+                <a class="nav-item me-auto nav-link @Model.TabActiveTasks fw-bolder" id="nav-tasks-tab" data-bs-toggle="tab" href="#nav-tasks" role="tab" aria-controls="nav-profile" aria-selected="false">Tasks (@Model.Tasks.Count.ToString())</a>
             </li>
 
         </ul>
     </nav>
-
     <div class="tab-content" id="nav-tabContent">
         @******************************************************************************************************************@
         @*  DETAIL TAB ****************************************************************************************************@
@@ -116,7 +115,8 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.Change_Owner)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Change_Owner)
+                    @* @Html.DisplayFor(model => model.ChangeRequest.Change_Owner) *@
+                    @Html.DisplayFor(model => model.employee.displayname)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status_Description)
@@ -250,19 +250,19 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Username)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Implementation_Username)
+                    @Html.DisplayFor(model => model.ImplementationDisplayName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Closeout_Username)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Closeout_Username)
+                    @Html.DisplayFor(model => model.CloseoutDisplayName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Username)
                 </dt>
                 <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Cancel_Username)
+                    @Html.DisplayFor(model => model.CancelDisplayName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Date)
@@ -281,7 +281,7 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.CreatedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.CreatedUser)
+                    @Html.DisplayFor(model => model.CreatUserDisplayName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.CreatedDate)
@@ -293,7 +293,7 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.ModifiedUser)
+                    @Html.DisplayFor(model => model.ModifiedUserDisplayName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedDate)
@@ -305,7 +305,7 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.DeletedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.DeletedUser)
+                    @Html.DisplayFor(model => model.DeletedUserDisplayName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.DeletedDate)
@@ -341,6 +341,20 @@
         <div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
             @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequest.Id }))
             {
+                @if (ViewBag.QuestionsSaved != null)
+                {
+@*                     <div class="alert alert-success alert-dismissible d-flex align-items-center" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                        <div class="fw-bold">
+                            MoC Responses have been Saved
+                        </div>
+                    </div> *@
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                        <strong>MoC Responses have been Saved</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
                 @*<h4 class="mt-5">General MOC Questions</h4>*@
                 <div class="row mt-5">
                     <div class="col-6">
@@ -378,7 +392,7 @@
                             <th>
                                 Question
                             </th>
-                            <th>
+                            <th class="text-center">
                                 Response
                             </th>
                             @*<th></th>*@
@@ -511,7 +525,7 @@
                                     @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
-                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", rec=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
+                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", recId=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
                                     }
                                 </td>
                             </tr>
@@ -823,7 +837,6 @@
 <div class="text-nowrap my-5">
     @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@
 </div>
-
 <script>
     $(document).ready(function () {
         var anchor = document.getElementById('@Model.IArecord');

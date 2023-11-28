@@ -29,12 +29,15 @@ namespace Management_of_Change.Utilities
         private static string emailPassword { get; set; }
         private static string emailFrom { get; set; }
 
+
+
         // Setup Global Static Variables based on environment....
         public static string WebsiteUrl { get; set; }
         public static string ConnectionString { get; set; }
         public static string AttachmentDirectory { get; set; }
 
         private static string registryPath = @"Software\\SKSiltron\\MoC";
+        public static string EmailError { get; set; }
 
         //public Initialize(Management_of_ChangeContext context, WebApplicationBuilder builder) : base(context, builder)
         //{
@@ -65,6 +68,9 @@ namespace Management_of_Change.Utilities
             {
                 throw new NullReferenceException("ERROR: registryPath: " + registryPath + " Key: Environment: " + environment + " is not equal to 'Development' or 'Production'");
             }
+
+            // get error email box....
+            EmailError = GetRegistryKey(registryPath, "EmailError");
 
             // Create Email Provider
             //emailHost = builder.Configuration.GetValue<string>("EmailProvider:emailHost");

@@ -86,7 +86,7 @@
                     @Html.DisplayNameFor(model => model.AssignedByUser)
                 </div>
                 <div class="col-9">
-                    @Html.DisplayFor(model => model.AssignedByUser)
+                    @Html.DisplayFor(model => model.AssignedByUserFullName)
                 </div>
             </div>
             <div class="row my-3">
@@ -94,7 +94,7 @@
                     @Html.DisplayNameFor(model => model.AssignedToUser)
                 </div>
                 <div class="col-9">
-                    @Html.DisplayFor(model => model.AssignedToUser)
+                    @Html.DisplayFor(model => model.AssignedToUserFullName)
                 </div>
             </div>
             <div class="row my-3">
@@ -107,14 +107,6 @@
             </div>
         </div>
         <div class="col-6">
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.OnHoldReason)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.OnHoldReason)
-                </div>
-            </div>
             <div class="row my-3">
                 <div class="col-3 text-end fw-bold">
                     @Html.DisplayNameFor(model => model.CompletionDate)
@@ -133,10 +125,26 @@
             </div>
             <div class="row my-3">
                 <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.OnHoldReason)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.OnHoldReason)
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-3 text-end fw-bold">
+                    @Html.DisplayNameFor(model => model.CancelledReason)
+                </div>
+                <div class="col-9">
+                    @Html.DisplayFor(model => model.CancelledReason)
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-3 text-end fw-bold">
                     @Html.DisplayNameFor(model => model.CreatedUser)
                 </div>
                 <div class="col-9">
-                    @Html.DisplayFor(model => model.CreatedUser)
+                    @ViewBag.CreatedUserDisplayName
                 </div>
             </div>
             <div class="row my-3">
@@ -152,7 +160,7 @@
                     @Html.DisplayNameFor(model => model.ModifiedUser)
                 </div>
                 <div class="col-9">
-                    @Html.DisplayFor(model => model.ModifiedUser)
+                    @ViewBag.ModifiedUserDisplayName
                 </div>
             </div>
             <div class="row my-3">
@@ -168,7 +176,7 @@
                     @Html.DisplayNameFor(model => model.DeletedUser)
                 </div>
                 <div class="col-9">
-                    @Html.DisplayFor(model => model.DeletedUser)
+                    @ViewBag.DeletedUserDisplayName
                 </div>
             </div>
             <div class="row my-3">

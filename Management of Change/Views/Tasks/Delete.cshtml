@@ -45,13 +45,13 @@
             @Html.DisplayNameFor(model => model.AssignedToUser)
         </dt>
         <dd class="col-sm-10 my-2">
-            @Html.DisplayFor(model => model.AssignedToUser)
+            @Html.DisplayFor(model => model.AssignedToUserFullName)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
             @Html.DisplayNameFor(model => model.AssignedByUser)
         </dt>
         <dd class="col-sm-10 my-2">
-            @Html.DisplayFor(model => model.AssignedByUser)
+            @Html.DisplayFor(model => model.AssignedByUserFullName)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
             @Html.DisplayNameFor(model => model.Title)
@@ -88,6 +88,12 @@
         </dt>
         <dd class="col-sm-10 my-2">
             @Html.DisplayFor(model => model.OnHoldReason)
+        </dd>
+        <dt class="col-sm-2 my-2 text-end">
+            @Html.DisplayNameFor(model => model.CancelledReason)
+        </dt>
+        <dd class="col-sm-10 my-2">
+            @Html.DisplayFor(model => model.CancelledReason)
         </dd>
         <dt class="col-sm-2 my-2 text-end">
             @Html.DisplayNameFor(model => model.CreatedUser)
