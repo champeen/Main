@@ -266,7 +266,7 @@ namespace Management_of_Change.Controllers
                 Change_Owner_FullName = changeOwner.displayname,
                 Change_Owner_Email = changeOwner.mail,
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             changeRequest.Change_Status = await _context.ChangeStatus.OrderByDescending(cs => cs.Default).ThenBy(cs => cs.Order).ThenBy(cs => cs.Id).Select(cs => cs.Status).FirstOrDefaultAsync();
@@ -325,7 +325,7 @@ namespace Management_of_Change.Controllers
                             Question = question.Question,
                             Order = question.Order,
                             CreatedUser = _username,
-                            CreatedDate = DateTime.UtcNow
+                            CreatedDate = DateTime.Now
                         };
                         changeRequest.GeneralMocResponses.Add(response);
                     }
@@ -392,7 +392,7 @@ namespace Management_of_Change.Controllers
             changeRequest.Change_Owner_Email = changeOwner.mail;
             changeRequest.Estimated_Completion_Date = null;
             changeRequest.CreatedUser = _username;
-            changeRequest.CreatedDate = DateTime.UtcNow;
+            changeRequest.CreatedDate = DateTime.Now;
             changeRequest.ModifiedDate = null;
             changeRequest.ModifiedUser = null;
             changeRequest.DeletedDate = null;
@@ -452,7 +452,7 @@ namespace Management_of_Change.Controllers
                             Response = oldResponse.Response,
                             Order = oldResponse.Order,
                             CreatedUser = _username,
-                            CreatedDate = DateTime.UtcNow
+                            CreatedDate = DateTime.Now
                         };
                         changeRequest.GeneralMocResponses.Add(response);
                     }
@@ -565,7 +565,7 @@ namespace Management_of_Change.Controllers
                 try
                 {
                     changeRequest.ModifiedUser = _username;
-                    changeRequest.ModifiedDate = DateTime.UtcNow;
+                    changeRequest.ModifiedDate = DateTime.Now;
                     _context.Update(changeRequest);
                     await _context.SaveChangesAsync();
                 }
@@ -617,7 +617,7 @@ namespace Management_of_Change.Controllers
             foreach (GeneralMocResponses record in changeRequestViewModel.ChangeRequest.GeneralMocResponses)
             {
                 record.ModifiedUser = _username;
-                record.ModifiedDate = DateTime.UtcNow;
+                record.ModifiedDate = DateTime.Now;
                 _context.Update(record);
             }
             await _context.SaveChangesAsync();   
@@ -670,7 +670,7 @@ namespace Management_of_Change.Controllers
                 changeRequest.Change_Status = "Cancelled";
                 changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Cancelled").Select(m => m.Description).FirstOrDefaultAsync();
                 changeRequest.DeletedUser = _username;
-                changeRequest.DeletedDate = DateTime.UtcNow;
+                changeRequest.DeletedDate = DateTime.Now;
                 _context.Update(changeRequest);
                 await _context.SaveChangesAsync();
                 //_context.ChangeRequest.Remove(changeRequest);
@@ -911,7 +911,7 @@ namespace Management_of_Change.Controllers
                             Reviewer = record.Reviewer,
                             ReviewerEmail = record.ReviewerEmail,
                             ReviewerName = record.ReviewerName,
-                            CreatedDate = DateTime.UtcNow,
+                            CreatedDate = DateTime.Now,
                             CreatedUser = _username
                         };
                         _context.AdditionalImpactAssessmentReviewers.Add(reviewer);
@@ -939,7 +939,7 @@ namespace Management_of_Change.Controllers
                             Reviewer = record.Reviewer,
                             ReviewerEmail = record.ReviewerEmail,
                             ReviewerName = record.ReviewerName,
-                            CreatedDate = DateTime.UtcNow,
+                            CreatedDate = DateTime.Now,
                             CreatedUser = _username
                         };
                         _context.AdditionalImpactAssessmentReviewers.Add(reviewer);
@@ -967,8 +967,6 @@ namespace Management_of_Change.Controllers
 
             // Close-out Draft and go to Impact Assessment Review...
             return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
-
-            //return RedirectToAction("Details", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
         }
 
         public async Task<IActionResult> CloseDraft(int changeRequestId, string tab)
@@ -1004,7 +1002,7 @@ namespace Management_of_Change.Controllers
                             ReviewerEmail = review.Email,
                             Username = review.Username,
                             CreatedUser = _username,
-                            CreatedDate = DateTime.UtcNow
+                            CreatedDate = DateTime.Now
                         };
                         changeRequest.ImpactAssessmentResponses.Add(response);
                         await _context.SaveChangesAsync();
@@ -1030,7 +1028,7 @@ namespace Management_of_Change.Controllers
                         ReviewerEmail = review.ReviewerEmail,
                         Username = review.Reviewer,
                         CreatedUser = _username,
-                        CreatedDate = DateTime.UtcNow
+                        CreatedDate = DateTime.Now
                     };
                     changeRequest.ImpactAssessmentResponses.Add(response);
                     await _context.SaveChangesAsync();
@@ -1060,7 +1058,7 @@ namespace Management_of_Change.Controllers
                                 Question = question.Question,
                                 Order = question.Order,
                                 CreatedUser = _username,
-                                CreatedDate = DateTime.UtcNow
+                                CreatedDate = DateTime.Now
                             };
                             record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
                             await _context.SaveChangesAsync();
@@ -1091,7 +1089,7 @@ namespace Management_of_Change.Controllers
                             ReviewerEmail = review.Email,
                             Username = review.Username,
                             CreatedUser = _username,
-                            CreatedDate = DateTime.UtcNow
+                            CreatedDate = DateTime.Now
                         };
                         changeRequest.ImplementationFinalApprovalResponses.Add(response);
                         await _context.SaveChangesAsync();
@@ -1103,7 +1101,7 @@ namespace Management_of_Change.Controllers
             changeRequest.Change_Status = "ImpactAssessmentReview";
             changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "ImpactAssessmentReview").Select(m => m.Description).FirstOrDefaultAsync();
             changeRequest.ModifiedUser = _username;
-            changeRequest.ModifiedDate = DateTime.UtcNow;
+            changeRequest.ModifiedDate = DateTime.Now;
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
 
@@ -1115,7 +1113,7 @@ namespace Management_of_Change.Controllers
                     string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
                     string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
-                    AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
+                    AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
 
                     //EmailHistory emailHistory = new EmailHistory
                     //{
@@ -1129,7 +1127,7 @@ namespace Management_of_Change.Controllers
                     //    ImpactAssessmentResponseId = record.Id,
                     //    Type = "ChangeRequest",
                     //    Status = changeRequest.Change_Status,
-                    //    CreatedDate = DateTime.UtcNow,
+                    //    CreatedDate = DateTime.Now,
                     //    CreatedUser = _username
                     //};
                     //_context.Add(emailHistory);
@@ -1159,9 +1157,9 @@ namespace Management_of_Change.Controllers
 
             // Mark the Impact Assessment Response as complete...
             impactAssessmentResponse.ReviewCompleted = true;
-            impactAssessmentResponse.DateCompleted = DateTime.UtcNow;
+            impactAssessmentResponse.DateCompleted = DateTime.Now;
             impactAssessmentResponse.ModifiedUser = _username;
-            impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+            impactAssessmentResponse.ModifiedDate = DateTime.Now;
             _context.Update(impactAssessmentResponse);
             await _context.SaveChangesAsync();
 
@@ -1180,7 +1178,7 @@ namespace Management_of_Change.Controllers
 
                 changeRequest.Change_Status = "FinalApprovals";
                 changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "FinalApprovals").Select(m => m.Description).FirstOrDefaultAsync();
-                changeRequest.ModifiedDate = DateTime.UtcNow;
+                changeRequest.ModifiedDate = DateTime.Now;
                 changeRequest.ModifiedUser = _username;
                 _context.Update(changeRequest);
                 await _context.SaveChangesAsync();
@@ -1196,7 +1194,7 @@ namespace Management_of_Change.Controllers
                     string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
-                    AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, null, record.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
+                    AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, null, record.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
 
                     //EmailHistory emailHistory = new EmailHistory
                     //{
@@ -1210,7 +1208,7 @@ namespace Management_of_Change.Controllers
                     //    ImplementationFinalApprovalResponseId = record.Id,
                     //    Type = "ChangeRequest",
                     //    Status = changeRequest.Change_Status,
-                    //    CreatedDate = DateTime.UtcNow,
+                    //    CreatedDate = DateTime.Now,
                     //    CreatedUser = _username
                     //};
                     //_context.Add(emailHistory);
@@ -1239,8 +1237,8 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             implementationFinalApprovalResponse.ReviewCompleted = true;
-            implementationFinalApprovalResponse.DateCompleted = DateTime.UtcNow;
-            implementationFinalApprovalResponse.ModifiedDate = DateTime.UtcNow;
+            implementationFinalApprovalResponse.DateCompleted = DateTime.Now;
+            implementationFinalApprovalResponse.ModifiedDate = DateTime.Now;
             implementationFinalApprovalResponse.ModifiedUser = _username;
             _context.Update(implementationFinalApprovalResponse);
             await _context.SaveChangesAsync();
@@ -1259,7 +1257,7 @@ namespace Management_of_Change.Controllers
                 {
                     changeRequest.Change_Status = "Implementation";
                     changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Implementation").Select(m => m.Description).FirstOrDefaultAsync();
-                    changeRequest.ModifiedDate = DateTime.UtcNow;
+                    changeRequest.ModifiedDate = DateTime.Now;
                     changeRequest.ModifiedUser = _username;
                     _context.Update(changeRequest);
                     await _context.SaveChangesAsync();
@@ -1274,7 +1272,7 @@ namespace Management_of_Change.Controllers
                         string body = @"Change Request has been submitted for implementation. All pre-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
                         Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null, changeRequest.Priority);
-                        AddEmailHistory(changeRequest.Priority, subject, body, admin.displayname, record.Username, admin.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
+                        AddEmailHistory(changeRequest.Priority, subject, body, admin.displayname, record.Username, admin.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
 
                         //EmailHistory emailHistory = new EmailHistory
                         //{
@@ -1288,7 +1286,7 @@ namespace Management_of_Change.Controllers
                         //    ImplementationFinalApprovalResponseId = implementationFinalApprovalResponse.Id,
                         //    Type = "ChangeRequest",
                         //    Status = changeRequest.Change_Status,                            
-                        //    CreatedDate = DateTime.UtcNow,
+                        //    CreatedDate = DateTime.Now,
                         //    CreatedUser = _username
                         //};
                         //_context.Add(emailHistory);
@@ -1320,8 +1318,8 @@ namespace Management_of_Change.Controllers
             changeRequest.Change_Status = "Closeout";
             changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Closeout").Select(m => m.Description).FirstOrDefaultAsync();
             changeRequest.ModifiedUser = _username;
-            changeRequest.ModifiedDate = DateTime.UtcNow;
-            changeRequest.Implementation_Approval_Date = DateTime.UtcNow;
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.Implementation_Approval_Date = DateTime.Now;
             changeRequest.Implementation_Username = _username;
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
@@ -1338,7 +1336,7 @@ namespace Management_of_Change.Controllers
                 body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null, changeRequest.Priority);
-                AddEmailHistory(changeRequest.Priority, subject, body, admin.displayname, record.Username, admin.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.UtcNow, _username);
+                AddEmailHistory(changeRequest.Priority, subject, body, admin.displayname, record.Username, admin.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
 
                 //EmailHistory emailHistory = new EmailHistory
                 //{
@@ -1351,7 +1349,7 @@ namespace Management_of_Change.Controllers
                 //    ChangeRequestId = changeRequest.Id,
                 //    Type = "ChangeRequest",
                 //    Status = changeRequest.Change_Status,
-                //    CreatedDate = DateTime.UtcNow,
+                //    CreatedDate = DateTime.Now,
                 //    CreatedUser = _username
                 //};
                 //_context.Add(emailHistory);
@@ -1370,9 +1368,9 @@ namespace Management_of_Change.Controllers
                 AssignedToUser = changeRequest.Change_Owner,
                 Title = @"Implementation Completion Notification",
                 Description = @"Notify MoC admin when this MoC is completely implemented.",
-                DueDate = DateTime.UtcNow.AddMonths(1),
+                DueDate = DateTime.Now.AddMonths(1),
                 CreatedUser = changeRequest.Change_Owner,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
             _context.Add(task);
             await _context.SaveChangesAsync();
@@ -1385,7 +1383,7 @@ namespace Management_of_Change.Controllers
             if (toPerson != null)
             {
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, task.CreatedUser);
+                AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, task.CreatedUser);
 
                 //EmailHistory emailHistory = new EmailHistory
                 //{
@@ -1399,7 +1397,7 @@ namespace Management_of_Change.Controllers
                 //    TaskId = task.Id,
                 //    Type = "Task",
                 //    Status = task.Status,
-                //    CreatedDate = DateTime.UtcNow,
+                //    CreatedDate = DateTime.Now,
                 //    CreatedUser = task.CreatedUser
                 //};
                 //_context.Add(emailHistory);
@@ -1430,8 +1428,8 @@ namespace Management_of_Change.Controllers
             changeRequest.Change_Status = "Closed";
             changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Closed").Select(m => m.Description).FirstOrDefaultAsync();
             changeRequest.ModifiedUser = _username;
-            changeRequest.ModifiedDate = DateTime.UtcNow;
-            changeRequest.Closeout_Date = DateTime.UtcNow;
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.Closeout_Date = DateTime.Now;
             changeRequest.Closeout_Username = _username;
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
@@ -1442,7 +1440,7 @@ namespace Management_of_Change.Controllers
             string body = @"Change Request has been Closed-Out/Completed.<br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
             Initialization.EmailProviderSmtp.SendMessage(subject, body, owner.mail, null, null, changeRequest.Priority);
-            AddEmailHistory(changeRequest.Priority, subject, body, owner.displayname, changeRequest.Change_Owner, owner.mail, changeRequest.Id, null, null, null, "Task", changeRequest.Change_Status, DateTime.UtcNow, _username);
+            AddEmailHistory(changeRequest.Priority, subject, body, owner.displayname, changeRequest.Change_Owner, owner.mail, changeRequest.Id, null, null, null, "Task", changeRequest.Change_Status, DateTime.Now, _username);
 
             //EmailHistory emailHistory = new EmailHistory
             //{
@@ -1455,7 +1453,7 @@ namespace Management_of_Change.Controllers
             //    ChangeRequestId = changeRequest.Id,
             //    Type = "ChangeRequest",
             //    Status = changeRequest.Change_Status,
-            //    CreatedDate = DateTime.UtcNow,
+            //    CreatedDate = DateTime.Now,
             //    CreatedUser = _username
             //};
             //_context.Add(emailHistory);
@@ -1476,7 +1474,7 @@ namespace Management_of_Change.Controllers
                 ChangeRequestId = changeRequestId,
                 AssignedByUser = _username,
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             ViewBag.Users = getUserList();
@@ -1551,7 +1549,7 @@ namespace Management_of_Change.Controllers
                 if (toPerson != null)
                 {
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
+                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                     //EmailHistory emailHistory = new EmailHistory
                     //{
@@ -1565,7 +1563,7 @@ namespace Management_of_Change.Controllers
                     //    TaskId = task.Id,
                     //    Type = "Task",
                     //    Status = task.Status,
-                    //    CreatedDate = DateTime.UtcNow,
+                    //    CreatedDate = DateTime.Now,
                     //    CreatedUser = _username
                     //};
                     //_context.Add(emailHistory);

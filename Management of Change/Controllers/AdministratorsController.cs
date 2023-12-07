@@ -81,7 +81,7 @@ namespace Management_of_Change.Controllers
             Administrators administrators = new Administrators
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             var employeeList = await _context.__mst_employee

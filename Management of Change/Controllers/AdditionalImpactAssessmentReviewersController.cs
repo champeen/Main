@@ -171,7 +171,7 @@ namespace Management_of_Change.Controllers
             aiar.ChangeRequestId = changeRequestId;
             ViewBag.Tab = tab;
             aiar.CreatedUser = _username;
-            aiar.CreatedDate = DateTime.UtcNow;
+            aiar.CreatedDate = DateTime.Now;
             return View(aiar);
         }
 
@@ -300,7 +300,7 @@ namespace Management_of_Change.Controllers
             {
                 try
                 {
-                    additionalImpactAssessmentReviewers.ModifiedDate = DateTime.UtcNow;
+                    additionalImpactAssessmentReviewers.ModifiedDate = DateTime.Now;
                     additionalImpactAssessmentReviewers.ModifiedUser = _username;
                     _context.Update(additionalImpactAssessmentReviewers);
                     await _context.SaveChangesAsync();
@@ -388,7 +388,7 @@ namespace Management_of_Change.Controllers
             additionalImpactAssessmentReviewers.ChangeRequestId = changeRequestId;
             additionalImpactAssessmentReviewers.ReviewType = reviewType;
             additionalImpactAssessmentReviewers.CreatedUser = _username;
-            additionalImpactAssessmentReviewers.CreatedDate = DateTime.UtcNow;
+            additionalImpactAssessmentReviewers.CreatedDate = DateTime.Now;
 
             _context.Add(additionalImpactAssessmentReviewers);
             await _context.SaveChangesAsync();

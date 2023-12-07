@@ -102,7 +102,7 @@ namespace Management_of_Change.Controllers
             {
                 changeRequest.Change_Status = "Cancelled";
                 changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Cancelled").Select(m => m.Description).FirstOrDefaultAsync();
-                changeRequest.ModifiedDate = DateTime.UtcNow;
+                changeRequest.ModifiedDate = DateTime.Now;
                 changeRequest.ModifiedUser = _username;
                 _context.Update(changeRequest);
                 await _context.SaveChangesAsync();

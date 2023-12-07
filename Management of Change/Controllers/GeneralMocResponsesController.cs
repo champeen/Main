@@ -71,7 +71,7 @@ namespace Management_of_Change.Controllers
             GeneralMocResponses generalMocResponses = new GeneralMocResponses
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
@@ -143,7 +143,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             generalMocResponses.ModifiedUser = _username;
-            generalMocResponses.ModifiedDate = DateTime.UtcNow;
+            generalMocResponses.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {

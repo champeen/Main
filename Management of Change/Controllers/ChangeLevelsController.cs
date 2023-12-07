@@ -86,7 +86,7 @@ namespace Management_of_Change.Controllers
             ChangeLevel changeLevel = new ChangeLevel
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             return View(changeLevel);
@@ -174,7 +174,7 @@ namespace Management_of_Change.Controllers
             //}
 
             changeLevel.ModifiedUser = _username;
-            changeLevel.ModifiedDate = DateTime.UtcNow;
+            changeLevel.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {

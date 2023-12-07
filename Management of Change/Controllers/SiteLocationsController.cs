@@ -74,7 +74,7 @@ namespace Management_of_Change.Controllers
             SiteLocation siteLocation = new SiteLocation
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             return View(siteLocation);
@@ -164,7 +164,7 @@ namespace Management_of_Change.Controllers
             //}
 
             siteLocation.ModifiedUser = _username;
-            siteLocation.ModifiedDate = DateTime.UtcNow;
+            siteLocation.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {

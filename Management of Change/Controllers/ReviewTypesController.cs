@@ -95,7 +95,7 @@ namespace Management_of_Change.Controllers
             ReviewType reviewType = new ReviewType
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             // Create Dropdown List of ChangeAreas...
@@ -264,7 +264,7 @@ namespace Management_of_Change.Controllers
             if (ModelState.IsValid)
             {
                 reviewType.ModifiedUser = _username;
-                reviewType.ModifiedDate = DateTime.UtcNow;
+                reviewType.ModifiedDate = DateTime.Now;
                 try
                 {
                     _context.Update(reviewType);

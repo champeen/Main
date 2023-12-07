@@ -90,7 +90,7 @@ namespace Management_of_Change.Controllers
             ImpactAssessmentResponseQuestions impactAssessmentResponseQuestions = new ImpactAssessmentResponseQuestions
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             ViewBag.ReviewTypes = (await _context.ReviewType.Select(m => m.Type).Distinct().ToListAsync()).OrderBy(x => x).ToList();
@@ -162,7 +162,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             impactAssessmentResponseQuestions.ModifiedUser = _username;
-            impactAssessmentResponseQuestions.ModifiedDate = DateTime.UtcNow;
+            impactAssessmentResponseQuestions.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {

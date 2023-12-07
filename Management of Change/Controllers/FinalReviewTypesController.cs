@@ -85,7 +85,7 @@ namespace Management_of_Change.Controllers
             FinalReviewType finalReviewType = new FinalReviewType
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             //// Create Dropdown List of Users...
@@ -244,7 +244,7 @@ namespace Management_of_Change.Controllers
             if (ModelState.IsValid)
             {
                 finalReviewType.ModifiedUser = _username;
-                finalReviewType.ModifiedDate = DateTime.UtcNow;
+                finalReviewType.ModifiedDate = DateTime.Now;
                 try
                 {
                     _context.Update(finalReviewType);

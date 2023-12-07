@@ -81,7 +81,7 @@ namespace Management_of_Change.Controllers
             {
                 AssignedByUser = _username,
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             // Create Dropdown List of ChangeRequests...
@@ -168,7 +168,7 @@ namespace Management_of_Change.Controllers
                 if (toPerson != null)
                 {
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
+                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                     //EmailHistory emailHistory = new EmailHistory
                     //{
@@ -182,7 +182,7 @@ namespace Management_of_Change.Controllers
                     //    TaskId = task.Id,
                     //    Type = "Task",
                     //    Status = task.Status,
-                    //    CreatedDate = DateTime.UtcNow,
+                    //    CreatedDate = DateTime.Now,
                     //    CreatedUser = _username
                     //};
                     //_context.Add(emailHistory);
@@ -287,7 +287,7 @@ namespace Management_of_Change.Controllers
                 task.AssignedByUserFullName = fromPerson.displayname;
                 task.AssignedByUserEmail = fromPerson.mail;
                 task.ModifiedUser = _username;
-                task.ModifiedDate = DateTime.UtcNow;
+                task.ModifiedDate = DateTime.Now;
                 _context.Update(task);
                 await _context.SaveChangesAsync();
 
@@ -302,7 +302,7 @@ namespace Management_of_Change.Controllers
                     if (toPerson != null)
                     {
                         Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null, task.Priority);
-                        AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
+                        AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                         //EmailHistory emailHistory = new EmailHistory
                         //{
@@ -316,7 +316,7 @@ namespace Management_of_Change.Controllers
                         //    TaskId = task.Id,
                         //    Type = "Task",
                         //    Status = task.Status,
-                        //    CreatedDate = DateTime.UtcNow,
+                        //    CreatedDate = DateTime.Now,
                         //    CreatedUser = _username
                         //};
                         //_context.Add(emailHistory);
@@ -411,7 +411,7 @@ namespace Management_of_Change.Controllers
             if (toPerson != null)
             {
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                var emailHistory = AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
+                var emailHistory = AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
                 //EmailHistory emailHistory = new EmailHistory
                 //{
                 //    Priority = task.Priority,
@@ -424,7 +424,7 @@ namespace Management_of_Change.Controllers
                 //    TaskId = task.Id,
                 //    Type = "Task",
                 //    Status = task.Status,
-                //    CreatedDate = DateTime.UtcNow,
+                //    CreatedDate = DateTime.Now,
                 //    CreatedUser = _username
                 //};
                 //_context.Add(emailHistory);

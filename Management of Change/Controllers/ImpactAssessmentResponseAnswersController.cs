@@ -72,7 +72,7 @@ namespace Management_of_Change.Controllers
             ImpactAssessmentResponseAnswer impactAssessmentResponseAnswer = new ImpactAssessmentResponseAnswer
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
@@ -192,7 +192,7 @@ namespace Management_of_Change.Controllers
             if (ModelState.IsValid)
             {
                 impactAssessmentResponseAnswer.ModifiedUser = _username;
-                impactAssessmentResponseAnswer.ModifiedDate = DateTime.UtcNow;
+                impactAssessmentResponseAnswer.ModifiedDate = DateTime.Now;
 
                 // if there is an action to take, create a task for it...
                 if (impactAssessmentResponseAnswer.Action == "Yes")
@@ -234,7 +234,7 @@ namespace Management_of_Change.Controllers
                             DueDate = impactAssessmentResponseAnswer.DateDue,
                             ImpactAssessmentResponseAnswerId = impactAssessmentResponseAnswer.Id,
                             CreatedUser = _username,
-                            CreatedDate = DateTime.UtcNow
+                            CreatedDate = DateTime.Now
                         };
                         _context.Add(task);
 
@@ -246,7 +246,7 @@ namespace Management_of_Change.Controllers
                         if (toPerson != null)
                         {
                             Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                            AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, impactAssessmentResponse.ChangeRequestId, impactAssessmentResponseAnswer.ImpactAssessmentResponseId, null, task.Id, "Task", task.Status, DateTime.UtcNow, _username);
+                            AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, impactAssessmentResponse.ChangeRequestId, impactAssessmentResponseAnswer.ImpactAssessmentResponseId, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                             //EmailHistory emailHistory = new EmailHistory
                             //{
@@ -260,7 +260,7 @@ namespace Management_of_Change.Controllers
                             //    ImpactAssessmentResponseId = impactAssessmentResponseAnswer.ImpactAssessmentResponseId,
                             //    Type = "Task",
                             //    Status = task.Status,
-                            //    CreatedDate = DateTime.UtcNow,
+                            //    CreatedDate = DateTime.Now,
                             //    CreatedUser = _username
                             //};
                             //_context.Add(emailHistory);
@@ -295,7 +295,7 @@ namespace Management_of_Change.Controllers
                             impactAssessmentResponse.QuestionsAnswered = true;
 
                         impactAssessmentResponse.ModifiedUser = _username;
-                        impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+                        impactAssessmentResponse.ModifiedDate = DateTime.Now;
                         _context.Update(impactAssessmentResponse);
                         await _context.SaveChangesAsync();
                     }

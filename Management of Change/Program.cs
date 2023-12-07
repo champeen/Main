@@ -12,10 +12,12 @@ using Management_of_Change.Provider;
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    Initialization.Initialize(builder);    
+    Initialization.Initialize(builder);
 
     // Test Sending Email
     //Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "michael.wilson@sksiltron.com;", null, null/*, "", null*/);
+    //Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "nagesh.sampangi@sksiltron.com;", null, null/*, "", null*/);
+    //Initialization.EmailProviderSmtp.SendMessage("TEST EMAIL subject", "<h1>Hello</h1></br>This is <h2>Michael James Wilson II</h2></br></br>", "it.errors@sksiltron.com;", null, null/*, "", null*/);
     // Test Sending Teams Message
     //Initialization.TeamsErrorProvider.SendMessage("This is a test <br/><br/> EOM");
 
@@ -87,7 +89,7 @@ catch (Exception ex)
 
     // SEND EMAIL ERROR MESSAGE
     Initialization.EmailProviderSmtp.SendMessage(
-        "Fourth Email Test",
+        "ERROR: Management of Change Application (MoC)",
         "ERROR: Management of Change Application (MoC) </br>" +
             "MESSAGE: " + ex.Message + "</br> " +
             "INNER EXCEPTION: " + ex.InnerException?.ToString() + "</br>",

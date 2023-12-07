@@ -86,7 +86,7 @@ namespace Management_of_Change.Controllers
             Models.ChangeStatus changeStatus = new Models.ChangeStatus
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
             return View(changeStatus);
         }
@@ -173,7 +173,7 @@ namespace Management_of_Change.Controllers
             //}
 
             changeStatus.ModifiedUser = _username;
-            changeStatus.ModifiedDate = DateTime.UtcNow;
+            changeStatus.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {

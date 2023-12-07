@@ -90,7 +90,7 @@ namespace Management_of_Change.Controllers
             ImpactAssessmentResponse impactAssessmentResponse = new ImpactAssessmentResponse
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             //ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
@@ -183,7 +183,7 @@ namespace Management_of_Change.Controllers
             if (ModelState.IsValid)
             {
                 impactAssessmentResponse.ModifiedUser = _username;
-                impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+                impactAssessmentResponse.ModifiedDate = DateTime.Now;
                 try
                 {
                     _context.Update(impactAssessmentResponse);
@@ -270,7 +270,7 @@ namespace Management_of_Change.Controllers
             if (impactAssessmentResponseAnswer != null)
             {
                 impactAssessmentResponseAnswer.Action = "No";
-                impactAssessmentResponseAnswer.ModifiedDate = DateTime.UtcNow;
+                impactAssessmentResponseAnswer.ModifiedDate = DateTime.Now;
                 impactAssessmentResponseAnswer.ModifiedUser = _username;
                 _context.Update(impactAssessmentResponseAnswer);
                 await _context.SaveChangesAsync();
@@ -298,7 +298,7 @@ namespace Management_of_Change.Controllers
                     impactAssessmentResponse.QuestionsAnswered = true;
 
                 impactAssessmentResponse.ModifiedUser = _username;
-                impactAssessmentResponse.ModifiedDate = DateTime.UtcNow;
+                impactAssessmentResponse.ModifiedDate = DateTime.Now;
                 _context.Update(impactAssessmentResponse);
                 await _context.SaveChangesAsync();
             }

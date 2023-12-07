@@ -55,15 +55,11 @@ namespace Management_of_Change.Provider
                     mailMessage.Body = @"<strong style=""color:Red"">HIGH PRIORITY!</strong><br/><br/>" + mailMessage.Body;
                 }
 
-                // MJWII UNCOMMENT DIRECTLY BELOW, COMMENT OUT FAR BELOW !!!!!
                 foreach (var curr_address in to.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     MailAddress mytoAddress = new MailAddress(curr_address);
                     mailMessage.To.Add(mytoAddress);
                 }
-                // MJWII TAKE BELOW OUT, ABOVE UNCOMMENT  !!!!
-                //MailAddress mytoAddress2 = new MailAddress("Mark.Bushong@sksiltron.com");
-                //mailMessage.To.Add(mytoAddress2);
 
                 if (cc != null)
                 {
@@ -105,10 +101,28 @@ namespace Management_of_Change.Provider
                     //else
                     //    smtpClient.Send(mailMessage);
 
-                    await smtpClient.SendMailAsync(mailMessage);
+                    smtpClient.Send(mailMessage);
                 }
             }
             //return true;
         }
     }
 }
+
+/*
+UPDATE
+
+Per MSDN:
+
+After calling SendAsync, you must wait for the e-mail transmission to complete before attempting to send another e-mail message using Send or SendAsync.
+
+http://msdn.microsoft.com/en-us/library/x5x13z6h.aspx
+
+So given your situation, there is almost no benefit to using SendAsync over Send. Your loop is probably stomping on something since you do not wait for the previous SendAsync to complete.
+
+Here are a few thoughts:
+
+SendAsync will perform almost the same as Send if you are sending a bunch of emails. Just use Send.
+If you need parallel sending, use a Producer/Consumer pattern. One (or more) producing threads dump stuff into a queue to send, and multiple consuming threads each use one SmtpClient to send messages. This pattern is amazingly simple to implement with a BlockingCollection. See the example in MSDN http://msdn.microsoft.com/en-us/library/dd267312.aspx
+If you use enough threads, your SMTP server will be the bottleneck. Be aware of when you are overloading it.
+ */

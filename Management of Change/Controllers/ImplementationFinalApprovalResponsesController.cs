@@ -72,7 +72,7 @@ namespace Management_of_Change.Controllers
             ImplementationFinalApprovalResponse implementationFinalApprovalResponse = new ImplementationFinalApprovalResponse
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             return View(implementationFinalApprovalResponse);
@@ -165,7 +165,7 @@ namespace Management_of_Change.Controllers
             if (ModelState.IsValid)
             {
                 implementationFinalApprovalResponse.ModifiedUser = _username;
-                implementationFinalApprovalResponse.ModifiedDate = DateTime.UtcNow;
+                implementationFinalApprovalResponse.ModifiedDate = DateTime.Now;
                 _context.Update(implementationFinalApprovalResponse);
                 await _context.SaveChangesAsync();
 

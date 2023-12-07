@@ -86,7 +86,7 @@ namespace Management_of_Change.Controllers
             }
 
             changeRequest.Cancel_Username = _username;
-            changeRequest.Cancel_Date = DateTime.UtcNow;
+            changeRequest.Cancel_Date = DateTime.Now;
             changeRequest.Cancel_Reason = cancelChangeRequest.CancelReason;
             //cancelChangeRequest.ChangeRequest = changeRequest;
 
@@ -114,9 +114,9 @@ namespace Management_of_Change.Controllers
                 changeRequest.Change_Status = "Cancelled";
                 changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Cancelled").Select(m => m.Description).FirstOrDefaultAsync();
                 changeRequest.Cancel_Username = _username;
-                changeRequest.Cancel_Date = DateTime.UtcNow;
+                changeRequest.Cancel_Date = DateTime.Now;
                 changeRequest.Cancel_Reason = cancelReason;
-                changeRequest.ModifiedDate = DateTime.UtcNow;
+                changeRequest.ModifiedDate = DateTime.Now;
                 changeRequest.ModifiedUser = _username;
                 _context.Update(changeRequest);
                 await _context.SaveChangesAsync();

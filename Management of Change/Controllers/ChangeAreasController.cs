@@ -85,7 +85,7 @@ namespace Management_of_Change.Controllers
             ChangeArea changeArea = new ChangeArea
             {
                 CreatedUser = _username,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.Now
             };
 
             return View(changeArea);
@@ -173,7 +173,7 @@ namespace Management_of_Change.Controllers
             //}
 
             changeArea.ModifiedUser = _username;
-            changeArea.ModifiedDate = DateTime.UtcNow;
+            changeArea.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
