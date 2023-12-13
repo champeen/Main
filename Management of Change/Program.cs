@@ -59,7 +59,7 @@ try
 
     app.Run();
 }
-catch (Exception ex)
+ catch (Exception ex)
 {
     // LOG IN WINDOWS EVENT LOG
     using (EventLog eventLog = new EventLog("Application"))
