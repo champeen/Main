@@ -165,7 +165,7 @@ namespace Management_of_Change.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
+            ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
             ViewBag.ReviewTypes = await _context.ReviewType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
 
             return View(impactAssessmentMatrix);
@@ -192,8 +192,8 @@ namespace Management_of_Change.Controllers
                 .ToListAsync();
             if (checkDupes.Count > 0)
             {
-                ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
-                ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).Distinct().ToListAsync();
+                ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
+                ViewBag.ReviewTypes = await _context.ReviewType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
                 ModelState.AddModelError("ChangeType", "Change Type and Review Type combination already exist.");
                 ModelState.AddModelError("ReviewType", "Change Type and Review Type combination already exist.");
                 return View(impactAssessmentMatrix);
@@ -205,8 +205,8 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
-            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).Distinct().ToListAsync();
+            ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
+            ViewBag.ReviewTypes = await _context.ReviewType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
             return View(impactAssessmentMatrix);
         }
 
@@ -261,8 +261,8 @@ namespace Management_of_Change.Controllers
                 .ToListAsync();
             if (checkDupes.Count > 0)
             {
-                ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
-                ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).Distinct().ToListAsync();
+                ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
+                ViewBag.ReviewTypes = await _context.ReviewType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
                 ModelState.AddModelError("ChangeType", "Change Type and Review Type combination already exist.");
                 ModelState.AddModelError("ReviewType", "Change Type and Review Type combination already exist.");
                 return View(impactAssessmentMatrix);
@@ -284,8 +284,8 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.ChangeTypes = await _context.ChangeType.OrderBy(m => m.Order).Select(m => m.Type).ToListAsync();
-            ViewBag.ReviewTypes = await _context.ReviewType.OrderBy(m => m.Type).Select(m => m.Type).Distinct().ToListAsync();
+            ViewBag.ChangeTypes = await _context.ChangeType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
+            ViewBag.ReviewTypes = await _context.ReviewType.Select(m => m.Type).Distinct().OrderBy(Type => Type).ToListAsync();
             return View(impactAssessmentMatrix);
         }
 
