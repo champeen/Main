@@ -22,11 +22,41 @@
             });
 
             $("#statusFilter").change(function () {
-                var value = $(this).val().toLowerCase();
-                $("#changeRequestTable tr").filter(function () {
-                    $(this).toggle($(this.children[2]).text().toLowerCase().indexOf(value) > -1)
-                });
+                var statusFilter = $(this).val();
+                // var PrevSort = document.getElementById("@(ViewBag.PrevSort)").value;
+                var prevSort = document.getElementById("PrevSortId").value.toString();
+                var url = '@Url.Action("Index", "ChangeRequests")?statusFilter=' + statusFilter + '&prevSort=' + prevSort;
+                window.location.href = url;
+
+                // Below filters table by statusFilter
+                // $("#changeRequestTable tr").filter(function () {
+                //     $(this).toggle($(this.children[2]).text().toLowerCase().indexOf(value) > -1)
+                // });
             });
+
+            $("#taskStatusFilter").change(function () {
+                var statusFilter = $(this).val();
+                var prevSort = document.getElementById("TaskPrevSortId").value.toString();
+                var url = '@Url.Action("Index", "Tasks")?taskStatusFilter=' + statusFilter + '&prevSort=' + prevSort;
+                window.location.href = url;
+
+                // $("#taskTable tr").filter(function () {
+                //     $(this).toggle($(this.children[4]).text().toLowerCase().indexOf(value) > -1)
+                // });
+            });
+
+            // $("#statusFilter").click(function () {
+            //     $("#statusFilter").change(function () {
+            //         var statusFilter = $(this).val();
+            //         // var PrevSort = document.getElementById("@(ViewBag.PrevSort)").value;
+            //         var prevSort = document.getElementById("PrevSortId").value.toString();
+
+            //         var url = '@Url.Action("Index", "ChangeRequests")?statusFilter=' + statusFilter + '&prevSort=' + prevSort;
+            //         window.location.href = url;
+            //     });
+            // });
+
+
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////
             // $("#reviewTypeFilter").change(function () {
             //     var value = $(this).val().toLowerCase();
@@ -35,17 +65,11 @@
             //     });
             // });
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             $("#taskSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $("#taskTable tr").filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
-
-            $("#taskStatusFilter").change(function () {
-                var value = $(this).val().toLowerCase();
-                $("#taskTable tr").filter(function () {
-                    $(this).toggle($(this.children[4]).text().toLowerCase().indexOf(value) > -1)
                 });
             });
 
@@ -143,7 +167,7 @@
                             </a>
                         </li>
                         <li class="nav-item me-3">
-                        <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/:p:/r/sites/Vault/_layouts/15/Doc.aspx?sourcedoc=%7BA98077B1-FE32-4996-AA57-CD7D9D8C8F3B%7D&file=MOC%20Training.pptx&action=edit&mobileredirect=true" target="_blank">
+                            <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/:p:/r/sites/Vault/_layouts/15/Doc.aspx?sourcedoc=%7BA98077B1-FE32-4996-AA57-CD7D9D8C8F3B%7D&file=MOC%20Training.pptx&action=edit&mobileredirect=true" target="_blank">
                                 <i class="bi bi-book" data-bs-toggle="tooltip" data-bs-html="true">
                                 </i>
                                 Training

@@ -17,7 +17,7 @@
                     @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
                 </span>
                 <span class="float-end">
-                    @Html.ActionLink("Send Assignment Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-success"})
+                    @Html.ActionLink("Send Assignment Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
                 </span>
             </div>
         </div>
@@ -51,7 +51,7 @@
                 <label asp-for="ChangeRequestId" class="control-label fw-bold"></label>
                 @*<label asp-for="MocNumber" class="control-label fw-bold"></label>*@
                 @*<input asp-for="MocNumber" class="form-control" />*@
-                @Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests,"Value","Text"), "-- select --", new { @class="form-control form-select"})
+                @Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:50%"})
                 <span asp-validation-for="ChangeRequestId" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
@@ -61,7 +61,7 @@
                 new SelectListItem {Value="Pre", Text="Pre"},
                 new SelectListItem {Value="Post", Text="Post"}},
                 "--Select One--",
-                new { @class="form-control form-select", @style="max-width:25%"})
+                new { @class="form-control form-select", @style="max-width:15%"})
                 <span asp-validation-for="ImplementationType" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
@@ -75,7 +75,7 @@
                 new SelectListItem {Value="Complete", Text="Complete"},
                 new SelectListItem {Value="Cancelled", Text="Cancelled"}},
                 "--Select One--",
-                new { @class="form-control form-select", @style="max-width:25%"})
+                new { @class="form-control form-select", @style="max-width:15%"})
                 <span asp-validation-for="Status" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
@@ -85,7 +85,7 @@
                 new List<SelectListItem>{
                 new SelectListItem {Value="Normal", Text="Normal"},
                 new SelectListItem {Value="High", Text="High"}},
-                new { @class="form-control form-select", @style="max-width:25%"})
+                new { @class="form-control form-select", @style="max-width:15%"})
                 <span asp-validation-for="Priority" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
@@ -153,7 +153,7 @@
                     @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
                 </span>
                 <span class="float-end">
-                    @Html.ActionLink("Send Assignment Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-success"})
+                    @Html.ActionLink("Send Assignment Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
                 </span>
             </div>
         </div>

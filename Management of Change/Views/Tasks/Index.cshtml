@@ -7,6 +7,8 @@
 <h1>Tasks</h1>
 
 <form asp-controller="Tasks" asp-action="Index">
+    <input hidden value=@ViewBag.PrevSort id="TaskPrevSortId" />
+    <input hidden value=@ViewBag.PrevStatusFilter id="TaskPrevStatusFilterId" />
     <div class="row mt-3">
         <div class="col-6 text-start">
             @*<a asp-action="Create">Create New</a>*@
@@ -19,8 +21,8 @@
             Status:
         </div>
         <div class="col-2 text-start">
-            @Html.DropDownList("taskStatusFilter",
-            new List<SelectListItem>{
+            @Html.DropDownList("taskStatusFilter", new SelectList(ViewBag.StatusList,"Value","Text"), new {@class = "form-control form-select", @id="taskStatusFilter"})
+@*             new List<SelectListItem>{
             new SelectListItem {Value="Open", Text="Open"},
             new SelectListItem {Value="In-Progress", Text="In-Progress"},
             new SelectListItem {Value="On Hold", Text="On Hold"},
@@ -28,7 +30,7 @@
             new SelectListItem {Value="Cancelled", Text="Cancelled"},
             },
             "All",
-            new {@class = "form-control form-select", @id="taskStatusFilter" })
+            new {@class = "form-control form-select", @id="taskStatusFilter" }) *@
         </div>
         @*        <div class="col-1 text-end">
         <input type="submit" value="Filter" class="btn btn-primary float-start" />
@@ -40,31 +42,112 @@
     <thead class="align-top align-text-top table-primary">
         <tr>
             <th>
-                Task#
+                @Html.ActionLink("Task#","Index",new {sort="Task", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "TaskAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "TaskDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Task# *@
             </th>
             <th>
-                for MOC#
+                @Html.ActionLink("for MOC#","Index",new {sort="Moc", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "MocAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "MocDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* for MOC# *@
             </th>
             <th>
-                Implementation Type
+                @Html.ActionLink("Implementation Type","Index",new {sort="ImplementationType", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "ImplementationTypeAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "ImplementationTypeDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Implementation Type *@
             </th>
             <th>
-                Title
+                @Html.ActionLink("Title","Index",new {sort="Title", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "TitleAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "TitleDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Title *@
             </th>
             <th>
-                Status
+                @Html.ActionLink("Status","Index",new {sort="Status", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "StatusAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "StatusDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Status *@
             </th>
             <th>
-                Assigned To User
+                @Html.ActionLink("Assigned To User","Index",new {sort="AssignedTo", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "AssignedToAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "AssignedToDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Assigned To User *@
             </th>
             <th>
-                Assigned By User
+                @Html.ActionLink("Assigned By User","Index",new {sort="AssignedBy", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "AssignedByAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "AssignedByDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Assigned By User *@
             </th>
             <th>
-                Due Date
+                @Html.ActionLink("Due Date","Index",new {sort="DueDate", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "DueDateAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "DueDateDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Due Date *@
             </th>
             <th>
-                Completion Date
+                @Html.ActionLink("Completion Date","Index",new {sort="CompletionDate", prevSort = ViewBag.PrevSort, taskStatusFilter = ViewBag.PrevTaskStatusFilter, prevTaskStatusFilter = ViewBag.PrevTaskStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "CompletionDateAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "CompletionDateDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Completion Date *@
             </th>
             <th></th>
         </tr>

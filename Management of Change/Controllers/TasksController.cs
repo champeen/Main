@@ -1,4 +1,5 @@
-﻿using Management_of_Change.Data;
+﻿using Azure.Core;
+using Management_of_Change.Data;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
 using Management_of_Change.ViewModels;
@@ -18,20 +19,281 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks
-        public async Task<IActionResult> Index(string taskStatusFilter)
+        public async Task<IActionResult> Index(string taskStatusFilter, string prevTaskStatusFilter = null, string sort = null, string prevSort = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            var requests = from m in _context.Task
-                           select m;
+            // if no filter selected, keep previous
+            if (taskStatusFilter == null)
+                taskStatusFilter = prevTaskStatusFilter;
 
-            if (taskStatusFilter != null)
-                requests = requests.Where(r => r.Status == taskStatusFilter);
+            // Create Dropdown List of Status...
+            List<SelectListItem> statusDropdown = new List<SelectListItem>();
+            SelectListItem item = new SelectListItem { Value = "AllCurrent", Text = "All Current (non complete/cancelled)" };
+            if (taskStatusFilter == null || taskStatusFilter == "AllCurrent")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            item = new SelectListItem { Value = "All", Text = "All" };
+            if (taskStatusFilter == "All")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            item = new SelectListItem { Value = "Open", Text = "Open" };
+            if (taskStatusFilter == "Open")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            item = new SelectListItem { Value = "In-Progress", Text = "In-Progress" };
+            if (taskStatusFilter == "InProgress")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            item = new SelectListItem { Value = "On Hold", Text = "On Hold" };
+            if (taskStatusFilter == "OnHold")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            item = new SelectListItem { Value = "Complete", Text = "Complete" };
+            if (taskStatusFilter == "Complete")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            item = new SelectListItem { Value = "Cancelled", Text = "Cancelled" };
+            if (taskStatusFilter == "Cancelled")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            //foreach (var status in statusList)
+            //{
+            //    item = new SelectListItem { Value = status.Status, Text = status.Description };
+            //    if (item.Value == statusFilter)
+            //        item.Selected = true;
+            //    else
+            //        item.Selected = false;
+            //    statusDropdown.Add(item);
+            //}
+            ViewBag.StatusList = statusDropdown;
 
-            var taskList = await requests.OrderBy(m => m.Priority).ThenBy(m => m.DueDate).ToListAsync();
+            var taskList = await _context.Task.ToListAsync(); // OrderBy(m => m.Priority).ThenBy(m => m.DueDate).ToListAsync();
+
+            switch (taskStatusFilter)
+            {
+                case null:
+                    taskList = taskList.Where(m => m.Status == "Open" || m.Status == "In-Progress" || m.Status == "On Hold").ToList();
+                    ViewBag.PrevTaskStatusFilter = "AllCurrent";
+                    break;
+                case "AllCurrent":
+                    taskList = taskList.Where(m => m.Status == "Open" || m.Status == "In-Progress" || m.Status == "On Hold").ToList();
+                    ViewBag.PrevTaskStatusFilter = "AllCurrent";
+                    break;
+                case "All":
+                    ViewBag.PrevTaskStatusFilter = "All";
+                    break;
+                default:
+                    taskList = taskList.Where(m => m.Status == taskStatusFilter).ToList();
+                    ViewBag.PrevTaskStatusFilter = taskStatusFilter;
+                    break;
+            }
+
+            // no sort selected, use previous sort...
+            if (sort == null)
+            {
+                sort = prevSort;
+                switch (sort)
+                {
+                    case null:
+                        taskList = taskList.OrderBy(m => m.Priority).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = null;
+                        break;
+                    case "TaskAsc":
+                        taskList = taskList.OrderBy(m => m.Id).ToList();
+                        ViewBag.PrevSort = "TaskAsc";
+                        break;
+                    case "TaskDesc":
+                        taskList = taskList.OrderByDescending(m => m.Id).ToList();
+                        ViewBag.PrevSort = "TaskDesc";
+                        break;
+                    case "MocAsc":
+                        taskList = taskList.OrderBy(m => m.MocNumber).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "MocAsc";
+                        break;
+                    case "MocDesc":
+                        taskList = taskList.OrderByDescending(m => m.MocNumber).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "MocDesc";
+                        break;
+                    case "ImplementationTypeAsc":
+                        taskList = taskList.OrderBy(m => m.ImplementationType).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "ImplementationTypeAsc";
+                        break;
+                    case "ImplementationTypeDesc":
+                        taskList = taskList.OrderByDescending(m => m.ImplementationType).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "ImplementationTypeDesc";
+                        break;
+                    case "TitleAsc":
+                        taskList = taskList.OrderBy(m => m.Title).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "TitleAsc";
+                        break;
+                    case "TitleDesc":
+                        taskList = taskList.OrderByDescending(m => m.Title).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "TitleDesc";
+                        break;
+                    case "StatusAsc":
+                        taskList = taskList.OrderBy(m => m.Status).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "StatusAsc";
+                        break;
+                    case "StatusDesc":
+                        taskList = taskList.OrderByDescending(m => m.Status).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "StatusDesc";
+                        break;
+                    case "AssignedToAsc":
+                        taskList = taskList.OrderBy(m => m.AssignedToUserFullName).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "AssignedToAsc";
+                        break;
+                    case "AssignedToDesc":
+                        taskList = taskList.OrderByDescending(m => m.AssignedToUserFullName).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "AssignedToDesc";
+                        break;
+                    case "AssignedByAsc":
+                        taskList = taskList.OrderBy(m => m.AssignedByUserFullName).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "AssignedByAsc";
+                        break;
+                    case "AssignedByDesc":
+                        taskList = taskList.OrderByDescending(m => m.AssignedByUserFullName).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "AssignedByDesc";
+                        break;
+                    case "DueDateAsc":
+                        taskList = taskList.OrderBy(m => m.DueDate).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "DueDateAsc";
+                        break;
+                    case "DueDateDesc":
+                        taskList = taskList.OrderByDescending(m => m.DueDate).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "DueDateDesc";
+                        break;
+                    case "CompletionDateAsc":
+                        taskList = taskList.OrderBy(m => m.DueDate).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "CompletionDateAsc";
+                        break;
+                    case "CompletionDateDesc":
+                        taskList = taskList.OrderByDescending(m => m.DueDate).ThenBy(m => m.DueDate).ToList();
+                        ViewBag.PrevSort = "CompletionDateDesc";
+                        break;
+                }
+            }
+            else
+            {
+                switch (sort)
+                {
+                    case "Task":
+                        if (prevSort != null && prevSort == "TaskAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.Id).ToList();
+                            ViewBag.PrevSort = "TaskDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.Id).ToList();
+                            ViewBag.PrevSort = "TaskAsc";
+                        }
+                        break;
+                    case "Moc":
+                        if (prevSort != null && prevSort == "MocAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.MocNumber).ToList();
+                            ViewBag.PrevSort = "MocDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.MocNumber).ToList();
+                            ViewBag.PrevSort = "MocAsc";
+                        }
+                        break;
+                    case "ImplementationType":
+                        if (prevSort != null && prevSort == "ImplementationTypeAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.ImplementationType).ToList();
+                            ViewBag.PrevSort = "ImplementationTypeDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.ImplementationType).ToList();
+                            ViewBag.PrevSort = "ImplementationTypeAsc";
+                        }
+                        break;
+                    case "Title":
+                        if (prevSort != null && prevSort == "TitleAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.Title).ToList();
+                            ViewBag.PrevSort = "TitleDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.Title).ToList();
+                            ViewBag.PrevSort = "TitleAsc";
+                        }
+                        break;
+                    case "Status":
+                        if (prevSort != null && prevSort == "StatusAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.Status).ToList();
+                            ViewBag.PrevSort = "StatusDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.Status).ToList();
+                            ViewBag.PrevSort = "StatusAsc";
+                        }
+                        break;
+                    case "AssignedTo":
+                        if (prevSort != null && prevSort == "AssignedToAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.AssignedToUserFullName).ToList();
+                            ViewBag.PrevSort = "AssignedToDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.AssignedToUserFullName).ToList();
+                            ViewBag.PrevSort = "AssignedToAsc";
+                        }
+                        break;
+                    case "AssignedBy":
+                        if (prevSort != null && prevSort == "AssignedByAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.AssignedByUserFullName).ToList();
+                            ViewBag.PrevSort = "AssignedByDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.AssignedByUserFullName).ToList();
+                            ViewBag.PrevSort = "AssignedByAsc";
+                        }
+                        break;
+                    case "DueDate":
+                        if (prevSort != null && prevSort == "DueDateAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.DueDate).ToList();
+                            ViewBag.PrevSort = "DueDateDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.DueDate).ToList();
+                            ViewBag.PrevSort = "DueDateAsc";
+                        }
+                        break;
+                    case "CompletionDate":
+                        if (prevSort != null && prevSort == "CompletionDateAsc")
+                        {
+                            taskList = taskList.OrderByDescending(m => m.CompletionDate).ToList();
+                            ViewBag.PrevSort = "CompletionDateDesc";
+                        }
+                        else
+                        {
+                            taskList = taskList.OrderBy(m => m.CompletionDate).ToList();
+                            ViewBag.PrevSort = "CompletionDateAsc";
+                        }
+                        break;
+                    default:
+                        taskList = taskList.OrderBy(m => m.Priority).ThenBy(m => m.CompletionDate).ToList();
+                        ViewBag.PrevSort = null;
+                        break;
+                }
+            }
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
@@ -123,6 +385,15 @@ namespace Management_of_Change.Controllers
             if (task.Status == "Cancelled" && String.IsNullOrWhiteSpace(task.CancelledReason))
                 ModelState.AddModelError("CancelledReason", "If Task Status is 'Cancelled', Reason is required.");
 
+            if (task.Status == "Complete" && task.CompletionDate == null)
+                ModelState.AddModelError("CompletionDate", "If Task Status is 'Completed, Completion Date is required.");
+
+            if (task.Status != "Complete" && task.CompletionDate != null)
+            {
+                ModelState.AddModelError("CompletionDate", "Completion Date is entered, but Status is not 'Complete'. (Either Change Status to 'Complete' or clear 'Completion Date')");
+                ModelState.AddModelError("Status", "Completion Date is entered, but Status is not 'Complete'. (Either Change Status to 'Complete' or clear 'Completion Date')");
+            }
+
             if (task.ChangeRequestId != null && task.ImplementationType == null)
                 ModelState.AddModelError("ImplementationType", "If task is part of a Change Request, Implementation Type is required.");
 
@@ -189,7 +460,7 @@ namespace Management_of_Change.Controllers
                     //await _context.SaveChangesAsync();
                 }
 
-                if (source == "Home")
+                if (source != null && source == "Home")
                     return RedirectToAction("Index", "Home", new { });
                 else
                     return RedirectToAction(nameof(Index));

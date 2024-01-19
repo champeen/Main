@@ -29,6 +29,7 @@ try
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     builder.Services.AddDbContext<Management_of_ChangeContext>(options => options.UseNpgsql(Initialization.ConnectionString));
     //builder.Services.AddDbContext<Management_of_ChangeContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLprd")));
+    // builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
     builder.Services.AddControllersWithViews();
     builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
@@ -37,7 +38,7 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var services = scope.ServiceProvider;
-        SeedData.Initialize(services);
+        //SeedData.Initialize(services);
     }
 
     // Configure the HTTP request pipeline.

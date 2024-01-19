@@ -566,10 +566,13 @@
                             @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
                             }*@
                                     @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
+
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
                                         @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", recId=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
                                     }
+
+
                                 </td>
                             </tr>
                         }
@@ -658,6 +661,12 @@
                                     else
                                     {
                                         @Html.ActionLink("Details","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                    }
+                                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "FinalApprovals") && (item.ReviewCompleted != true))
+                                    {
+                                        <span>
+                                            @Html.ActionLink("Send Reminder","FinalApprovalReminder","ChangeRequests", new {id = @item.Id, tab="FinalApprovals"}, new {@class="btn btn-info"})
+                                        </span>
                                     }
                                 </td>
                             </tr>

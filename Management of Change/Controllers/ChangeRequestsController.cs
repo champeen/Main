@@ -25,46 +25,298 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests
-        public async Task<IActionResult> Index(string statusFilter)
+        public async Task<IActionResult> Index(string statusFilter, string prevStatusFilter = null, string sort = null, string prevSort = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            // if no filter selected, keep previous
+            if (statusFilter == null)
+                statusFilter = prevStatusFilter;            
+
             // Create Dropdown List of Status...
             var statusList = await _context.ChangeStatus.OrderBy(m => m.Order).ToListAsync();
             List<SelectListItem> statusDropdown = new List<SelectListItem>();
+            SelectListItem item = new SelectListItem { Value = "AllCurrent", Text = "All Current (non closed/cancelled)"};
+            if (statusFilter == "AllCurrent")
+                item.Selected = true;
+            statusDropdown.Add(item);
+            item = new SelectListItem { Value = "All", Text = "All"};
+            if (statusFilter == "All")
+                item.Selected = true;
+            statusDropdown.Add(item);
             foreach (var status in statusList)
             {
-                SelectListItem item = new SelectListItem { Value = status.Description, Text = status.Description };
+                item = new SelectListItem { Value = status.Status, Text = status.Description};
+                if (item.Value == statusFilter)
+                    item.Selected = true;
+                else
+                    item.Selected = false;
                 statusDropdown.Add(item);
             }
             ViewBag.StatusList = statusDropdown;
-
-            var requests = from m in _context.ChangeRequest
-                           select m;
-            requests = requests.Where(r => r.DeletedDate == null);
+            
+            var requests = await _context.ChangeRequest.Where(m => m.DeletedDate == null).ToListAsync();            
 
             switch (statusFilter)
             {
                 case null:
+                    ViewBag.PrevStatusFilter = "AllCurrent";
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
                     break;
                 case "All":
+                    ViewBag.PrevStatusFilter = "All";
+                    break;
+                case "AllCurrent":
+                    ViewBag.PrevStatusFilter = "AllCurrent";
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
                     break;
                 default:
-                    requests = requests.Where(m => m.Change_Status == statusFilter);
+                    requests = requests.Where(m => m.Change_Status == statusFilter).ToList();
+                    ViewBag.PrevStatusFilter = statusFilter;
                     break;
+            }
+
+            // no sort selected, use previous sort...
+            if (sort == null)
+            {
+                sort = prevSort;
+                switch (sort)
+                {
+                    case null:
+                        requests = requests.OrderBy(m => m.Priority).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = null;
+                        break;
+                    case "MocNumberAsc":
+                        requests = requests.OrderBy(m => m.MOC_Number).ToList();
+                        ViewBag.PrevSort = "MocNumberAsc";
+                        break;
+                    case "MocNumberDesc":
+                        requests = requests.OrderByDescending(m => m.MOC_Number).ToList();
+                        ViewBag.PrevSort = "MocNumberDesc";
+                        break;
+                    case "TitleAsc":
+                        requests = requests.OrderBy(m => m.MOC_Number).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "TitleAsc";
+                        break;
+                    case "TitleDesc":
+                        requests = requests.OrderByDescending(m => m.MOC_Number).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "TitleDesc";
+                        break;
+                    case "StatusAsc":
+                        requests = requests.OrderBy(m => m.Change_Status_Description).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "StatusAsc";
+                        break;
+                    case "StatusDesc":
+                        requests = requests.OrderByDescending(m => m.Change_Status_Description).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "StatusDesc";
+                        break;
+                    case "OwnerAsc":
+                        requests = requests.OrderBy(m => m.Change_Owner_FullName).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "OwnerAsc";
+                        break;
+                    case "OwnerDesc":
+                        requests = requests.OrderByDescending(m => m.Change_Owner_FullName).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "OwnerDesc";
+                        break;
+                    case "TypeAsc":
+                        requests = requests.OrderBy(m => m.Change_Type).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "TypeAsc";
+                        break;
+                    case "TypeDesc":
+                        requests = requests.OrderByDescending(m => m.Change_Type).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "TypeDesc";
+                        break;
+                    case "LevelAsc":
+                        requests = requests.OrderBy(m => m.Change_Level).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "LevelAsc";
+                        break;
+                    case "LevelDesc":
+                        requests = requests.OrderByDescending(m => m.Change_Level).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "LevelDesc";
+                        break;
+                    case "LocationAsc":
+                        requests = requests.OrderBy(m => m.Location_Site).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "LocationAsc";
+                        break;
+                    case "LocationDesc":
+                        requests = requests.OrderByDescending(m => m.Location_Site).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "LocationDesc";
+                        break;
+                    case "AreaAsc":
+                        requests = requests.OrderBy(m => m.Area_of_Change).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "AreaAsc";
+                        break;
+                    case "AreaDesc":
+                        requests = requests.OrderByDescending(m => m.Area_of_Change).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "AreaDesc";
+                        break;
+                    case "ProductLineAsc":
+                        requests = requests.OrderBy(m => m.Proudct_Line).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "ProductLineAsc";
+                        break;
+                    case "ProductLineDesc":
+                        requests = requests.OrderByDescending(m => m.Proudct_Line).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "ProductLineDesc";
+                        break;
+                    case "CompletionDateAsc":
+                        requests = requests.OrderBy(m => m.Estimated_Completion_Date).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "CompletionDateAsc";
+                        break;
+                    case "CompletionDateDesc":
+                        requests = requests.OrderByDescending(m => m.Estimated_Completion_Date).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                        ViewBag.PrevSort = "CompletionDateDesc";
+                        break;
+                }
+            }
+            else
+            {
+                switch (sort)
+                {
+                    case "MocNumber":
+                        if (prevSort != null && prevSort == "MocNumberAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.MOC_Number).ToList();
+                            ViewBag.PrevSort = "MocNumberDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.MOC_Number).ToList();
+                            ViewBag.PrevSort = "MocNumberAsc";
+                        }
+                        break;
+                    case "Title":
+                        if (prevSort != null && prevSort == "TitleAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Title_Change_Description).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "TitleDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Title_Change_Description).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "TitleAsc";
+                        }
+                        break;
+                    case "Status":
+                        if (prevSort != null && prevSort == "StatusAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Change_Status_Description).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "StatusDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Change_Status_Description).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "StatusAsc";
+                        }
+                        break;
+                    case "Owner":
+                        if (prevSort != null && prevSort == "OwnerAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Change_Owner_FullName).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "OwnerDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Change_Owner_FullName).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "OwnerAsc";
+                        }
+                        break;
+                    case "Type":
+                        if (prevSort != null && prevSort == "TypeAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Change_Type).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "TypeDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Change_Type).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "TypeAsc";
+                        }
+                        break;
+                    case "Level":
+                        if (prevSort != null && prevSort == "LevelAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Change_Level).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "LevelDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Change_Level).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "LevelAsc";
+                        }
+                        break;
+                    case "Location":
+                        if (prevSort != null && prevSort == "LocationAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Location_Site).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "LocationDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Location_Site).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "LocationAsc";
+                        }
+                        break;
+                    case "Area":
+                        if (prevSort != null && prevSort == "AreaAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Area_of_Change).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "AreaDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Area_of_Change).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "AreaAsc";
+                        }
+                        break;
+                    case "ProductLine":
+                        if (prevSort != null && prevSort == "ProductLineAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Proudct_Line).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "ProductLineDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Proudct_Line).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "ProductLineAsc";
+                        }
+                        break;
+                    case "CompletionDate":
+                        if (prevSort != null && prevSort == "CompletionDateAsc")
+                        {
+                            requests = requests.OrderByDescending(m => m.Estimated_Completion_Date).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "CompletionDateDesc";
+                        }
+                        else
+                        {
+                            requests = requests.OrderBy(m => m.Estimated_Completion_Date).ThenBy(m => m.Estimated_Completion_Date).ToList();
+                            ViewBag.PrevSort = "CompletionDateAsc";
+                        }
+                        break;
+                    default:
+                        requests = requests.OrderBy(m => m.Priority).ThenBy(m => m.Change_Type).ToList();
+                        ViewBag.PrevSort = null;
+                        break;
+                }
             }
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return View("Index", await requests
-                .OrderBy(m => m.Priority)
-                .ThenBy(m => m.Estimated_Completion_Date)
-                .ToListAsync());
+            return View(requests);
+            //await requests
+            //.OrderBy(m => m.Priority)
+            //.ThenBy(m => m.Estimated_Completion_Date)
+            //.ToListAsync());
         }
+
+        //[HttpPost]
+        //public IActionResult Sort(string statusFilter, string sort = null, string prevSort = null)
+        //{
+        //    return RedirectToAction("Index", new { statusFilter = statusFilter, sort = sort, prevSort = prevSort});
+        //}
 
         // GET: ChangeRequests/Details/5
         public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null)
@@ -243,7 +495,7 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.QuestionsSaved = questionsSaved;
-            
+
             changeRequestViewModel.employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
 
             //return View("Details" + (string.IsNullOrEmpty(rec) ? "" : "#" + rec), changeRequestViewModel);
@@ -350,7 +602,7 @@ namespace Management_of_Change.Controllers
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number)))
                     path.Create();
 
-                if (source == "Home")
+                if (source != null && source == "Home")
                     return RedirectToAction("Index", "Home", new { });
                 else
                     return RedirectToAction("Details", new { id = changeRequest.Id });
@@ -477,7 +729,7 @@ namespace Management_of_Change.Controllers
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number)))
                     path.Create();
 
-                if (source == "Home")
+                if (source != null && source == "Home")
                     return RedirectToAction("Index", "Home", new { });
                 else
                     return RedirectToAction("Details", new { id = changeRequest.Id });
@@ -620,7 +872,7 @@ namespace Management_of_Change.Controllers
                 record.ModifiedDate = DateTime.Now;
                 _context.Update(record);
             }
-            await _context.SaveChangesAsync();   
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "GeneralMocQuestions", questionsSaved = "Yes" });
         }
@@ -714,7 +966,7 @@ namespace Management_of_Change.Controllers
         }
 
         public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
-        {            
+        {
             byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
             return File(fileBytes, "application/x-msdownload", fileName);
         }
@@ -882,7 +1134,7 @@ namespace Management_of_Change.Controllers
             {
                 //vm.EquipmentReviewerRequired = "No";
                 return View("SelectIAReviewers", vm);
-            }                
+            }
 
             // Close-out Draft and go to Impact Assessment Review...
             return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
@@ -963,7 +1215,7 @@ namespace Management_of_Change.Controllers
             if (vm.ErrorMessage != null)
                 //return View("SelectIAReviewers", vm);
                 return RedirectToAction("SubmitForReview", new { id = vm.ChangeRequestId, tab = vm.Tab, errorMessage = vm.ErrorMessage });
-            
+
 
             // Close-out Draft and go to Impact Assessment Review...
             return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
@@ -976,7 +1228,7 @@ namespace Management_of_Change.Controllers
 
             ChangeRequest changeRequest = await _context.ChangeRequest.FindAsync(changeRequestId);
 
-            // add Impact Assessment Responses
+            // add base Impact Assessment Responses from matrix
             List<ImpactAssessmentMatrix> impactAssessmentMatrix = await _context.ImpactAssessmentMatrix
                 .Where(m => m.ChangeType == changeRequest.Change_Type)
                 .OrderBy(m => m.ReviewType)
@@ -989,23 +1241,27 @@ namespace Management_of_Change.Controllers
                 {
                     // Get ALL Review Types setup for this Change Type ...
                     List<ReviewType> reviews = await _context.ReviewType
-                        .Where(rt => (rt.Type == assessment.ReviewType && rt.ChangeArea == null) /*|| (rt.Type == assessment.ReviewType && rt.ChangeArea == changeRequest.Area_of_Change)*/)
+                        .Where(rt => (rt.Type == assessment.ReviewType && rt.ChangeArea == null) || (rt.Type == assessment.ReviewType && assessment.ReviewType == "Quality" && rt.ChangeArea == changeRequest.Area_of_Change) || (rt.Type == assessment.ReviewType && assessment.ReviewType == "Test" && rt.ChangeArea == changeRequest.Area_of_Change))
                         .ToListAsync();
                     foreach (var review in reviews)
                     {
-                        ImpactAssessmentResponse response = new ImpactAssessmentResponse
+                        var found = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == changeRequest.Id && m.ReviewType == review.Type && m.Reviewer == review.Reviewer).FirstOrDefaultAsync();
+                        if (found == null)
                         {
-                            ReviewType = assessment.ReviewType,
-                            ChangeType = assessment.ChangeType,
-                            ChangeArea = review.ChangeArea,
-                            Reviewer = review.Reviewer,
-                            ReviewerEmail = review.Email,
-                            Username = review.Username,
-                            CreatedUser = _username,
-                            CreatedDate = DateTime.Now
-                        };
-                        changeRequest.ImpactAssessmentResponses.Add(response);
-                        await _context.SaveChangesAsync();
+                            ImpactAssessmentResponse response = new ImpactAssessmentResponse
+                            {
+                                ReviewType = assessment.ReviewType,
+                                ChangeType = assessment.ChangeType,
+                                ChangeArea = review.ChangeArea,
+                                Reviewer = review.Reviewer,
+                                ReviewerEmail = review.Email,
+                                Username = review.Username,
+                                CreatedUser = _username,
+                                CreatedDate = DateTime.Now
+                            };
+                            changeRequest.ImpactAssessmentResponses.Add(response);
+                            await _context.SaveChangesAsync();
+                        }
                     }
                 }
             }
@@ -1014,15 +1270,15 @@ namespace Management_of_Change.Controllers
             List<AdditionalImpactAssessmentReviewers> reviewers = await _context.AdditionalImpactAssessmentReviewers.Where(m => m.ChangeRequestId == changeRequestId).ToListAsync();
             foreach (var review in reviewers)
             {
-                // Make Sure the combination of Reviewer & ReviewType is not already added !!!!!
-                var found = await _context.ImpactAssessmentResponse.Where(m => m.ReviewType == review.ReviewType && m.ChangeArea == review.ReviewArea && m.Username == review.Reviewer && m.ChangeRequestId == changeRequest.Id).ToListAsync();
+                // Make Sure the combination of Reviewer & ReviewType is not already added for this Change Request !!!!!
+                var found = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == changeRequest.Id && m.ReviewType == review.ReviewType && m.Username == review.Reviewer).ToListAsync();
                 if (found.Count == 0)
                 {
                     ImpactAssessmentResponse response = new ImpactAssessmentResponse
                     {
                         ChangeRequestId = changeRequest.Id,
                         ChangeType = changeRequest.Change_Type,
-                        ReviewType = review.ReviewType,          
+                        ReviewType = review.ReviewType,
                         ChangeArea = review.ReviewArea,
                         Reviewer = review.ReviewerName,
                         ReviewerEmail = review.ReviewerEmail,
@@ -1033,7 +1289,7 @@ namespace Management_of_Change.Controllers
                     changeRequest.ImpactAssessmentResponses.Add(response);
                     await _context.SaveChangesAsync();
                 }
-            }            
+            }
 
             // add Impact Assessment Response Quesion/Answers
             if (changeRequest.ImpactAssessmentResponses != null && changeRequest.ImpactAssessmentResponses.Count > 0)
@@ -1216,6 +1472,96 @@ namespace Management_of_Change.Controllers
                 }
             }
             return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "ImpactAssessments", rec = rec });
+        }
+
+        public async Task<IActionResult> AssessmentReminder(int id, string tab = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            var impactAssessmentResponse = await _context.ImpactAssessmentResponse.FindAsync(id);
+            if (impactAssessmentResponse == null)
+                return RedirectToAction("Index");
+
+            var changeRequest = await _context.ChangeRequest.FindAsync(impactAssessmentResponse.ChangeRequestId);
+            if (changeRequest == null)
+                return RedirectToAction("Index");
+
+            // Send Email Out notifying the person who is assigned the task
+            string subject = @"Management of Change (MoC) - Impact Assessment Response Reminder.";
+            string body = @"REMINDER! A Management of Change Impact Assessment has been assigned to you.  Please follow link below and review your impact assessment. <br/><br/><strong>Change Request: </strong>" +  changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == impactAssessmentResponse.Username).FirstOrDefaultAsync();
+            if (toPerson != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, changeRequest.Priority);
+                var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, impactAssessmentResponse.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+
+                //EmailHistory emailHistory = new EmailHistory
+                //{
+                //    Priority = task.Priority,
+                //    Subject = subject,
+                //    Body = body,
+                //    SentToDisplayName = toPerson.displayname,
+                //    SentToUsername = toPerson.onpremisessamaccountname,
+                //    SentToEmail = toPerson.mail,
+                //    ChangeRequestId = task.ChangeRequestId,
+                //    TaskId = task.Id,
+                //    Type = "Task",
+                //    Status = task.Status,
+                //    CreatedDate = DateTime.Now,
+                //    CreatedUser = _username
+                //};
+                //_context.Add(emailHistory);
+            }
+            //await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = changeRequest.Id, tab=tab });
+        }
+
+        public async Task<IActionResult> FinalApprovalReminder(int id, string tab = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            var implementationFinalApprovalResponse = await _context.ImplementationFinalApprovalResponse.FindAsync(id);
+            if (implementationFinalApprovalResponse == null)
+                return RedirectToAction("Index");
+
+            var changeRequest = await _context.ChangeRequest.FindAsync(implementationFinalApprovalResponse.ChangeRequestId);
+            if (changeRequest == null)
+                return RedirectToAction("Index");
+
+            // Send Email Out notifying the person who is assigned the task
+            string subject = @"Management of Change (MoC) - Final Approval Reminder.";
+            string body = @"REMINDER! A Management of Change Final Approval has been assigned to you.  Please follow link below and review your final approval. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == implementationFinalApprovalResponse.Username).FirstOrDefaultAsync();
+            if (toPerson != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, changeRequest.Priority);
+                var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+
+                //EmailHistory emailHistory = new EmailHistory
+                //{
+                //    Priority = task.Priority,
+                //    Subject = subject,
+                //    Body = body,
+                //    SentToDisplayName = toPerson.displayname,
+                //    SentToUsername = toPerson.onpremisessamaccountname,
+                //    SentToEmail = toPerson.mail,
+                //    ChangeRequestId = task.ChangeRequestId,
+                //    TaskId = task.Id,
+                //    Type = "Task",
+                //    Status = task.Status,
+                //    CreatedDate = DateTime.Now,
+                //    CreatedUser = _username
+                //};
+                //_context.Add(emailHistory);
+            }
+            //await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = changeRequest.Id, tab = tab });
         }
 
         // This closes out 'FinalApprovals' and moves to 'Implementation' phase

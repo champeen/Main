@@ -138,6 +138,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Users = getUserList(implementationFinalApprovalResponse.Username);
 
             if (id != implementationFinalApprovalResponse.Id)
                 return NotFound();

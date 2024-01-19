@@ -8,6 +8,8 @@
 <h1>Change Requests</h1>
 
 <form asp-controller="ChangeRequests" asp-action="Index">
+    <input hidden value=@ViewBag.PrevSort id="PrevSortId" />
+    <input hidden value=@ViewBag.PrevStatusFilter id="PrevStatusFilterId" />
     <div class="row mt-3">
         <div class="col-6 text-start">
             @*<a asp-action="Create">Create New</a>*@
@@ -24,7 +26,7 @@
             Status:
         </div>
         <div class="col-2 text-start">
-            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList,"Value","Text"),"All", new {@class = "form-control form-select", @id="statusFilter"})
+            @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList,"Value","Text"), new {@class = "form-control form-select", @id="statusFilter"})
         </div>
         @*        <div class="col-2 fw-bold text-end">
         Another Filter:
@@ -41,36 +43,108 @@
     <thead class="align-top align-text-top table-primary">
         <tr>
             <th class="text-nowrap">
-                MOC Number
+                @* MOC Number *@
+                @Html.ActionLink("MoC Number","Index",new {sort="MocNumber", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "MocNumberAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "MocNumberDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
                 @*@Html.DisplayNameFor(model => model.MOC_Number)*@
             </th>
             <th>
-                Title/Change Description
+                @Html.ActionLink("Title/Change Description","Index",new {sort="Title", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "TitleAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "TitleDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                
+                @* Title/Change Description *@
                 @*@Html.DisplayNameFor(model => model.Title_Change_Description)*@
             </th>
             <th>
-                Change Status
+                @Html.ActionLink("Change Status","Index",new {sort="Status", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "StatusAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "StatusDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Change Status *@
                 @*@Html.DisplayNameFor(model => model.Change_Status)*@
             </th>
             <th>
-                Change Owner
+                @Html.ActionLink("Change Owner","Index",new {sort="Owner", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "OwnerAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "OwnerDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Change Owner *@
                 @*@Html.DisplayNameFor(model => model.Change_Owner)*@
             </th>
-
             <th>
-                Change Type
+                @Html.ActionLink("Change Type","Index",new {sort="Type", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "TypeAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "TypeDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Change Type *@
                 @*@Html.DisplayNameFor(model => model.Change_Type)*@
             </th>
             <th>
-                Change Level
+                @Html.ActionLink("Change Level","Index",new {sort="Level", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "LevelAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "LevelDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Change Level *@
                 @*@Html.DisplayNameFor(model => model.Change_Level)*@
             </th>
             <th>
-                Location/Site
+                @Html.ActionLink("Location/Site","Index",new {sort="Location", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "LocationAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "LocationDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Location/Site *@
                 @*@Html.DisplayNameFor(model => model.Location_Site)*@
             </th>
             <th>
-                Area of Change
+                @Html.ActionLink("Area of Change","Index",new {sort="Area", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "AreaAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "AreaDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Area of Change *@
                 @*@Html.DisplayNameFor(model => model.Area_of_Change)*@
             </th>
             @*            <th>
@@ -80,7 +154,16 @@
             @Html.DisplayNameFor(model => model.Justification_of_the_Change)
             </th>*@
             <th>
-                Product Line
+                @Html.ActionLink("Product Line","Index",new {sort="ProductLine", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "ProductLineAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "ProductLineDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Product Line *@
                 @*@Html.DisplayNameFor(model => model.Proudct_Line)*@
             </th>
             @*            <th>
@@ -93,7 +176,16 @@
             @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
             </th>*@
             <th>
-                Estimated Completion Date
+                @Html.ActionLink("Estimated Completion Date","Index",new {sort="CompletionDate", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @if (ViewBag.PrevSort == "CompletionDateAsc")
+                {
+                    <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                else if (ViewBag.PrevSort == "CompletionDateDesc")
+                {
+                    <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
+                }
+                @* Estimated Completion Date *@
                 @*@Html.DisplayNameFor(model => model.Request_Date)*@
             </th>
             <th></th>
