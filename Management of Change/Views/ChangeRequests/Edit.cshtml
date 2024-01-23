@@ -113,8 +113,6 @@
                 @Html.DropDownListFor(model => model.Change_Owner, new SelectList(ViewBag.Users,"Value","Text"), new { @class="form-control form-select"})
                 <span asp-validation-for="Change_Owner" class="text-danger fw-bold"></span>
             </div>
-        </div>
-        <div class="col-6">
             <div class="form-group my-3">
                 <label asp-for="Estimated_Completion_Date" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -128,6 +126,9 @@
                 <input asp-for="Expiration_Date_Temporary" class="form-control" onclick="this.showPicker()" />
                 <span asp-validation-for="Expiration_Date_Temporary" class="text-danger fw-bold"></span>
             </div>
+        </div>
+        <div class="col-6">
+
             <div class="form-group my-3">
                 <label asp-for="Waiver_Number" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Does this change require the use of a waiver for the release of final product? If so, please enter the waiver number(s)">
@@ -150,6 +151,15 @@
                 @*@Html.DropDownListFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text"), "-- select --", new { @class="form-control form-select", multiple="multiple"})*@
                 @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs, "Value","Text", Model.PTN_Number), new { @class = "form-control from-select", multiple="multiple", size=12})
                 <span asp-validation-for="PTN_Number" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Implementation_Notification_Employees" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Select One or more employees that you would like notified by email once implementation is approved for this change request. This is simply used to make them aware of the change (MoC). They are not required to do anything. If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
+                </i>
+                @*<input asp-for="PTN_Number" class="form-control" />*@
+                @*@Html.DropDownListFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text"), "-- select --", new { @class="form-control form-select", multiple="multiple"})*@
+                @Html.ListBoxFor(model => model.Implementation_Notification_Employees, new MultiSelectList(ViewBag.Users, "Value","Text", Model.Implementation_Notification_Employees), new { @class = "form-control from-select", multiple="multiple", size=12})
+                <span asp-validation-for="Implementation_Notification_Employees" class="text-danger fw-bold"></span>
             </div>
         </div>
     </div>

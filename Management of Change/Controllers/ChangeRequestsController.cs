@@ -389,6 +389,19 @@ namespace Management_of_Change.Controllers
                 .Where(m => m.Status == "Open" || m.Status == "In-Progress" || m.Status == "On Hold")
                 .Count();
 
+            // Get Employees to Notify full names instead of usernames...
+            List<String> employeesToNotify = new List<string>();
+            if (changeRequest.Implementation_Notification_Employees != null && changeRequest.Implementation_Notification_Employees.Count > 0) 
+            {                
+                foreach (var username in changeRequest.Implementation_Notification_Employees)
+                {
+                    string fullName = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).Select(m => m.displayname).FirstOrDefaultAsync();
+                    if (!String.IsNullOrWhiteSpace(fullName))
+                        employeesToNotify.Add(fullName);
+                }
+            }
+            ViewBag.EmployeesToNotify = employeesToNotify;
+
             changeRequestViewModel.ChangeRequest = changeRequest;
             changeRequestViewModel.Tasks = tasks;
             // disable tab 3 (ImpactAssessments) if General MOC Responses have not been completed...
@@ -528,6 +541,7 @@ namespace Management_of_Change.Controllers
             ViewBag.Types = getChangeTypes();
             ViewBag.Levels = getChangeLevels();
             ViewBag.PTNs = getPtnNumbers();
+            ViewBag.Employees = getUserList();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -544,7 +558,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source = null)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,Implementation_Notification_Employees,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -612,6 +626,7 @@ namespace Management_of_Change.Controllers
             ViewBag.Types = getChangeTypes();
             ViewBag.Levels = getChangeLevels();
             ViewBag.PTNs = getPtnNumbers();
+            ViewBag.Employees = getUserList();
             //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -655,6 +670,7 @@ namespace Management_of_Change.Controllers
             ViewBag.Types = getChangeTypes();
             ViewBag.Levels = getChangeLevels();
             ViewBag.PTNs = getPtnNumbers();
+            ViewBag.Employees = getUserList();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
             ViewBag.SiteLocations = await _context.SiteLocation.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -669,7 +685,7 @@ namespace Management_of_Change.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CloneCreate([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, int clonedId, string source = null)
+        public async Task<IActionResult> CloneCreate([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Implementation_Notification_Employees,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, int clonedId, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -739,6 +755,7 @@ namespace Management_of_Change.Controllers
             ViewBag.Types = getChangeTypes();
             ViewBag.Levels = getChangeLevels();
             ViewBag.PTNs = getPtnNumbers();
+            ViewBag.Employees = getUserList();
             //ViewBag.Status = await _context.ChangeStatus.OrderBy(m => m.Order).Select(m => m.Status).ToListAsync();
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
             ViewBag.ProductLines = await _context.ProductLine.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
@@ -788,7 +805,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,Implementation_Notification_Employees,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -1609,35 +1626,28 @@ namespace Management_of_Change.Controllers
                     await _context.SaveChangesAsync();
 
                     // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
-                    // TODO MJWII
-                    var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                     var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
                     foreach (var record in adminApproverList)
                     {
-                        var admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
+                        var adminToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
                         string subject = @"Management of Change (MoC) - Submitted for Implementation";
                         string body = @"Change Request has been submitted for implementation. All pre-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
-                        Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null, changeRequest.Priority);
-                        AddEmailHistory(changeRequest.Priority, subject, body, admin.displayname, record.Username, admin.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                        // Send Email...
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, adminToNotify.mail, null, null, changeRequest.Priority);
 
-                        //EmailHistory emailHistory = new EmailHistory
-                        //{
-                        //    Priority = changeRequest.Priority,
-                        //    Subject = subject,
-                        //    Body = body,
-                        //    SentToDisplayName = admin.displayname,
-                        //    SentToUsername = record.Username,
-                        //    SentToEmail = admin.mail,
-                        //    ChangeRequestId = changeRequest.Id,
-                        //    ImplementationFinalApprovalResponseId = implementationFinalApprovalResponse.Id,
-                        //    Type = "ChangeRequest",
-                        //    Status = changeRequest.Change_Status,                            
-                        //    CreatedDate = DateTime.Now,
-                        //    CreatedUser = _username
-                        //};
-                        //_context.Add(emailHistory);
-                        //await _context.SaveChangesAsync();
+                        // Log that Email was Sent...
+                        AddEmailHistory(changeRequest.Priority, subject, body, adminToNotify.displayname, record.Username, adminToNotify.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
                     }
+
+                    // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
+                    foreach (var username in changeRequest.Implementation_Notification_Employees)
+                    {
+                        var employeeToEmailTo = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).FirstOrDefaultAsync();
+                        string subject = @"Management of Change (MoC) - Submitted for Implementation";
+                        string body = @"Change Request has been submitted for implementation. All pre-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                    }
+
                 }
             }
             return RedirectToAction("Details", new { id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });

@@ -195,9 +195,15 @@
                 <dd class="col-sm-4 my-1">
                     @if (Model.ChangeRequest.PTN_Number != null)
                     {
+                        var counter = 0;
                         @foreach (var ptn in Model.ChangeRequest.PTN_Number)
-                        {
-                            <span>@ptn&nbsp;</span>
+                        {      
+                            counter = counter + 1;
+                            <span>@ptn</span>
+                            if (counter < Model.ChangeRequest.PTN_Number.Count)
+                            {
+                                <span>,&nbsp;</span>
+                            }
                         }
                         @* @Html.DisplayFor(model => model.ChangeRequest.PTN_Number) *@
                     }
@@ -208,8 +214,24 @@
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.ChangeRequest.Change_Level)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end"></dt>
-                <dd class="col-sm-4 my-1"></dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Notification_Employees)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @if (ViewBag.EmployeesToNotify != null)
+                    {
+                        var counter = 0;
+                        @foreach (var employeeToNotify in ViewBag.EmployeesToNotify)
+                        {
+                            counter = counter + 1;
+                            <span>@employeeToNotify</span>
+                            if (counter < ViewBag.EmployeesToNotify.Count)
+                            {
+                                <span>,&nbsp;</span>
+                            }
+                        }
+                    }
+                </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Proudct_Line)
                 </dt>
@@ -566,13 +588,16 @@
                             @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
                             }*@
                                     @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
-
+                                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.ReviewCompleted != true))
+                                    {
+                                        <span>
+                                            @Html.ActionLink("Send Reminder","AssessmentReminder","ChangeRequests", new {id = @item.Id, tab="ImpactAssessments"}, new {@class="btn btn-info"})
+                                        </span>
+                                    }
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
                                         @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", recId=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
                                     }
-
-
                                 </td>
                             </tr>
                         }

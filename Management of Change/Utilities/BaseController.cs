@@ -167,7 +167,6 @@ namespace Management_of_Change.Utilities
                 users.Add(item);
             }
             return users;
-
         }
 
         public List<SelectListItem> getChangeTypes()
