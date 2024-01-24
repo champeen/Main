@@ -119,20 +119,26 @@
                 <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please select the PTN number(s). If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
                 </i>
                 @*<input asp-for="PTN_Number" class="form-control" />*@
-                @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text", Model.PTN_Number), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=9 })
+                @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs,"Value","Text", Model.PTN_Number), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=10 })
                 @* @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs, "Value","Text", Model.PTN_Number), new { @class = "form-control from-select", multiple="multiple", data_placeholder = "Select Users", size=20}) *@
                 <span asp-validation-for="PTN_Number" class="text-danger fw-bold"></span>
             </div>
-
             <div class="form-group my-3">
-                <label asp-for="Implementation_Notification_Employees" class="control-label fw-bold mb-1"></label>
+                <label asp-for="Additional_Notification" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Select One or more employees that you would like notified by email once implementation is approved for this change request. This is simply used to make them aware of the change (MoC). They are not required to do anything. If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
                 </i>
                 @*<input asp-for="PTN_Number" class="form-control" />*@
-                @Html.ListBoxFor(model => model.Implementation_Notification_Employees, new MultiSelectList(ViewBag.Employees,"Value","Text"), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select Employee(s)", size=9 })
+                @Html.ListBoxFor(model => model.Additional_Notification, new MultiSelectList(ViewBag.Employees,"Value","Text"), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select Employee(s)", size=11 })
                 @* @Html.ListBoxFor(model => model.PTN_Number, new MultiSelectList(ViewBag.PTNs, "Value","Text", Model.PTN_Number), new { @class = "form-control from-select", multiple="multiple", data_placeholder = "Select Users", size=20}) *@
-                <span asp-validation-for="Implementation_Notification_Employees" class="text-danger fw-bold"></span>
+                <span asp-validation-for="Additional_Notification" class="text-danger fw-bold"></span>
             </div>
+@*TEST GROUPING DROPDOWN             <div class="form-group my-3">
+                <label asp-for="PTN_Number" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Is this change associated with a PTN? If yes, please select the PTN number(s). If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
+                </i>
+                <select asp-for="PTN_Number" class="form-control" asp-items="ViewBag.Test" multiple></select>
+                <span asp-validation-for="PTN_Number" class="text-danger fw-bold"></span>
+            </div> *@
         </div>
     </div>
     <div class="row">

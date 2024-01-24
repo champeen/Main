@@ -391,9 +391,9 @@ namespace Management_of_Change.Controllers
 
             // Get Employees to Notify full names instead of usernames...
             List<String> employeesToNotify = new List<string>();
-            if (changeRequest.Implementation_Notification_Employees != null && changeRequest.Implementation_Notification_Employees.Count > 0) 
+            if (changeRequest.Additional_Notification != null && changeRequest.Additional_Notification.Count > 0) 
             {                
-                foreach (var username in changeRequest.Implementation_Notification_Employees)
+                foreach (var username in changeRequest.Additional_Notification)
                 {
                     string fullName = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).Select(m => m.displayname).FirstOrDefaultAsync();
                     if (!String.IsNullOrWhiteSpace(fullName))
@@ -549,6 +549,22 @@ namespace Management_of_Change.Controllers
             ViewBag.Source = source;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+
+            // test mjwii
+            //SelectListGroup group1 = new SelectListGroup() { Name = "GroupOne" };
+            //SelectListGroup group2 = new SelectListGroup() { Name = "GroupTwo" };
+            //List<SelectListItem> testSelectList = new List<SelectListItem>()
+            //{
+            //    new SelectListItem("One","1",false,false),
+            //    new SelectListItem() { Value = "2", Text = "Two", Group = group1 },
+            //    new SelectListItem() { Value = "3", Text = "Three", Group = group1 },
+            //    new SelectListItem() { Value = "4", Text = "Four", Group = group2 },
+            //    new SelectListItem() { Value = "5", Text = "Five", Group = group2 },
+            //    new SelectListItem() { Value = "6", Text = "Six" },
+            //    new SelectListItem() { Value = "7", Text = "Seven", Group = group1 }
+            //};
+            //ViewBag.Test = testSelectList;
+            // end test mjwii
 
             return View(changeRequest);
         }
@@ -1188,9 +1204,7 @@ namespace Management_of_Change.Controllers
                     }
                 }
                 if (vm.EquipmentReviewerRequired != null || vm.EquipmentReviewerRequired == "No")
-                {
                     await _context.SaveChangesAsync();
-                }
             }
 
             if (vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "Yes")
@@ -1216,9 +1230,7 @@ namespace Management_of_Change.Controllers
                     }
                 }
                 if (vm.MaintenanceReviewerRequired != null && vm.MaintenanceReviewerRequired == "No")
-                {
                     await _context.SaveChangesAsync();
-                }
             }
 
             // make sure if 1 reviewer is still required, that they have selected one...
@@ -1232,7 +1244,6 @@ namespace Management_of_Change.Controllers
             if (vm.ErrorMessage != null)
                 //return View("SelectIAReviewers", vm);
                 return RedirectToAction("SubmitForReview", new { id = vm.ChangeRequestId, tab = vm.Tab, errorMessage = vm.ErrorMessage });
-
 
             // Close-out Draft and go to Impact Assessment Review...
             return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
@@ -1387,24 +1398,6 @@ namespace Management_of_Change.Controllers
                     string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
                     AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
-
-                    //EmailHistory emailHistory = new EmailHistory
-                    //{
-                    //    Priority = changeRequest.Priority,
-                    //    Subject = subject,
-                    //    Body = body,
-                    //    SentToDisplayName = record.Reviewer,
-                    //    SentToUsername = record.Username,
-                    //    SentToEmail = record.ReviewerEmail,
-                    //    ChangeRequestId = changeRequest.Id,
-                    //    ImpactAssessmentResponseId = record.Id,
-                    //    Type = "ChangeRequest",
-                    //    Status = changeRequest.Change_Status,
-                    //    CreatedDate = DateTime.Now,
-                    //    CreatedUser = _username
-                    //};
-                    //_context.Add(emailHistory);
-                    //await _context.SaveChangesAsync();
                 }
             }
             return RedirectToAction("Details", new { id = changeRequestId, tab = "ImpactAssessments" });
@@ -1468,24 +1461,6 @@ namespace Management_of_Change.Controllers
 
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
                     AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, null, record.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
-
-                    //EmailHistory emailHistory = new EmailHistory
-                    //{
-                    //    Priority = changeRequest.Priority,
-                    //    Subject = subject,
-                    //    Body = body,
-                    //    SentToDisplayName = record.Reviewer,
-                    //    SentToUsername = record.Username,
-                    //    SentToEmail = record.ReviewerEmail,
-                    //    ChangeRequestId = changeRequest.Id,
-                    //    ImplementationFinalApprovalResponseId = record.Id,
-                    //    Type = "ChangeRequest",
-                    //    Status = changeRequest.Change_Status,
-                    //    CreatedDate = DateTime.Now,
-                    //    CreatedUser = _username
-                    //};
-                    //_context.Add(emailHistory);
-                    //await _context.SaveChangesAsync();
                 }
             }
             return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "ImpactAssessments", rec = rec });
@@ -1514,25 +1489,7 @@ namespace Management_of_Change.Controllers
             {
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, changeRequest.Priority);
                 var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, impactAssessmentResponse.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
-
-                //EmailHistory emailHistory = new EmailHistory
-                //{
-                //    Priority = task.Priority,
-                //    Subject = subject,
-                //    Body = body,
-                //    SentToDisplayName = toPerson.displayname,
-                //    SentToUsername = toPerson.onpremisessamaccountname,
-                //    SentToEmail = toPerson.mail,
-                //    ChangeRequestId = task.ChangeRequestId,
-                //    TaskId = task.Id,
-                //    Type = "Task",
-                //    Status = task.Status,
-                //    CreatedDate = DateTime.Now,
-                //    CreatedUser = _username
-                //};
-                //_context.Add(emailHistory);
             }
-            //await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { id = changeRequest.Id, tab=tab });
         }
 
@@ -1559,25 +1516,7 @@ namespace Management_of_Change.Controllers
             {
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, changeRequest.Priority);
                 var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
-
-                //EmailHistory emailHistory = new EmailHistory
-                //{
-                //    Priority = task.Priority,
-                //    Subject = subject,
-                //    Body = body,
-                //    SentToDisplayName = toPerson.displayname,
-                //    SentToUsername = toPerson.onpremisessamaccountname,
-                //    SentToEmail = toPerson.mail,
-                //    ChangeRequestId = task.ChangeRequestId,
-                //    TaskId = task.Id,
-                //    Type = "Task",
-                //    Status = task.Status,
-                //    CreatedDate = DateTime.Now,
-                //    CreatedUser = _username
-                //};
-                //_context.Add(emailHistory);
             }
-            //await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = tab });
         }
 
@@ -1639,15 +1578,6 @@ namespace Management_of_Change.Controllers
                         // Log that Email was Sent...
                         AddEmailHistory(changeRequest.Priority, subject, body, adminToNotify.displayname, record.Username, adminToNotify.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
                     }
-
-                    // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
-                    foreach (var username in changeRequest.Implementation_Notification_Employees)
-                    {
-                        var employeeToEmailTo = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).FirstOrDefaultAsync();
-                        string subject = @"Management of Change (MoC) - Submitted for Implementation";
-                        string body = @"Change Request has been submitted for implementation. All pre-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-                    }
-
                 }
             }
             return RedirectToAction("Details", new { id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });
@@ -1693,23 +1623,20 @@ namespace Management_of_Change.Controllers
 
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null, changeRequest.Priority);
                 AddEmailHistory(changeRequest.Priority, subject, body, admin.displayname, record.Username, admin.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
 
-                //EmailHistory emailHistory = new EmailHistory
-                //{
-                //    Priority = changeRequest.Priority,
-                //    Subject = subject,
-                //    Body = body,
-                //    SentToDisplayName = admin.displayname,
-                //    SentToUsername = record.Username,
-                //    SentToEmail = admin.mail,
-                //    ChangeRequestId = changeRequest.Id,
-                //    Type = "ChangeRequest",
-                //    Status = changeRequest.Change_Status,
-                //    CreatedDate = DateTime.Now,
-                //    CreatedUser = _username
-                //};
-                //_context.Add(emailHistory);
-                //await _context.SaveChangesAsync();
+            // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
+            foreach (var username in changeRequest.Additional_Notification)
+            {
+                var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).FirstOrDefaultAsync();
+                subject = @"Management of Change (MoC) - Submitted for Implementation";
+                body = @"Change Request has been submitted for implementation. This is for notification purposes only. This may affect your job process, so please read through change request. Follow link below and review the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                // Send Email...
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify.mail, null, null, changeRequest.Priority);
+
+                // Log that Email was Sent...
+                AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify.displayname, username, employeeToNotify.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
 
             // Create a task for the ChangeRequest Owner to notify Administrator when ChangeRequest has been fully implemented
@@ -1740,24 +1667,6 @@ namespace Management_of_Change.Controllers
             {
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
                 AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, task.CreatedUser);
-
-                //EmailHistory emailHistory = new EmailHistory
-                //{
-                //    Priority = task.Priority,
-                //    Subject = subject,
-                //    Body = body,
-                //    SentToDisplayName = toPerson.displayname,
-                //    SentToUsername = toPerson.onpremisessamaccountname,
-                //    SentToEmail = toPerson.mail,
-                //    ChangeRequestId = task.ChangeRequestId,
-                //    TaskId = task.Id,
-                //    Type = "Task",
-                //    Status = task.Status,
-                //    CreatedDate = DateTime.Now,
-                //    CreatedUser = task.CreatedUser
-                //};
-                //_context.Add(emailHistory);
-                //await _context.SaveChangesAsync();
             }
 
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "Implementation" });
@@ -1797,23 +1706,6 @@ namespace Management_of_Change.Controllers
 
             Initialization.EmailProviderSmtp.SendMessage(subject, body, owner.mail, null, null, changeRequest.Priority);
             AddEmailHistory(changeRequest.Priority, subject, body, owner.displayname, changeRequest.Change_Owner, owner.mail, changeRequest.Id, null, null, null, "Task", changeRequest.Change_Status, DateTime.Now, _username);
-
-            //EmailHistory emailHistory = new EmailHistory
-            //{
-            //    Priority = changeRequest.Priority,
-            //    Subject = subject,
-            //    Body = body,
-            //    SentToDisplayName = owner.displayname,
-            //    SentToUsername = changeRequest.Change_Owner,
-            //    SentToEmail = owner.mail,
-            //    ChangeRequestId = changeRequest.Id,
-            //    Type = "ChangeRequest",
-            //    Status = changeRequest.Change_Status,
-            //    CreatedDate = DateTime.Now,
-            //    CreatedUser = _username
-            //};
-            //_context.Add(emailHistory);
-            //await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "CloseoutComplete" });
         }
@@ -1906,24 +1798,6 @@ namespace Management_of_Change.Controllers
                 {
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
                     AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
-
-                    //EmailHistory emailHistory = new EmailHistory
-                    //{
-                    //    Priority = task.Priority,
-                    //    Subject = subject,
-                    //    Body = body,
-                    //    SentToDisplayName = toPerson.displayname,
-                    //    SentToUsername = toPerson.onpremisessamaccountname,
-                    //    SentToEmail = toPerson.mail,
-                    //    ChangeRequestId = task.ChangeRequestId,
-                    //    TaskId = task.Id,
-                    //    Type = "Task",
-                    //    Status = task.Status,
-                    //    CreatedDate = DateTime.Now,
-                    //    CreatedUser = _username
-                    //};
-                    //_context.Add(emailHistory);
-                    //await _context.SaveChangesAsync();
                 }
                 return RedirectToAction("Details", "ChangeRequests", new { Id = task.ChangeRequestId, Tab = "Tasks" });
             }
