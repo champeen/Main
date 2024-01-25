@@ -574,7 +574,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,Implementation_Notification_Employees,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source = null)
+        public async Task<IActionResult> Create([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,Additional_Notification,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -701,7 +701,7 @@ namespace Management_of_Change.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CloneCreate([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Implementation_Notification_Employees,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, int clonedId, string source = null)
+        public async Task<IActionResult> CloneCreate([Bind("Id,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Additional_Notification,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest, int clonedId, string source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -821,7 +821,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,Implementation_Notification_Employees,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,MOC_Number,Change_Owner,Change_Owner_FullName,Change_Owner_Email,Location_Site,Title_Change_Description,Scope_of_the_Change,Justification_of_the_Change,Change_Status,Change_Status_Description,Priority,Request_Date,Proudct_Line,Change_Type,Estimated_Completion_Date,Raw_Material_Component_Numbers_Impacted,Change_Level,Area_of_Change,Expiration_Date_Temporary,PTN_Number,Waiver_Number,CMT_Number,Implementation_Approval_Date,Implementation_Username,Closeout_Date,Closeout_Username,Cancel_Username,Cancel_Date,Cancel_Reason,Additional_Notification,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeRequest changeRequest)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
