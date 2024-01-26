@@ -99,6 +99,16 @@
                         {
                             @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                             {
+@*                                 <div class="row">
+                                    <div class="col-12">
+                                        <button type="submit"
+                                                id="submitButton"
+                                                class="btn btn-primary"
+                                                onclick="return DisplayProgressMessage(this, 'Saving...');">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div> *@
                                 <div class="row">
                                     <div class="col-xl-10 text-xl-end mt-2">
                                         <span class="bg-warning fw-bold">
@@ -106,7 +116,11 @@
                                         </span>
                                     </div>
                                     <div class="col-xl-2 col">
-                                        @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                                        @Html.ActionLink(
+                                "Submit for Review",
+                                "SubmitForReview",
+                                new {id=@Model.ChangeRequest.Id, tab="Details"},
+                                new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                     </div>
                                 </div>
                             }
@@ -370,7 +384,7 @@
                                         </span>
                                     </div>
                                     <div class="col-xl-2">
-                                        @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                                        @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId2", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                     </div>
                                 </div>
                             }
@@ -425,7 +439,7 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-2">
-                                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId3", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                         </div>
                                     </div>
                                 }
@@ -512,7 +526,7 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-2">
-                                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked."})
+                                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId4", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                         </div>
                                     </div>
                                 }
@@ -915,9 +929,31 @@
     @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@
 </div>
 <script>
+    function DisplayProgressMessage(ctl, msg) {
+        // document.getElementById("SubmitForReviewId").href = "javascript:void(0)";
+        //document.getElementById("SubmitForReviewId").disabled = true;
+        // $(ctl).prop("disabled", true);
+        //$(ctl).text(msg);
+        $("body").addClass("submit-progress-bg");
+        $("#SubmitForReviewId1").addClass("disableClick");
+        $("#SubmitForReviewId1").text(msg);
+        $("#SubmitForReviewId2").addClass("disableClick");
+        $("#SubmitForReviewId2").text(msg);
+        $("#SubmitForReviewId3").addClass("disableClick");
+        $("#SubmitForReviewId3").text(msg);
+        $("#SubmitForReviewId4").addClass("disableClick");
+        $("#SubmitForReviewId4").text(msg);
+        //$("SubmitForReviewId").prop('disabled', false);
+        //$("#SubmitForReviewId").addClass("disableClick");
+        // $("SubmitForReviewId").addClass("disabled");
+        // $("SubmitForReviewId").addClass("btnDisable");
+        // //document.getElementById("SubmitForReviewId").disabled = true;        
+        return true;
+    }
+
     $(document).ready(function () {
         var anchor = document.getElementById('@Model.IArecord');
-        anchor.scrollIntoView(true);
+        if (anchor != null) { anchor.scrollIntoView(true); }
     });
 </script>
 

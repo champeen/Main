@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Identity.Client;
 using System.Threading.Tasks;
 //using Management_of_Change.Migrations;
 
@@ -1583,8 +1584,8 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });
         }
 
-        // This closes out 'Implementation' stage and moves to 'Closeout/Complete' stage
-        public async Task<IActionResult> CloseoutImplementation(int id)
+            // This closes out 'Implementation' stage and moves to 'Closeout/Complete' stage
+            public async Task<IActionResult> CloseoutImplementation(int id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
