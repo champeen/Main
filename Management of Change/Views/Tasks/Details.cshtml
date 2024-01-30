@@ -16,7 +16,7 @@
         }        
         @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
         <span class="float-end">
-            @Html.ActionLink("Send Assignment Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
+            @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
         </span>
         
     </div>
@@ -201,6 +201,6 @@
     }    
     @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
     <span class="float-end">
-        @Html.ActionLink("Send Assignment Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
+        @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
     </span>
 </div>

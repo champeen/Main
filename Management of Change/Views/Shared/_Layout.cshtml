@@ -12,6 +12,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <script>
+        function DisplayProgressMessage(ctl, msg) {
+            $("body").addClass("submit-progress-bg");
+            $(ctl).addClass("disableClick");
+            $(ctl).text(msg);
+            return true;
+        };
+
         $(document).ready(function () {
 
             $("#changeRequestSearch").on("keyup", function () {
@@ -100,7 +107,6 @@
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
             });
-
         });
     </script>
 
@@ -109,6 +115,7 @@
             background-color: #3a6bfb !important;
             color: white !important;
         }
+
         .nav-link.disabled {
             pointer-events: auto;
         }
@@ -118,17 +125,15 @@
                 max-width: 1740px;
             }
         }
+
         input#session-date {
             display: inline-block;
             position: relative;
         }
+
         .submit-progress-bg {
             background-color: lightgray;
             opacity: .5;
-        }
-        .btnDisable {
-            pointer-events: none;
-            opacity: .65;
         }
 
         .disableClick {

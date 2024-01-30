@@ -1627,17 +1627,20 @@ namespace Management_of_Change.Controllers
             }
 
             // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
-            foreach (var username in changeRequest.Additional_Notification)
+            if (changeRequest.Additional_Notification != null && changeRequest.Additional_Notification.Count > 0)
             {
-                var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).FirstOrDefaultAsync();
-                subject = @"Management of Change (MoC) - Submitted for Implementation";
-                body = @"Change Request has been submitted for implementation. This is for notification purposes only. This may affect your job process, so please read through change request. Follow link below and review the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                foreach (var username in changeRequest.Additional_Notification)
+                {
+                    var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).FirstOrDefaultAsync();
+                    subject = @"Management of Change (MoC) - Submitted for Implementation";
+                    body = @"Change Request has been submitted for implementation. This is for notification purposes only. This may affect your job process, so please read through change request. Follow link below and review the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
-                // Send Email...
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify.mail, null, null, changeRequest.Priority);
+                    // Send Email...
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify.mail, null, null, changeRequest.Priority);
 
-                // Log that Email was Sent...
-                AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify.displayname, username, employeeToNotify.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                    // Log that Email was Sent...
+                    AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify.displayname, username, employeeToNotify.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
             }
 
             // Create a task for the ChangeRequest Owner to notify Administrator when ChangeRequest has been fully implemented

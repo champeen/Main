@@ -116,11 +116,7 @@
                                         </span>
                                     </div>
                                     <div class="col-xl-2 col">
-                                        @Html.ActionLink(
-                                "Submit for Review",
-                                "SubmitForReview",
-                                new {id=@Model.ChangeRequest.Id, tab="Details"},
-                                new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                        @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                     </div>
                                 </div>
                             }
@@ -694,7 +690,7 @@
                                         }
                                         if (item.ReviewResult != null && item.ReviewResult != "" && item.ReviewCompleted != true)
                                         {
-                                            @Html.ActionLink("Mark Complete","CompleteFinalReview","ChangeRequests",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-success ms-2", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                            @Html.ActionLink("Mark Complete","CompleteFinalReview","ChangeRequests",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-success ms-2", title="Must Fill Out 'Review Result' to be able to Complete Review", onclick="return DisplayProgressMessage(this, 'Processing...');"})
                                         }
                                     }
                                     else
@@ -732,7 +728,7 @@
                 {
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
                     {
-                        @Html.ActionLink("Close Implementation","CloseoutImplementation", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
+                        @Html.ActionLink("Close Implementation","CloseoutImplementation", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
                     }
                     @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
                     {
@@ -929,27 +925,6 @@
     @*@Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})*@
 </div>
 <script>
-    function DisplayProgressMessage(ctl, msg) {
-        // document.getElementById("SubmitForReviewId").href = "javascript:void(0)";
-        //document.getElementById("SubmitForReviewId").disabled = true;
-        // $(ctl).prop("disabled", true);
-        //$(ctl).text(msg);
-        $("body").addClass("submit-progress-bg");
-        $("#SubmitForReviewId1").addClass("disableClick");
-        $("#SubmitForReviewId1").text(msg);
-        $("#SubmitForReviewId2").addClass("disableClick");
-        $("#SubmitForReviewId2").text(msg);
-        $("#SubmitForReviewId3").addClass("disableClick");
-        $("#SubmitForReviewId3").text(msg);
-        $("#SubmitForReviewId4").addClass("disableClick");
-        $("#SubmitForReviewId4").text(msg);
-        //$("SubmitForReviewId").prop('disabled', false);
-        //$("#SubmitForReviewId").addClass("disableClick");
-        // $("SubmitForReviewId").addClass("disabled");
-        // $("SubmitForReviewId").addClass("btnDisable");
-        // //document.getElementById("SubmitForReviewId").disabled = true;        
-        return true;
-    }
 
     $(document).ready(function () {
         var anchor = document.getElementById('@Model.IArecord');
