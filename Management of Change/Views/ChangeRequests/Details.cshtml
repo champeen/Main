@@ -601,12 +601,16 @@
                                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.ReviewCompleted != true))
                                     {
                                         <span>
-                                            @Html.ActionLink("Send Reminder","AssessmentReminder","ChangeRequests", new {id = @item.Id, tab="ImpactAssessments"}, new {@class="btn btn-info"})
+                                            @Html.ActionLink("Send Reminder","AssessmentReminder","ChangeRequests", new {id = @item.Id, tab="ImpactAssessments"}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
                                         </span>
+@*                                         <div id="Fade_area" class="overlay1"></div>
+                                        <div id="myModal" class="popup1">
+                                            @Html.Partial("~/Views/Shared/_Popup.cshtml")
+                                        </div> *@
                                     }
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
-                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", recId=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again"})
+                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", recId=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                     }
                                 </td>
                             </tr>
@@ -700,7 +704,7 @@
                                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "FinalApprovals") && (item.ReviewCompleted != true))
                                     {
                                         <span>
-                                            @Html.ActionLink("Send Reminder","FinalApprovalReminder","ChangeRequests", new {id = @item.Id, tab="FinalApprovals"}, new {@class="btn btn-info"})
+                                            @Html.ActionLink("Send Reminder","FinalApprovalReminder","ChangeRequests", new {id = @item.Id, tab="FinalApprovals"}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
                                         </span>
                                     }
                                 </td>

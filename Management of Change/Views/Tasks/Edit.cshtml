@@ -17,7 +17,7 @@
                     @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
                 </span>
                 <span class="float-end">
-                    @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
+                    @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
                 </span>
             </div>
         </div>
@@ -153,7 +153,7 @@
                     @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
                 </span>
                 <span class="float-end">
-                    @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info"})
+                    @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
                 </span>
             </div>
         </div>

@@ -20,6 +20,35 @@
         };
 
         $(document).ready(function () {
+            
+            // $("#btnAPICall").click(function () {
+            //     console.info("blah1");
+            //     $(".overlay,.popup").fadeIn();
+            //     CallAPI();
+            // });
+
+            // function LoadingBar() {
+            //     console.info("blah3");
+            //     $("#Fade_area").removeAttr("style");
+            //     $("#myModal").removeAttr("style");
+            // };
+
+            // function CallAPI() {
+            //     console.info("blah2");
+            //     $.ajax({
+            //         url:"",
+            //         type:'post',
+            //         contentType:'application/json',
+            //         success: function () {
+            //             console.info("blah4");
+            //             setTimeout(function () { LoadingBar() }, 10000);
+            //         },
+            //         Error: function () {
+            //             console.info("blah5");
+            //             setTimeout(function () { LoadingBar()}, 10000);
+            //         }
+            //     });               
+            // };
 
             $("#changeRequestSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -139,6 +168,25 @@
         .disableClick {
             pointer-events: none;
         }
+
+        .overlay1 {
+            position:absolute;
+            display:none;
+            background-color:rgba(128,128,128,.5);
+            top:0;
+            left:0;
+            right:0;
+        }
+
+        .popup1 {
+            position:fixed;
+            z-index:99;
+            vertical-align:central;
+            display:none;
+            margin-left:30%;
+            margin-bottom:30%;
+        }
+
     </style>
 </head>
 <body>

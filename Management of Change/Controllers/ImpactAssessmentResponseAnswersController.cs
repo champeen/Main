@@ -220,6 +220,8 @@ namespace Management_of_Change.Controllers
 
                     if (existingTask == null)
                     {
+                        var assignedToUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == impactAssessmentResponseAnswer.ActionOwner);
+                        var assignedByUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == _username);
                         Models.Task task = new Models.Task
                         {
                             ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
@@ -228,7 +230,11 @@ namespace Management_of_Change.Controllers
                             Status = "Open",
                             Priority = changeRequest.Priority,
                             AssignedToUser = impactAssessmentResponseAnswer.ActionOwner,
+                            AssignedToUserFullName = assignedToUser.displayname,
+                            AssignedToUserEmail = assignedToUser.mail,
                             AssignedByUser = _username,
+                            AssignedByUserFullName = assignedByUser.displayname,
+                            AssignedByUserEmail = assignedByUser.mail,
                             Title = impactAssessmentResponseAnswer.Title,
                             Description = impactAssessmentResponseAnswer.DetailsOfActionNeeded,
                             DueDate = impactAssessmentResponseAnswer.DateDue,
@@ -247,24 +253,6 @@ namespace Management_of_Change.Controllers
                         {
                             Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
                             AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, impactAssessmentResponse.ChangeRequestId, impactAssessmentResponseAnswer.ImpactAssessmentResponseId, null, task.Id, "Task", task.Status, DateTime.Now, _username);
-
-                            //EmailHistory emailHistory = new EmailHistory
-                            //{
-                            //    Priority = task.Priority,
-                            //    Subject = subject,
-                            //    Body = body,
-                            //    SentToDisplayName = toPerson.displayname,
-                            //    SentToUsername = toPerson.onpremisessamaccountname,
-                            //    SentToEmail = toPerson.mail,
-                            //    ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
-                            //    ImpactAssessmentResponseId = impactAssessmentResponseAnswer.ImpactAssessmentResponseId,
-                            //    Type = "Task",
-                            //    Status = task.Status,
-                            //    CreatedDate = DateTime.Now,
-                            //    CreatedUser = _username
-                            //};
-                            //_context.Add(emailHistory);
-                            //await _context.SaveChangesAsync();
                         }
                     }                     
                 }
