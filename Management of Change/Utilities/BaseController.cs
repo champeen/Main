@@ -4,10 +4,6 @@ using Management_of_Change.Models;
 using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Management_of_Change.Utilities
 {

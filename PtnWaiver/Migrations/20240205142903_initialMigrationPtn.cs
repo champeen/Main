@@ -1,0 +1,119 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+
+#nullable disable
+
+namespace PtnWaiver.Migrations
+{
+    /// <inheritdoc />
+    public partial class initialMigrationPtn : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Administrators",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Username = table.Column<string>(type: "text", nullable: false),
+                    Approver = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserFullName = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserEmail = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Administrators", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PTN",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserFullName = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserEmail = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PTN", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Waiver",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    PTNId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserFullName = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserEmail = table.Column<string>(type: "text", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Waiver", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Waiver_PTN_PTNId",
+                        column: x => x.PTNId,
+                        principalTable: "PTN",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Waiver_PTNId",
+                table: "Waiver",
+                column: "PTNId");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Administrators");
+
+            migrationBuilder.DropTable(
+                name: "Waiver");
+
+            migrationBuilder.DropTable(
+                name: "PTN");
+        }
+    }
+}

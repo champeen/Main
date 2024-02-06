@@ -1,0 +1,119 @@
+﻿@model IEnumerable<PtnWaiver.Models.SubjectType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedUserFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedUserEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedUserFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedUserEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedUser)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedUserFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedUserEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DeletedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedUserFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedUserEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModifiedUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModifiedUserFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModifiedUserEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModifiedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedUser)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedUserFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedUserEmail)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DeletedDate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

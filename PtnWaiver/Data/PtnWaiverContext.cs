@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using PtnWaiver.Models;
+
+namespace PtnWaiver.Data
+{
+    public class PtnWaiverContext : DbContext
+    {
+        public PtnWaiverContext (DbContextOptions<PtnWaiverContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<PtnWaiver.Models.Administrators>? Administrators { get; set; }
+        public DbSet<PtnWaiver.Models.PTN> PTN { get; set; } = default!;
+        public DbSet<PtnWaiver.Models.Waiver>? Waiver { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        }
+        public DbSet<PtnWaiver.Models.PtnStatus>? PtnStatus { get; set; }
+        public DbSet<PtnWaiver.Models.PtnPin>? PtnPin { get; set; }
+        public DbSet<PtnWaiver.Models.SubjectType>? SubjectType { get; set; }
+    }
+}
