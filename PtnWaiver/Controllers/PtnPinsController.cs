@@ -78,7 +78,7 @@ namespace PtnWaiver.Controllers
 
             PtnPin ptnPin = new PtnPin()
             {
-                CreatedUser = userInfo.onpremisesdomainname,
+                CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
                 CreatedUserEmail = userInfo.mail,
                 CreatedDate = DateTime.Now
@@ -171,10 +171,10 @@ namespace PtnWaiver.Controllers
             if (ModelState.IsValid)
             {
                 var userInfo = getUserInfo(_username);
-                if (userInfo == null)
+                if (userInfo != null)
                 {
                     ptnPin.ModifiedDate = DateTime.Now;
-                    ptnPin.ModifiedUser = userInfo.onpremisesdomainname;
+                    ptnPin.ModifiedUser = userInfo.onpremisessamaccountname;
                     ptnPin.ModifiedUserFullName = userInfo.displayname;
                     ptnPin.ModifiedUserEmail = userInfo.mail;
                 }

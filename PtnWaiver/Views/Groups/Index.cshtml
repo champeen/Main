@@ -1,10 +1,10 @@
-﻿@model IEnumerable<PtnWaiver.Models.Administrators>
+﻿@model IEnumerable<PtnWaiver.Models.Group>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Administrators</h1>
+<h1>Group Dropdowns</h1>
 
 <div class="row mt-5 mb-3">
     <div class="col-12">
@@ -16,10 +16,13 @@
     <thead class="table-primary">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Username)
+                @Html.DisplayNameFor(model => model.Code)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Approver)
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order)
             </th>
             <th></th>
         </tr>
@@ -28,10 +31,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Username)
+                @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Approver)
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order)
             </td>
             <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary me-2">Edit</a>

@@ -16,6 +16,21 @@ namespace PtnWaiver.Controllers
         private bool? isAuthorized { get; set; }
         private bool? isAdmin { get; set; }
 
+        public BaseController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc, WebApplicationBuilder builder)
+        {
+            _contextPtnWaiver = contextPtnWaiver;
+            _contextMoc = contextMoc;
+        }
+        public BaseController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc)
+        {
+            _contextPtnWaiver = contextPtnWaiver;
+            _contextMoc = contextMoc;
+        }
+        public BaseController()
+        {
+
+        }
+
         public string _username
         {
             get
@@ -27,6 +42,19 @@ namespace PtnWaiver.Controllers
                 }
                 else
                     return userName;
+            }
+        }
+
+        public int _getDaysSince1900
+        {
+            get
+            {
+                DateTime beginDate = new DateTime(1900, 01, 01);
+                DateTime today = DateTime.Now;
+                TimeSpan ts = today - beginDate;
+                int differenceInDays = ts.Days;
+                int subtract38352 = differenceInDays - 38352;
+                return subtract38352;
             }
         }
 
@@ -108,36 +136,6 @@ namespace PtnWaiver.Controllers
             }
         }
 
-        //public BaseController()
-        //{
-
-        //}
-        public BaseController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc, WebApplicationBuilder builder)
-        {
-            _contextPtnWaiver = contextPtnWaiver;
-            _contextMoc = contextMoc;
-        }
-        public BaseController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc)
-        {
-            _contextPtnWaiver = contextPtnWaiver;
-            _contextMoc = contextMoc;
-        }
-
-        //public BaseController(PtnWaiverContext contextPtnWaiver)
-        //{
-        //    _contextPtnWaiver = contextPtnWaiver;
-        //}
-
-        //public BaseController(ILogger<AdminController> logger)
-        //{
-
-        //}
-
-        public BaseController()
-        {
-
-        }
-
         public ErrorViewModel CheckAuthorization()
         {
             if (String.IsNullOrWhiteSpace(_username))
@@ -149,27 +147,27 @@ namespace PtnWaiver.Controllers
             return null;
         }
 
-        //public List<SelectListItem> getUserList(string username = null)
-        //{
-        //    // Create Dropdown List of Users...
-        //    var userList = _context.__mst_employee
-        //        .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-        //        .Where(m => m.accountenabled == true)
-        //        .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-        //        .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-        //        .OrderBy(m => m.displayname)
-        //        .ThenBy(m => m.onpremisessamaccountname)
-        //        .ToList();
-        //    List<SelectListItem> users = new List<SelectListItem>();
-        //    foreach (var user in userList)
-        //    {
-        //        SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-        //        if (user.onpremisessamaccountname == username)
-        //            item.Selected = true;
-        //        users.Add(item);
-        //    }
-        //    return users;
-        //}
+        public List<SelectListItem> getUserList(string username = null)
+        {
+            // Create Dropdown List of Users...
+            var userList = _contextMoc.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToList();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                if (user.onpremisessamaccountname == username)
+                    item.Selected = true;
+                users.Add(item);
+            }
+            return users;
+        }
 
         //public List<SelectListItem> getChangeTypes()
         //{

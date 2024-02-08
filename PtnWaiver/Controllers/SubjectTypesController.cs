@@ -78,7 +78,7 @@ namespace PtnWaiver.Controllers
 
             SubjectType subjectType = new SubjectType()
             {
-                CreatedUser = userInfo.onpremisesdomainname,
+                CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
                 CreatedUserEmail = userInfo.mail,
                 CreatedDate = DateTime.Now
@@ -92,7 +92,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Description,Order")] SubjectType subjectType)
+        public async Task<IActionResult> Create([Bind("Id,Code,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] SubjectType subjectType)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -101,15 +101,15 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            //// Make sure duplicates are not entered...
-            //List<PtnPin> checkDupes = await _contextPtnWaiver.PtnPin
-            //    .Where(m => m.Code == ptnPin.Code)
-            //    .ToListAsync();
-            //if (checkDupes.Count > 0)
-            //{
-            //    ModelState.AddModelError("Code", "PtnPin Code already exists.");
-            //    return View(ptnPin);
-            //}
+            // Make sure duplicates are not entered...
+            List<SubjectType> checkDupes = await _contextPtnWaiver.SubjectType
+                .Where(m => m.Code == subjectType.Code)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Code", "Subject Type Code already exists.");
+                return View(subjectType);
+            }
 
             if (ModelState.IsValid)
             {
@@ -146,7 +146,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] SubjectType subjectType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] SubjectType subjectType)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -158,8 +158,26 @@ namespace PtnWaiver.Controllers
             if (id != subjectType.Id)
                 return NotFound();
 
+            // Make sure duplicates are not entered...
+            List<SubjectType> checkDupes = await _contextPtnWaiver.SubjectType
+                .Where(m => m.Code == subjectType.Code)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Code", "Subject Type Code already exists.");
+                return View(subjectType);
+            }
+
             if (ModelState.IsValid)
             {
+                var userInfo = getUserInfo(_username);
+                if (userInfo != null)
+                {
+                    subjectType.ModifiedDate = DateTime.Now;
+                    subjectType.ModifiedUser = userInfo.onpremisessamaccountname;
+                    subjectType.ModifiedUserFullName = userInfo.displayname;
+                    subjectType.ModifiedUserEmail = userInfo.mail;
+                }
                 try
                 {
                     _contextPtnWaiver.Update(subjectType);

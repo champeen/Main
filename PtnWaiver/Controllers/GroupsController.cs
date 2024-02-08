@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,34 +11,26 @@ using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
 {
-    public class PTNsController : BaseController
+    public class GroupsController : BaseController
     {
         private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly MocContext _contextMoc;
 
-        public PTNsController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
+        public GroupsController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
         {
             _contextPtnWaiver = contextPtnWaiver;
             _contextMoc = contextMoc;
-        }
+        }    
 
-        // GET: PTNs
+        // GET: Groups
         public async Task<IActionResult> Index()
         {
-            // make sure valid Username
-            ErrorViewModel errorViewModel = CheckAuthorization();
-            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
-                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
-
-            var requests = await _contextPtnWaiver.PTN.Where(m => m.DeletedDate == null).ToListAsync();
-
-            return View(requests);
+              return _contextPtnWaiver.Group != null ? 
+                          View(await _contextPtnWaiver.Group.ToListAsync()) :
+                          Problem("Entity set 'PtnWaiverContext.Group'  is null.");
         }
 
-        // GET: PTNs/Details/5
+        // GET: Groups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             // make sure valid Username
@@ -46,21 +38,22 @@ namespace PtnWaiver.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            if (id == null || _contextPtnWaiver.PTN == null)
-                return NotFound();
-
-            var pTN = await _contextPtnWaiver.PTN
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (pTN == null)
-                return NotFound();
-
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return View(pTN);
+            if (id == null || _contextPtnWaiver.Group == null)
+                return NotFound();
+
+            var @group = await _contextPtnWaiver.Group
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (@group == null)
+                return NotFound();
+
+            return View(@group);
         }
 
-        // GET: PTNs/Create
+        // GET: Groups/Create
         public IActionResult Create()
         {
             // make sure valid Username
@@ -78,23 +71,23 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
-            PTN ptn = new PTN()
+            Group group = new Group()
             {
-                CreatedDate = DateTime.Now,
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
-                CreatedUserEmail = userInfo.mail
+                CreatedUserEmail = userInfo.mail,
+                CreatedDate = DateTime.Now
             };
 
-            return View(ptn);
+            return View(group);
         }
 
-        // POST: PTNs/Create
+        // POST: Groups/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
+        public async Task<IActionResult> Create([Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Group @group)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -104,29 +97,26 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
+            // Make sure duplicates are not entered...
+            List<Group> checkDupes = await _contextPtnWaiver.Group
+                .Where(m => m.Code == group.Code)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Code", "Group Code already exists.");
+                return View(group);
+            }
+
             if (ModelState.IsValid)
             {
-                // This weird naming convention is striaght from how they are doing it in the spreadsheet.....
-                int days = _getDaysSince1900;
-                string docId = "";
-                for (int i = 1; i < 10000; i++)
-                {
-                    docId = ptn.PtnPin + "-" + days.ToString() + "-" + i.ToString();
-                    PTN record = await _contextPtnWaiver.PTN
-                        .FirstOrDefaultAsync(m => m.DocId == docId);
-                    if (record == null)
-                        break;
-                }
-                ptn.DocId = docId;
-
-                _contextPtnWaiver.Add(ptn);
+                _contextPtnWaiver.Add(@group);
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(ptn);
+            return View(@group);
         }
 
-        // GET: PTNs/Edit/5
+        // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             // make sure valid Username
@@ -137,22 +127,23 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.PTN == null)
+            if (id == null || _contextPtnWaiver.Group == null)
                 return NotFound();
 
-            var pTN = await _contextPtnWaiver.PTN.FindAsync(id);
-            if (pTN == null)
+            var @group = await _contextPtnWaiver.Group.FindAsync(id);
+
+            if (@group == null)
                 return NotFound();
 
-            return View(pTN);
+            return View(@group);
         }
 
-        // POST: PTNs/Edit/5
+        // POST: Groups/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Group @group)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -162,29 +153,39 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != pTN.Id)
+            if (id != @group.Id)
                 return NotFound();
+
+            // Make sure duplicates are not entered...
+            List<Group> checkDupes = await _contextPtnWaiver.Group
+                .Where(m => m.Code == group.Code)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Code", "Group Code already exists.");
+                return View(group);
+            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _contextPtnWaiver.Update(pTN);
+                    _contextPtnWaiver.Update(@group);
                     await _contextPtnWaiver.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PTNExists(pTN.Id))
+                    if (!GroupExists(@group.Id))
                         return NotFound();
                     else
                         throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(pTN);
+            return View(@group);
         }
 
-        // GET: PTNs/Delete/5
+        // GET: Groups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             // make sure valid Username
@@ -195,18 +196,19 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.PTN == null)
+            if (id == null || _contextPtnWaiver.Group == null)
                 return NotFound();
 
-            var pTN = await _contextPtnWaiver.PTN
+            var @group = await _contextPtnWaiver.Group
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (pTN == null)
+
+            if (@group == null)
                 return NotFound();
 
-            return View(pTN);
+            return View(@group);
         }
 
-        // POST: PTNs/Delete/5
+        // POST: Groups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -219,20 +221,21 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (_contextPtnWaiver.PTN == null)
-                return Problem("Entity set 'PtnWaiverContext.PTN'  is null.");
+            if (_contextPtnWaiver.Group == null)
+                return Problem("Entity set 'PtnWaiverContext.Group'  is null.");
 
-            var pTN = await _contextPtnWaiver.PTN.FindAsync(id);
-            if (pTN != null)
-                  _contextPtnWaiver.PTN.Remove(pTN);
+            var @group = await _contextPtnWaiver.Group.FindAsync(id);
+
+            if (@group != null)
+                _contextPtnWaiver.Group.Remove(@group);
             
             await _contextPtnWaiver.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PTNExists(int id)
+        private bool GroupExists(int id)
         {
-          return (_contextPtnWaiver.PTN?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_contextPtnWaiver.Group?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

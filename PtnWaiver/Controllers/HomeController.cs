@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
 using PtnWaiver.ViewModels;
@@ -24,6 +25,8 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             string username = _username;
             ViewBag.Username = username;
+
+
             //ViewBag.UserDisplayName = _userDisplayName;
 
             return View();

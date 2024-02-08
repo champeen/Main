@@ -4,98 +4,39 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>SubjectType</h4>
+<h1>Subject Types</h1>
+<h4 class="mt-5">Create</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Code" class="control-label"></label>
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="CreatedUserFullName" />
+            <input type="hidden" asp-for="CreatedUserEmail" />
+            <div class="form-group my-3">
+                <label asp-for="Code" class="control-label fw-bold mb-1"></label>
                 <input asp-for="Code" class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="Description" class="form-control" /> *@
+                @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Order" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label fw-bold mb-1"></label>
                 <input asp-for="Order" class="form-control" />
                 <span asp-validation-for="Order" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedUser" class="control-label"></label>
-                <input asp-for="CreatedUser" class="form-control" />
-                <span asp-validation-for="CreatedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedUserFullName" class="control-label"></label>
-                <input asp-for="CreatedUserFullName" class="form-control" />
-                <span asp-validation-for="CreatedUserFullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedUserEmail" class="control-label"></label>
-                <input asp-for="CreatedUserEmail" class="form-control" />
-                <span asp-validation-for="CreatedUserEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUser" class="control-label"></label>
-                <input asp-for="ModifiedUser" class="form-control" />
-                <span asp-validation-for="ModifiedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUserFullName" class="control-label"></label>
-                <input asp-for="ModifiedUserFullName" class="form-control" />
-                <span asp-validation-for="ModifiedUserFullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUserEmail" class="control-label"></label>
-                <input asp-for="ModifiedUserEmail" class="form-control" />
-                <span asp-validation-for="ModifiedUserEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUser" class="control-label"></label>
-                <input asp-for="DeletedUser" class="form-control" />
-                <span asp-validation-for="DeletedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUserFullName" class="control-label"></label>
-                <input asp-for="DeletedUserFullName" class="form-control" />
-                <span asp-validation-for="DeletedUserFullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUserEmail" class="control-label"></label>
-                <input asp-for="DeletedUserEmail" class="form-control" />
-                <span asp-validation-for="DeletedUserEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedDate" class="control-label"></label>
-                <input asp-for="DeletedDate" class="form-control" />
-                <span asp-validation-for="DeletedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group mt-5">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

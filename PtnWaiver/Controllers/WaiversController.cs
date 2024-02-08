@@ -31,16 +31,13 @@ namespace PtnWaiver.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Waiver == null)
-            {
                 return NotFound();
-            }
 
             var waiver = await _context.Waiver
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (waiver == null)
-            {
                 return NotFound();
-            }
 
             return View(waiver);
         }
@@ -56,7 +53,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
         {
             if (ModelState.IsValid)
             {
@@ -71,15 +68,13 @@ namespace PtnWaiver.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Waiver == null)
-            {
                 return NotFound();
-            }
 
             var waiver = await _context.Waiver.FindAsync(id);
+
             if (waiver == null)
-            {
                 return NotFound();
-            }
+
             return View(waiver);
         }
 
@@ -91,9 +86,7 @@ namespace PtnWaiver.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
         {
             if (id != waiver.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -105,13 +98,9 @@ namespace PtnWaiver.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!WaiverExists(waiver.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -122,16 +111,13 @@ namespace PtnWaiver.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Waiver == null)
-            {
                 return NotFound();
-            }
 
             var waiver = await _context.Waiver
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (waiver == null)
-            {
                 return NotFound();
-            }
 
             return View(waiver);
         }
@@ -142,14 +128,12 @@ namespace PtnWaiver.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Waiver == null)
-            {
                 return Problem("Entity set 'PtnWaiverContext.Waiver'  is null.");
-            }
+
             var waiver = await _context.Waiver.FindAsync(id);
+
             if (waiver != null)
-            {
                 _context.Waiver.Remove(waiver);
-            }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

@@ -78,7 +78,7 @@ namespace PtnWaiver.Controllers
 
             PtnStatus ptnStatus = new PtnStatus
             {
-                CreatedUser = userInfo.onpremisesdomainname,
+                CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
                 CreatedUserEmail = userInfo.mail,
                 CreatedDate = DateTime.Now
@@ -163,7 +163,7 @@ namespace PtnWaiver.Controllers
                 if (userInfo == null)
                 {
                     ptnStatus.ModifiedDate = DateTime.Now;
-                    ptnStatus.ModifiedUser = userInfo.onpremisesdomainname;
+                    ptnStatus.ModifiedUser = userInfo.onpremisessamaccountname;
                     ptnStatus.ModifiedUserFullName = userInfo.displayname;
                     ptnStatus.ModifiedUserEmail = userInfo.mail;
                 }

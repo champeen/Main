@@ -7,40 +7,53 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
+using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
 {
-    public class AdministratorsController : Controller
+    public class AdministratorsController : BaseController
     {
-        private readonly PtnWaiverContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
+        private readonly MocContext _contextMoc;
 
-        public AdministratorsController(PtnWaiverContext context)
+        public AdministratorsController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
         {
-            _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
+            _contextMoc = contextMoc;
         }
 
         // GET: Administrators
         public async Task<IActionResult> Index()
         {
-              return _context.Administrators != null ? 
-                          View(await _context.Administrators.ToListAsync()) :
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _contextPtnWaiver.Administrators != null ? 
+                          View(await _contextPtnWaiver.Administrators.ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.Administrators'  is null.");
         }
 
         // GET: Administrators/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Administrators == null)
-            {
-                return NotFound();
-            }
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            var administrators = await _context.Administrators
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || _contextPtnWaiver.Administrators == null)
+                return NotFound();
+
+            var administrators = await _contextPtnWaiver.Administrators
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (administrators == null)
-            {
                 return NotFound();
-            }
 
             return View(administrators);
         }
@@ -48,7 +61,31 @@ namespace PtnWaiver.Controllers
         // GET: Administrators/Create
         public IActionResult Create()
         {
-            return View();
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo == null)
+            {
+                errorViewModel = new ErrorViewModel() { Action = "Error", Controller = "Home", ErrorMessage = "Invalid Username: " + _username + ". Contact MoC Admin." };
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
+            }
+
+            Administrators administrators = new Administrators()
+            {
+                CreatedUser = userInfo.onpremisessamaccountname,
+                CreatedUserFullName = userInfo.displayname,
+                CreatedUserEmail = userInfo.mail,
+                CreatedDate = DateTime.Now
+            };
+
+            ViewBag.Users = getUserList();
+
+            return View(administrators);
         }
 
         // POST: Administrators/Create
@@ -56,30 +93,53 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,Approver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Administrators administrators)
+        public async Task<IActionResult> Create([Bind("Id,Username,Approver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Administrators administrators)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            // Make sure duplicates are not entered...
+            List<Administrators> checkDupes = await _contextPtnWaiver.Administrators
+                .Where(m => m.Username == administrators.Username)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+                ModelState.AddModelError("Username", "Username already exists.");
+
             if (ModelState.IsValid)
             {
-                _context.Add(administrators);
-                await _context.SaveChangesAsync();
+                _contextPtnWaiver.Add(administrators);
+                await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Users = getUserList(administrators.Username);
             return View(administrators);
         }
 
         // GET: Administrators/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Administrators == null)
-            {
-                return NotFound();
-            }
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            var administrators = await _context.Administrators.FindAsync(id);
-            if (administrators == null)
-            {
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+            
+            if (id == null || _contextPtnWaiver.Administrators == null)
                 return NotFound();
-            }
+
+            var administrators = await _contextPtnWaiver.Administrators.FindAsync(id);
+
+            if (administrators == null)
+                return NotFound();
+
+            ViewBag.Users = getUserList(administrators.Username);
+
             return View(administrators);
         }
 
@@ -90,48 +150,70 @@ namespace PtnWaiver.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Username,Approver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Administrators administrators)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != administrators.Id)
-            {
                 return NotFound();
-            }
+
+            // Make sure duplicates are not entered...
+            List<Administrators> checkDupes = await _contextPtnWaiver.Administrators
+                .Where(m => m.Username == administrators.Username)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+                ModelState.AddModelError("Username", "Username already exists.");
 
             if (ModelState.IsValid)
             {
+                var userInfo = getUserInfo(_username);
+                if (userInfo != null)
+                {
+                    administrators.ModifiedDate = DateTime.Now;
+                    administrators.ModifiedUser = userInfo.onpremisessamaccountname;
+                    administrators.ModifiedUserFullName = userInfo.displayname;
+                    administrators.ModifiedUserEmail = userInfo.mail;
+                }
                 try
                 {
-                    _context.Update(administrators);
-                    await _context.SaveChangesAsync();
+                    _contextPtnWaiver.Update(administrators);
+                    await _contextPtnWaiver.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!AdministratorsExists(administrators.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewBag.Users = getUserList(administrators.Username);
             return View(administrators);
         }
 
         // GET: Administrators/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Administrators == null)
-            {
-                return NotFound();
-            }
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            var administrators = await _context.Administrators
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (administrators == null)
-            {
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || _contextPtnWaiver.Administrators == null)
                 return NotFound();
-            }
+
+            var administrators = await _contextPtnWaiver.Administrators
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (administrators == null)
+                return NotFound();
 
             return View(administrators);
         }
@@ -141,23 +223,28 @@ namespace PtnWaiver.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Administrators == null)
-            {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (_contextPtnWaiver.Administrators == null)
                 return Problem("Entity set 'PtnWaiverContext.Administrators'  is null.");
-            }
-            var administrators = await _context.Administrators.FindAsync(id);
+ 
+            var administrators = await _contextPtnWaiver.Administrators.FindAsync(id);
+
             if (administrators != null)
-            {
-                _context.Administrators.Remove(administrators);
-            }
+                _contextPtnWaiver.Administrators.Remove(administrators);
             
-            await _context.SaveChangesAsync();
+            await _contextPtnWaiver.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AdministratorsExists(int id)
         {
-          return (_context.Administrators?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_contextPtnWaiver.Administrators?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
