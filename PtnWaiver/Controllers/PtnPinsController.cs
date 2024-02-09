@@ -33,7 +33,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             return _contextPtnWaiver.PtnPin != null ?
-                          View(await _contextPtnWaiver.PtnPin.ToListAsync()) :
+                          View(await _contextPtnWaiver.PtnPin.OrderBy(m=>m.Order).ThenBy(m=>m.Description).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.PtnPin'  is null.");
         }
 
@@ -158,15 +158,15 @@ namespace PtnWaiver.Controllers
             if (id != ptnPin.Id)
                 return NotFound();
 
-            // Make sure duplicates are not entered...
-            List<PtnPin> checkDupes = await _contextPtnWaiver.PtnPin
-                .Where(m => m.Code == ptnPin.Code)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Code", "PtnPin Code already exists.");
-                return View(ptnPin);
-            }
+            //// Make sure duplicates are not entered...
+            //List<PtnPin> checkDupes = await _contextPtnWaiver.PtnPin
+            //    .Where(m => m.Code == ptnPin.Code)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Code", "PtnPin Code already exists.");
+            //    return View(ptnPin);
+            //}
 
             if (ModelState.IsValid)
             {
@@ -178,7 +178,6 @@ namespace PtnWaiver.Controllers
                     ptnPin.ModifiedUserFullName = userInfo.displayname;
                     ptnPin.ModifiedUserEmail = userInfo.mail;
                 }
-
                 try
                 {
                     _contextPtnWaiver.Update(ptnPin);

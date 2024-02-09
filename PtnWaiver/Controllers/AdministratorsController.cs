@@ -33,7 +33,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             return _contextPtnWaiver.Administrators != null ? 
-                          View(await _contextPtnWaiver.Administrators.ToListAsync()) :
+                          View(await _contextPtnWaiver.Administrators.OrderBy(m=>m.Username).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.Administrators'  is null.");
         }
 

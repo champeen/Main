@@ -59,10 +59,10 @@
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+                @Html.DisplayNameFor(model => model.CreatedUserFullName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedUserFullName)
+                @Html.DisplayNameFor(model => model.CreatedDate)
             </th>
             <th></th>
         </tr>
@@ -93,10 +93,10 @@
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                    @Html.DisplayFor(modelItem => item.CreatedUserFullName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedUserFullName)
+                    @Html.DisplayFor(modelItem => item.CreatedDate)
                 </td>
                 <td class="text-nowrap">
                     @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})

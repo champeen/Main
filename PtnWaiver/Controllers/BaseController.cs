@@ -169,18 +169,64 @@ namespace PtnWaiver.Controllers
             return users;
         }
 
-        //public List<SelectListItem> getChangeTypes()
-        //{
-        //    var changeTypeList = _context.ChangeType.OrderBy(m => m.Order).ThenBy(m => m.Type).ToList();
-        //    List<SelectListItem> changeTypes = new List<SelectListItem>();
-        //    foreach (var changeType in changeTypeList)
-        //    {
-        //        string text = changeType.Type + "\u00A0\u00A0\u00A0 : \u00A0\u00A0\u00A0" + changeType.Description;
-        //        SelectListItem item = new SelectListItem { Value = changeType.Type, Text = text.Substring(0, text.Length > 200 ? 200 : text.Length) };
-        //        changeTypes.Add(item);
-        //    }
-        //    return changeTypes;
-        //}
+        public List<SelectListItem> getStatus()
+        {
+            var statusList = _contextPtnWaiver.PtnStatus.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> status = new List<SelectListItem>();
+            foreach (var rec in statusList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Status, Text = rec.Description };
+                status.Add(item);
+            }
+            return status;
+        }
+        public List<SelectListItem> getPtnPins()
+        {
+            var ptnPinList = _contextPtnWaiver.PtnPin.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> ptnPins = new List<SelectListItem>();
+            foreach (var rec in ptnPinList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+                ptnPins.Add(item);
+            }
+            return ptnPins;
+        }
+
+        public List<SelectListItem> getSubjectTypes()
+        {
+            var subjectTypeList = _contextPtnWaiver.SubjectType.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> subjectTypes = new List<SelectListItem>();
+            foreach (var rec in subjectTypeList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+                subjectTypes.Add(item);
+            }
+            return subjectTypes;
+        }
+
+        public List<SelectListItem> getAreas()
+        {
+            var areaList = _contextPtnWaiver.Area.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> areas = new List<SelectListItem>();
+            foreach (var rec in areaList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+                areas.Add(item);
+            }
+            return areas;
+        }
+
+        public List<SelectListItem> getGroups()
+        {
+            var groupList = _contextPtnWaiver.Group.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> groups = new List<SelectListItem>();
+            foreach (var rec in groupList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+                groups.Add(item);
+            }
+            return groups;
+        }
 
         //public List<SelectListItem> getChangeLevels()
         //{
@@ -193,18 +239,6 @@ namespace PtnWaiver.Controllers
         //        changeLevels.Add(item);
         //    }
         //    return changeLevels;
-        //}
-
-        //public List<SelectListItem> getPtnNumbers()
-        //{
-        //    var ptnList = _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToList();
-        //    List<SelectListItem> ptns = new List<SelectListItem>();
-        //    foreach (var request in ptnList)
-        //    {
-        //        SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
-        //        ptns.Add(item);
-        //    }
-        //    return ptns;
         //}
 
         //public EmailHistory AddEmailHistory(string? priority, string? subject, string? body, string? sentToDisplayName, string? sentToUsername, string? sentToEmail, int? changeRequestId, int? impactAssessmentResponseId, int? implementationFinalApprovalResponseId, int? taskId, string? type, string? status, DateTime createdDate, string? username)

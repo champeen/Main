@@ -25,8 +25,16 @@ namespace PtnWaiver.Controllers
         // GET: Groups
         public async Task<IActionResult> Index()
         {
-              return _contextPtnWaiver.Group != null ? 
-                          View(await _contextPtnWaiver.Group.ToListAsync()) :
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return _contextPtnWaiver.Group != null ? 
+                          View(await _contextPtnWaiver.Group.OrderBy(m => m.Order).ThenBy(m => m.Description).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.Group'  is null.");
         }
 
@@ -156,18 +164,27 @@ namespace PtnWaiver.Controllers
             if (id != @group.Id)
                 return NotFound();
 
-            // Make sure duplicates are not entered...
-            List<Group> checkDupes = await _contextPtnWaiver.Group
-                .Where(m => m.Code == group.Code)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Code", "Group Code already exists.");
-                return View(group);
-            }
+            //// Make sure duplicates are not entered...
+            //List<Group> checkDupes = await _contextPtnWaiver.Group
+            //    .Where(m => m.Code == group.Code)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Code", "Group Code already exists.");
+            //    return View(group);
+            //}
 
             if (ModelState.IsValid)
             {
+                var userInfo = getUserInfo(_username);
+                if (userInfo == null)
+                {
+                    @group.ModifiedUser = userInfo.onpremisessamaccountname;
+                    @group.ModifiedUserFullName = userInfo.displayname;
+                    @group.ModifiedUserEmail = userInfo.mail;
+                    @group.ModifiedDate = DateTime.Now;
+                }
+
                 try
                 {
                     _contextPtnWaiver.Update(@group);

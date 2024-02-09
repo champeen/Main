@@ -33,7 +33,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             return _contextPtnWaiver.SubjectType != null ? 
-                          View(await _contextPtnWaiver.SubjectType.ToListAsync()) :
+                          View(await _contextPtnWaiver.SubjectType.OrderBy(m=>m.Order).ThenBy(m=>m.Description).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.SubjectType'  is null.");
         }
 
@@ -75,7 +75,6 @@ namespace PtnWaiver.Controllers
                 errorViewModel = new ErrorViewModel() { Action = "Error", Controller = "Home", ErrorMessage = "Invalid Username: " + _username + ". Contact MoC Admin." };
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
-
             SubjectType subjectType = new SubjectType()
             {
                 CreatedUser = userInfo.onpremisessamaccountname,
@@ -106,10 +105,7 @@ namespace PtnWaiver.Controllers
                 .Where(m => m.Code == subjectType.Code)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
                 ModelState.AddModelError("Code", "Subject Type Code already exists.");
-                return View(subjectType);
-            }
 
             if (ModelState.IsValid)
             {
@@ -158,15 +154,12 @@ namespace PtnWaiver.Controllers
             if (id != subjectType.Id)
                 return NotFound();
 
-            // Make sure duplicates are not entered...
-            List<SubjectType> checkDupes = await _contextPtnWaiver.SubjectType
-                .Where(m => m.Code == subjectType.Code)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Code", "Subject Type Code already exists.");
-                return View(subjectType);
-            }
+            //// Make sure duplicates are not entered...
+            //List<SubjectType> checkDupes = await _contextPtnWaiver.SubjectType
+            //    .Where(m => m.Code == subjectType.Code)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //    ModelState.AddModelError("Code", "Subject Type Code already exists.");
 
             if (ModelState.IsValid)
             {

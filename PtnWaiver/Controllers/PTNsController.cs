@@ -78,6 +78,12 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
+            ViewBag.Status = getStatus();
+            ViewBag.PtnPins = getPtnPins();
+            ViewBag.Areas = getAreas();
+            ViewBag.Groups = getGroups();
+            ViewBag.SubjectTypes = getSubjectTypes();
+
             PTN ptn = new PTN()
             {
                 CreatedDate = DateTime.Now,
@@ -123,6 +129,11 @@ namespace PtnWaiver.Controllers
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Status = getStatus();
+            ViewBag.PtnPins = getPtnPins();
+            ViewBag.Areas = getAreas();
+            ViewBag.Groups = getGroups();
+            ViewBag.SubjectTypes = getSubjectTypes();
             return View(ptn);
         }
 
@@ -143,6 +154,12 @@ namespace PtnWaiver.Controllers
             var pTN = await _contextPtnWaiver.PTN.FindAsync(id);
             if (pTN == null)
                 return NotFound();
+
+            ViewBag.Status = getStatus();
+            ViewBag.PtnPins = getPtnPins();
+            ViewBag.Areas = getAreas();
+            ViewBag.Groups = getGroups();
+            ViewBag.SubjectTypes = getSubjectTypes();
 
             return View(pTN);
         }
@@ -181,6 +198,11 @@ namespace PtnWaiver.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Status = getStatus();
+            ViewBag.PtnPins = getPtnPins();
+            ViewBag.Areas = getAreas();
+            ViewBag.Groups = getGroups();
+            ViewBag.SubjectTypes = getSubjectTypes();
             return View(pTN);
         }
 

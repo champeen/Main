@@ -157,15 +157,15 @@ namespace Management_of_Change.Controllers
             if (id != changeType.Id)
                 return NotFound();
 
-            // Make sure duplicates are not entered...
-            List<ChangeType> checkDupes = await _context.ChangeType
-                .Where(m => m.Type == changeType.Type)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Type", "Change Type already exists.");
-                return View(changeType);
-            }
+            //// Make sure duplicates are not entered...
+            //List<ChangeType> checkDupes = await _context.ChangeType
+            //    .Where(m => m.Type == changeType.Type)
+            //    .ToListAsync();
+            //if (checkDupes.Count > 0)
+            //{
+            //    ModelState.AddModelError("Type", "Change Type already exists.");
+            //    return View(changeType);
+            //}
 
             changeType.ModifiedUser = _username;
             changeType.ModifiedDate = DateTime.Now;

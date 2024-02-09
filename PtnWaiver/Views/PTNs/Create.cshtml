@@ -40,15 +40,59 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <div class="form-group my-3">
+@*             <div class="form-group my-3">
                 <label asp-for="DocId" class="control-label fw-bold mb-1"></label>
                 <input asp-for="DocId" class="form-control" style="max-width:25%;" />
                 <span asp-validation-for="DocId" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="PtnPin" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @* <input asp-for="PtnPin" class="form-control" style="max-width:25%;" /> *@
+                @Html.DropDownListFor(model => model.PtnPin, new SelectList(ViewBag.PtnPins, "Value", "Text")/* , "-- select --" */, new { @class="form-control form-select",@style="max-width:25%;"})
+                <span asp-validation-for="PtnPin" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @* <input asp-for="SubjectType" class="form-control" style="max-width:25%;" /> *@
+                @Html.DropDownListFor(model => model.SubjectType, new SelectList(ViewBag.SubjectTypes, "Value", "Text")/* , "-- select --" */, new { @class="form-control form-select",@style="max-width:25%;"})
+                <span asp-validation-for="SubjectType" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Group" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @* <input asp-for="Group" class="form-control" style="max-width:25%;" /> *@
+                @Html.DropDownListFor(model => model.Group, new SelectList(ViewBag.Groups, "Value", "Text")/* , "-- select --" */, new { @class="form-control form-select",@style="max-width:25%;"})
+                <span asp-validation-for="Group" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="Title" class="control-label fw-bold mb-1"></label>
-                <input asp-for="Title" class="form-control" style="max-width:50%;" />
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <input asp-for="Title" class="form-control" style="max-width:100%;" />
                 <span asp-validation-for="Title" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="TisNumber" class="control-label fw-bold mb-1"></label>
+                <input asp-for="TisNumber" class="form-control" style="max-width:25%;" />
+                <span asp-validation-for="TisNumber" class="text-danger fw-bold"></span>
+            </div>
+@*             <div class="form-group my-3">
+                <label asp-for="PdfLocation" class="control-label fw-bold mb-1"></label>
+                <input asp-for="PdfLocation" class="form-control" style="max-width:100%;" />
+                <span asp-validation-for="PdfLocation" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="Status" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @* <input asp-for="Status" class="form-control" style="max-width:25%;" /> *@
+                @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.Status, "Value", "Text"), new { @class="form-control form-select", @style="max-width:25%;"})
+                <span asp-validation-for="Status" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Roadblocks" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" />
+                <span asp-validation-for="Roadblocks" class="text-danger fw-bold"></span>
             </div>
         </div>
     </div>

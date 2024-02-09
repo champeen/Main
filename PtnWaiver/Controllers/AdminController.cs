@@ -20,7 +20,6 @@ namespace PtnWaiver.Controllers
             _contextMoc = contextMoc;
             _logger = logger;
         }
-
         public IActionResult Index()
         {
             ErrorViewModel errorViewModel = CheckAuthorization();

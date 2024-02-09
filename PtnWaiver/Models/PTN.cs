@@ -11,8 +11,8 @@ namespace PtnWaiver.Models
         public string PtnPin { get; set; }
         [Display(Name = "Subject Type")]
         public string SubjectType { get; set; }
-        public string? Title { get; set; }
-        public string? Group { get; set; }
+        public string Title { get; set; }
+        public string Group { get; set; }
         [Display(Name = "TIS Number (Completed)")]
         public string? TisNumber { get; set; }
         [Display(Name = "Link to original PDF copy")]
