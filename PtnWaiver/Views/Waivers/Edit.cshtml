@@ -4,19 +4,36 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>Waiver</h4>
+<h1>Waiver</h1>
+<h4>Edit</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<form asp-action="Edit">
+    <div class="row">
+        <div class="col-md-4">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="CreatedUserFullName" />
+            <input type="hidden" asp-for="CreatedUserEmail" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="ModifiedUser" />
+            <input type="hidden" asp-for="ModifiedUserFullName" />
+            <input type="hidden" asp-for="ModifiedUserEmail" />
+            <input type="hidden" asp-for="ModifiedDate" />
+            <input type="hidden" asp-for="DeletedUser" />
+            <input type="hidden" asp-for="DeletedUserFullName" />
+            <input type="hidden" asp-for="DeletedUserEmail" />
+            <input type="hidden" asp-for="DeletedDate" />
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="RevisionNumber" class="control-label"></label>
+                <input asp-for="RevisionNumber" class="form-control" />
+                <span asp-validation-for="RevisionNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PorProject" class="control-label"></label>
+                <input asp-for="PorProject" class="form-control" />
+                <span asp-validation-for="PorProject" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -24,81 +41,35 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PTNId" class="control-label"></label>
-                <select asp-for="PTNId" class="form-control" asp-items="ViewBag.PTNId"></select>
-                <span asp-validation-for="PTNId" class="text-danger"></span>
+                <label asp-for="ProductProcess" class="control-label"></label>
+                <input asp-for="ProductProcess" class="form-control" />
+                <span asp-validation-for="ProductProcess" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedUser" class="control-label"></label>
-                <input asp-for="CreatedUser" class="form-control" />
-                <span asp-validation-for="CreatedUser" class="text-danger"></span>
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedUserFullName" class="control-label"></label>
-                <input asp-for="CreatedUserFullName" class="form-control" />
-                <span asp-validation-for="CreatedUserFullName" class="text-danger"></span>
+                <label asp-for="DateClosed" class="control-label"></label>
+                <input asp-for="DateClosed" class="form-control" />
+                <span asp-validation-for="DateClosed" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedUserEmail" class="control-label"></label>
-                <input asp-for="CreatedUserEmail" class="form-control" />
-                <span asp-validation-for="CreatedUserEmail" class="text-danger"></span>
+                <label asp-for="CorrectiveActionDueDate" class="control-label"></label>
+                <input asp-for="CorrectiveActionDueDate" class="form-control" />
+                <span asp-validation-for="CorrectiveActionDueDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUser" class="control-label"></label>
-                <input asp-for="ModifiedUser" class="form-control" />
-                <span asp-validation-for="ModifiedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUserFullName" class="control-label"></label>
-                <input asp-for="ModifiedUserFullName" class="form-control" />
-                <span asp-validation-for="ModifiedUserFullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUserEmail" class="control-label"></label>
-                <input asp-for="ModifiedUserEmail" class="form-control" />
-                <span asp-validation-for="ModifiedUserEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUser" class="control-label"></label>
-                <input asp-for="DeletedUser" class="form-control" />
-                <span asp-validation-for="DeletedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUserFullName" class="control-label"></label>
-                <input asp-for="DeletedUserFullName" class="form-control" />
-                <span asp-validation-for="DeletedUserFullName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUserEmail" class="control-label"></label>
-                <input asp-for="DeletedUserEmail" class="form-control" />
-                <span asp-validation-for="DeletedUserEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedDate" class="control-label"></label>
-                <input asp-for="DeletedDate" class="form-control" />
-                <span asp-validation-for="DeletedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group mt-4">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
             </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

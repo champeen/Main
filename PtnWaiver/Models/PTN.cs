@@ -4,11 +4,13 @@ namespace PtnWaiver.Models
 {
     public class PTN : TimeStamps
     {
+        [Key]
         public int Id { get; set; }
         [Display(Name = "Doc Id")]
         public string? DocId { get; set; }
         [Display(Name = "PTN/PIN")]
         public string PtnPin { get; set; }
+        public string Area { get; set; }
         [Display(Name = "Subject Type")]
         public string SubjectType { get; set; }
         public string Title { get; set; }
@@ -22,6 +24,6 @@ namespace PtnWaiver.Models
         public string? Roadblocks { get; set; }
 
 
-        public List<Waiver>? Waivers { get; set; }
+        public virtual List<Waiver>? Waivers { get; set; }
     }
 }

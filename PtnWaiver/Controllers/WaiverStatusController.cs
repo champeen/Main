@@ -11,18 +11,18 @@ using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
 {
-    public class SubjectTypesController : BaseController
+    public class WaiverStatusController : BaseController
     {
         private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly MocContext _contextMoc;
 
-        public SubjectTypesController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
+        public WaiverStatusController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
         {
             _contextPtnWaiver = contextPtnWaiver;
             _contextMoc = contextMoc;
         }
 
-        // GET: SubjectTypes
+        // GET: WaiverStatus
         public async Task<IActionResult> Index()
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -32,12 +32,12 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _contextPtnWaiver.SubjectType != null ? 
-                          View(await _contextPtnWaiver.SubjectType.OrderBy(m=>m.Order).ThenBy(m=>m.Description).ToListAsync()) :
-                          Problem("Entity set 'PtnWaiverContext.SubjectType'  is null.");
+            return _contextPtnWaiver.WaiverStatus != null ? 
+                          View(await _contextPtnWaiver.WaiverStatus.OrderBy(m=>m.Order).ThenBy(m=>m.Status).ToListAsync()) :
+                          Problem("Entity set 'PtnWaiverContext.WaiverStatus'  is null.");
         }
 
-        // GET: SubjectTypes/Details/5
+        // GET: WaiverStatus/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -47,19 +47,19 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.SubjectType == null)
+            if (id == null || _contextPtnWaiver.WaiverStatus == null)
                 return NotFound();
 
-            var subjectType = await _contextPtnWaiver.SubjectType
+            var waiverStatus = await _contextPtnWaiver.WaiverStatus
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (subjectType == null)
+            if (waiverStatus == null)
                 return NotFound();
 
-            return View(subjectType);
+            return View(waiverStatus);
         }
 
-        // GET: SubjectTypes/Create
+        // GET: WaiverStatus/Create
         public IActionResult Create()
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -75,7 +75,8 @@ namespace PtnWaiver.Controllers
                 errorViewModel = new ErrorViewModel() { Action = "Error", Controller = "Home", ErrorMessage = "Invalid Username: " + _username + ". Contact MoC Admin." };
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
-            SubjectType subjectType = new SubjectType()
+
+            WaiverStatus waiverStatus = new WaiverStatus
             {
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
@@ -83,15 +84,15 @@ namespace PtnWaiver.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            return View(subjectType);
+            return View(waiverStatus);
         }
 
-        // POST: SubjectTypes/Create
+        // POST: WaiverStatus/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] SubjectType subjectType)
+        public async Task<IActionResult> Create([Bind("Id,Status,Description,Default,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] WaiverStatus waiverStatus)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -101,22 +102,22 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             // Make sure duplicates are not entered...
-            List<SubjectType> checkDupes = await _contextPtnWaiver.SubjectType
-                .Where(m => m.Code == subjectType.Code)
+            List<WaiverStatus> checkDupes = await _contextPtnWaiver.WaiverStatus
+                .Where(m => m.Status == waiverStatus.Status)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-                ModelState.AddModelError("Code", "Subject Type Code already exists.");
+                ModelState.AddModelError("Status", "Waiver Status already exists.");
 
             if (ModelState.IsValid)
             {
-                _contextPtnWaiver.Add(subjectType);
+                _contextPtnWaiver.Add(waiverStatus);
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(subjectType);
+            return View(waiverStatus);
         }
 
-        // GET: SubjectTypes/Edit/5
+        // GET: WaiverStatus/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -126,23 +127,23 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.SubjectType == null)
+            if (id == null || _contextPtnWaiver.WaiverStatus == null)
                 return NotFound();
 
-            var subjectType = await _contextPtnWaiver.SubjectType.FindAsync(id);
+            var waiverStatus = await _contextPtnWaiver.WaiverStatus.FindAsync(id);
 
-            if (subjectType == null)
+            if (waiverStatus == null)
                 return NotFound();
 
-            return View(subjectType);
+            return View(waiverStatus);
         }
 
-        // POST: SubjectTypes/Edit/5
+        // POST: WaiverStatus/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] SubjectType subjectType)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Status,Description,Default,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] WaiverStatus waiverStatus)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -151,44 +152,44 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != subjectType.Id)
+            if (id != waiverStatus.Id)
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<SubjectType> checkDupes = await _contextPtnWaiver.SubjectType
-                .Where(m => m.Code == subjectType.Code && m.Id != subjectType.Id)
+            List<WaiverStatus> checkDupes = await _contextPtnWaiver.WaiverStatus
+                .Where(m => m.Status == waiverStatus.Status && m.Id != waiverStatus.Id)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-                ModelState.AddModelError("Code", "Subject Type Code already exists.");
+                ModelState.AddModelError("Status", "Waiver Status already exists.");
 
             if (ModelState.IsValid)
             {
                 var userInfo = getUserInfo(_username);
-                if (userInfo != null)
+                if (userInfo == null)
                 {
-                    subjectType.ModifiedDate = DateTime.Now;
-                    subjectType.ModifiedUser = userInfo.onpremisessamaccountname;
-                    subjectType.ModifiedUserFullName = userInfo.displayname;
-                    subjectType.ModifiedUserEmail = userInfo.mail;
+                    waiverStatus.ModifiedDate = DateTime.Now;
+                    waiverStatus.ModifiedUser = userInfo.onpremisessamaccountname;
+                    waiverStatus.ModifiedUserFullName = userInfo.displayname;
+                    waiverStatus.ModifiedUserEmail = userInfo.mail;
                 }
                 try
                 {
-                    _contextPtnWaiver.Update(subjectType);
+                    _contextPtnWaiver.Update(waiverStatus);
                     await _contextPtnWaiver.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SubjectTypeExists(subjectType.Id))
+                    if (!WaiverStatusExists(waiverStatus.Id))
                         return NotFound();
                     else
                         throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(subjectType);
+            return View(waiverStatus);
         }
 
-        // GET: SubjectTypes/Delete/5
+        // GET: WaiverStatus/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -198,19 +199,19 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.SubjectType == null)
+            if (id == null || _contextPtnWaiver.WaiverStatus == null)
                 return NotFound();
 
-            var subjectType = await _contextPtnWaiver.SubjectType
+            var waiverStatus = await _contextPtnWaiver.WaiverStatus
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (subjectType == null)
+            if (waiverStatus == null)
                 return NotFound();
 
-            return View(subjectType);
+            return View(waiverStatus);
         }
 
-        // POST: SubjectTypes/Delete/5
+        // POST: WaiverStatus/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -222,20 +223,21 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (_contextPtnWaiver.SubjectType == null)
-                return Problem("Entity set 'PtnWaiverContext.SubjectType'  is null.");
+            if (_contextPtnWaiver.WaiverStatus == null)
+                return Problem("Entity set 'PtnWaiverContext.WaiverStatus'  is null.");
 
-            var subjectType = await _contextPtnWaiver.SubjectType.FindAsync(id);
-            if (subjectType != null)
-                _contextPtnWaiver.SubjectType.Remove(subjectType);
+            var waiverStatus = await _contextPtnWaiver.WaiverStatus.FindAsync(id);
+
+            if (waiverStatus != null)
+                _contextPtnWaiver.WaiverStatus.Remove(waiverStatus);
             
             await _contextPtnWaiver.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SubjectTypeExists(int id)
+        private bool WaiverStatusExists(int id)
         {
-          return (_contextPtnWaiver.SubjectType?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_contextPtnWaiver.WaiverStatus?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

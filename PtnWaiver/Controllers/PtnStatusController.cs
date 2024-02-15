@@ -33,7 +33,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             return _contextPtnWaiver.PtnStatus != null ? 
-                          View(await _contextPtnWaiver.PtnStatus.OrderBy(m=>m.Order).ThenBy(m=>m.Description).ToListAsync()) :
+                          View(await _contextPtnWaiver.PtnStatus.OrderBy(m=>m.Order).ThenBy(m=>m.Status).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.PtnStatus'  is null.");
         }
 
@@ -83,6 +83,7 @@ namespace PtnWaiver.Controllers
                 CreatedUserEmail = userInfo.mail,
                 CreatedDate = DateTime.Now
             };
+
             return View(ptnStatus);
         }
 
@@ -105,10 +106,7 @@ namespace PtnWaiver.Controllers
                 .Where(m => m.Status == ptnStatus.Status)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
                 ModelState.AddModelError("Status", "PTN Status already exists.");
-                return View(ptnStatus);
-            }
 
             if (ModelState.IsValid)
             {
@@ -157,12 +155,12 @@ namespace PtnWaiver.Controllers
             if (id != ptnStatus.Id)
                 return NotFound();
 
-            //// Make sure duplicates are not entered...
-            //List<PtnStatus> checkDupes = await _contextPtnWaiver.PtnStatus
-            //    .Where(m => m.Status == ptnStatus.Status)
-            //    .ToListAsync();
-            //if (checkDupes.Count > 0)
-            //    ModelState.AddModelError("Status", "PTN Status already exists.");
+            // Make sure duplicates are not entered...
+            List<PtnStatus> checkDupes = await _contextPtnWaiver.PtnStatus
+                .Where(m => m.Status == ptnStatus.Status && m.Id != ptnStatus.Id)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+                ModelState.AddModelError("Status", "PTN Status already exists.");
 
             if (ModelState.IsValid)
             {

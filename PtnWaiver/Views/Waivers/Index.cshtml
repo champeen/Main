@@ -4,110 +4,133 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
+<h1>Waivers</h1>
+<form asp-controller="Waivers" asp-action="Index">
+    <div class="row mt-5 mb-3">
+        <div class="col-12">
+            <input hidden value=@ViewBag.PrevSort id="PrevSortId" />
+            <input hidden value=@ViewBag.PrevStatusFilter id="PrevStatusFilterId" />
+            <div class="row">
+                <div class="col-6 text-start">
+                    @*<a asp-action="Create">Create New</a>*@
+                    @*            @Html.ActionLink("Create New","Create")*@
+                    <span class="flex-nowrap">
+                        @Html.ActionLink("Create New","Create",new {source="WaiverIndex"},new {@class="btn btn-success"})
+                    </span>
+                </div>
+                <div class="col-3 text-center">
+                    @* <i class="bi bi-binoculars-fill" data-bs-toggle="tooltip" data-bs-html="true"></i> *@
+                    <input class="form-control" id="waiverIndexSearch" type="text" placeholder="Search..">
+                </div>
+                <div class="col-1 fw-bold text-end mt-2">
+                    Status:
+                </div>
+                <div class="col-2 text-start">
+                    @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList,"Value","Text"), new {@class = "form-control form-select", @id="waiverIndexStatusFilter"})
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<table class="table table-bordered table-striped">
+    <thead class="align-top align-text-top table-primary">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.PTN.DocId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PtnDocId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WaiverNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RevisionNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PorProject)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedUser)
+                @Html.DisplayNameFor(model => model.ProductProcess)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedUserFullName)
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedUserEmail)
+                @Html.DisplayNameFor(model => model.DateClosed)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreatedDate)
+                @Html.DisplayNameFor(model => model.CorrectiveActionDueDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ModifiedUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedUserFullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedUserEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModifiedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedUserFullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedUserEmail)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeletedDate)
+                @Html.DisplayNameFor(model => model.PTNId)
             </th>
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedUserFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedUserEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedUserFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedUserEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModifiedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedUser)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedUserFullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedUserEmail)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeletedDate)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+    <tbody id="waiverIndexTable">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PTN.DocId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PtnDocId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WaiverNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RevisionNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PorProject)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductProcess)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateClosed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PTNId)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
+                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary ms-1"})
+                    @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1"})
+                </td>
+            </tr>
+        }
     </tbody>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
 </table>

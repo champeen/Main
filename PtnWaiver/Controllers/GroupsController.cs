@@ -164,15 +164,12 @@ namespace PtnWaiver.Controllers
             if (id != @group.Id)
                 return NotFound();
 
-            //// Make sure duplicates are not entered...
-            //List<Group> checkDupes = await _contextPtnWaiver.Group
-            //    .Where(m => m.Code == group.Code)
-            //    .ToListAsync();
-            //if (checkDupes.Count > 0)
-            //{
-            //    ModelState.AddModelError("Code", "Group Code already exists.");
-            //    return View(group);
-            //}
+            // Make sure duplicates are not entered...
+            List<Group> checkDupes = await _contextPtnWaiver.Group
+                .Where(m => m.Code == group.Code && m.Id != group.Id)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+                ModelState.AddModelError("Code", "Group Code already exists.");
 
             if (ModelState.IsValid)
             {

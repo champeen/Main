@@ -23,7 +23,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: PTNs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string statusFilter, string prevStatusFilter = null, string sort = null, string prevSort = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -33,9 +33,33 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            var requests = await _contextPtnWaiver.PTN.Where(m => m.DeletedDate == null).ToListAsync();
+            // if no filter selected, keep previous
+            if (statusFilter == null)
+                statusFilter = prevStatusFilter;
+            ViewBag.StatusList = getStatusFilter(statusFilter);
 
-            return View(requests);
+            // Get 
+            var ptns = await _contextPtnWaiver.PTN
+                .Where(m => m.DeletedDate == null)
+                .OrderBy(m => m.CreatedDate)
+                .ThenBy(m => m.DocId)
+                .ToListAsync();
+
+            switch (statusFilter)
+            {
+                case null:
+                    ViewBag.PrevStatusFilter = "All";
+                    break;
+                case "All":
+                    ViewBag.PrevStatusFilter = "All";
+                    break;
+                default:
+                    ptns = ptns.Where(m => m.Status == statusFilter).ToList();
+                    ViewBag.PrevStatusFilter = statusFilter;
+                    break;
+            }
+
+            return View(ptns);
         }
 
         // GET: PTNs/Details/5
@@ -78,7 +102,7 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
-            ViewBag.Status = getStatus();
+            ViewBag.Status = getPtnStatus();
             ViewBag.PtnPins = getPtnPins();
             ViewBag.Areas = getAreas();
             ViewBag.Groups = getGroups();
@@ -100,7 +124,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
+        public async Task<IActionResult> Create([Bind("Id,DocId,PtnPin,Area,SubjectType,Title,Group,TisNumber,PdfLocation,Status,Roadblocks,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -129,7 +153,7 @@ namespace PtnWaiver.Controllers
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Status = getStatus();
+            ViewBag.Status = getPtnStatus();
             ViewBag.PtnPins = getPtnPins();
             ViewBag.Areas = getAreas();
             ViewBag.Groups = getGroups();
@@ -155,7 +179,7 @@ namespace PtnWaiver.Controllers
             if (pTN == null)
                 return NotFound();
 
-            ViewBag.Status = getStatus();
+            ViewBag.Status = getPtnStatus();
             ViewBag.PtnPins = getPtnPins();
             ViewBag.Areas = getAreas();
             ViewBag.Groups = getGroups();
@@ -169,7 +193,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,PtnPin,Area,SubjectType,Title,Group,TisNumber,PdfLocation,Status,Roadblocks,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -184,6 +208,14 @@ namespace PtnWaiver.Controllers
 
             if (ModelState.IsValid)
             {
+                var userInfo = getUserInfo(_username);
+                if (userInfo == null)
+                {
+                    pTN.ModifiedUser = userInfo.onpremisessamaccountname;
+                    pTN.ModifiedUserFullName = userInfo.displayname;
+                    pTN.ModifiedUserEmail = userInfo.mail;
+                    pTN.ModifiedDate = DateTime.Now;
+                }
                 try
                 {
                     _contextPtnWaiver.Update(pTN);
@@ -198,7 +230,7 @@ namespace PtnWaiver.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Status = getStatus();
+            ViewBag.Status = getPtnStatus();
             ViewBag.PtnPins = getPtnPins();
             ViewBag.Areas = getAreas();
             ViewBag.Groups = getGroups();
@@ -246,15 +278,24 @@ namespace PtnWaiver.Controllers
 
             var pTN = await _contextPtnWaiver.PTN.FindAsync(id);
             if (pTN != null)
-                  _contextPtnWaiver.PTN.Remove(pTN);
-            
-            await _contextPtnWaiver.SaveChangesAsync();
+            {
+                var userInfo = getUserInfo(_username);
+                if (userInfo == null)
+                {
+                    pTN.DeletedUser = userInfo.onpremisessamaccountname;
+                    pTN.DeletedUserFullName = userInfo.displayname;
+                    pTN.DeletedUserEmail = userInfo.mail;
+                    pTN.DeletedDate = DateTime.Now;
+                }
+                _contextPtnWaiver.PTN.Update(pTN);
+                await _contextPtnWaiver.SaveChangesAsync();
+            }
             return RedirectToAction(nameof(Index));
         }
 
         private bool PTNExists(int id)
         {
-          return (_contextPtnWaiver.PTN?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_contextPtnWaiver.PTN?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

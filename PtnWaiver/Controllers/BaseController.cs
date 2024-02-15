@@ -169,9 +169,9 @@ namespace PtnWaiver.Controllers
             return users;
         }
 
-        public List<SelectListItem> getStatus()
+        public List<SelectListItem> getPtnStatus()
         {
-            var statusList = _contextPtnWaiver.PtnStatus.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            var statusList = _contextPtnWaiver.PtnStatus.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
             List<SelectListItem> status = new List<SelectListItem>();
             foreach (var rec in statusList)
             {
@@ -180,9 +180,46 @@ namespace PtnWaiver.Controllers
             }
             return status;
         }
+
+        public List<SelectListItem> getWaiverStatus()
+        {
+            var statusList = _contextPtnWaiver.WaiverStatus.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> status = new List<SelectListItem>();
+            foreach (var rec in statusList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Status, Text = rec.Description };
+                status.Add(item);
+            }
+            return status;
+        }
+
+        public List<SelectListItem> getPtns()
+        {
+            var statusList = _contextPtnWaiver.PTN.OrderBy(m => m.DocId).ToList();
+            List<SelectListItem> status = new List<SelectListItem>();
+            foreach (var rec in statusList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Id.ToString(), Text = rec.DocId };
+                status.Add(item);
+            }
+            return status;
+        }
+
+        public List<SelectListItem> getStatusFilter(string value = null)
+        {
+            var statusList = _contextPtnWaiver.PtnStatus.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> status = new List<SelectListItem>();
+            status.Add(new SelectListItem() { Text = "All", Value = "All", Selected = (value == "All" ? true : false) });
+            foreach (var rec in statusList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Status, Text = rec.Description, Selected = (value == rec.Status ? true : false) };
+                status.Add(item);
+            }
+            return status;
+        }
         public List<SelectListItem> getPtnPins()
         {
-            var ptnPinList = _contextPtnWaiver.PtnPin.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            var ptnPinList = _contextPtnWaiver.PtnPin.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
             List<SelectListItem> ptnPins = new List<SelectListItem>();
             foreach (var rec in ptnPinList)
             {
@@ -194,7 +231,7 @@ namespace PtnWaiver.Controllers
 
         public List<SelectListItem> getSubjectTypes()
         {
-            var subjectTypeList = _contextPtnWaiver.SubjectType.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            var subjectTypeList = _contextPtnWaiver.SubjectType.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
             List<SelectListItem> subjectTypes = new List<SelectListItem>();
             foreach (var rec in subjectTypeList)
             {
@@ -206,7 +243,7 @@ namespace PtnWaiver.Controllers
 
         public List<SelectListItem> getAreas()
         {
-            var areaList = _contextPtnWaiver.Area.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            var areaList = _contextPtnWaiver.Area.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
             List<SelectListItem> areas = new List<SelectListItem>();
             foreach (var rec in areaList)
             {
@@ -218,7 +255,7 @@ namespace PtnWaiver.Controllers
 
         public List<SelectListItem> getGroups()
         {
-            var groupList = _contextPtnWaiver.Group.OrderByDescending(m => m.Order).ThenBy(m => m.Description).ToList();
+            var groupList = _contextPtnWaiver.Group.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
             List<SelectListItem> groups = new List<SelectListItem>();
             foreach (var rec in groupList)
             {

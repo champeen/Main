@@ -164,15 +164,12 @@ namespace PtnWaiver.Controllers
             if (id != area.Id)
                 return NotFound();
 
-            //// Make sure duplicates are not entered...
-            //List<Area> checkDupes = await _contextPtnWaiver.Area
-            //    .Where(m => m.Code == area.Code)
-            //    .ToListAsync();
-            //if (checkDupes.Count > 0)
-            //{
-            //    ModelState.AddModelError("Code", "Area Code already exists.");
-            //    return View(area);
-            //}
+            // Make sure duplicates are not entered...
+            List<Area> checkDupes = await _contextPtnWaiver.Area
+                .Where(m => m.Code == area.Code && m.Id != area.Id)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+                ModelState.AddModelError("Code", "Area Code already exists.");
 
             if (ModelState.IsValid)
             {

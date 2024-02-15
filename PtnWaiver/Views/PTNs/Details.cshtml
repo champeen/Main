@@ -4,99 +4,152 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
+<h1>PTN</h1>
+<h4>Detail</h4>
+<hr />
+<div class="row my-4">
+    <div class="col-12">
+        <div class="form-group">
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary mx-2">Back to List</a>
+        </div>
+    </div>
+</div>
 <div>
-    <h4>PTN</h4>
-    <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.DocId)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.DocId)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.PtnPin)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.PtnPin)
+        </dd>
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.Area)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.Area)
+        </dd>
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.SubjectType)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.SubjectType)
+        </dd>
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.Group)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.Group)
+        </dd>
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.Title)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.TisNumber)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.TisNumber)
+        </dd>
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.Roadblocks)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.Roadblocks)
+        </dd>
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.CreatedUser)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.CreatedUser)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.CreatedUserFullName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.CreatedUserFullName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.CreatedUserEmail)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.CreatedUserEmail)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.CreatedDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.CreatedDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.ModifiedUser)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.ModifiedUser)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.ModifiedUserFullName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.ModifiedUserFullName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.ModifiedUserEmail)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.ModifiedUserEmail)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.ModifiedDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.ModifiedDate)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.DeletedUser)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.DeletedUser)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.DeletedUserFullName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.DeletedUserFullName)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.DeletedUserEmail)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.DeletedUserEmail)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.DeletedDate)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.DeletedDate)
         </dd>
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="form-group">
+            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary mx-2">Back to List</a>
+        </div>
+    </div>
 </div>

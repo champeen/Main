@@ -1,10 +1,10 @@
-﻿@model PtnWaiver.Models.SubjectType
+﻿@model PtnWaiver.Models.WaiverStatus
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Subject Types</h1>
+<h1>Waiver Status</h1>
 <h4 class="mt-5">Create</h4>
 <hr />
 <div class="row">
@@ -17,15 +17,20 @@
             <input type="hidden" asp-for="CreatedUserFullName" />
             <input type="hidden" asp-for="CreatedUserEmail" />
             <div class="form-group my-3">
-                <label asp-for="Code" class="control-label fw-bold mb-1"></label>
-                <input asp-for="Code" class="form-control" />
-                <span asp-validation-for="Code" class="text-danger"></span>
+                <label asp-for="Status" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="Description" class="control-label fw-bold mb-1"></label>
                 @* <input asp-for="Description" class="form-control" /> *@
                 @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold mb-1">
+                    <input class="form-check-input" asp-for="Default" /> @Html.DisplayNameFor(model => model.Default)
+                </label>
             </div>
             <div class="form-group my-3">
                 <label asp-for="Order" class="control-label fw-bold mb-1"></label>

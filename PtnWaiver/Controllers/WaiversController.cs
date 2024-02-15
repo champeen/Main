@@ -7,33 +7,74 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
+using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
 {
-    public class WaiversController : Controller
+    public class WaiversController : BaseController
     {
-        private readonly PtnWaiverContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
+        private readonly MocContext _contextMoc;
 
-        public WaiversController(PtnWaiverContext context)
+        public WaiversController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
         {
-            _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
+            _contextMoc = contextMoc;
         }
 
         // GET: Waivers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string statusFilter, string prevStatusFilter = null, string sort = null, string prevSort = null)
         {
-              return _context.Waiver != null ? 
-                          View(await _context.Waiver.ToListAsync()) :
-                          Problem("Entity set 'PtnWaiverContext.Waiver'  is null.");
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            // if no filter selected, keep previous
+            if (statusFilter == null)
+                statusFilter = prevStatusFilter;
+            ViewBag.StatusList = getStatusFilter(statusFilter);
+
+            // Get
+            var waivers = await _contextPtnWaiver.Waiver
+                .Where(m=>m.DeletedDate == null)
+                .OrderBy(m=>m.CreatedDate)
+                .ThenBy(m=>m.WaiverNumber)
+                .ToListAsync();
+
+            switch (statusFilter)
+            {
+                case null:
+                    ViewBag.PrevStatusFilter = "All";
+                    break;
+                case "All":
+                    ViewBag.PrevStatusFilter = "All";
+                    break;
+                default:
+                    waivers = waivers.Where(m => m.Status == statusFilter).ToList();
+                    ViewBag.PrevStatusFilter = statusFilter;
+                    break;
+            }
+
+            return View(waivers);
         }
 
         // GET: Waivers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Waiver == null)
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
-            var waiver = await _context.Waiver
+            var waiver = await _contextPtnWaiver.Waiver
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (waiver == null)
@@ -45,7 +86,32 @@ namespace PtnWaiver.Controllers
         // GET: Waivers/Create
         public IActionResult Create()
         {
-            return View();
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo == null)
+            {
+                errorViewModel = new ErrorViewModel() { Action = "Error", Controller = "Home", ErrorMessage = "Invalid Username: " + _username + ". Contact MoC Admin." };
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
+            }
+
+            ViewBag.Ptns = getPtns();
+            ViewBag.Status = getWaiverStatus();
+
+            Waiver waiver = new Waiver()
+            {
+                CreatedDate = DateTime.Now,
+                CreatedUser = userInfo.onpremisessamaccountname,
+                CreatedUserFullName = userInfo.displayname,
+                CreatedUserEmail = userInfo.mail
+            };
+
+            return View(waiver);
         }
 
         // POST: Waivers/Create
@@ -53,24 +119,42 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
+        public async Task<IActionResult> Create([Bind("Id,WaiverNumber,PorProject,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (ModelState.IsValid)
             {
-                _context.Add(waiver);
-                await _context.SaveChangesAsync();
+                waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
+
+                _contextPtnWaiver.Add(waiver);
+                await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Ptns = getPtns();
+            ViewBag.Status = getWaiverStatus();
             return View(waiver);
         }
 
         // GET: Waivers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Waiver == null)
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
-            var waiver = await _context.Waiver.FindAsync(id);
+            var waiver = await _contextPtnWaiver.Waiver.FindAsync(id);
 
             if (waiver == null)
                 return NotFound();
@@ -85,6 +169,13 @@ namespace PtnWaiver.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
         {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
             if (id != waiver.Id)
                 return NotFound();
 
@@ -92,8 +183,8 @@ namespace PtnWaiver.Controllers
             {
                 try
                 {
-                    _context.Update(waiver);
-                    await _context.SaveChangesAsync();
+                    _contextPtnWaiver.Update(waiver);
+                    await _contextPtnWaiver.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -110,10 +201,17 @@ namespace PtnWaiver.Controllers
         // GET: Waivers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Waiver == null)
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
-            var waiver = await _context.Waiver
+            var waiver = await _contextPtnWaiver.Waiver
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (waiver == null)
@@ -127,21 +225,28 @@ namespace PtnWaiver.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Waiver == null)
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (_contextPtnWaiver.Waiver == null)
                 return Problem("Entity set 'PtnWaiverContext.Waiver'  is null.");
 
-            var waiver = await _context.Waiver.FindAsync(id);
+            var waiver = await _contextPtnWaiver.Waiver.FindAsync(id);
 
             if (waiver != null)
-                _context.Waiver.Remove(waiver);
+                _contextPtnWaiver.Waiver.Remove(waiver);
             
-            await _context.SaveChangesAsync();
+            await _contextPtnWaiver.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool WaiverExists(int id)
         {
-          return (_context.Waiver?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_contextPtnWaiver.Waiver?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

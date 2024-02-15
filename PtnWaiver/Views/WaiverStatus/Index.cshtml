@@ -1,10 +1,10 @@
-﻿@model IEnumerable<PtnWaiver.Models.Area>
+﻿@model IEnumerable<PtnWaiver.Models.WaiverStatus>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Area Dropdowns</h1>
+<h1>Waiver Status</h1>
 <div class="row mt-5 mb-3">
     <div class="col-12">
         <a asp-action="Create" class="me-2 btn btn-success">Create New</a>
@@ -15,10 +15,13 @@
     <thead class="table-primary">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Code)
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Default)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Order)
@@ -31,10 +34,13 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Code)
+                    @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Default)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Order)
@@ -51,6 +57,7 @@
     {
         <tr>
             <td>No data found</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

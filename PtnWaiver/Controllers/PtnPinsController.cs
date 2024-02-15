@@ -158,15 +158,12 @@ namespace PtnWaiver.Controllers
             if (id != ptnPin.Id)
                 return NotFound();
 
-            //// Make sure duplicates are not entered...
-            //List<PtnPin> checkDupes = await _contextPtnWaiver.PtnPin
-            //    .Where(m => m.Code == ptnPin.Code)
-            //    .ToListAsync();
-            //if (checkDupes.Count > 0)
-            //{
-            //    ModelState.AddModelError("Code", "PtnPin Code already exists.");
-            //    return View(ptnPin);
-            //}
+            // Make sure duplicates are not entered...
+            List<PtnPin> checkDupes = await _contextPtnWaiver.PtnPin
+                .Where(m => m.Code == ptnPin.Code && m.Id != ptnPin.Id)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+                ModelState.AddModelError("Code", "PtnPin Code already exists.");
 
             if (ModelState.IsValid)
             {

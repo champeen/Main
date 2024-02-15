@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -11,9 +12,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240214181750_addWaiverStatusTable")]
+    partial class addWaiverStatusTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -490,9 +493,6 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("CorrectiveActionDueDate")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -508,9 +508,6 @@ namespace PtnWaiver.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("DateClosed")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -524,7 +521,6 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedDate")
@@ -539,29 +535,11 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("ModifiedUserFullName")
                         .HasColumnType("text");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
                     b.Property<int>("PTNId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("PorProject")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProductProcess")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PtnDocId")
-                        .HasColumnType("text");
-
-                    b.Property<int>("RevisionNumber")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("WaiverNumber")
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -637,13 +615,11 @@ namespace PtnWaiver.Migrations
 
             modelBuilder.Entity("PtnWaiver.Models.Waiver", b =>
                 {
-                    b.HasOne("PtnWaiver.Models.PTN", "PTN")
+                    b.HasOne("PtnWaiver.Models.PTN", null)
                         .WithMany("Waivers")
                         .HasForeignKey("PTNId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("PTN");
                 });
 
             modelBuilder.Entity("PtnWaiver.Models.PTN", b =>

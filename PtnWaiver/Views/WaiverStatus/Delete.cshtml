@@ -1,56 +1,13 @@
-﻿@model PtnWaiver.Models.PTN
+﻿@model PtnWaiver.Models.WaiverStatus
 
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>PTN</h1>
-<h3>Are you sure you want to delete this?</h3>
-<hr />
+<h1>Waiver Status</h1>
+<h3 class="mt-5">Are you sure you want to delete this?</h3>
 <div>
     <dl class="row">
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DocId)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DocId)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.PtnPin)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.PtnPin)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Area)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Area)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.SubjectType)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.SubjectType)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Group)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Group)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.TisNumber)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.TisNumber)
-        </dd>
         <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.Status)
         </dt>
@@ -58,10 +15,22 @@
             @Html.DisplayFor(model => model.Status)
         </dd>
         <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Roadblocks)
+            @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Roadblocks)
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.Default)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.Default)
+        </dd>
+        <dt class="col-sm-2 my-1">
+            @Html.DisplayNameFor(model => model.Order)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.Order)
         </dd>
         <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.CreatedUser)
@@ -135,10 +104,10 @@
         <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.DeletedDate)
         </dd>
-    </dl>
-    <form asp-action="Delete" class="mt-4">
+    </dl>    
+    <form asp-action="Delete" class="mt-5">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> 
-        <a asp-action="Index" class="btn btn-secondary mx-2">Cancel</a>
+        <input type="submit" value="Delete" class="btn btn-danger" />
+        <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
     </form>
 </div>

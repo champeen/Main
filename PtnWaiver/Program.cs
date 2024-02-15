@@ -11,8 +11,14 @@ try
     Initialization.Initialize(builder);
 
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-    builder.Services.AddDbContext<MocContext>(options => options.UseNpgsql(Initialization.ConnectionStringMoc));
-    builder.Services.AddDbContext<PtnWaiverContext>(options => options.UseNpgsql(Initialization.ConnectionStringPtnWaiver));
+    builder.Services.AddDbContext<MocContext>(options => options
+    .UseNpgsql(Initialization.ConnectionStringMoc)
+    //.UseLazyLoadingProxies()
+    );
+    builder.Services.AddDbContext<PtnWaiverContext>(options => options
+    .UseNpgsql(Initialization.ConnectionStringPtnWaiver)
+    //.UseLazyLoadingProxies()
+    );
     //builder.Services.AddDbContext<PtnWaiverContext>(options =>
     //    options.UseSqlServer(builder.Configuration.GetConnectionString("PtnWaiverContext") ?? throw new InvalidOperationException("Connection string 'PtnWaiverContext' not found.")));
 
