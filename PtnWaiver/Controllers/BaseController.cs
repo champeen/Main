@@ -264,6 +264,28 @@ namespace PtnWaiver.Controllers
             }
             return groups;
         }
+        public List<SelectListItem> getPorProjects()
+        {
+            var groupList = _contextPtnWaiver.PorProject.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> groups = new List<SelectListItem>();
+            foreach (var rec in groupList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+                groups.Add(item);
+            }
+            return groups;
+        }
+        public List<SelectListItem> getProductProcess()
+        {
+            var groupList = _contextPtnWaiver.ProductProcess.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> groups = new List<SelectListItem>();
+            foreach (var rec in groupList)
+            {
+                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+                groups.Add(item);
+            }
+            return groups;
+        }
 
         //public List<SelectListItem> getChangeLevels()
         //{

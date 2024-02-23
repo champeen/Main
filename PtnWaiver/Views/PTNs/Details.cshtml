@@ -1,10 +1,10 @@
-﻿@model PtnWaiver.Models.PTN
+﻿@model PtnWaiver.ViewModels.PtnViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>PTN</h1>
+@* <h1>PTN</h1>
 <h4>Detail</h4>
 <hr />
 <div class="row my-4">
@@ -14,142 +14,535 @@
             <a asp-action="Index" class="btn btn-secondary mx-2">Back to List</a>
         </div>
     </div>
+</div> *@
+
+
+<div class="row">
+    <div class="col-4">
+        <div class="text-nowrap">
+            <h1 style="display:inline">
+                <span class="me-2">
+                    PTN
+                </span>
+                @*                 <span class="" title="Create New PTN based on this MoC.  Include all Details and General MoC Questions only. Status will be set to 'Draft' and ChangeOwner will be you.">
+                @Html.ActionLink("Clone","Clone", new {id=@Model?.PTN?.Id, tab="Details"},new {@class="btn btn-success align-middle"})
+                @Html.ActionLink("Download New Equipment Checklist","DownloadNewEquipmentChecklist","ChangeRequests", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-secondary", title="Download 'New Equipment Checklist' Spreadsheet to Download Folder"})
+                </span> *@
+            </h1>
+        </div>
+    </div>
+    <div class="col-8 text-end">
+        <h4>
+            <span class="fw-bold">
+                @Html.DisplayFor(model => model.PTN.DocId)
+            </span>
+        </h4>
+        <h4>
+            @Html.DisplayNameFor(model => model.PTN.Status):
+            <span class="text-success fw-bold">
+                @Html.DisplayFor(model => model.PTN.Status)
+            </span>
+        </h4>
+    </div>
 </div>
-<div>
-    <dl class="row">
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DocId)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DocId)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.PtnPin)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.PtnPin)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Area)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Area)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.SubjectType)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.SubjectType)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Group)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Group)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.TisNumber)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.TisNumber)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Roadblocks)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Roadblocks)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedUser)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedUser)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedUserFullName)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedUserFullName)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedUserEmail)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedUserEmail)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedUser)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedUser)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedUserFullName)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedUserFullName)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedUserEmail)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedUserEmail)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedUser)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedUser)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedUserFullName)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedUserFullName)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedUserEmail)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedUserEmail)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedDate)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedDate)
-        </dd>
-    </dl>
-</div>
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="form-group">
-            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-            <a asp-action="Index" class="btn btn-secondary mx-2">Back to List</a>
+<nav class="my-5">
+    <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+        </li>
+        @* <li class="nav-item ms-auto"> *@
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveAttachmentsPtn fw-bolder" id="nav-attachmentsPtn-tab" data-bs-toggle="tab" href="#nav-attachmentsPtn" role="tab" aria-controls="nav-profile" aria-selected="false">Upload PTN Template (@Model.AttachmentsPtn.Count.ToString())</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActivePtnApproval fw-bolder" id="nav-ptnApproval-tab" data-bs-toggle="tab" href="#nav-ptnApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit PTN for Admin Approval</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActivePtnAdminApproval fw-bolder" id="nav-ptnAdminApproval-tab" data-bs-toggle="tab" href="#nav-ptnAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Admin Approve PTN</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveWaivers fw-bolder" id="nav-activeWaivers-tab" data-bs-toggle="tab" href="#nav-activeWaivers" role="tab" aria-controls="nav-profile" aria-selected="false">Waivers</a>
+        </li>
+    </ul>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    @******************************************************************************************************************@
+    @*  DETAIL TAB ****************************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div>
+            @*<h4 class="mt-5">Details</h4>*@
+            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+            <a class="mx-2" asp-action="Index">Back to List</a>*@
+            <div class="row mt-5">
+                <div class="col-5 text-start">
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser) && (Model.PTN.Status == "Draft"))
+                    {
+                        @Html.ActionLink("Edit","Edit",new {id=@Model?.PTN?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
+                        @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
+                    }
+                    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                </div>
+                @* <div class="col-6 text-end"> *@
+                <div class="col-lg-7">
+                    @if (@Model.ButtonSubmitForReview == true)
+                    {
+                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
+                        {
+                            <div class="row">
+                                <div class="col-xl-10 text-xl-end mt-2">
+                                    <span class="bg-warning fw-bold">
+                                        WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                                    </span>
+                                </div>
+                                <div class="col-xl-2 col">
+                                    @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.PTN.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.PtnPin)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.PtnPin)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.Area)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.Area)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.SubjectType)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.SubjectType)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.Group)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.Group)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.TisNumber)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.TisNumber)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                </dt>
+                <dd class="col-sm-4 my-1">
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.Title)
+                </dt>
+                <dd class="col-10 my-1">
+                    @Html.DisplayFor(model => model.PTN.Title)
+                </dd>
+
+            </div>
+            @*                 <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.PTN.Status)
+            </dt>
+            <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.PTN.Status)
+            </dd> *@
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.Roadblocks)
+                </dt>
+                <dd class="col-sm-10 my-1">
+                    @Html.DisplayFor(model => model.PTN.Roadblocks)
+                </dd>
+            </div>
+            <hr / class="mt-3">
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.CreatedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.CreatedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.CreatedUserFullName)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.CreatedUserFullName)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.CreatedUserEmail)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.PTN.CreatedUserEmail)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.CreatedDate)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.PTN.CreatedDate)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.ModifiedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.ModifiedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.ModifiedUserFullName)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.ModifiedUserFullName)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.ModifiedUserEmail)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.PTN.ModifiedUserEmail)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.ModifiedDate)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.PTN.ModifiedDate)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.DeletedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.DeletedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.DeletedUserFullName)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.DeletedUserFullName)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.DeletedUserEmail)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.DeletedUserEmail)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.DeletedDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.DeletedDate)
+                </dd>
+            </div>
+        </div>
+        <hr />
+        <div class="row mt-4">
+            <div class="col-5 text-start">
+                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser) && (Model.PTN.Status == "Draft"))
+                {
+                    @Html.ActionLink("Edit","Edit",new {id=@Model?.PTN?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
+                    @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
+                }
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+        </div>
+    </div>
+    @******************************************************************************************************************@
+    @*  ATTACHMENTS TAB  **********************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveAttachmentsPtn" id="nav-attachmentsPtn" role="tabpanel" aria-labelledby="nav-attachmentsPtn-tab">
+        <div class="text-nowrap mt-5">
+            @*<h4 class="mt-5">Attachments</h4>*@
+            @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+            @* @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"}) *@
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-5">
+                        <span class="fw-bold">STEP 1:</span> Download PTN Template and Complete
+                        @Html.ActionLink("Download PTN Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"})
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-5">
+                        <span class="fw-bold">STEP 2:</span> Complete PTN Template
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-5">
+                        <span class="fw-bold">STEP 3:</span> Upload Completed PTN Template under PTN
+                    </div>
+                </div>
+            </div>
+            <div class="mx-5">
+                @using (Html.BeginForm("SaveFile", "PTNs", new { id = Model.PTN.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="control-label fw-bold mt-5 mb-2">
+                        <strong>Upload Completed PTF Template:</strong>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-10">
+                                <input type="file" name="fileAttachment" class="form-control" />
+                                <div class="form-group text-danger fw-bold">
+                                    @*<input asp-for="FileAttachmentError" class="form-control" />*@
+                                    @Html.DisplayFor(m => m.FileAttachmentError)
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <input type="submit" value="Upload PTN Completed Template" class="form-control btn btn-success">
+                            </div>
+                        </div>
+                    </div>
+                }
+                <table class="table table-bordered table-striped mt-5">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                File Name
+                            </th>
+                            <th>
+                                Date Added
+                            </th>
+                            <th>
+                                Size
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.AttachmentsPtn)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Size)
+                                </td>
+                                <td>
+                                    @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                                    @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                                    @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.PTN.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
+                                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
+                                    {
+                                        @Html.ActionLink("Delete","DeleteFile","ChangeRequests",new {id=@Model.PTN.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
+                                    }
+                                    @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.AttachmentsPtn.Count() == 0)
+                    {
+                        <tr>
+                            <td>No data found</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                </table>
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+            </div>
+        </div>
+    </div>
+    @******************************************************************************************************************@
+    @*  SUBMIT FOR ADMIN APPROVAL TAB *********************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActivePtnApproval" id="nav-ptnApproval" role="tabpanel" aria-labelledby="nav-ptnApproval-tab">
+        <div class="text-nowrap">
+            @*<h4 class="mt-5">Details</h4>*@
+            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+            <a class="mx-2" asp-action="Index">Back to List</a>*@
+            @*             <div class="row mt-5">
+            <div class="col-12 text-start">
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            </div> *@
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    WORK IN PROGRESS - SUBMIT FOR APPROVAL!
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                </div>
+            </div>
+        </div>
+    </div>
+    @******************************************************************************************************************@
+    @*  PTN ADMIN APPROVAL ********************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActivePtnAdminApproval" id="nav-ptnAdminApproval" role="tabpanel" aria-labelledby="nav-ptnAdminApproval-tab">
+        <div class="text-nowrap">
+            @*<h4 class="mt-5">Details</h4>*@
+            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+            <a class="mx-2" asp-action="Index">Back to List</a>*@
+            @*             <div class="row mt-5">
+            <div class="col-12 text-start">
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            </div> *@
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    WORK IN PROGRESS - ADMIN APPROVE IT!
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                </div>
+            </div>
+        </div>
+    </div>
+    @******************************************************************************************************************@
+    @*  WAIVERS  ******************************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveWaivers" id="nav-activeWaivers" role="tabpanel" aria-labelledby="nav-activeWaivers-tab">
+        <div class="text-nowrap">
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    @Html.ActionLink("Create","Create","Waivers",new {ptnId=@Model?.PTN?.Id, tab="Waivers"},new {@class="btn btn-success"})
+                    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary ms-1"})
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    WORK IN PROGRESS - SHOW ALL WAIVERS UNDER THIS PTN!
+                </div>
+            </div>
+        </div>
+    </div>
+    @******************************************************************************************************************@
+    @*  WAIVER ATTACHMENTS TAB  ***************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveAttachmentsWaiver" id="nav-attachmentsWaiver" role="tabpanel" aria-labelledby="nav-attachmentsWaiver-tab">
+        <div class="text-nowrap mt-5">
+            @*<h4 class="mt-5">Attachments</h4>*@
+            @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+            @* @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"}) *@
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-4">
+                        STEP 1: Download Waiver Template and Complete
+                        @Html.ActionLink("Download PTN Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"})
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-4">
+                        STEP 2: Complete Waiver Template
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-4">
+                        STEP 3: Upload Completed Waiver Template under PTN/Waiver
+                    </div>
+                </div>
+            </div>
+            <div class="mx-5">
+                @using (Html.BeginForm("SaveFile", "PTNs", new { id = Model.PTN.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="control-label fw-bold mt-5 mb-2">
+                        <strong>Upload Completed PTF Template:</strong>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-10">
+                                <input type="file" name="fileAttachment" class="form-control" />
+                                <div class="form-group text-danger fw-bold">
+                                    @*<input asp-for="FileAttachmentError" class="form-control" />*@
+                                    @Html.DisplayFor(m => m.FileAttachmentError)
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <input type="submit" value="Upload PTN Completed Template" class="form-control btn btn-success">
+                            </div>
+                        </div>
+                    </div>
+                }
+                <table class="table table-bordered table-striped mt-5">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                File Name
+                            </th>
+                            <th>
+                                Date Added
+                            </th>
+                            <th>
+                                Size
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.AttachmentsWaiver)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Size)
+                                </td>
+                                <td>
+                                    @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                                    @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                                    @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.PTN.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
+                                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
+                                    {
+                                        @Html.ActionLink("Delete","DeleteFile","ChangeRequests",new {id=@Model.PTN.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
+                                    }
+                                    @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.AttachmentsWaiver.Count() == 0)
+                    {
+                        <tr>
+                            <td>No data found</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                </table>
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+            </div>
         </div>
     </div>
 </div>

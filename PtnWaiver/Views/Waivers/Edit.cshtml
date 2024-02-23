@@ -8,8 +8,16 @@
 <h4>Edit</h4>
 <hr />
 <form asp-action="Edit">
+    <div class="row my-4">
+        <div class="col-12">
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
+            </div>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-12">
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
             <input type="hidden" asp-for="Id" />
@@ -25,39 +33,53 @@
             <input type="hidden" asp-for="DeletedUserFullName" />
             <input type="hidden" asp-for="DeletedUserEmail" />
             <input type="hidden" asp-for="DeletedDate" />
-            <div class="form-group">
-                <label asp-for="RevisionNumber" class="control-label"></label>
-                <input asp-for="RevisionNumber" class="form-control" />
+            <input type="hidden" asp-for="PtnDocId" />
+            <div class="form-group my-3">
+                <label asp-for="WaiverNumber" class="control-label fw-bold mb-1"></label>
+                <input asp-for="WaiverNumber" class="form-control" style="max-width:10%;" readonly/>
+                <span asp-validation-for="WaiverNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <div class="control-label fw-bold mb-1">PTN/PIN</div>
+                @*                <label  "Change Request" class="control-label fw-bold"></label>*@
+                @*<input asp-for="ChangeRequestId" class="form-control" />*@
+                @*@Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests), new { @class="form-control form-select"})*@
+                @Html.DropDownListFor(model => model.PTNId, new SelectList(ViewBag.Ptns,"Value","Text"), "-- select --", new { @class="form-control form-select"})
+                <span asp-validation-for="PTNId" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="RevisionNumber" class="control-label fw-bold mb-1"></label>
+                <input asp-for="RevisionNumber" class="form-control" style="max-width:10%;"/>
                 <span asp-validation-for="RevisionNumber" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PorProject" class="control-label"></label>
-                <input asp-for="PorProject" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="PorProject" class="control-label fw-bold mb-1"></label>
+                @Html.DropDownListFor(model => model.PorProject, new SelectList(ViewBag.PorProjects,"Value","Text"), new { @class="form-control form-select", @style="max-width:20%;"})
                 <span asp-validation-for="PorProject" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ProductProcess" class="control-label"></label>
-                <input asp-for="ProductProcess" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
+                @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess,"Value","Text"), new { @class="form-control form-select", @style="max-width:20%;"})
                 <span asp-validation-for="ProductProcess" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="Status" class="control-label fw-bold mb-1"></label>
+                @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.Status,"Value","Text"), new { @class="form-control form-select", @style="max-width:20%;"})
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DateClosed" class="control-label"></label>
-                <input asp-for="DateClosed" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="DateClosed" class="control-label fw-bold mb-1"></label>
+                <input asp-for="DateClosed" class="form-control" style="max-width:20%" onclick="this.showPicker()" />
                 <span asp-validation-for="DateClosed" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CorrectiveActionDueDate" class="control-label"></label>
-                <input asp-for="CorrectiveActionDueDate" class="form-control" />
+            <div class="form-group my-3">
+                <label asp-for="CorrectiveActionDueDate" class="control-label fw-bold mb-1"></label>
+                <input asp-for="CorrectiveActionDueDate" class="form-control" style="max-width:20%" onclick="this.showPicker()" />
                 <span asp-validation-for="CorrectiveActionDueDate" class="text-danger"></span>
             </div>
             <div class="form-group mt-4">

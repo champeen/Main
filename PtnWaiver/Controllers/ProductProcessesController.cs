@@ -11,21 +11,20 @@ using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
 {
-    public class AreasController : BaseController
+    public class ProductProcessesController : BaseController
     {
         private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly MocContext _contextMoc;
 
-        public AreasController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
+        public ProductProcessesController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
         {
             _contextPtnWaiver = contextPtnWaiver;
             _contextMoc = contextMoc;
         }
 
-        // GET: Areas
+        // GET: ProductProcesses
         public async Task<IActionResult> Index()
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -33,15 +32,14 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _contextPtnWaiver.Area != null ?
-                          View(await _contextPtnWaiver.Area.OrderBy(m => m.Order).ThenBy(m => m.Description).ToListAsync()) :
-                          Problem("Entity set 'PtnWaiverContext.Area'  is null.");
+            return _contextPtnWaiver.ProductProcess != null ? 
+                          View(await _contextPtnWaiver.ProductProcess.ToListAsync()) :
+                          Problem("Entity set 'PtnWaiverContext.ProductProcess'  is null.");
         }
 
-        // GET: Areas/Details/5
+        // GET: ProductProcesses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -49,22 +47,21 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.Area == null)
+            if (id == null || _contextPtnWaiver.ProductProcess == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.Area
+            var productProcess = await _contextPtnWaiver.ProductProcess
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (area == null)
-                return NotFound();
+            if (productProcess == null)
+                 return NotFound();
 
-            return View(area);
+            return View(productProcess);
         }
 
-        // GET: Areas/Create
+        // GET: ProductProcesses/Create
         public IActionResult Create()
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -79,7 +76,7 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
-            Area area = new Area()
+            ProductProcess productProcess = new ProductProcess()
             {
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
@@ -87,17 +84,16 @@ namespace PtnWaiver.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            return View(area);
+            return View(productProcess);
         }
 
-        // POST: Areas/Create
+        // POST: ProductProcesses/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Area area)
+        public async Task<IActionResult> Create([Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] ProductProcess productProcess)
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -106,28 +102,24 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             // Make sure duplicates are not entered...
-            List<Area> checkDupes = await _contextPtnWaiver.Area
-                .Where(m => m.Code == area.Code)
+            List<ProductProcess> checkDupes = await _contextPtnWaiver.ProductProcess
+                .Where(m => m.Code == productProcess.Code)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Code", "Area Code already exists.");
-                return View(area);
-            }
+                ModelState.AddModelError("Code", "Product/Process Code already exists.");
 
             if (ModelState.IsValid)
             {
-                _contextPtnWaiver.Add(area);
+                _contextPtnWaiver.Add(productProcess);
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(area);
+            return View(productProcess);
         }
 
-        // GET: Areas/Edit/5
+        // GET: ProductProcesses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -135,25 +127,23 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.Area == null)
+            if (id == null || _contextPtnWaiver.ProductProcess == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.Area.FindAsync(id);
-
-            if (area == null)
+            var productProcess = await _contextPtnWaiver.ProductProcess.FindAsync(id);
+            if (productProcess == null)
                 return NotFound();
 
-            return View(area);
+            return View(productProcess);
         }
 
-        // POST: Areas/Edit/5
+        // POST: ProductProcesses/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Area area)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] ProductProcess productProcess)
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -161,47 +151,46 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != area.Id)
+            if (id != productProcess.Id)
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<Area> checkDupes = await _contextPtnWaiver.Area
-                .Where(m => m.Code == area.Code && m.Id != area.Id)
+            List<ProductProcess> checkDupes = await _contextPtnWaiver.ProductProcess
+                .Where(m => m.Code == productProcess.Code && m.Id != productProcess.Id)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-                ModelState.AddModelError("Code", "Area Code already exists.");
+                ModelState.AddModelError("Code", "Product/Process Code already exists.");
 
             if (ModelState.IsValid)
             {
                 var userInfo = getUserInfo(_username);
                 if (userInfo != null)
                 {
-                    area.ModifiedUser = userInfo.onpremisessamaccountname;
-                    area.ModifiedUserFullName = userInfo.displayname;
-                    area.ModifiedUserEmail = userInfo.mail;
-                    area.ModifiedDate = DateTime.Now;
+                    productProcess.ModifiedDate = DateTime.Now;
+                    productProcess.ModifiedUser = userInfo.onpremisessamaccountname;
+                    productProcess.ModifiedUserFullName = userInfo.displayname;
+                    productProcess.ModifiedUserEmail = userInfo.mail;
                 }
                 try
                 {
-                    _contextPtnWaiver.Update(area);
+                    _contextPtnWaiver.Update(productProcess);
                     await _contextPtnWaiver.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AreaExists(area.Id))
-                        return NotFound();
+                    if (!ProductProcessExists(productProcess.Id))
+                         return NotFound();
                     else
                         throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(area);
+            return View(productProcess);
         }
 
-        // GET: Areas/Delete/5
+        // GET: ProductProcesses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -209,24 +198,22 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.Area == null)
+            if (id == null || _contextPtnWaiver.ProductProcess == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.Area
+            var productProcess = await _contextPtnWaiver.ProductProcess
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (area == null)
+            if (productProcess == null)
                 return NotFound();
 
-            return View(area);
+            return View(productProcess);
         }
 
-        // POST: Areas/Delete/5
+        // POST: ProductProcesses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
@@ -234,21 +221,20 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (_contextPtnWaiver.Area == null)
-                return Problem("Entity set 'PtnWaiverContext.Area'  is null.");
+            if (_contextPtnWaiver.ProductProcess == null)
+                return Problem("Entity set 'PtnWaiverContext.ProductProcess'  is null.");
 
-            var area = await _contextPtnWaiver.Area.FindAsync(id);
-
-            if (area != null)
-                _contextPtnWaiver.Area.Remove(area);
-
+            var productProcess = await _contextPtnWaiver.ProductProcess.FindAsync(id);
+            if (productProcess != null)
+                 _contextPtnWaiver.ProductProcess.Remove(productProcess);
+            
             await _contextPtnWaiver.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AreaExists(int id)
+        private bool ProductProcessExists(int id)
         {
-            return (_contextPtnWaiver.Area?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_contextPtnWaiver.ProductProcess?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

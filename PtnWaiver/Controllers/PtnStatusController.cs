@@ -165,7 +165,7 @@ namespace PtnWaiver.Controllers
             if (ModelState.IsValid)
             {
                 var userInfo = getUserInfo(_username);
-                if (userInfo == null)
+                if (userInfo != null)
                 {
                     ptnStatus.ModifiedDate = DateTime.Now;
                     ptnStatus.ModifiedUser = userInfo.onpremisessamaccountname;

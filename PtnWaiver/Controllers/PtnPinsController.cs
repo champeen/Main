@@ -106,10 +106,7 @@ namespace PtnWaiver.Controllers
                 .Where(m => m.Code == ptnPin.Code)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
                 ModelState.AddModelError("Code", "PtnPin Code already exists.");
-                return View(ptnPin);
-            }
 
             if (ModelState.IsValid)
             {

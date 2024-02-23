@@ -471,7 +471,6 @@ namespace Management_of_Change.Controllers
             // Get all attachments    \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
             // Get the directory
             DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number));
-
             if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number)))
                 path.Create();
 

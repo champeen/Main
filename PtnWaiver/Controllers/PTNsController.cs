@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
+using PtnWaiver.Utilities;
 using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
@@ -58,12 +59,11 @@ namespace PtnWaiver.Controllers
                     ViewBag.PrevStatusFilter = statusFilter;
                     break;
             }
-
             return View(ptns);
         }
 
         // GET: PTNs/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details")
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -79,9 +79,104 @@ namespace PtnWaiver.Controllers
                 return NotFound();
 
             ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
+            ViewBag.Username = _username;            
 
-            return View(pTN);
+            PtnViewModel ptnVM = new PtnViewModel();
+            ptnVM.PTN = pTN;
+
+            ptnVM.TabActiveDetail = "";
+            ptnVM.TabActiveAttachmentsPtn = "";
+            ptnVM.TabActivePtnApproval = "";
+            ptnVM.TabActivePtnAdminApproval = "";
+            ptnVM.TabActiveWaivers = "";
+            ptnVM.TabActiveAttachmentsWaiver = "";
+            switch (tab)
+            {
+                case null:
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "":
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "AttachmentsPtn":
+                    ptnVM.TabActiveAttachmentsPtn = "active";
+                    break;
+                case "PtnApproval":
+                    ptnVM.TabActivePtnApproval = "active";
+                    break;
+                case "PtnAdminApproval":
+                    ptnVM.TabActivePtnAdminApproval = "active";
+                    break;
+                case "Waivers":
+                    ptnVM.TabActiveWaivers = "active";
+                    break;
+                case "AttachmentsWaiver":
+                    ptnVM.TabActiveAttachmentsWaiver = "active";
+                    break;
+            }
+
+            // GET ALL ATTACHMENTS FOR PTN ///////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId)))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<ViewModels.Attachment> attachments = new List<ViewModels.Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                ViewModels.Attachment attachment = new ViewModels.Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            ptnVM.AttachmentsPtn = attachments.OrderBy(m => m.Name).ToList();
+
+            // GET ALL ATTACHMENTS FOR Waiver ///////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId)))
+                pathWaiver.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] filesWaiver = pathWaiver.GetFiles();
+
+            // Display the file names
+            List<ViewModels.Attachment> attachmentsWaiver = new List<ViewModels.Attachment>();
+            foreach (FileInfo i in filesWaiver)
+            {
+                ViewModels.Attachment attachmentWaiver = new ViewModels.Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachmentWaiver);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            ptnVM.AttachmentsWaiver = attachmentsWaiver.OrderBy(m => m.Name).ToList();
+
+            return View(ptnVM);
         }
 
         // GET: PTNs/Create
@@ -149,6 +244,10 @@ namespace PtnWaiver.Controllers
                 }
                 ptn.DocId = docId;
 
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, ptn.DocId));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, ptn.DocId)))
+                    path.Create();
+
                 _contextPtnWaiver.Add(ptn);
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -209,7 +308,7 @@ namespace PtnWaiver.Controllers
             if (ModelState.IsValid)
             {
                 var userInfo = getUserInfo(_username);
-                if (userInfo == null)
+                if (userInfo != null)
                 {
                     pTN.ModifiedUser = userInfo.onpremisessamaccountname;
                     pTN.ModifiedUserFullName = userInfo.displayname;
@@ -228,7 +327,7 @@ namespace PtnWaiver.Controllers
                     else
                         throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = pTN.Id });
             }
             ViewBag.Status = getPtnStatus();
             ViewBag.PtnPins = getPtnPins();
@@ -280,7 +379,7 @@ namespace PtnWaiver.Controllers
             if (pTN != null)
             {
                 var userInfo = getUserInfo(_username);
-                if (userInfo == null)
+                if (userInfo != null)
                 {
                     pTN.DeletedUser = userInfo.onpremisessamaccountname;
                     pTN.DeletedUserFullName = userInfo.displayname;

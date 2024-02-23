@@ -6,8 +6,8 @@
 
 <h1>PTN/PIN dropdown</h1>
 <h3>Are you sure you want to delete this?</h3>
+<hr />
 <div>
-    <hr />
     <dl class="row">
         <dt class="col-sm-2 my-1">
             @Html.DisplayNameFor(model => model.Code)
@@ -99,8 +99,7 @@
         <dd class="col-sm-10 my-1">
             @Html.DisplayFor(model => model.DeletedDate)
         </dd>
-    </dl>
-    
+    </dl>    
     <form asp-action="Delete" class="mt-5">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" />

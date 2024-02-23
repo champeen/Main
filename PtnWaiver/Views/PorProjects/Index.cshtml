@@ -1,10 +1,10 @@
-﻿@model IEnumerable<PtnWaiver.Models.PtnPin>
+﻿@model IEnumerable<PtnWaiver.Models.PorProject>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>PTN/PIN dropdown</h1>
+<h1>Por/Project Dropdown</h1>
 <div class="row mt-5 mb-3">
     <div class="col-12">
         <a asp-action="Create" class="me-2 btn btn-success">Create New</a>
@@ -27,25 +27,24 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Code)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Order)
-                </td>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order)
+            </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary ms-1">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-1">Delete</a>
                 </td>
-            </tr>
-        }
+        </tr>
+}
     </tbody>
     @if (Model.Count() == 0)
     {

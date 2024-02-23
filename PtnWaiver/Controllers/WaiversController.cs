@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
+using PtnWaiver.Utilities;
 using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
@@ -80,11 +81,12 @@ namespace PtnWaiver.Controllers
             if (waiver == null)
                 return NotFound();
 
-            return View(waiver);
+            return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
+            //return View(waiver);
         }
 
         // GET: Waivers/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int ptnId, string tab = "Details")
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -100,11 +102,20 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
-            ViewBag.Ptns = getPtns();
+            //ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
+            ViewBag.PorProjects = getPorProjects();
+            ViewBag.ProductProcess = getProductProcess();
+
+            PTN ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == ptnId);
+            if (ptn == null)
+                return NotFound();
 
             Waiver waiver = new Waiver()
             {
+                PTNId = ptnId,
+                PtnDocId = ptn.DocId,
+                Status = "Draft",
                 CreatedDate = DateTime.Now,
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
@@ -119,7 +130,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,WaiverNumber,PorProject,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
+        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,Status,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -130,14 +141,33 @@ namespace PtnWaiver.Controllers
 
             if (ModelState.IsValid)
             {
-                waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
+                // This weird naming convention is striaght from how they are doing it in the spreadsheet.....
+                string year = DateTime.Now.Year.ToString();
+                string waiverNumber = "";
+                for (int i = 1; i < 10000; i++)
+                {
+                    waiverNumber = "INS" + DateTime.Now.Year.ToString() + "-" + i.ToString();
+                    Waiver record = await _contextPtnWaiver.Waiver
+                        .FirstOrDefaultAsync(m => m.WaiverNumber == waiverNumber);
+                    if (record == null)
+                        break;
+                }
+                waiver.WaiverNumber = waiverNumber;
 
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, waiver.WaiverNumber));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, waiver.WaiverNumber)))
+                    path.Create();
+
+                //waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
                 _contextPtnWaiver.Add(waiver);
                 await _contextPtnWaiver.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab="Waivers" });
+                //return RedirectToAction(nameof(Index));
             }
             ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
+            ViewBag.PorProjects = getPorProjects();
+            ViewBag.ProductProcess = getProductProcess();            
             return View(waiver);
         }
 
@@ -150,6 +180,10 @@ namespace PtnWaiver.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Ptns = getPtns();
+            ViewBag.Status = getWaiverStatus();
+            ViewBag.PorProjects = getPorProjects();
+            ViewBag.ProductProcess = getProductProcess();
 
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -167,7 +201,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,PTNId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,PorProject,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -183,6 +217,7 @@ namespace PtnWaiver.Controllers
             {
                 try
                 {
+                    waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m => m.Id == waiver.PTNId).Select(m => m.DocId).FirstOrDefaultAsync();
                     _contextPtnWaiver.Update(waiver);
                     await _contextPtnWaiver.SaveChangesAsync();
                 }
@@ -195,6 +230,10 @@ namespace PtnWaiver.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Ptns = getPtns();
+            ViewBag.Status = getWaiverStatus();
+            ViewBag.PorProjects = getPorProjects();
+            ViewBag.ProductProcess = getProductProcess();
             return View(waiver);
         }
 

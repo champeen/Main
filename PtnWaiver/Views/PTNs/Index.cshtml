@@ -105,9 +105,16 @@
                     @Html.DisplayFor(modelItem => item.CreatedDate)
                 </td>
                 <td class="text-nowrap">
-                    @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
-                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary ms-1"})
-                    @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1"})
+                    @* @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"}) *@
+                    @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary"})
+                    @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
+                    {
+                        @if (item.DeletedDate == null && item.Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
+                        {
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1", title="Hard Delete only if in 'Draft' status."})
+                            @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Cancelled'"></i>*@
+                        }
+                    }
                 </td>
             </tr>
         }

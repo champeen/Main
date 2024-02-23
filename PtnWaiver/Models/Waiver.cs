@@ -26,6 +26,7 @@ namespace PtnWaiver.Models
 
         [ForeignKey("PTN")]
         public int PTNId { get; set; }
+        [Display(Name ="PTN Doc Id")]
         public string? PtnDocId { get; set; }
         public virtual PTN? PTN {  get; set; }
     }

@@ -27,9 +27,49 @@
                 window.location.href = url;
             });
 
+
+            $("#waiverIndexSearch").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#waiverIndexTable tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+
+            $("#waiverIndexStatusFilter").change(function () {
+                var statusFilter = $(this).val();
+                // var PrevSort = document.getElementById("@(ViewBag.PrevSort)").value;
+                var prevSort = document.getElementById("WaiverPrevSortId").value.toString();
+                var url = '@Url.Action("Index", "Waivers")?statusFilter=' + statusFilter + '&prevSort=' + prevSort;
+                window.location.href = url;
+            });
+
+
         });
     </script>
-    <style></style>
+    <style>
+        .nav-link.active {
+            background-color: #3a6bfb !important;
+            color: white !important;
+        }
+
+        .nav-link.disabled {
+            pointer-events: auto;
+        }
+
+        input#session-date {
+            display: inline-block;
+            position: relative;
+        }
+
+        .submit-progress-bg {
+            background-color: lightgray;
+            opacity: .5;
+        }
+
+        .disableClick {
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
     <header>

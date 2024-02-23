@@ -8,8 +8,8 @@
 <form asp-controller="Waivers" asp-action="Index">
     <div class="row mt-5 mb-3">
         <div class="col-12">
-            <input hidden value=@ViewBag.PrevSort id="PrevSortId" />
-            <input hidden value=@ViewBag.PrevStatusFilter id="PrevStatusFilterId" />
+            <input hidden value=@ViewBag.PrevSort id="WaiverPrevSortId" />
+            <input hidden value=@ViewBag.PrevStatusFilter id="WaiverPrevStatusFilterId" />
             <div class="row">
                 <div class="col-6 text-start">
                     @*<a asp-action="Create">Create New</a>*@
@@ -35,14 +35,14 @@
 <table class="table table-bordered table-striped">
     <thead class="align-top align-text-top table-primary">
         <tr>
-            <th>
+@*             <th>
                 @Html.DisplayNameFor(model => model.PTN.DocId)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.WaiverNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PtnDocId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WaiverNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.RevisionNumber)
@@ -65,9 +65,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.CorrectiveActionDueDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PTNId)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -75,14 +72,15 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+@*                 <td>
                     @Html.DisplayFor(modelItem => item.PTN.DocId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PtnDocId)
-                </td>
+                </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.WaiverNumber)
+                </td>
+                <td>
+                    @Html.ActionLink(item.PtnDocId,"Details","PTNs",new {id=@item.PTNId, tab="Details"},new {@class="btn btn-primary text-nowrap"})
+                    @* @Html.DisplayFor(modelItem => item.PtnDocId) *@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RevisionNumber)
@@ -105,10 +103,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PTNId)
-                </td>
-                <td>
+                <td class="text-nowrap">
                     @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary ms-1"})
                     @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1"})
@@ -120,8 +115,6 @@
     {
         <tr>
             <td>No data found</td>
-            <td></td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
