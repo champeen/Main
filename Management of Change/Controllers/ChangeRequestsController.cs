@@ -35,22 +35,22 @@ namespace Management_of_Change.Controllers
 
             // if no filter selected, keep previous
             if (statusFilter == null)
-                statusFilter = prevStatusFilter;            
+                statusFilter = prevStatusFilter;
 
             // Create Dropdown List of Status...
             var statusList = await _context.ChangeStatus.OrderBy(m => m.Order).ToListAsync();
             List<SelectListItem> statusDropdown = new List<SelectListItem>();
-            SelectListItem item = new SelectListItem { Value = "AllCurrent", Text = "All Current (non closed/cancelled)"};
+            SelectListItem item = new SelectListItem { Value = "AllCurrent", Text = "All Current (non closed/cancelled)" };
             if (statusFilter == "AllCurrent")
                 item.Selected = true;
             statusDropdown.Add(item);
-            item = new SelectListItem { Value = "All", Text = "All"};
+            item = new SelectListItem { Value = "All", Text = "All" };
             if (statusFilter == "All")
                 item.Selected = true;
             statusDropdown.Add(item);
             foreach (var status in statusList)
             {
-                item = new SelectListItem { Value = status.Status, Text = status.Description};
+                item = new SelectListItem { Value = status.Status, Text = status.Description };
                 if (item.Value == statusFilter)
                     item.Selected = true;
                 else
@@ -58,8 +58,8 @@ namespace Management_of_Change.Controllers
                 statusDropdown.Add(item);
             }
             ViewBag.StatusList = statusDropdown;
-            
-            var requests = await _context.ChangeRequest.Where(m => m.DeletedDate == null).ToListAsync();            
+
+            var requests = await _context.ChangeRequest.Where(m => m.DeletedDate == null).ToListAsync();
 
             switch (statusFilter)
             {
@@ -392,8 +392,8 @@ namespace Management_of_Change.Controllers
 
             // Get Employees to Notify full names instead of usernames...
             List<String> employeesToNotify = new List<string>();
-            if (changeRequest.Additional_Notification != null && changeRequest.Additional_Notification.Count > 0) 
-            {                
+            if (changeRequest.Additional_Notification != null && changeRequest.Additional_Notification.Count > 0)
+            {
                 foreach (var username in changeRequest.Additional_Notification)
                 {
                     string fullName = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).Select(m => m.displayname).FirstOrDefaultAsync();
@@ -1267,10 +1267,14 @@ namespace Management_of_Change.Controllers
                 changeRequest.ImpactAssessmentResponses = new List<ImpactAssessmentResponse>();
                 foreach (var assessment in impactAssessmentMatrix)
                 {
-                    // Get ALL Review Types setup for this Change Type ...
+                    // Get ALL Review Types setup for this Change Type ... (*** only gets area of change for equipment, maintenance and reliability and quality)
                     List<ReviewType> reviews = await _context.ReviewType
-                        .Where(rt => (rt.Type == assessment.ReviewType && rt.ChangeArea == null) || (rt.Type == assessment.ReviewType && assessment.ReviewType == "Quality" && rt.ChangeArea == changeRequest.Area_of_Change) || (rt.Type == assessment.ReviewType && assessment.ReviewType == "Test" && rt.ChangeArea == changeRequest.Area_of_Change))
+                        .Where(rt =>
+                            (rt.Type == assessment.ReviewType && rt.ChangeArea == null) ||
+                            (rt.Type == assessment.ReviewType && assessment.ReviewType == "Quality" && rt.ChangeArea == changeRequest.Area_of_Change) ||
+                            (rt.Type == assessment.ReviewType && assessment.ReviewType == "Test" && rt.ChangeArea == changeRequest.Area_of_Change))
                         .ToListAsync();
+
                     foreach (var review in reviews)
                     {
                         var found = await _context.ImpactAssessmentResponse.Where(m => m.ChangeRequestId == changeRequest.Id && m.ReviewType == review.Type && m.Reviewer == review.Reviewer).FirstOrDefaultAsync();
@@ -1278,6 +1282,7 @@ namespace Management_of_Change.Controllers
                         {
                             ImpactAssessmentResponse response = new ImpactAssessmentResponse
                             {
+                                ChangeRequestId = changeRequest.Id,
                                 ReviewType = assessment.ReviewType,
                                 ChangeType = assessment.ChangeType,
                                 ChangeArea = review.ChangeArea,
@@ -1314,8 +1319,14 @@ namespace Management_of_Change.Controllers
                         CreatedUser = _username,
                         CreatedDate = DateTime.Now
                     };
-                    changeRequest.ImpactAssessmentResponses.Add(response);
-                    await _context.SaveChangesAsync();
+                    // make sure record does not already exist...
+                    var recFound = await _context.ImpactAssessmentResponse
+                        .Where(m => m.ChangeRequestId == changeRequest.Id && m.ChangeType == changeRequest.Change_Type && m.Username == review.Reviewer && m.ReviewType == review.ReviewType && m.ChangeArea == review.ReviewArea).FirstOrDefaultAsync();
+                    if (recFound == null)
+                    {
+                        changeRequest.ImpactAssessmentResponses.Add(response);
+                        await _context.SaveChangesAsync();
+                    }
                 }
             }
 
@@ -1338,14 +1349,21 @@ namespace Management_of_Change.Controllers
                         {
                             ImpactAssessmentResponseAnswer rec = new ImpactAssessmentResponseAnswer
                             {
+                                ImpactAssessmentResponseId = record.Id,
                                 ReviewType = record.ReviewType,
                                 Question = question.Question,
                                 Order = question.Order,
                                 CreatedUser = _username,
                                 CreatedDate = DateTime.Now
                             };
-                            record.ImpactAssessmentResponseAnswers.Add(rec);  //NEED TO INSTANTIATE HERE!!!
-                            await _context.SaveChangesAsync();
+                            // make sure record does not already exist...
+                            var recFound = await _context.ImpactAssessmentResponseAnswer
+                                .Where(m => m.ImpactAssessmentResponseId == record.Id && m.ReviewType == record.ReviewType && m.Question == question.Question).FirstOrDefaultAsync();
+                            if (recFound == null)
+                            {
+                                record.ImpactAssessmentResponseAnswers.Add(rec);
+                                await _context.SaveChangesAsync();
+                            }
                         }
                     }
                 }
@@ -1367,6 +1385,7 @@ namespace Management_of_Change.Controllers
                     {
                         ImplementationFinalApprovalResponse response = new ImplementationFinalApprovalResponse
                         {
+                            ChangeRequestId = changeRequest.Id,
                             FinalReviewType = assessment.FinalReviewType,
                             ChangeType = assessment.ChangeType,
                             Reviewer = review.Reviewer,
@@ -1375,8 +1394,14 @@ namespace Management_of_Change.Controllers
                             CreatedUser = _username,
                             CreatedDate = DateTime.Now
                         };
-                        changeRequest.ImplementationFinalApprovalResponses.Add(response);
-                        await _context.SaveChangesAsync();
+                        // do not allow duplicate Final approvals to be added
+                        var recFound = await _context.ImplementationFinalApprovalResponse
+                            .Where(m => m.ChangeRequestId == changeRequest.Id && m.FinalReviewType == assessment.FinalReviewType && m.Username == review.Username).FirstOrDefaultAsync();
+                        if (recFound == null)
+                        {
+                            changeRequest.ImplementationFinalApprovalResponses.Add(response);
+                            await _context.SaveChangesAsync();
+                        }
                     }
                 }
             }
@@ -1483,14 +1508,14 @@ namespace Management_of_Change.Controllers
 
             // Send Email Out notifying the person who is assigned the task
             string subject = @"Management of Change (MoC) - Impact Assessment Response Reminder.";
-            string body = @"REMINDER! A Management of Change Impact Assessment has been assigned to you.  Please follow link below and review your impact assessment. <br/><br/><strong>Change Request: </strong>" +  changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+            string body = @"REMINDER! A Management of Change Impact Assessment has been assigned to you.  Please follow link below and review your impact assessment. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
             var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == impactAssessmentResponse.Username).FirstOrDefaultAsync();
             if (toPerson != null)
             {
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, changeRequest.Priority);
                 var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, impactAssessmentResponse.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
-            return RedirectToAction("Details", new { id = changeRequest.Id, tab=tab });
+            return RedirectToAction("Details", new { id = changeRequest.Id, tab = tab });
         }
 
         public async Task<IActionResult> FinalApprovalReminder(int id, string tab = null)
@@ -1565,7 +1590,7 @@ namespace Management_of_Change.Controllers
                     await _context.SaveChangesAsync();
 
                     // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
-                     var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                    var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
                     foreach (var record in adminApproverList)
                     {
                         var adminToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
@@ -1583,8 +1608,8 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });
         }
 
-            // This closes out 'Implementation' stage and moves to 'Closeout/Complete' stage
-            public async Task<IActionResult> CloseoutImplementation(int id)
+        // This closes out 'Implementation' stage and moves to 'Closeout/Complete' stage
+        public async Task<IActionResult> CloseoutImplementation(int id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
