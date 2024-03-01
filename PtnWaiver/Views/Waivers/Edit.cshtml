@@ -7,12 +7,12 @@
 <h1>Waiver</h1>
 <h4>Edit</h4>
 <hr />
-<form asp-action="Edit">
+<form asp-action="Edit" asp-route-ptnId="@Model.PTNId">
     <div class="row my-4">
         <div class="col-12">
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
+                @Html.ActionLink("Cancel","Details","Waivers",new {id=Model.Id, tab="Details"},new {@class="btn btn-secondary mx-2"})
             </div>
         </div>
     </div>
@@ -84,7 +84,7 @@
             </div>
             <div class="form-group mt-4">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
+                @Html.ActionLink("Cancel","Details","Waivers",new {id=Model.Id, tab="Details"},new {@class="btn btn-secondary mx-2"})
             </div>
         </div>
     </div>

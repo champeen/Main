@@ -1,151 +1,417 @@
-﻿@model PtnWaiver.Models.Waiver
+﻿@model PtnWaiver.ViewModels.WaiverViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Waiver</h1>
+@* <h1>Waiver</h1>
 <h4>Details</h4>
 <hr />
 <div class="row my-4">
     <div class="col-12">
         <div class="form-group">
             <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-            <a asp-action="Index" class="btn btn-secondary mx-2">Back to List</a>
+            @Html.ActionLink("Cancel","Details","PTNs",new {id=Model.PTNId, tab="Waivers"},new {@class="btn btn-secondary mx-2"})
         </div>
     </div>
+</div> *@
+
+
+<div class="row">
+    <div class="col-4">
+        <div class="text-nowrap">
+            <h1 style="display:inline">
+                <span class="me-2">
+                    Waiver
+                </span>
+                @*                 <span class="" title="Create New PTN based on this MoC.  Include all Details and General MoC Questions only. Status will be set to 'Draft' and ChangeOwner will be you.">
+                @Html.ActionLink("Clone","Clone", new {id=@Model?.PTN?.Id, tab="Details"},new {@class="btn btn-success align-middle"})
+                @Html.ActionLink("Download New Equipment Checklist","DownloadNewEquipmentChecklist","ChangeRequests", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-secondary", title="Download 'New Equipment Checklist' Spreadsheet to Download Folder"})
+                </span> *@
+            </h1>
+        </div>
+    </div>
+    <div class="col-8 text-end">
+        <h4>
+            <span class="fw-bold">
+                @Html.DisplayFor(model => model.Waiver.WaiverNumber)
+            </span>
+        </h4>
+        <h4>
+            @Html.DisplayNameFor(model => model.Waiver.Status):
+            <span class="text-success fw-bold">
+                @Html.DisplayFor(model => model.Waiver.Status)
+            </span>
+        </h4>
+    </div>
 </div>
-<div>
-    <dl class="row">
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.WaiverNumber)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.WaiverNumber)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.RevisionNumber)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.RevisionNumber)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.PorProject)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.PorProject)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ProductProcess)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ProductProcess)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DateClosed)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DateClosed)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CorrectiveActionDueDate)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CorrectiveActionDueDate)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedUser)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedUser)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedUserFullName)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedUserFullName)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedUserEmail)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedUserEmail)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedUser)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedUser)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedUserFullName)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedUserFullName)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedUserEmail)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedUserEmail)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedUser)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedUser)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedUserFullName)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedUserFullName)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedUserEmail)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedUserEmail)
-        </dd>
-        <dt class="col-sm-2 my-1">
-            @Html.DisplayNameFor(model => model.DeletedDate)
-        </dt>
-        <dd class="col-sm-10 my-1">
-            @Html.DisplayFor(model => model.DeletedDate)
-        </dd>
-    </dl>
-</div>
-<div>
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="form-group">
-                <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-                <a asp-action="Index" class="btn btn-secondary mx-2">Back to List</a>
+<nav class="my-5">
+    <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+        </li>
+        @* <li class="nav-item ms-auto"> *@
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveAttachmentsWaiver fw-bolder" id="nav-attachmentsWaiver-tab" data-bs-toggle="tab" href="#nav-attachmentsWaiver" role="tab" aria-controls="nav-profile" aria-selected="false">Upload Waiver Template (@Model.AttachmentsWaiver.Count.ToString())</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveWaiverApproval fw-bolder" id="nav-waiverApproval-tab" data-bs-toggle="tab" href="#nav-waiverApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit Waiver for Admin Approval</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveWaiverAdminApproval fw-bolder" id="nav-waiverAdminApproval-tab" data-bs-toggle="tab" href="#nav-waiverAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Admin Approve Waiver</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+    @******************************************************************************************************************@
+    @*  DETAIL TAB ****************************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div>
+            @*<h4 class="mt-5">Details</h4>*@
+            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+            <a class="mx-2" asp-action="Index">Back to List</a>*@
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") && (Model.Ptn.Status == "Approved"))
+                    {
+                        @Html.ActionLink("Edit","Edit",new {id=@Model?.Waiver?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
+                        @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
+                    }
+                    @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary"})
+                </div>
+@*                 <div class="col-lg-7">
+                    @if (@Model.ButtonSubmitForReview == true)
+                    {
+                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser)
+                        {
+                            <div class="row">
+                                <div class="col-xl-10 text-xl-end mt-2">
+                                    <span class="bg-warning fw-bold">
+                                        WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                                    </span>
+                                </div>
+                                <div class="col-xl-2 col">
+                                    @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.Waiver.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                </div>
+                            </div>
+                        }
+                    }
+                </div> *@
+            </div>
+            <hr />
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.RevisionNumber)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.RevisionNumber)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.PorProject)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.PorProject)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.ProductProcess)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.DateClosed)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.DateClosed)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.CorrectiveActionDueDate)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                </dt>
+                <dd class="col-sm-4 my-1">
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.Description)
+                </dt>
+                <dd class="col-10 my-1">
+                    @Html.DisplayFor(model => model.Waiver.Description)
+                </dd>
+            </div>
+            <hr / class="mt-3">
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.CreatedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.CreatedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.CreatedUserFullName)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.CreatedUserFullName)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.CreatedUserEmail)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.Waiver.CreatedUserEmail)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.CreatedDate)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.Waiver.CreatedDate)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.ModifiedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.ModifiedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.ModifiedUserFullName)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.ModifiedUserFullName)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.ModifiedUserEmail)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.Waiver.ModifiedUserEmail)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.ModifiedDate)
+                </dt>
+                <dd class="col-sm-4 mt-1 mb-3">
+                    @Html.DisplayFor(model => model.Waiver.ModifiedDate)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.DeletedUser)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.DeletedUser)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.DeletedUserFullName)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.DeletedUserFullName)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.DeletedUserEmail)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.DeletedUserEmail)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.DeletedDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.Waiver.DeletedDate)
+                </dd>
+            </div>
+        </div>
+        <hr />
+        <div class="row mt-4">
+            <div class="col-5 text-start">
+                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft"))
+                {
+                    @Html.ActionLink("Edit","Edit",new {id=@Model?.Waiver?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
+                    @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
+                }
+                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary"})
+            </div>
+        </div>
+    </div>
+
+    @******************************************************************************************************************@
+    @*  ATTACHMENTS TAB  **********************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveAttachmentsWaiver" id="nav-attachmentsWaiver" role="tabpanel" aria-labelledby="nav-attachmentsWaiver-tab">
+        <div class="text-nowrap mt-5">
+            @*<h4 class="mt-5">Attachments</h4>*@
+            @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+            @* @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"}) *@
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-5">
+                        <span class="fw-bold">STEP 1:</span> Download Waiver Template (to download folder)
+                        @Html.ActionLink("Download Waiver Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"})
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-5">
+                        <span class="fw-bold">STEP 2:</span> Complete Waiver Template
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="text-nowrap fs-5">
+                        <span class="fw-bold">STEP 3:</span> Upload Completed Waiver Template
+                    </div>
+                </div>
+            </div>
+            <div class="mx-5">
+                @using (Html.BeginForm("SaveFile", "Waivers", new { id = Model.Waiver.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="control-label fw-bold mt-5 mb-2">
+                        <strong>Upload Completed Waiver Template:</strong>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-10">
+                                <input type="file" name="fileAttachment" class="form-control" />
+                                <div class="form-group text-danger fw-bold">
+                                    @*<input asp-for="FileAttachmentError" class="form-control" />*@
+                                    @Html.DisplayFor(m => m.FileAttachmentError)
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <input type="submit" value="Upload Completed Waiver Template" class="form-control btn btn-success">
+                            </div>
+                        </div>
+                    </div>
+                }
+                <table class="table table-bordered table-striped mt-5">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                File Name
+                            </th>
+                            <th>
+                                Date Added
+                            </th>
+                            <th>
+                                Size
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.AttachmentsWaiver)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Size)
+                                </td>
+                                <td>
+                                    @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                                    @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                                    @Html.ActionLink("Download File","DownloadFile","Waivers",new {id=@Model.Waiver.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
+                                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser)
+                                    {
+                                        @Html.ActionLink("Delete","DeleteFile","Waivers",new {id=@Model.Waiver.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
+                                    }
+                                    @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @if (Model.AttachmentsWaiver.Count() == 0)
+                    {
+                        <tr>
+                            <td>No data found</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                </table>
+                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
+            </div>
+        </div>
+    </div>
+    @******************************************************************************************************************@
+    @*  SUBMIT FOR ADMIN APPROVAL TAB *********************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveWaiverApproval" id="nav-waiverApproval" role="tabpanel" aria-labelledby="nav-waiverApproval-tab">
+        <div class="text-nowrap">
+            @*<h4 class="mt-5">Details</h4>*@
+            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+            <a class="mx-2" asp-action="Index">Back to List</a>*@
+            @*             <div class="row mt-5">
+            <div class="col-12 text-start">
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            </div> *@
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    WORK IN PROGRESS - SUBMIT FOR APPROVAL!
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
+                </div>
+            </div>
+        </div>
+    </div>
+    @******************************************************************************************************************@
+    @*  WAIVER ADMIN APPROVAL *****************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveWaiverAdminApproval" id="nav-waiverAdminApproval" role="tabpanel" aria-labelledby="nav-waiverAdminApproval-tab">
+        <div class="text-nowrap">
+            @*<h4 class="mt-5">Details</h4>*@
+            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+            <a class="mx-2" asp-action="Index">Back to List</a>*@
+            @*             <div class="row mt-5">
+            <div class="col-12 text-start">
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            </div>
+            </div> *@
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    WORK IN PROGRESS - ADMIN APPROVE IT!
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
+                </div>
             </div>
         </div>
     </div>
 </div>
+@* <div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="form-group">
+                <a asp-action="Edit" asp-route-id="@Model?.Waiver?.Id" class="btn btn-primary">Edit</a>
+                @Html.ActionLink("Back","Details","PTNs",new {id=Model?.Waiver?.PTNId, tab="Waivers"},new {@class="btn btn-secondary mx-2"})
+            </div>
+        </div>
+    </div>
+</div> *@

@@ -63,7 +63,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: PTNs/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details")
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -82,6 +82,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;            
 
             PtnViewModel ptnVM = new PtnViewModel();
+            ptnVM.FileAttachmentError = fileAttachmentError;
             ptnVM.PTN = pTN;
 
             ptnVM.TabActiveDetail = "";
@@ -113,15 +114,12 @@ namespace PtnWaiver.Controllers
                 case "Waivers":
                     ptnVM.TabActiveWaivers = "active";
                     break;
-                case "AttachmentsWaiver":
-                    ptnVM.TabActiveAttachmentsWaiver = "active";
-                    break;
             }
 
             // GET ALL ATTACHMENTS FOR PTN ///////////////////////////////////////////////////////////////////////////////////////////////
             // Get the directory
-            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId)))
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId)))
                 path.Create();
 
             // Using GetFiles() method to get list of all
@@ -129,10 +127,10 @@ namespace PtnWaiver.Controllers
             FileInfo[] Files = path.GetFiles();
 
             // Display the file names
-            List<ViewModels.Attachment> attachments = new List<ViewModels.Attachment>();
+            List<Attachment> attachments = new List<Attachment>();
             foreach (FileInfo i in Files)
             {
-                ViewModels.Attachment attachment = new ViewModels.Attachment
+                Attachment attachment = new Attachment
                 {
                     Directory = i.DirectoryName,
                     Name = i.Name,
@@ -147,34 +145,19 @@ namespace PtnWaiver.Controllers
             }
             ptnVM.AttachmentsPtn = attachments.OrderBy(m => m.Name).ToList();
 
-            // GET ALL ATTACHMENTS FOR Waiver ///////////////////////////////////////////////////////////////////////////////////////////////
-            // Get the directory
-            DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, pTN.DocId)))
-                pathWaiver.Create();
+            // Get all Waivers under this PTN....
+            ptnVM.PTN.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == id && m.DeletedDate == null).ToListAsync();
 
-            // Using GetFiles() method to get list of all
-            // the files present in the Train directory
-            FileInfo[] filesWaiver = pathWaiver.GetFiles();
+            // RENDER TABS DISABLED/ENABLED....
+            // Submit for Admin Approval Tab...
+            ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : ""; 
+            // Admin Approve Ptn Tab...
+            ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Completed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            // Waivers Tab...
+            ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Completed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
 
-            // Display the file names
-            List<ViewModels.Attachment> attachmentsWaiver = new List<ViewModels.Attachment>();
-            foreach (FileInfo i in filesWaiver)
-            {
-                ViewModels.Attachment attachmentWaiver = new ViewModels.Attachment
-                {
-                    Directory = i.DirectoryName,
-                    Name = i.Name,
-                    Extension = i.Extension,
-                    FullPath = i.FullName,
-                    CreatedDate = i.CreationTimeUtc.Date,
-                    Size = Convert.ToInt32(i.Length)
-                };
-                attachments.Add(attachmentWaiver);
-
-                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
-            }
-            ptnVM.AttachmentsWaiver = attachmentsWaiver.OrderBy(m => m.Name).ToList();
+            if (ptnVM.PTN.Status != "Draft")
+                ViewBag.Disable = "disabled";
 
             return View(ptnVM);
         }
@@ -205,6 +188,7 @@ namespace PtnWaiver.Controllers
 
             PTN ptn = new PTN()
             {
+                Status = "Draft",
                 CreatedDate = DateTime.Now,
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
@@ -244,8 +228,8 @@ namespace PtnWaiver.Controllers
                 }
                 ptn.DocId = docId;
 
-                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, ptn.DocId));
-                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, ptn.DocId)))
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
                     path.Create();
 
                 _contextPtnWaiver.Add(ptn);
@@ -396,5 +380,160 @@ namespace PtnWaiver.Controllers
         {
             return (_contextPtnWaiver.PTN?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn", fileAttachmentError = "No File Has Been Selected For Upload" });
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            if (ptn == null)
+                return RedirectToAction("Index");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _contextPtnWaiver.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
+
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId, fileAttachment.FileName);
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn" });
+        }
+
+        public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
+            return File(fileBytes, "application/x-msdownload", fileName);
+        }
+        public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn" });
+        }
+
+        public async Task<IActionResult> SubmitPtnForAdminApproval(int id)
+        {
+            if (id == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            if (ptn == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                ptn.ModifiedUser = userInfo.onpremisessamaccountname;
+                ptn.ModifiedUserFullName = userInfo.displayname;
+                ptn.ModifiedUserEmail = userInfo.mail;
+                ptn.ModifiedDate = DateTime.Now;
+                ptn.SubmittedForAdminApprovalUser = userInfo.onpremisessamaccountname;
+                ptn.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
+                ptn.SubmittedForAdminApprovalDate = DateTime.Now;
+            }
+            ptn.Status = "Pending Approval";
+
+            _contextPtnWaiver.PTN.Update(ptn);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
+        }
+
+        public async Task<IActionResult> RejectPtn(int id)
+
+        {
+            if (id == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            if (ptn == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                ptn.ModifiedUser = userInfo.onpremisessamaccountname;
+                ptn.ModifiedUserFullName = userInfo.displayname;
+                ptn.ModifiedUserEmail = userInfo.mail;
+                ptn.ModifiedDate = DateTime.Now;
+                ptn.SubmittedForAdminApprovalUser = userInfo.onpremisessamaccountname;
+                ptn.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
+                ptn.SubmittedForAdminApprovalDate = DateTime.Now;
+            }
+            ptn.Status = "Rejected";
+
+            _contextPtnWaiver.PTN.Update(ptn);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tab = "PtnApproval" });
+        }
+
+        public async Task<IActionResult> ApprovePtnAdmin(int id)
+        {
+            if (id == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            if (ptn == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                ptn.ModifiedUser = userInfo.onpremisessamaccountname;
+                ptn.ModifiedUserFullName = userInfo.displayname;
+                ptn.ModifiedUserEmail = userInfo.mail;
+                ptn.ModifiedDate = DateTime.Now;
+                ptn.ApprovedByAdminlUser = userInfo.onpremisessamaccountname;
+                ptn.ApprovedByAdminlUserFullName = userInfo.displayname;
+                ptn.ApprovedByAdminDate = DateTime.Now;
+            }
+            ptn.Status = "Approved";
+
+            _contextPtnWaiver.PTN.Update(ptn);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tab = "Waivers" });
+        }
+        public async Task<IActionResult> RejectPtnAdmin(int id)
+
+        {
+            if (id == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            if (ptn == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                ptn.ModifiedUser = userInfo.onpremisessamaccountname;
+                ptn.ModifiedUserFullName = userInfo.displayname;
+                ptn.ModifiedUserEmail = userInfo.mail;
+                ptn.ModifiedDate = DateTime.Now;
+                ptn.ApprovedByAdminlUser = userInfo.onpremisessamaccountname;
+                ptn.ApprovedByAdminlUserFullName = userInfo.displayname;
+                ptn.ApprovedByAdminDate = DateTime.Now;
+            }
+            ptn.Status = "Rejected";
+
+            _contextPtnWaiver.PTN.Update(ptn);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
+        }
+
     }
 }

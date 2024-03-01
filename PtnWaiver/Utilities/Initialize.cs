@@ -38,7 +38,8 @@ namespace PtnWaiver.Utilities
         public static string WebsiteUrl { get; set; }
         public static string ConnectionStringMoc { get; set; }
         public static string ConnectionStringPtnWaiver { get; set; }
-        public static string AttachmentDirectory { get; set; }
+        public static string AttachmentDirectoryPTN { get; set; }
+        public static string AttachmentDirectoryWaiver { get; set; }
 
         private static string registryPath = @"Software\\SKSiltron\\PTN";
         public static string EmailError { get; set; }
@@ -92,7 +93,8 @@ namespace PtnWaiver.Utilities
             //ConnectionString = builder.Configuration.GetConnectionString("PostgreSQLprd");
 
             // Get Attachment Directory
-            AttachmentDirectory = GetRegistryKey(registryPath, "AttachmentDirectory");
+            AttachmentDirectoryPTN = GetRegistryKey(registryPath, "AttachmentDirectoryPTN");
+            AttachmentDirectoryWaiver = GetRegistryKey(registryPath, "AttachmentDirectoryWaiver");
 
             // Teams Provider for Error Channel
             teamsErrorUrl = GetRegistryKey(registryPath, "TeamsErrorUrl");

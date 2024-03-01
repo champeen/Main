@@ -63,14 +63,11 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: Waivers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string tab="Waiver", string tabWaiver="Details", string fileAttachmentError = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
 
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -78,11 +75,77 @@ namespace PtnWaiver.Controllers
             var waiver = await _contextPtnWaiver.Waiver
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (waiver == null)
+            PTN ptn = await _contextPtnWaiver.PTN
+                .FirstOrDefaultAsync(m => m.Id == waiver.PTNId);
+
+            if (waiver == null || ptn == null)
                 return NotFound();
 
-            return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
-            //return View(waiver);
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            WaiverViewModel waiverVM = new WaiverViewModel();
+            waiverVM.FileAttachmentError = fileAttachmentError;
+            waiverVM.Waiver = waiver;
+            waiverVM.Ptn = ptn;
+
+            waiverVM.TabActiveDetail = "";
+            waiverVM.TabActiveAttachmentsWaiver = "";
+            waiverVM.TabActiveWaiverApproval = "";
+            waiverVM.TabActiveWaiverAdminApproval = "";
+            switch (tabWaiver)
+            {
+                case null:
+                    waiverVM.TabActiveDetail = "active";
+                    break;
+                case "":
+                    waiverVM.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    waiverVM.TabActiveDetail = "active";
+                    break;
+                case "AttachmentsWaiver":
+                    waiverVM.TabActiveAttachmentsWaiver = "active";
+                    break;
+                case "WaiverApproval":
+                    waiverVM.TabActiveWaiverApproval = "active";
+                    break;
+                case "WaiverAdminApproval":
+                    waiverVM.TabActiveWaiverAdminApproval = "active";
+                    break;
+            }
+
+            // GET ALL ATTACHMENTS FOR Waiver ///////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber)))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            waiverVM.AttachmentsWaiver = attachments.OrderBy(m => m.Name).ToList();
+
+            //return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
+            return View(waiverVM);
         }
 
         // GET: Waivers/Create
@@ -154,8 +217,8 @@ namespace PtnWaiver.Controllers
                 }
                 waiver.WaiverNumber = waiverNumber;
 
-                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, waiver.WaiverNumber));
-                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, waiver.WaiverNumber)))
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber)))
                     path.Create();
 
                 //waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
@@ -217,6 +280,15 @@ namespace PtnWaiver.Controllers
             {
                 try
                 {
+                    var userInfo = getUserInfo(_username);
+                    if (userInfo != null)
+                    {
+                        waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                        waiver.ModifiedUserFullName = userInfo.displayname;
+                        waiver.ModifiedUserEmail = userInfo.mail;
+                        waiver.ModifiedDate = DateTime.Now;
+                    }
+
                     waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m => m.Id == waiver.PTNId).Select(m => m.DocId).FirstOrDefaultAsync();
                     _contextPtnWaiver.Update(waiver);
                     await _contextPtnWaiver.SaveChangesAsync();
@@ -228,12 +300,14 @@ namespace PtnWaiver.Controllers
                     else
                         throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab = "Details" });
+                //return RedirectToAction(nameof(Index));
             }
             ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
             ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
+            
             return View(waiver);
         }
 
@@ -286,6 +360,47 @@ namespace PtnWaiver.Controllers
         private bool WaiverExists(int id)
         {
           return (_contextPtnWaiver.Waiver?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver", fileAttachmentError = "No File Has Been Selected For Upload" });
+
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return RedirectToAction("Index");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _contextPtnWaiver.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new { id = id, tab = "AttachmentsWaiver", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
+
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber, fileAttachment.FileName);
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
+        }
+
+        public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
+            return File(fileBytes, "application/x-msdownload", fileName);
+        }
+        public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
         }
     }
 }

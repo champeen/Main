@@ -22,6 +22,15 @@ namespace PtnWaiver.Models
         public string Status { get; set; }
         [Display(Name = "Roadblocks (if open > 90 days)")]
         public string? Roadblocks { get; set; }
+        public string? SubmittedForAdminApprovalUser { get; set; }
+        public string? SubmittedForAdminApprovalUserFullName { get; set; }
+        public DateTime? SubmittedForAdminApprovalDate { get; set; }
+        public string? ApprovedByAdminlUser { get; set; }
+        public string? ApprovedByAdminlUserFullName { get; set; }
+        public DateTime? ApprovedByAdminDate { get; set; }
+        public string? CompletedBylUser { get; set; }
+        public string? CompletedBylUserFullName { get; set; }
+        public DateTime? CompletedByDate { get; set; }
 
 
         public virtual List<Waiver>? Waivers { get; set; }

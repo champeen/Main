@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -11,9 +12,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240227142905_addAllowedAttachmentExtensionsTable")]
+    partial class addAllowedAttachmentExtensionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -233,26 +236,8 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ApprovedByAdminDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("ApprovedByAdminlUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ApprovedByAdminlUserFullName")
-                        .HasColumnType("text");
-
                     b.Property<string>("Area")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("CompletedByDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CompletedBylUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CompletedBylUserFullName")
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedDate")
@@ -317,15 +302,6 @@ namespace PtnWaiver.Migrations
 
                     b.Property<string>("SubjectType")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("SubmittedForAdminApprovalDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("SubmittedForAdminApprovalUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SubmittedForAdminApprovalUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("TisNumber")

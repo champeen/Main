@@ -22,6 +22,7 @@ namespace PtnWaiver.Models
         public DateTime? DateClosed { get; set; }
         [Display(Name = "Corrective Action Due Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? CorrectiveActionDueDate { get; set; }
 
         [ForeignKey("PTN")]

@@ -11,6 +11,7 @@ namespace PtnWaiver.Models
         [Display(Name = "Create User Email")]
         public string CreatedUserEmail { get; set; }
         [Display(Name = "Create Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime CreatedDate { get; set; }
         [Display(Name = "Modified Username")]
         public string? ModifiedUser { get; set; }
@@ -19,6 +20,7 @@ namespace PtnWaiver.Models
         [Display(Name = "Modified User Email")]
         public string? ModifiedUserEmail { get; set; }
         [Display(Name = "Modified Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? ModifiedDate { get; set; }
         [Display(Name = "Deleted Username")]
         public string? DeletedUser { get; set; }
@@ -27,6 +29,7 @@ namespace PtnWaiver.Models
         [Display(Name = "Deleted User Email")]
         public string? DeletedUserEmail { get; set; }
         [Display(Name = "Deleted Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? DeletedDate { get; set; }
     }
 }

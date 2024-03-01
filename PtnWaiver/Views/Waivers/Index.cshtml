@@ -14,8 +14,9 @@
                 <div class="col-6 text-start">
                     @*<a asp-action="Create">Create New</a>*@
                     @*            @Html.ActionLink("Create New","Create")*@
-                    <span class="flex-nowrap">
-                        @Html.ActionLink("Create New","Create",new {source="WaiverIndex"},new {@class="btn btn-success"})
+                    <span class="flex-nowrap alert-danger">
+                        @* @Html.ActionLink("Create New","Create",new {source="WaiverIndex"},new {@class="btn btn-success"}) *@
+                        Waivers must be created under a PTN
                     </span>
                 </div>
                 <div class="col-3 text-center">
@@ -35,8 +36,8 @@
 <table class="table table-bordered table-striped">
     <thead class="align-top align-text-top table-primary">
         <tr>
-@*             <th>
-                @Html.DisplayNameFor(model => model.PTN.DocId)
+            @*             <th>
+            @Html.DisplayNameFor(model => model.PTN.DocId)
             </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.WaiverNumber)
@@ -65,21 +66,21 @@
             <th>
                 @Html.DisplayNameFor(model => model.CorrectiveActionDueDate)
             </th>
-            <th></th>
+            @* <th></th> *@
         </tr>
     </thead>
     <tbody id="waiverIndexTable">
         @foreach (var item in Model)
         {
             <tr>
-@*                 <td>
-                    @Html.DisplayFor(modelItem => item.PTN.DocId)
-                </td> *@
+                @*                 <td>
+            @Html.DisplayFor(modelItem => item.PTN.DocId)
+            </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.WaiverNumber)
                 </td>
                 <td>
-                    @Html.ActionLink(item.PtnDocId,"Details","PTNs",new {id=@item.PTNId, tab="Details"},new {@class="btn btn-primary text-nowrap"})
+                    @Html.ActionLink(item.PtnDocId,"Details","PTNs",new {id=@item.PTNId, tab="Waivers"},new {@class="btn btn-primary text-nowrap"})
                     @* @Html.DisplayFor(modelItem => item.PtnDocId) *@
                 </td>
                 <td>
@@ -103,11 +104,17 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
                 </td>
-                <td class="text-nowrap">
+@*                 <td class="text-nowrap">
                     @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary ms-1"})
-                    @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1"})
-                </td>
+                    @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
+                    {
+                        @if (item.DeletedDate == null && item.Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
+                        {
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1"})
+                        }
+                    }
+                </td> *@
             </tr>
         }
     </tbody>
@@ -123,7 +130,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
+            @* <td></td> *@
         </tr>
     }
 </table>
