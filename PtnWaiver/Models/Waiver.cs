@@ -24,6 +24,17 @@ namespace PtnWaiver.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? CorrectiveActionDueDate { get; set; }
+        [Display(Name = "Rejected Reason")]
+        public string? RejectedReason { get; set; }
+        public string? SubmittedForAdminApprovalUser { get; set; }
+        public string? SubmittedForAdminApprovalUserFullName { get; set; }
+        public DateTime? SubmittedForAdminApprovalDate { get; set; }
+        public string? ApprovedByAdminlUser { get; set; }
+        public string? ApprovedByAdminlUserFullName { get; set; }
+        public DateTime? ApprovedByAdminDate { get; set; }
+        public string? CompletedBylUser { get; set; }
+        public string? CompletedBylUserFullName { get; set; }
+        public DateTime? CompletedByDate { get; set; }
 
         [ForeignKey("PTN")]
         public int PTNId { get; set; }

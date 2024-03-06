@@ -300,31 +300,30 @@ namespace PtnWaiver.Controllers
         //    return changeLevels;
         //}
 
-        //public EmailHistory AddEmailHistory(string? priority, string? subject, string? body, string? sentToDisplayName, string? sentToUsername, string? sentToEmail, int? changeRequestId, int? impactAssessmentResponseId, int? implementationFinalApprovalResponseId, int? taskId, string? type, string? status, DateTime createdDate, string? username)
-        //{
-        //    EmailHistory emailHistory = new EmailHistory
-        //    {
-        //        Priority = priority,
-        //        Subject = subject,
-        //        Body = body,
-        //        SentToDisplayName = sentToDisplayName,
-        //        SentToUsername = sentToUsername,
-        //        SentToEmail = sentToEmail,
-        //        ChangeRequestId = changeRequestId,
-        //        ImpactAssessmentResponseId = impactAssessmentResponseId,
-        //        ImplementationFinalApprovalResponseId = implementationFinalApprovalResponseId,
-        //        TaskId = taskId,
-        //        Type = type,
-        //        Status = status,
-        //        CreatedDate = createdDate,
-        //        CreatedUser = username
-        //    };
-        //    _context.Add(emailHistory);
-        //    _context.SaveChanges();
-        //    return emailHistory;
-        //    //_context.Add(emailHistory);
-        //    //await _context.SaveChangesAsync();
-        //}
+        public EmailHistory AddEmailHistory(string? priority, string? subject, string? body, string? sentToDisplayName, string? sentToUsername, string? sentToEmail, int? ptnId, int? waiverId, int? taskId, string? type, string? status, DateTime createdDate, string? username)
+        {
+            EmailHistory emailHistory = new EmailHistory
+            {
+                Priority = priority,
+                Subject = subject,
+                Body = body,
+                SentToDisplayName = sentToDisplayName,
+                SentToUsername = sentToUsername,
+                SentToEmail = sentToEmail,
+                PtnId = ptnId,
+                WaiverId = waiverId,
+                TaskId = taskId,
+                Type = type,
+                Status = status,
+                CreatedDate = createdDate,
+                CreatedUser = username
+            };
+            _contextPtnWaiver.Add(emailHistory);
+            _contextPtnWaiver.SaveChanges();
+            return emailHistory;
+            //_context.Add(emailHistory);
+            //await _context.SaveChangesAsync();
+        }
 
         public __mst_employee getUserInfo(string username = null)
         {

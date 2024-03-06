@@ -63,7 +63,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: PTNs/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string rejectedReason = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -79,7 +79,8 @@ namespace PtnWaiver.Controllers
                 return NotFound();
 
             ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;            
+            ViewBag.Username = _username;
+            ViewBag.RejectedReason = rejectedReason;
 
             PtnViewModel ptnVM = new PtnViewModel();
             ptnVM.FileAttachmentError = fileAttachmentError;
@@ -150,7 +151,7 @@ namespace PtnWaiver.Controllers
 
             // RENDER TABS DISABLED/ENABLED....
             // Submit for Admin Approval Tab...
-            ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : ""; 
+            ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
             // Admin Approve Ptn Tab...
             ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Completed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
             // Waivers Tab...
@@ -242,6 +243,97 @@ namespace PtnWaiver.Controllers
             ViewBag.Groups = getGroups();
             ViewBag.SubjectTypes = getSubjectTypes();
             return View(ptn);
+        }
+
+        public async Task<IActionResult> Clone(int id, string? tab = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (id == null || id == 0)
+                return View("Index");
+
+            PTN ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            if (ptn == null)
+                return View("Index");
+
+            var ptnOwner = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+
+            ViewBag.Status = getPtnStatus();
+            ViewBag.PtnPins = getPtnPins();
+            ViewBag.Areas = getAreas();
+            ViewBag.Groups = getGroups();
+            ViewBag.SubjectTypes = getSubjectTypes();
+            ViewBag.ClonedId = id;
+
+            ptn.Status = "Draft";
+            ptn.CreatedUser = _username;
+            ptn.CreatedUserFullName = ptnOwner.displayname;
+            ptn.CreatedUserEmail = ptnOwner.mail;
+            ptn.CreatedDate = DateTime.Now;
+            ptn.ModifiedDate = null;
+            ptn.ModifiedUser = null;
+            ptn.DeletedDate = null;
+            ptn.DeletedUser = null;
+
+            return View(ptn);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CloneCreate([Bind("Id,DocId,PtnPin,Area,SubjectType,Title,Group,TisNumber,PdfLocation,Status,Roadblocks,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn, int clonedId, string? source = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            //if (changeRequest.Estimated_Completion_Date == null)
+            //    ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Valid Completion Date");
+
+            //if (changeRequest.Estimated_Completion_Date < DateTime.Today)
+            //    ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
+
+            //if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
+            //    ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (ModelState.IsValid)
+            {
+                // This weird naming convention is striaght from how they are doing it in the spreadsheet.....
+                int days = _getDaysSince1900;
+                string docId = "";
+                for (int i = 1; i < 10000; i++)
+                {
+                    docId = ptn.PtnPin + "-" + days.ToString() + "-" + i.ToString();
+                    PTN record = await _contextPtnWaiver.PTN
+                        .FirstOrDefaultAsync(m => m.DocId == docId);
+                    if (record == null)
+                        break;
+                }
+                ptn.DocId = docId;
+
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
+                    path.Create();
+
+                _contextPtnWaiver.Add(ptn);
+                await _contextPtnWaiver.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.Status = getPtnStatus();
+            ViewBag.PtnPins = getPtnPins();
+            ViewBag.Areas = getAreas();
+            ViewBag.Groups = getGroups();
+            ViewBag.SubjectTypes = getSubjectTypes();
+            ViewBag.ClonedId = clonedId;
+
+            return View("Clone", ptn);
         }
 
         // GET: PTNs/Edit/5
@@ -447,10 +539,25 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver.PTN.Update(ptn);
             await _contextPtnWaiver.SaveChangesAsync();
 
+            // email administrators to review the PTN and either Approve or Reject....
+            var admins = await _contextPtnWaiver.Administrators.Where(m => m.Approver == true).ToListAsync();
+            foreach (var admin in admins)
+            {
+                string subject = @"Process Test Notification (PTN) - Review Needed";
+                string body = @"Your Review is needed. Please follow link below and review/respond to the following PTN request. <br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                __mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
+
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, person.mail, null, null, null);
+                AddEmailHistory(null, subject, body, person.displayname, person.onpremisessamaccountname, person.mail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+            }
+
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }
 
-        public async Task<IActionResult> RejectPtn(int id)
+        //public async Task<IActionResult> RejectPtn(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectPtn(int id, [Bind("Id,RejectedReason")] PTN pTN)
 
         {
             if (id == null || _contextPtnWaiver.PTN == null)
@@ -459,6 +566,9 @@ namespace PtnWaiver.Controllers
             var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
             if (ptn == null)
                 return RedirectToAction("Index");
+
+            if (pTN.RejectedReason == null)                
+                return RedirectToAction("Details", new { id = id, tab = "PtnApproval", rejectedReason = "If PTN is Rejected, Rejected Reason is Required" });
 
             var userInfo = getUserInfo(_username);
             if (userInfo != null)
@@ -471,10 +581,20 @@ namespace PtnWaiver.Controllers
                 ptn.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
                 ptn.SubmittedForAdminApprovalDate = DateTime.Now;
             }
+            ptn.RejectedReason = pTN.RejectedReason;
             ptn.Status = "Rejected";
 
             _contextPtnWaiver.PTN.Update(ptn);
             await _contextPtnWaiver.SaveChangesAsync();
+
+            // email PTN creator to notify of PTN Rejection....
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - PTN Rejected";
+            string body = @"Your PTN has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." + 
+                "<br/><br/><strong>Reason Rejected: </strong>" + ptn.RejectedReason + "." +
+                "<br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.CreatedUserEmail, personRejecting.mail, null, null);
+            AddEmailHistory(null, subject, body, ptn.CreatedUserFullName, ptn.CreatedUser, ptn.CreatedUserEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
 
             return RedirectToAction("Details", new { id = id, tab = "PtnApproval" });
         }
@@ -504,10 +624,21 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver.PTN.Update(ptn);
             await _contextPtnWaiver.SaveChangesAsync();
 
+            // email PTN creator that the PTN was Approved....
+            var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - PTN Approved by Admin";
+            string body = @"Your PTN has been <span style=""color:green"">approved</span> by " + personApproving.displayname + ".<br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.CreatedUserEmail, personApproving.mail, null, null);
+            AddEmailHistory(null, subject, body, ptn.CreatedUserFullName, ptn.CreatedUser, ptn.CreatedUserEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+
             return RedirectToAction("Details", new { id = id, tab = "Waivers" });
         }
-        public async Task<IActionResult> RejectPtnAdmin(int id)
 
+        //public async Task<IActionResult> RejectPtnAdmin(int id)
+                    //public async Task<IActionResult> RejectPtn(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectPtnAdmin(int id, [Bind("Id,RejectedReason")] PTN pTN)
         {
             if (id == null || _contextPtnWaiver.PTN == null)
                 return NotFound();
@@ -531,6 +662,15 @@ namespace PtnWaiver.Controllers
 
             _contextPtnWaiver.PTN.Update(ptn);
             await _contextPtnWaiver.SaveChangesAsync();
+
+            // email PTN creator to notify of PTN Rejection....
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - PTN Rejected";
+            string body = @"Your PTN has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
+                "<br/><br/><strong>Reason Rejected: </strong>" + ptn.RejectedReason + "." +
+                "<br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.CreatedUserEmail, personRejecting.mail, null, null);
+            AddEmailHistory(null, subject, body, ptn.CreatedUserFullName, ptn.CreatedUser, ptn.CreatedUserEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
 
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }

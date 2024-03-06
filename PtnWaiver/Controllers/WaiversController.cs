@@ -144,6 +144,12 @@ namespace PtnWaiver.Controllers
             }
             waiverVM.AttachmentsWaiver = attachments.OrderBy(m => m.Name).ToList();
 
+            // Render Tabs Disabled/Enabled
+            // Submit for Admin Approval Tab...
+            waiverVM.Tab3Disabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
+            // Admin Approve Waiver Tab...
+            waiverVM.Tab4Disabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Completed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+
             //return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
             return View(waiverVM);
         }
@@ -381,7 +387,7 @@ namespace PtnWaiver.Controllers
                 .Any();
 
             if (!found)
-                return RedirectToAction("Details", new { id = id, tab = "AttachmentsWaiver", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
+                return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
 
             string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber, fileAttachment.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
@@ -401,6 +407,119 @@ namespace PtnWaiver.Controllers
         {
             System.IO.File.Delete(sourcePath);
             return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
+        }
+
+        public async Task<IActionResult> SubmitWaiverForAdminApproval(int id)
+        {
+            if (id == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+                waiver.SubmittedForAdminApprovalUser = userInfo.onpremisessamaccountname;
+                waiver.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
+                waiver.SubmittedForAdminApprovalDate = DateTime.Now;
+            }
+            waiver.Status = "Pending Approval";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
+        }
+
+        public async Task<IActionResult> RejectWaiver(int id)
+
+        {
+            if (id == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+                waiver.SubmittedForAdminApprovalUser = userInfo.onpremisessamaccountname;
+                waiver.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
+                waiver.SubmittedForAdminApprovalDate = DateTime.Now;
+            }
+            waiver.Status = "Rejected";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverApproval" });
+        }
+
+        public async Task<IActionResult> ApproveWaiverAdmin(int id)
+        {
+            if (id == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+                waiver.ApprovedByAdminlUser = userInfo.onpremisessamaccountname;
+                waiver.ApprovedByAdminlUserFullName = userInfo.displayname;
+                waiver.ApprovedByAdminDate = DateTime.Now;
+            }
+            waiver.Status = "Approved";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
+        }
+
+        public async Task<IActionResult> RejectWaiverAdmin(int id)
+        {
+            if (id == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+                waiver.ApprovedByAdminlUser = userInfo.onpremisessamaccountname;
+                waiver.ApprovedByAdminlUserFullName = userInfo.displayname;
+                waiver.ApprovedByAdminDate = DateTime.Now;
+            }
+            waiver.Status = "Rejected";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }
     }
 }

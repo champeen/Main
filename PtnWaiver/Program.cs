@@ -65,7 +65,7 @@ catch (Exception ex)
 
         eventLog.Source = "Application";
         eventLog.WriteEntry(
-            "ERROR: Management of Change Application (MoC)" + Environment.NewLine +
+            "ERROR: Process Test Notification Application (PTN)" + Environment.NewLine +
             "CLASS: " + fileName + Environment.NewLine +
             "METHOD: " + methodName + Environment.NewLine +
             "LINE NUMBER: " + line.ToString() + Environment.NewLine +
@@ -82,10 +82,10 @@ catch (Exception ex)
 
     // SEND EMAIL ERROR MESSAGE
     Initialization.EmailProviderSmtp.SendMessage(
-        "ERROR: Management of Change Application (MoC)",
-        "ERROR: Management of Change Application (MoC) </br>" +
+        "ERROR: Process Test Notification Application (PTN)",
+        "ERROR: Process Test Notification (PTN) </br>" +
             "MESSAGE: " + ex.Message + "</br> " +
-            "INNER EXCEPTION: " + ex.InnerException?.ToString() + "</br>",
+            "INNER EXCEPTION: " + ex.InnerException?.ToString() + "</br></br>",
         Initialization.EmailError,
         null,
         null,

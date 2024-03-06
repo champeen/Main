@@ -55,10 +55,10 @@
             <a class="nav-link @Model.TabActiveAttachmentsWaiver fw-bolder" id="nav-attachmentsWaiver-tab" data-bs-toggle="tab" href="#nav-attachmentsWaiver" role="tab" aria-controls="nav-profile" aria-selected="false">Upload Waiver Template (@Model.AttachmentsWaiver.Count.ToString())</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @Model.TabActiveWaiverApproval fw-bolder" id="nav-waiverApproval-tab" data-bs-toggle="tab" href="#nav-waiverApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit Waiver for Admin Approval</a>
+            <a class="nav-link @Model.TabActiveWaiverApproval @Model.Tab3Disabled fw-bolder" id="nav-waiverApproval-tab" data-bs-toggle="tab" href="#nav-waiverApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit Waiver for Admin Approval</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @Model.TabActiveWaiverAdminApproval fw-bolder" id="nav-waiverAdminApproval-tab" data-bs-toggle="tab" href="#nav-waiverAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Admin Approve Waiver</a>
+            <a class="nav-link @Model.TabActiveWaiverAdminApproval @Model.Tab4Disabled fw-bolder" id="nav-waiverAdminApproval-tab" data-bs-toggle="tab" href="#nav-waiverAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Admin Approve Waiver</a>
         </li>
     </ul>
 </nav>
@@ -81,23 +81,23 @@
                     }
                     @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary"})
                 </div>
-@*                 <div class="col-lg-7">
-                    @if (@Model.ButtonSubmitForReview == true)
-                    {
-                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser)
-                        {
-                            <div class="row">
-                                <div class="col-xl-10 text-xl-end mt-2">
-                                    <span class="bg-warning fw-bold">
-                                        WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
-                                    </span>
-                                </div>
-                                <div class="col-xl-2 col">
-                                    @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.Waiver.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
-                                </div>
-                            </div>
-                        }
-                    }
+                @*                 <div class="col-lg-7">
+                @if (@Model.ButtonSubmitForReview == true)
+                {
+                @if (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser)
+                {
+                <div class="row">
+                <div class="col-xl-10 text-xl-end mt-2">
+                <span class="bg-warning fw-bold">
+                WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                </span>
+                </div>
+                <div class="col-xl-2 col">
+                @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.Waiver.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                </div>
+                </div>
+                }
+                }
                 </div> *@
             </div>
             <hr />
@@ -238,7 +238,7 @@
         <hr />
         <div class="row mt-4">
             <div class="col-5 text-start">
-                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft"))
+                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") && (Model.Ptn.Status == "Approved"))
                 {
                     @Html.ActionLink("Edit","Edit",new {id=@Model?.Waiver?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
                     @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
@@ -358,24 +358,64 @@
     @*  SUBMIT FOR ADMIN APPROVAL TAB *********************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveWaiverApproval" id="nav-waiverApproval" role="tabpanel" aria-labelledby="nav-waiverApproval-tab">
-        <div class="text-nowrap">
-            @*<h4 class="mt-5">Details</h4>*@
-            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-            <a class="mx-2" asp-action="Index">Back to List</a>*@
-            @*             <div class="row mt-5">
+        @if (@Model.Waiver.Status == "Draft")
+        {
+            @if (ViewBag.IsAdmin || (ViewBag.Username == Model.Waiver.CreatedUser || ViewBag.Username == Model.Ptn.CreatedUser))
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <h5>
+                            Once submitted for administrator approval, you cannot modify the Waiver or the Template.  Make sure everything is complete before submitting for administrator approval.  If you no longer want to submit this PTN for review, reject.
+                        </h5>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        @Html.ActionLink("Submit for Admin Approval","SubmitWaiverForAdminApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
+                        @Html.ActionLink("Reject Waiver","RejectWaiver","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-danger ms-1"})
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <h5>
+                            Waiver Creater or PTN administrator must submit this Waiver for administrator approval in order to move on to next phase.
+                        </h5>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        Waiver has been
+                        @if (Model.Waiver.Status == "Rejected")
+                        {
+                            <span class="text-danger fw-bold">Rejected</span>
+                        }
+                        else
+                        {
+                            <span class="text-success fw-bold">Submitted for Administrator Approval</span>
+                        }
+                        by
+                        <span class="fw-bold">
+                            @Model.Waiver.SubmittedForAdminApprovalUserFullName
+                        </span>
+                        on
+                        <span class="fw-bold">
+                            @Model.Waiver.SubmittedForAdminApprovalDate
+                        </span>.
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row mt-5">
             <div class="col-12 text-start">
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
-            </div>
-            </div> *@
-            <div class="row mt-5">
-                <div class="col-12 text-start">
-                    WORK IN PROGRESS - SUBMIT FOR APPROVAL!
-                </div>
-            </div>
-            <div class="row mt-5">
-                <div class="col-12 text-start">
-                    @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
-                </div>
+                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
             </div>
         </div>
     </div>
@@ -383,24 +423,78 @@
     @*  WAIVER ADMIN APPROVAL *****************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveWaiverAdminApproval" id="nav-waiverAdminApproval" role="tabpanel" aria-labelledby="nav-waiverAdminApproval-tab">
-        <div class="text-nowrap">
-            @*<h4 class="mt-5">Details</h4>*@
-            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-            <a class="mx-2" asp-action="Index">Back to List</a>*@
-            @*             <div class="row mt-5">
+        @if (@Model.Waiver.Status == "Pending Approval")
+        {
+            @if (ViewBag.IsAdmin)
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <h5>
+                            Look over the Waiver and attached template. Rejecting the Waiver stops the process.
+                        </h5>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        @Html.ActionLink("Approve Waiver","ApproveWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
+                        @Html.ActionLink("Reject Waiver","RejectWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-danger ms-1"})
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <h5>
+                            PTN administrator must approve this Waiver in order to move on to next phase.
+                        </h5>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-12">
+                    <div>
+                        Waiver has been
+                        @if (Model.Waiver.Status == "Rejected")
+                        {
+                            <span class="text-danger fw-bold">Rejected</span>
+                        }
+                        else
+                        {
+                            <span class="text-success fw-bold">Approved</span>
+                        }
+                        by
+                        <span class="fw-bold">
+                            @if (Model.Waiver.ApprovedByAdminlUser != null)
+                            {
+                                @Model.Waiver.ApprovedByAdminlUserFullName
+                            }
+                            else
+                            {
+                                @Model.Waiver.SubmittedForAdminApprovalUserFullName
+                            }
+                        </span>
+                        on
+                        <span class="fw-bold">
+                            @if (Model.Waiver.ApprovedByAdminDate != null)
+                            {
+                                @Model.Waiver.ApprovedByAdminDate
+                            }
+                            else
+                            {
+                                @Model.Waiver.SubmittedForAdminApprovalDate
+                            }
+                        </span>.
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row mt-5">
             <div class="col-12 text-start">
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
-            </div>
-            </div> *@
-            <div class="row mt-5">
-                <div class="col-12 text-start">
-                    WORK IN PROGRESS - ADMIN APPROVE IT!
-                </div>
-            </div>
-            <div class="row mt-5">
-                <div class="col-12 text-start">
-                    @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
-                </div>
+                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
             </div>
         </div>
     </div>

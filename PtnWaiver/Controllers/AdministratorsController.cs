@@ -162,7 +162,7 @@ namespace PtnWaiver.Controllers
 
             // Make sure duplicates are not entered...
             List<Administrators> checkDupes = await _contextPtnWaiver.Administrators
-                .Where(m => m.Username == administrators.Username)
+                .Where(m => m.Username == administrators.Username && m.Id != administrators.Id)
                 .ToListAsync();
             if (checkDupes.Count > 0)
                 ModelState.AddModelError("Username", "Username already exists.");

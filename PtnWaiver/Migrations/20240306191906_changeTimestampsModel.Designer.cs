@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -11,9 +12,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240306191906_changeTimestampsModel")]
+    partial class changeTimestampsModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,9 +384,6 @@ namespace PtnWaiver.Migrations
 
                     b.Property<string>("PtnPin")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("RejectedReason")
                         .HasColumnType("text");
 
                     b.Property<string>("Roadblocks")
@@ -806,9 +806,6 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PtnDocId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("RejectedReason")
                         .HasColumnType("text");
 
                     b.Property<int>("RevisionNumber")

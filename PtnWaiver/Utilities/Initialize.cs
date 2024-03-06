@@ -85,7 +85,7 @@ namespace PtnWaiver.Utilities
             emailUser = GetRegistryKey(registryPath, "EmailUser");
             emailPassword = GetRegistryKey(registryPath, "EmailPassword");
             emailFrom = GetRegistryKey(registryPath, "EmailFrom");
-            //EmailProviderSmtp = new EmailProvider(emailHost, emailUser, emailPassword, emailPort, emailFrom);
+            EmailProviderSmtp = new EmailProvider(emailHost, emailUser, emailPassword, emailPort, emailFrom);
 
             // Get Connection Strings
             ConnectionStringMoc = GetRegistryKey(registryPath, "ConnectionStringMoc");
@@ -100,7 +100,7 @@ namespace PtnWaiver.Utilities
             teamsErrorUrl = GetRegistryKey(registryPath, "TeamsErrorUrl");
             //teamsErrorUrl = builder.Configuration.GetValue<string>("TeamsHooks:TeamsErrorUrlPrd");
             HttpClient = new HttpClient();
-            //TeamsErrorProvider = new TeamsProvider(teamsErrorUrl, HttpClient);
+            TeamsErrorProvider = new TeamsProvider(teamsErrorUrl, HttpClient);
         }
 
         private static string GetRegistryKey(string registryPath, string registryKey)

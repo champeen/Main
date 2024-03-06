@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -11,9 +12,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240306165742_addEmailHistoryTable")]
+    partial class addEmailHistoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,9 +44,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -119,9 +124,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -159,89 +166,6 @@ namespace PtnWaiver.Migrations
                     b.ToTable("Area");
                 });
 
-            modelBuilder.Entity("PtnWaiver.Models.EmailHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Body")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedUser")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("DeletedUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeletedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeletedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("ModifiedUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ModifiedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ModifiedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Priority")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("PtnId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("SentToDisplayName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SentToEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SentToUsername")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Subject")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("TaskId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("text");
-
-                    b.Property<int?>("WaiverId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("EmailHistory");
-                });
-
             modelBuilder.Entity("PtnWaiver.Models.Group", b =>
                 {
                     b.Property<int>("Id")
@@ -262,9 +186,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -340,9 +266,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -381,9 +309,6 @@ namespace PtnWaiver.Migrations
 
                     b.Property<string>("PtnPin")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("RejectedReason")
                         .HasColumnType("text");
 
                     b.Property<string>("Roadblocks")
@@ -438,9 +363,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -498,9 +425,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -558,9 +487,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -614,9 +545,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("Default")
@@ -681,9 +614,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DeletedDate")
@@ -758,9 +693,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("DateClosed")
@@ -808,9 +745,6 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("PtnDocId")
                         .HasColumnType("text");
 
-                    b.Property<string>("RejectedReason")
-                        .HasColumnType("text");
-
                     b.Property<int>("RevisionNumber")
                         .HasColumnType("integer");
 
@@ -853,9 +787,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedUserFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("Default")

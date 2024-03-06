@@ -22,6 +22,8 @@ namespace PtnWaiver.Models
         public string Status { get; set; }
         [Display(Name = "Roadblocks (if open > 90 days)")]
         public string? Roadblocks { get; set; }
+        [Display(Name = "Rejected Reason")]
+        public string? RejectedReason { get; set; }
         public string? SubmittedForAdminApprovalUser { get; set; }
         public string? SubmittedForAdminApprovalUserFullName { get; set; }
         public DateTime? SubmittedForAdminApprovalDate { get; set; }

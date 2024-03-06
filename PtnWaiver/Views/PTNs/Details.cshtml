@@ -19,17 +19,15 @@
 
 <div class="row">
     <div class="col-4">
-        <div class="text-nowrap">
-            <h1 style="display:inline">
-                <span class="me-2">
-                    PTN
-                </span>
-                @*                 <span class="" title="Create New PTN based on this MoC.  Include all Details and General MoC Questions only. Status will be set to 'Draft' and ChangeOwner will be you.">
+        <h1 style="display:inline">
+            <span class="me-2 text-nowrap">
+                PTN
+            </span>
+            <span class="" title="Create New PTN based on this PTN.  Include all Details only. Status will be set to 'Draft' and PTN Creator will be you.">
                 @Html.ActionLink("Clone","Clone", new {id=@Model?.PTN?.Id, tab="Details"},new {@class="btn btn-success align-middle"})
-                @Html.ActionLink("Download New Equipment Checklist","DownloadNewEquipmentChecklist","ChangeRequests", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-secondary", title="Download 'New Equipment Checklist' Spreadsheet to Download Folder"})
-                </span> *@
-            </h1>
-        </div>
+                @* @Html.ActionLink("Download New Equipment Checklist","DownloadNewEquipmentChecklist","ChangeRequests", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-secondary", title="Download 'New Equipment Checklist' Spreadsheet to Download Folder"}) *@
+            </span>
+        </h1>
     </div>
     <div class="col-8 text-end">
         <h4>
@@ -95,23 +93,23 @@
                     }
                     @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                 </div>
-@*                 <div class="col-lg-7">
-                    @if (@Model.ButtonSubmitForReview == true)
-                    {
-                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
-                        {
-                            <div class="row">
-                                <div class="col-xl-10 text-xl-end mt-2">
-                                    <span class="bg-warning fw-bold">
-                                        WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
-                                    </span>
-                                </div>
-                                <div class="col-xl-2 col">
-                                    @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.PTN.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
-                                </div>
-                            </div>
-                        }
-                    }
+                @*                 <div class="col-lg-7">
+                @if (@Model.ButtonSubmitForReview == true)
+                {
+                @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
+                {
+                <div class="row">
+                <div class="col-xl-10 text-xl-end mt-2">
+                <span class="bg-warning fw-bold">
+                WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                </span>
+                </div>
+                <div class="col-xl-2 col">
+                @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.PTN.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                </div>
+                </div>
+                }
+                }
                 </div> *@
             </div>
             <hr />
@@ -176,6 +174,14 @@
                 </dt>
                 <dd class="col-sm-10 my-1">
                     @Html.DisplayFor(model => model.PTN.Roadblocks)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.RejectedReason)
+                </dt>
+                <dd class="col-sm-10 my-1">
+                    @Html.DisplayFor(model => model.PTN.RejectedReason)
                 </dd>
             </div>
             <hr / class="mt-3">
@@ -397,12 +403,28 @@
                         </h5>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12">
-                        @Html.ActionLink("Submit for Admin Approval","SubmitPtnForAdminApproval","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
-                        @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"})
+                <form asp-action="RejectPtn" asp-route-id="@Model.PTN.Id" asp-route-rejectedReason="@Model.PTN.RejectedReason">
+                    <input type="hidden" asp-for="@Model.PTN.Id" />
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            @Html.ActionLink("Submit for Admin Approval","SubmitPtnForAdminApproval","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
+                            <input type="submit" value="RejectPTN" class="btn btn-danger ms-1" />
+                            @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
+                        </div>
+                        <div class="row mt-3 mb-1">
+                            <div class="col-12">
+                                <label asp-for="PTN.RejectedReason" class="control-label fw-bold mb-1"></label>
+                                @Html.TextAreaFor(model => model.PTN.RejectedReason, new {@class = "form-control", @rows = 3 })
+                                @if (@ViewBag.RejectedReason != null)
+                                {
+                                    <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
+                                }
+                                
+                                
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </form>
             }
             else
             {
@@ -417,22 +439,25 @@
         }
         else
         {
-            <div class="row">
-                <div class="col-12">
-                    <div>
-                        PTN has been
-                        @if (Model.PTN.Status == "Rejected")
-                        {
-                            <span>Rejected</span>
-                        }
-                        else
-                        {
-                            <span>submitted for administrator approval</span>
-                        }
-                        by <span class="text-danger fw-bold">@Model.PTN.SubmittedForAdminApprovalUserFullName</span> on <span class="text-danger fw-bold">@Model.PTN.SubmittedForAdminApprovalDate</span>.
+            @if (Model.PTN.SubmittedForAdminApprovalUser != null)
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <div>
+                            PTN has been
+                            @if (Model.PTN.Status == "Rejected")
+                            {
+                                <span>Rejected</span>
+                            }
+                            else
+                            {
+                                <span>submitted for administrator approval</span>
+                            }
+                            by <span class="text-danger fw-bold">@Model.PTN.SubmittedForAdminApprovalUserFullName</span> on <span class="text-danger fw-bold">@Model.PTN.SubmittedForAdminApprovalDate</span>.
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
         <div class="row mt-5">
             <div class="col-12 text-start">
@@ -451,7 +476,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h5>
-                            Look over the PTN and attached template. Approving this allows the PTN creator to create Waivers under this PTN. Rejecting the PTN stops the process. 
+                            Look over the PTN and attached template. Approving this allows the PTN creator to create Waivers under this PTN. Rejecting the PTN stops the process.
                         </h5>
                     </div>
                 </div>
@@ -475,22 +500,25 @@
         }
         else
         {
-            <div class="row">
-                <div class="col-12">
-                    <div>
-                        PTN has been
-                        @if (Model.PTN.Status == "Rejected")
-                        {
-                            <span>Rejected</span>
-                        }
-                        else
-                        {
-                            <span>Approved</span>
-                        }
-                        by <span class="text-danger fw-bold">@Model.PTN.ApprovedByAdminlUserFullName</span> on <span class="text-danger fw-bold">@Model.PTN.ApprovedByAdminDate</span>.
+            @if (Model.PTN.ApprovedByAdminlUser != null)
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <div>
+                            PTN has been
+                            @if (Model.PTN.Status == "Rejected")
+                            {
+                                <span>Rejected</span>
+                            }
+                            else
+                            {
+                                <span>Approved</span>
+                            }
+                            by <span class="text-danger fw-bold">@Model.PTN.ApprovedByAdminlUserFullName</span> on <span class="text-danger fw-bold">@Model.PTN.ApprovedByAdminDate</span>.
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
         <div class="row mt-5">
             <div class="col-12 text-start">
@@ -524,7 +552,7 @@
                                             @if (Model.PTN.Status == "Approved")
                                             {
                                                 @Html.ActionLink("Create New","Create","Waivers",new {ptnId=Model?.PTN?.Id, tab="Waivers"},new {@class="btn btn-success me-1"})
-                                            }                                            
+                                            }
                                             @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                                         </span>
                                     </div>
@@ -616,7 +644,7 @@
                                         @Html.ActionLink("Details","Details","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-secondary ms-1"})
                                         @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
                                         {
-                                            @if (item.DeletedDate == null && item.Status == "Draft" && Model.PTN.Status == "Approved")   
+                                            @if (item.DeletedDate == null && item.Status == "Draft" && Model.PTN.Status == "Approved")
                                             {
                                                 @Html.ActionLink("Delete","Delete","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-danger ms-1"})
                                             }

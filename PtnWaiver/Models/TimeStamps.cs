@@ -7,9 +7,9 @@ namespace PtnWaiver.Models
         [Display(Name = "Create Username")]
         public string CreatedUser { get; set; }
         [Display(Name = "Create User Full Name")]
-        public string CreatedUserFullName { get; set; }
+        public string? CreatedUserFullName { get; set; }
         [Display(Name = "Create User Email")]
-        public string CreatedUserEmail { get; set; }
+        public string? CreatedUserEmail { get; set; }
         [Display(Name = "Create Date")]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime CreatedDate { get; set; }

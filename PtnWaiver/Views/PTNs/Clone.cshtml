@@ -7,9 +7,9 @@
 <h1>PTN</h1>
 <h4>Create</h4>
 <hr />
-<form asp-action="Create" asp-route-source="@ViewBag.Source">
+<form asp-action="CloneCreate" asp-route-clonedId="@ViewBag.ClonedId" asp-route-source="@ViewBag.Source">
     <div class="row my-4">
-        <div class="col-md-12">
+        <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
@@ -23,10 +23,10 @@
     <div class="row">
         <div class="col-12">
             <input type="hidden" asp-for="Status" />
-            <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
             <input type="hidden" asp-for="CreatedUserFullName" />
             <input type="hidden" asp-for="CreatedUserEmail" />
+            <input type="hidden" asp-for="CreatedDate" />
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
         </div>
@@ -77,17 +77,6 @@
                 <input asp-for="TisNumber" class="form-control" style="max-width:25%;" />
                 <span asp-validation-for="TisNumber" class="text-danger"></span>
             </div>
-            @*             <div class="form-group my-3">
-            <label asp-for="PdfLocation" class="control-label fw-bold mb-1"></label>
-            <input asp-for="PdfLocation" class="form-control" style="max-width:100%;" />
-            <span asp-validation-for="PdfLocation" class="text-danger"></span>
-            </div> *@
-            @*             <div class="form-group my-3">
-            <label asp-for="Status" class="control-label fw-bold mb-1"></label>
-            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-            @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.Status, "Value", "Text"), new { @class="form-control form-select", @style="max-width:25%;"})
-            <span asp-validation-for="Status" class="text-danger"></span>
-            </div> *@
             <div class="form-group my-3">
                 <label asp-for="Roadblocks" class="control-label fw-bold mb-1"></label>
                 @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
@@ -96,7 +85,7 @@
             </div>
         </div>
     </div>
-    <div class="row mt-4">
+    <div class="row my-4">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
