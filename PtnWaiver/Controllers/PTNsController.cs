@@ -543,7 +543,7 @@ namespace PtnWaiver.Controllers
             var admins = await _contextPtnWaiver.Administrators.Where(m => m.Approver == true).ToListAsync();
             foreach (var admin in admins)
             {
-                string subject = @"Process Test Notification (PTN) - Review Needed";
+                string subject = @"Process Test Notification (PTN) - PTN Review Needed";
                 string body = @"Your Review is needed. Please follow link below and review/respond to the following PTN request. <br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
                 __mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
 
@@ -554,21 +554,19 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }
 
-        //public async Task<IActionResult> RejectPtn(int id)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RejectPtn(int id, [Bind("Id,RejectedReason")] PTN pTN)
-
         {
             if (id == null || _contextPtnWaiver.PTN == null)
                 return NotFound();
 
-            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == pTN.Id);
             if (ptn == null)
                 return RedirectToAction("Index");
 
             if (pTN.RejectedReason == null)                
-                return RedirectToAction("Details", new { id = id, tab = "PtnApproval", rejectedReason = "If PTN is Rejected, Rejected Reason is Required" });
+                return RedirectToAction("Details", new { id = pTN.Id, tab = "PtnApproval", rejectedReason = "If PTN is Rejected, Rejected Reason is Required" });
 
             var userInfo = getUserInfo(_username);
             if (userInfo != null)
@@ -582,6 +580,7 @@ namespace PtnWaiver.Controllers
                 ptn.SubmittedForAdminApprovalDate = DateTime.Now;
             }
             ptn.RejectedReason = pTN.RejectedReason;
+            ptn.RejectedBeforeSubmission = true;
             ptn.Status = "Rejected";
 
             _contextPtnWaiver.PTN.Update(ptn);
@@ -596,9 +595,11 @@ namespace PtnWaiver.Controllers
             Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.CreatedUserEmail, personRejecting.mail, null, null);
             AddEmailHistory(null, subject, body, ptn.CreatedUserFullName, ptn.CreatedUser, ptn.CreatedUserEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
 
-            return RedirectToAction("Details", new { id = id, tab = "PtnApproval" });
+            return RedirectToAction("Details", new { id = pTN.Id, tab = "PtnApproval" });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApprovePtnAdmin(int id)
         {
             if (id == null || _contextPtnWaiver.PTN == null)
@@ -635,7 +636,7 @@ namespace PtnWaiver.Controllers
         }
 
         //public async Task<IActionResult> RejectPtnAdmin(int id)
-                    //public async Task<IActionResult> RejectPtn(int id)
+        //public async Task<IActionResult> RejectPtn(int id)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RejectPtnAdmin(int id, [Bind("Id,RejectedReason")] PTN pTN)
@@ -646,6 +647,9 @@ namespace PtnWaiver.Controllers
             var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
             if (ptn == null)
                 return RedirectToAction("Index");
+
+            if (pTN.RejectedReason == null)
+                return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval", rejectedReason = "If PTN is Rejected, Rejected Reason is Required" });
 
             var userInfo = getUserInfo(_username);
             if (userInfo != null)
@@ -658,6 +662,8 @@ namespace PtnWaiver.Controllers
                 ptn.ApprovedByAdminlUserFullName = userInfo.displayname;
                 ptn.ApprovedByAdminDate = DateTime.Now;
             }
+            ptn.RejectedReason = pTN.RejectedReason;
+            ptn.RejectedByAdmin = true;
             ptn.Status = "Rejected";
 
             _contextPtnWaiver.PTN.Update(ptn);

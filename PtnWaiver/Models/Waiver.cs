@@ -24,6 +24,10 @@ namespace PtnWaiver.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? CorrectiveActionDueDate { get; set; }
+        [Display(Name = "Rejected Before Submission To Admin")]
+        public bool? RejectedBeforeSubmission { get; set; }
+        [Display(Name = "Rejected By Admin")]
+        public bool? RejectedByAdmin { get; set; }
         [Display(Name = "Rejected Reason")]
         public string? RejectedReason { get; set; }
         public string? SubmittedForAdminApprovalUser { get; set; }

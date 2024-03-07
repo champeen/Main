@@ -37,9 +37,16 @@
         </h4>
         <h4>
             @Html.DisplayNameFor(model => model.PTN.Status):
-            <span class="text-success fw-bold">
-                @Html.DisplayFor(model => model.PTN.Status)
-            </span>
+            @if (Model.PTN.Status == "Rejected")
+            {
+                <span class="text-danger fw-bold">Rejected</span>
+            }
+            else
+            {
+                <span class="text-success fw-bold">
+                    @Html.DisplayFor(model => model.PTN.Status)
+                </span>
+            }
         </h4>
     </div>
 </div>
@@ -93,24 +100,6 @@
                     }
                     @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
                 </div>
-                @*                 <div class="col-lg-7">
-                @if (@Model.ButtonSubmitForReview == true)
-                {
-                @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
-                {
-                <div class="row">
-                <div class="col-xl-10 text-xl-end mt-2">
-                <span class="bg-warning fw-bold">
-                WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
-                </span>
-                </div>
-                <div class="col-xl-2 col">
-                @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.PTN.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
-                </div>
-                </div>
-                }
-                }
-                </div> *@
             </div>
             <hr />
             <div class="row">
@@ -403,12 +392,13 @@
                         </h5>
                     </div>
                 </div>
-                <form asp-action="RejectPtn" asp-route-id="@Model.PTN.Id" asp-route-rejectedReason="@Model.PTN.RejectedReason">
+                @* <form asp-action="RejectPtn" asp-route-id="@Model.PTN.Id"> *@
+                <form asp-action="RejectPtn">
                     <input type="hidden" asp-for="@Model.PTN.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
                             @Html.ActionLink("Submit for Admin Approval","SubmitPtnForAdminApproval","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
-                            <input type="submit" value="RejectPTN" class="btn btn-danger ms-1" />
+                            <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" />
                             @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
                         </div>
                         <div class="row mt-3 mb-1">
@@ -419,8 +409,6 @@
                                 {
                                     <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
                                 }
-                                
-                                
                             </div>
                         </div>
                     </div>
@@ -441,22 +429,28 @@
         {
             @if (Model.PTN.SubmittedForAdminApprovalUser != null)
             {
-                <div class="row">
-                    <div class="col-12">
-                        <div>
-                            PTN has been
-                            @if (Model.PTN.Status == "Rejected")
-                            {
-                                <span>Rejected</span>
-                            }
-                            else
-                            {
-                                <span>submitted for administrator approval</span>
-                            }
-                            by <span class="text-danger fw-bold">@Model.PTN.SubmittedForAdminApprovalUserFullName</span> on <span class="text-danger fw-bold">@Model.PTN.SubmittedForAdminApprovalDate</span>.
+
+                @if (Model.PTN.RejectedBeforeSubmission == true)
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            PTN has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.PTN.SubmittedForAdminApprovalUserFullName</span> on <span class="fw-bold">@Model.PTN.SubmittedForAdminApprovalDate</span>.
                         </div>
                     </div>
-                </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <span class="fw-bold">Reason for Rejection: </span>@Model.PTN.RejectedReason
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            PTN has been <span class="text-success fw-bold">submitted for administrator approval</span> by <span class="fw-bold">@Model.PTN.SubmittedForAdminApprovalUserFullName</span> on <span class="fw-bold">@Model.PTN.SubmittedForAdminApprovalDate</span>.
+                        </div>
+                    </div>
+                }
             }
         }
         <div class="row mt-5">
@@ -480,12 +474,32 @@
                         </h5>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12">
-                        @Html.ActionLink("Approve PTN","ApprovePtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
-                        @Html.ActionLink("Reject PTN","RejectPtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"})
+                <form asp-action="RejectPtnAdmin" asp-route-id="@Model.PTN.Id" asp-route-rejectedReason="@Model.PTN.RejectedReason">
+                    <input type="hidden" asp-for="@Model.PTN.Id" />
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            @Html.ActionLink("Approve PTN","ApprovePtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
+                            <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" />
+                            @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
+                        </div>
+                        <div class="row mt-3 mb-1">
+                            <div class="col-12">
+                                <label asp-for="PTN.RejectedReason" class="control-label fw-bold mb-1"></label>
+                                @Html.TextAreaFor(model => model.PTN.RejectedReason, new {@class = "form-control", @rows = 3 })
+                                @if (@ViewBag.RejectedReason != null)
+                                {
+                                    <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
+                                }
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </form>
+                @*                 <div class="row mt-3">
+        <div class="col-12">
+        @Html.ActionLink("Approve PTN","ApprovePtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
+        @Html.ActionLink("Reject PTN","RejectPtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"})
+        </div>
+        </div> *@
             }
             else
             {
@@ -502,22 +516,27 @@
         {
             @if (Model.PTN.ApprovedByAdminlUser != null)
             {
-                <div class="row">
-                    <div class="col-12">
-                        <div>
-                            PTN has been
-                            @if (Model.PTN.Status == "Rejected")
-                            {
-                                <span>Rejected</span>
-                            }
-                            else
-                            {
-                                <span>Approved</span>
-                            }
-                            by <span class="text-danger fw-bold">@Model.PTN.ApprovedByAdminlUserFullName</span> on <span class="text-danger fw-bold">@Model.PTN.ApprovedByAdminDate</span>.
+                @if (Model.PTN.RejectedByAdmin != null && Model.PTN.RejectedByAdmin == true)
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            PTN has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.PTN.ApprovedByAdminlUserFullName</span> on <span class="fw-bold">@Model.PTN.ApprovedByAdminDate</span>.
                         </div>
                     </div>
-                </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <span class="fw-bold">Reason for Rejection: </span>@Model.PTN.RejectedReason
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            PTN has been <span class="text-success fw-bold">submitted for administrator approval</span> by <span class="fw-bold">@Model.PTN.ApprovedByAdminlUserFullName</span> on <span class="fw-bold">@Model.PTN.ApprovedByAdminDate</span>.
+                        </div>
+                    </div>
+                }
             }
         }
         <div class="row mt-5">

@@ -39,9 +39,16 @@
         </h4>
         <h4>
             @Html.DisplayNameFor(model => model.Waiver.Status):
-            <span class="text-success fw-bold">
-                @Html.DisplayFor(model => model.Waiver.Status)
-            </span>
+            @if (Model.Waiver.Status == "Rejected")
+            {
+                <span class="text-danger fw-bold">Rejected</span>
+            }
+            else
+            {
+                <span class="text-success fw-bold">
+                    @Html.DisplayFor(model => model.Waiver.Status)
+                </span>
+            }
         </h4>
     </div>
 </div>
@@ -81,24 +88,6 @@
                     }
                     @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary"})
                 </div>
-                @*                 <div class="col-lg-7">
-                @if (@Model.ButtonSubmitForReview == true)
-                {
-                @if (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser)
-                {
-                <div class="row">
-                <div class="col-xl-10 text-xl-end mt-2">
-                <span class="bg-warning fw-bold">
-                WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
-                </span>
-                </div>
-                <div class="col-xl-2 col">
-                @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.Waiver.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
-                </div>
-                </div>
-                }
-                }
-                </div> *@
             </div>
             <hr />
             <div class="row">
@@ -147,6 +136,14 @@
                 </dt>
                 <dd class="col-10 my-1">
                     @Html.DisplayFor(model => model.Waiver.Description)
+                </dd>
+            </div>
+            <div class="row">
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.RejectedReason)
+                </dt>
+                <dd class="col-sm-10 my-1">
+                    @Html.DisplayFor(model => model.Waiver.RejectedReason)
                 </dd>
             </div>
             <hr / class="mt-3">
@@ -369,12 +366,28 @@
                         </h5>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12">
-                        @Html.ActionLink("Submit for Admin Approval","SubmitWaiverForAdminApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
-                        @Html.ActionLink("Reject Waiver","RejectWaiver","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-danger ms-1"})
+                @* <form asp-action="RejectWaiver" asp-route-id="@Model.Waiver.Id"> *@
+                <form asp-action="RejectWaiver">
+                    @* <input type="hidden" asp-for="@Model.Waiver.Id" /> *@
+                    <input type="hidden" value="@Model.Waiver.Id" name="Waiver.Id" />
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            @Html.ActionLink("Submit for Admin Approval","SubmitWaiverForAdminApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
+                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" />
+                            @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
+                        </div>
+                        <div class="row mt-3 mb-1">
+                            <div class="col-12">
+                                <label asp-for="Waiver.RejectedReason" class="control-label fw-bold mb-1"></label>
+                                @Html.TextAreaFor(model => model.Waiver.RejectedReason, new {@class = "form-control", @rows = 3 })
+                                @if (@ViewBag.RejectedReason != null)
+                                {
+                                    <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
+                                }
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </form>
             }
             else
             {
@@ -389,29 +402,31 @@
         }
         else
         {
-            <div class="row">
-                <div class="col-12">
-                    <div>
-                        Waiver has been
-                        @if (Model.Waiver.Status == "Rejected")
-                        {
-                            <span class="text-danger fw-bold">Rejected</span>
-                        }
-                        else
-                        {
-                            <span class="text-success fw-bold">Submitted for Administrator Approval</span>
-                        }
-                        by
-                        <span class="fw-bold">
-                            @Model.Waiver.SubmittedForAdminApprovalUserFullName
-                        </span>
-                        on
-                        <span class="fw-bold">
-                            @Model.Waiver.SubmittedForAdminApprovalDate
-                        </span>.
+            @if (Model.Waiver.SubmittedForAdminApprovalUser != null)
+            {
+
+                @if (Model.Waiver.RejectedBeforeSubmission == true)
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            Waiver has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.Waiver.SubmittedForAdminApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForAdminApprovalDate</span>.
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <span class="fw-bold">Reason for Rejection: </span>@Model.Waiver.RejectedReason
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            Waiver has been <span class="text-success fw-bold">submitted for administrator approval</span> by <span class="fw-bold">@Model.Waiver.SubmittedForAdminApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForAdminApprovalDate</span>.
+                        </div>
+                    </div>
+                }
+            }
         }
         <div class="row mt-5">
             <div class="col-12 text-start">
@@ -434,12 +449,26 @@
                         </h5>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-12">
-                        @Html.ActionLink("Approve Waiver","ApproveWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
-                        @Html.ActionLink("Reject Waiver","RejectWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-danger ms-1"})
+                <form asp-action="RejectWaiverAdmin" asp-route-id="@Model.Waiver.Id" asp-route-rejectedReason="@Model.Waiver.RejectedReason">
+                    <input type="hidden" asp-for="@Model.Waiver.Id" />
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            @Html.ActionLink("Approve Waiver","ApproveWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
+                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" />
+                            @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
+                        </div>
+                        <div class="row mt-3 mb-1">
+                            <div class="col-12">
+                                <label asp-for="Waiver.RejectedReason" class="control-label fw-bold mb-1"></label>
+                                @Html.TextAreaFor(model => model.Waiver.RejectedReason, new {@class = "form-control", @rows = 3 })
+                                @if (@ViewBag.RejectedReason != null)
+                                {
+                                    <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
+                                }
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </form>
             }
             else
             {
@@ -454,43 +483,30 @@
         }
         else
         {
-            <div class="row">
-                <div class="col-12">
-                    <div>
-                        Waiver has been
-                        @if (Model.Waiver.Status == "Rejected")
-                        {
-                            <span class="text-danger fw-bold">Rejected</span>
-                        }
-                        else
-                        {
-                            <span class="text-success fw-bold">Approved</span>
-                        }
-                        by
-                        <span class="fw-bold">
-                            @if (Model.Waiver.ApprovedByAdminlUser != null)
-                            {
-                                @Model.Waiver.ApprovedByAdminlUserFullName
-                            }
-                            else
-                            {
-                                @Model.Waiver.SubmittedForAdminApprovalUserFullName
-                            }
-                        </span>
-                        on
-                        <span class="fw-bold">
-                            @if (Model.Waiver.ApprovedByAdminDate != null)
-                            {
-                                @Model.Waiver.ApprovedByAdminDate
-                            }
-                            else
-                            {
-                                @Model.Waiver.SubmittedForAdminApprovalDate
-                            }
-                        </span>.
+            @if (Model.Waiver.ApprovedByAdminlUser != null)
+            {
+                @if (Model.Waiver.RejectedByAdmin != null && Model.Waiver.RejectedByAdmin == true)
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            Waiver has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.Waiver.ApprovedByAdminlUserFullName</span> on <span class="fw-bold">@Model.Waiver.ApprovedByAdminDate</span>.
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <span class="fw-bold">Reason for Rejection: </span>@Model.Waiver.RejectedReason
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-12">
+                            Waiver has been <span class="text-success fw-bold">Approved</span> by <span class="fw-bold">@Model.Waiver.ApprovedByAdminlUserFullName</span> on <span class="fw-bold">@Model.Waiver.ApprovedByAdminDate</span>.
+                        </div>
+                    </div>
+                }
+            }
         }
         <div class="row mt-5">
             <div class="col-12 text-start">

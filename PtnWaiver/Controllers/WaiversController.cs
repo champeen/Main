@@ -63,7 +63,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: Waivers/Details/5
-        public async Task<IActionResult> Details(int? id, string tab="Waiver", string tabWaiver="Details", string fileAttachmentError = null)
+        public async Task<IActionResult> Details(int? id, string tab="Waiver", string tabWaiver="Details", string fileAttachmentError = null, string rejectedReason = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -83,6 +83,7 @@ namespace PtnWaiver.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.RejectedReason = rejectedReason;
 
             WaiverViewModel waiverVM = new WaiverViewModel();
             waiverVM.FileAttachmentError = fileAttachmentError;
@@ -409,6 +410,8 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitWaiverForAdminApproval(int id)
         {
             if (id == null || _contextPtnWaiver.Waiver == null)
@@ -434,18 +437,35 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver.Waiver.Update(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
 
+            // email administrators to review the Waiver and either Approve or Reject....
+            var admins = await _contextPtnWaiver.Administrators.Where(m => m.Approver == true).ToListAsync();
+            foreach (var admin in admins)
+            {
+                string subject = @"Process Test Notification (PTN) - Waiver Review Needed";
+                string body = @"Your Review is needed. Please follow link below and review/respond to the following Waiver request. <br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                __mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
+
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, person.mail, null, null, null);
+                AddEmailHistory(null, subject, body, person.displayname, person.onpremisessamaccountname, person.mail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+            }
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }
 
-        public async Task<IActionResult> RejectWaiver(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectWaiver(int id, [Bind("Id,RejectedReason")] Waiver waiverIn)
+        //public async Task<IActionResult> RejectWaiver(Waiver waiverIn)
 
         {
-            if (id == null || _contextPtnWaiver.Waiver == null)
+            if (waiverIn.Id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
-            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == waiverIn.Id);
             if (waiver == null)
                 return RedirectToAction("Index");
+
+            if (waiverIn.RejectedReason == null)
+                return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverApproval", rejectedReason = "If Waiver is Rejected, Rejected Reason is Required" });
 
             var userInfo = getUserInfo(_username);
             if (userInfo != null)
@@ -458,14 +478,27 @@ namespace PtnWaiver.Controllers
                 waiver.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
                 waiver.SubmittedForAdminApprovalDate = DateTime.Now;
             }
+            waiver.RejectedReason = waiverIn.RejectedReason;
+            waiver.RejectedBeforeSubmission = true;
             waiver.Status = "Rejected";
 
             _contextPtnWaiver.Waiver.Update(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverApproval" });
+            // email Waiver creator to notify of Waiver Rejection....
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - Waiver Rejected";
+            string body = @"Your Waiver has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
+                "<br/><br/><strong>Reason Rejected: </strong>" + waiver.RejectedReason + "." +
+                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personRejecting.mail, null, null);
+            AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+
+            return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverApproval" });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveWaiverAdmin(int id)
         {
             if (id == null || _contextPtnWaiver.Waiver == null)
@@ -491,10 +524,20 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver.Waiver.Update(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
 
+            // email Waiver creator that the Waiver was Approved....
+            var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - Waiver Approved by Admin";
+            string body = @"Your Waiver has been <span style=""color:green"">approved</span> by " + personApproving.displayname + "." +
+                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personApproving.mail, null, null);
+            AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }
 
-        public async Task<IActionResult> RejectWaiverAdmin(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectWaiverAdmin(int id, [Bind("Id,RejectedReason")] Waiver waiverIn)
         {
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -502,6 +545,9 @@ namespace PtnWaiver.Controllers
             var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
             if (waiver == null)
                 return RedirectToAction("Index");
+
+            if (waiverIn.RejectedReason == null)
+                return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval", rejectedReason = "If Waiver is Rejected, Rejected Reason is Required" });
 
             var userInfo = getUserInfo(_username);
             if (userInfo != null)
@@ -514,10 +560,21 @@ namespace PtnWaiver.Controllers
                 waiver.ApprovedByAdminlUserFullName = userInfo.displayname;
                 waiver.ApprovedByAdminDate = DateTime.Now;
             }
+            waiver.RejectedReason = waiverIn.RejectedReason;
+            waiver.RejectedByAdmin = true;
             waiver.Status = "Rejected";
 
             _contextPtnWaiver.Waiver.Update(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
+
+            // email Waiver creator to notify of Waiver Rejection....
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - Waiver Rejected";
+            string body = @"Your Waiver has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
+                "<br/><br/><strong>Reason Rejected: </strong>" + waiver.RejectedReason + "." +
+                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personRejecting.mail, null, null);
+            AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
 
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }
