@@ -153,9 +153,9 @@ namespace PtnWaiver.Controllers
             // Submit for Admin Approval Tab...
             ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
             // Admin Approve Ptn Tab...
-            ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Completed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
             // Waivers Tab...
-            ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Completed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
 
             if (ptnVM.PTN.Status != "Draft")
                 ViewBag.Disable = "disabled";
@@ -598,8 +598,6 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = pTN.Id, tab = "PtnApproval" });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApprovePtnAdmin(int id)
         {
             if (id == null || _contextPtnWaiver.PTN == null)

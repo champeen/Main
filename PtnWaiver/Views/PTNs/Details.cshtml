@@ -397,8 +397,8 @@
                     <input type="hidden" asp-for="@Model.PTN.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
-                            @Html.ActionLink("Submit for Admin Approval","SubmitPtnForAdminApproval","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
-                            <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" />
+                            @Html.ActionLink("Submit for Admin Approval","SubmitPtnForAdminApproval","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                            <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                             @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
                         </div>
                         <div class="row mt-3 mb-1">
@@ -478,8 +478,8 @@
                     <input type="hidden" asp-for="@Model.PTN.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
-                            @Html.ActionLink("Approve PTN","ApprovePtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
-                            <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" />
+                            @Html.ActionLink("Approve PTN","ApprovePtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                            <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                             @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
                         </div>
                         <div class="row mt-3 mb-1">
@@ -494,12 +494,6 @@
                         </div>
                     </div>
                 </form>
-                @*                 <div class="row mt-3">
-        <div class="col-12">
-        @Html.ActionLink("Approve PTN","ApprovePtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-success"})
-        @Html.ActionLink("Reject PTN","RejectPtnAdmin","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"})
-        </div>
-        </div> *@
             }
             else
             {
@@ -663,6 +657,10 @@
                                         @Html.ActionLink("Details","Details","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-secondary ms-1"})
                                         @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
                                         {
+                                            @if (item.Status != "Draft" && item.Status != "Pending Approval")
+                                            {
+                                                @Html.ActionLink("Revise","Revise","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-success ms-1"})
+                                            }                                            
                                             @if (item.DeletedDate == null && item.Status == "Draft" && Model.PTN.Status == "Approved")
                                             {
                                                 @Html.ActionLink("Delete","Delete","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-danger ms-1"})
@@ -688,111 +686,8 @@
                             </tr>
                         }
                     </table>
-
-
                 </div>
             </div>
         </div>
     </div>
-
-
-    @******************************************************************************************************************@
-    @*  WAIVER ATTACHMENTS TAB  ***************************************************************************************@
-    @******************************************************************************************************************@
-    @*     <div class="tab-pane fade show @Model.TabActiveAttachmentsWaiver" id="nav-attachmentsWaiver" role="tabpanel" aria-labelledby="nav-attachmentsWaiver-tab">
-    <div class="text-nowrap mt-5">
-    <div class="row mb-5">
-    <div class="col-12">
-    <div class="text-nowrap fs-4">
-    STEP 1: Download Waiver Template and Complete
-    @Html.ActionLink("Download PTN Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"})
-    </div>
-    </div>
-    </div>
-    <div class="row mt-5">
-    <div class="col-12">
-    <div class="text-nowrap fs-4">
-    STEP 2: Complete Waiver Template
-    </div>
-    </div>
-    </div>
-    <div class="row mt-5">
-    <div class="col-12">
-    <div class="text-nowrap fs-4">
-    STEP 3: Upload Completed Waiver Template under PTN/Waiver
-    </div>
-    </div>
-    </div>
-    <div class="mx-5">
-    @using (Html.BeginForm("SaveFile", "PTNs", new { id = Model.PTN.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-    {
-    <div class="control-label fw-bold mt-5 mb-2">
-    <strong>Upload Completed PTF Template:</strong>
-    </div>
-    <div class="form-group mb-3">
-    <div class="row">
-    <div class="col-10">
-    <input type="file" name="fileAttachment" class="form-control" />
-    <div class="form-group text-danger fw-bold">
-    @Html.DisplayFor(m => m.FileAttachmentError)
-    </div>
-    </div>
-    <div class="col-2">
-    <input type="submit" value="Upload PTN Completed Template" class="form-control btn btn-success">
-    </div>
-    </div>
-    </div>
-    }
-    <table class="table table-bordered table-striped mt-5">
-    <thead class="table-primary">
-    <tr>
-    <th>
-    File Name
-    </th>
-    <th>
-    Date Added
-    </th>
-    <th>
-    Size
-    </th>
-    <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.AttachmentsWaiver)
-    {
-    <tr>
-    <td>
-    @Html.DisplayFor(modelItem => item.Name)
-    </td>
-    <td>
-    @Html.DisplayFor(modelItem => item.CreatedDate)
-    </td>
-    <td>
-    @Html.DisplayFor(modelItem => item.Size)
-    </td>
-    <td>
-    @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.PTN.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
-    @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
-    {
-    @Html.ActionLink("Delete","DeleteFile","ChangeRequests",new {id=@Model.PTN.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
-    }
-    </td>
-    </tr>
-    }
-    </tbody>
-    @if (Model.AttachmentsWaiver.Count() == 0)
-    {
-    <tr>
-    <td>No data found</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    </tr>
-    }
-    </table>
-    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
-    </div>
-    </div>
-    </div> *@
 </div>

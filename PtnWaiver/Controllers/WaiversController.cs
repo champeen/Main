@@ -118,8 +118,8 @@ namespace PtnWaiver.Controllers
 
             // GET ALL ATTACHMENTS FOR Waiver ///////////////////////////////////////////////////////////////////////////////////////////////
             // Get the directory
-            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber)))
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
                 path.Create();
 
             // Using GetFiles() method to get list of all
@@ -149,7 +149,10 @@ namespace PtnWaiver.Controllers
             // Submit for Admin Approval Tab...
             waiverVM.Tab3Disabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
             // Admin Approve Waiver Tab...
-            waiverVM.Tab4Disabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Completed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+            waiverVM.Tab4Disabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+
+            if (waiverVM.Waiver.Status != "Draft")
+                ViewBag.Disable = "disabled";
 
             //return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
             return View(waiverVM);
@@ -224,8 +227,8 @@ namespace PtnWaiver.Controllers
                 }
                 waiver.WaiverNumber = waiverNumber;
 
-                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber));
-                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber)))
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
                     path.Create();
 
                 //waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
@@ -410,8 +413,6 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitWaiverForAdminApproval(int id)
         {
             if (id == null || _contextPtnWaiver.Waiver == null)
@@ -451,11 +452,9 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("RejectWaiver")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RejectWaiver(int id, [Bind("Id,RejectedReason")] Waiver waiverIn)
-        //public async Task<IActionResult> RejectWaiver(Waiver waiverIn)
-
+        public async Task<IActionResult> RejectWaiver([Bind("Id,RejectedReason", Prefix = "Ptn")] PTN ptnIn, [Bind("Id,RejectedReason", Prefix = "Waiver")] Waiver waiverIn)
         {
             if (waiverIn.Id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -497,8 +496,6 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverApproval" });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApproveWaiverAdmin(int id)
         {
             if (id == null || _contextPtnWaiver.Waiver == null)
@@ -537,17 +534,17 @@ namespace PtnWaiver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RejectWaiverAdmin(int id, [Bind("Id,RejectedReason")] Waiver waiverIn)
+        public async Task<IActionResult> RejectWaiverAdmin([Bind("Id,RejectedReason", Prefix = "Ptn")] PTN ptnIn, [Bind("Id,RejectedReason", Prefix = "Waiver")] Waiver waiverIn)
         {
-            if (id == null || _contextPtnWaiver.Waiver == null)
+            if (waiverIn.Id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
-            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == waiverIn.Id);
             if (waiver == null)
                 return RedirectToAction("Index");
 
             if (waiverIn.RejectedReason == null)
-                return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval", rejectedReason = "If Waiver is Rejected, Rejected Reason is Required" });
+                return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverAdminApproval", rejectedReason = "If Waiver is Rejected, Rejected Reason is Required" });
 
             var userInfo = getUserInfo(_username);
             if (userInfo != null)
@@ -576,7 +573,69 @@ namespace PtnWaiver.Controllers
             Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personRejecting.mail, null, null);
             AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
 
-            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
+            return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverAdminApproval" });
+        }
+
+        public async Task<IActionResult> Revise(int id, string? tab = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (id == null || id == 0)
+                return View("Index");
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            Waiver waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return View("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+            }
+            waiver.RejectedReason = "Waiver Revised";
+            waiver.Status = "Rejected";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            waiver.Id = 0;
+            waiver.DateClosed = null;
+            waiver.RevisionNumber += 1;
+            waiver.RejectedBeforeSubmission = false;
+            waiver.RejectedByAdmin = false;
+            waiver.SubmittedForAdminApprovalDate = null;
+            waiver.SubmittedForAdminApprovalUser = null;
+            waiver.SubmittedForAdminApprovalUserFullName = null;
+            waiver.ApprovedByAdminDate = null;
+            waiver.ApprovedByAdminlUser = null;
+            waiver.ApprovedByAdminlUserFullName = null;
+            waiver.CompletedByDate = null;
+            waiver.CompletedBylUser = null;
+            waiver.CompletedBylUserFullName = null;
+            waiver.CreatedDate = DateTime.Now;
+            waiver.CreatedUser = userInfo.onpremisessamaccountname;
+            waiver.CreatedUserFullName = userInfo.displayname;
+            waiver.CreatedUserEmail = userInfo.mail;
+            waiver.ModifiedUser = null;
+            waiver.ModifiedUserFullName = null;
+            waiver.ModifiedUserEmail = null;
+            waiver.ModifiedDate = null;
+            waiver.RejectedReason = null;
+            waiver.Status = "Draft";
+
+            _contextPtnWaiver.Add(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", "PTNs", new { id = waiver.PTNId, tab = "Waivers" });
         }
     }
 }

@@ -36,6 +36,10 @@
             <span class="fw-bold">
                 @Html.DisplayFor(model => model.Waiver.WaiverNumber)
             </span>
+            revision: 
+            <span class="fw-bold">
+                @Html.DisplayFor(model => model.Waiver.RevisionNumber) 
+            </span>
         </h4>
         <h4>
             @Html.DisplayNameFor(model => model.Waiver.Status):
@@ -284,14 +288,14 @@
                     <div class="form-group mb-3">
                         <div class="row">
                             <div class="col-10">
-                                <input type="file" name="fileAttachment" class="form-control" />
+                                <input type="file" name="fileAttachment" class="form-control" @ViewBag.Disable />
                                 <div class="form-group text-danger fw-bold">
                                     @*<input asp-for="FileAttachmentError" class="form-control" />*@
                                     @Html.DisplayFor(m => m.FileAttachmentError)
                                 </div>
                             </div>
                             <div class="col-2">
-                                <input type="submit" value="Upload Completed Waiver Template" class="form-control btn btn-success">
+                                <input type="submit" value="Upload Completed Waiver Template" class="form-control btn btn-success" @ViewBag.Disable>
                             </div>
                         </div>
                     </div>
@@ -328,7 +332,7 @@
                                     @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
                                     @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
                                     @Html.ActionLink("Download File","DownloadFile","Waivers",new {id=@Model.Waiver.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
-                                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser)
+                                    @if (Model.Waiver.Status == "Draft" && (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser))
                                     {
                                         @Html.ActionLink("Delete","DeleteFile","Waivers",new {id=@Model.Waiver.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
                                     }
@@ -369,11 +373,12 @@
                 @* <form asp-action="RejectWaiver" asp-route-id="@Model.Waiver.Id"> *@
                 <form asp-action="RejectWaiver">
                     @* <input type="hidden" asp-for="@Model.Waiver.Id" /> *@
-                    <input type="hidden" value="@Model.Waiver.Id" name="Waiver.Id" />
+                    <input type="hidden" asp-for="@Model.Waiver.Id" />
+                    <input type="hidden" asp-for="@Model.Ptn.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
-                            @Html.ActionLink("Submit for Admin Approval","SubmitWaiverForAdminApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
-                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" />
+                            @Html.ActionLink("Submit for Admin Approval","SubmitWaiverForAdminApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                             @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
                         </div>
                         <div class="row mt-3 mb-1">
@@ -453,8 +458,8 @@
                     <input type="hidden" asp-for="@Model.Waiver.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
-                            @Html.ActionLink("Approve Waiver","ApproveWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success"})
-                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" />
+                            @Html.ActionLink("Approve Waiver","ApproveWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                             @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
                         </div>
                         <div class="row mt-3 mb-1">
@@ -515,13 +520,3 @@
         </div>
     </div>
 </div>
-@* <div>
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="form-group">
-                <a asp-action="Edit" asp-route-id="@Model?.Waiver?.Id" class="btn btn-primary">Edit</a>
-                @Html.ActionLink("Back","Details","PTNs",new {id=Model?.Waiver?.PTNId, tab="Waivers"},new {@class="btn btn-secondary mx-2"})
-            </div>
-        </div>
-    </div>
-</div> *@

@@ -10,6 +10,13 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script>
+        function DisplayProgressMessage(ctl, msg) {
+            $("body").addClass("submit-progress-bg");
+            $(ctl).addClass("disableClick");
+            $(ctl).text(msg);
+            return true;
+        };
+
         $(document).ready(function () {
 
             $("#ptnIndexSearch").on("keyup", function () {
