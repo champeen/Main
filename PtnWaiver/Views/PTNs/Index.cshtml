@@ -111,8 +111,17 @@
                     {
                         @if (item.DeletedDate == null && item.Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
                         {
-                            @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1", title="Hard Delete only if in 'Draft' status."})
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id, tab="Details"},new {@class="btn btn-danger ms-1", title="Hard Delete only if in 'Draft' status.", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                             @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Cancelled'"></i>*@
+                        }
+                        @if (item.Waivers.Any(m => m.Status == "Draft" || m.Status == "Pending Approval")) {}
+                        else
+                        {
+                            @if (item.Status == "Approved")
+                            {
+                                @Html.ActionLink("Close PTN","ClosePtn",new {id=@item.Id},new {@class="btn btn-primary ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                            }
+                            
                         }
                     }
                 </td>

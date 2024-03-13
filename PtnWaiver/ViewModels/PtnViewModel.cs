@@ -19,7 +19,6 @@ namespace PtnWaiver.ViewModels
         public string? Tab5Disabled { get; set; }
         public string? Tab6Disabled { get; set; }
 
-        public bool ButtonSubmitForReview { get; set; }
         public string? FileAttachmentError { get; set; }
         
     }

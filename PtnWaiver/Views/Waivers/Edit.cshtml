@@ -21,6 +21,8 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="RevisionNumber" />
+            <input type="hidden" asp-for="Status" />
             <input type="hidden" asp-for="CreatedUser" />
             <input type="hidden" asp-for="CreatedUserFullName" />
             <input type="hidden" asp-for="CreatedUserEmail" />
@@ -34,6 +36,7 @@
             <input type="hidden" asp-for="DeletedUserEmail" />
             <input type="hidden" asp-for="DeletedDate" />
             <input type="hidden" asp-for="PtnDocId" />
+            <input type="hidden" asp-for="DateClosed" />
             <div class="form-group my-3">
                 <label asp-for="WaiverNumber" class="control-label fw-bold mb-1"></label>
                 <input asp-for="WaiverNumber" class="form-control" style="max-width:10%;" readonly/>
@@ -46,11 +49,6 @@
                 @*@Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests), new { @class="form-control form-select"})*@
                 @Html.DropDownListFor(model => model.PTNId, new SelectList(ViewBag.Ptns,"Value","Text"), "-- select --", new { @class="form-control form-select"})
                 <span asp-validation-for="PTNId" class="text-danger fw-bold"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="RevisionNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="RevisionNumber" class="form-control" style="max-width:10%;"/>
-                <span asp-validation-for="RevisionNumber" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="PorProject" class="control-label fw-bold mb-1"></label>
@@ -66,16 +64,6 @@
                 <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
                 @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess,"Value","Text"), new { @class="form-control form-select", @style="max-width:20%;"})
                 <span asp-validation-for="ProductProcess" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="Status" class="control-label fw-bold mb-1"></label>
-                @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.Status,"Value","Text"), new { @class="form-control form-select", @style="max-width:20%;"})
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="DateClosed" class="control-label fw-bold mb-1"></label>
-                <input asp-for="DateClosed" class="form-control" style="max-width:20%" onclick="this.showPicker()" />
-                <span asp-validation-for="DateClosed" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="CorrectiveActionDueDate" class="control-label fw-bold mb-1"></label>

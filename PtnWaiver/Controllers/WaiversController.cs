@@ -364,7 +364,8 @@ namespace PtnWaiver.Controllers
                 _contextPtnWaiver.Waiver.Remove(waiver);
             
             await _contextPtnWaiver.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+           
+            return RedirectToAction("Details", "PTNs", new { id = waiver.PTNId, tab = "Waivers" });
         }
 
         private bool WaiverExists(int id)
@@ -393,7 +394,7 @@ namespace PtnWaiver.Controllers
             if (!found)
                 return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
 
-            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber, fileAttachment.FileName);
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + '-' + waiver.RevisionNumber.ToString(), fileAttachment.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await fileAttachment.CopyToAsync(fileStream);
@@ -443,7 +444,7 @@ namespace PtnWaiver.Controllers
             foreach (var admin in admins)
             {
                 string subject = @"Process Test Notification (PTN) - Waiver Review Needed";
-                string body = @"Your Review is needed. Please follow link below and review/respond to the following Waiver request. <br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                string body = @"Your Review is needed. Please follow link below and review/respond to the following Waiver request. <br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
                 __mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
 
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, person.mail, null, null, null);
@@ -489,7 +490,7 @@ namespace PtnWaiver.Controllers
             string subject = @"Process Test Notification (PTN) - Waiver Rejected";
             string body = @"Your Waiver has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
                 "<br/><br/><strong>Reason Rejected: </strong>" + waiver.RejectedReason + "." +
-                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
             Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personRejecting.mail, null, null);
             AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
 
@@ -525,7 +526,7 @@ namespace PtnWaiver.Controllers
             var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - Waiver Approved by Admin";
             string body = @"Your Waiver has been <span style=""color:green"">approved</span> by " + personApproving.displayname + "." +
-                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
             Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personApproving.mail, null, null);
             AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
 
@@ -569,7 +570,7 @@ namespace PtnWaiver.Controllers
             string subject = @"Process Test Notification (PTN) - Waiver Rejected";
             string body = @"Your Waiver has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
                 "<br/><br/><strong>Reason Rejected: </strong>" + waiver.RejectedReason + "." +
-                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
             Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personRejecting.mail, null, null);
             AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
 
@@ -602,7 +603,7 @@ namespace PtnWaiver.Controllers
                 waiver.ModifiedDate = DateTime.Now;
             }
             waiver.RejectedReason = "Waiver Revised";
-            waiver.Status = "Rejected";
+            waiver.Status = "Closed";
 
             _contextPtnWaiver.Waiver.Update(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
@@ -634,6 +635,42 @@ namespace PtnWaiver.Controllers
 
             _contextPtnWaiver.Add(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", "PTNs", new { id = waiver.PTNId, tab = "Waivers" });
+        }
+
+        public async Task<IActionResult> CloseWaiver(int id)
+        {
+            if (id == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return RedirectToAction("Index","Home");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+                waiver.CompletedBylUser = userInfo.onpremisessamaccountname;
+                waiver.CompletedBylUserFullName = userInfo.displayname;
+                waiver.CompletedByDate = DateTime.Now;
+            }
+            waiver.Status = "Closed";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            // email Waiver creator to notify of PTN Rejection....
+            var personClosing = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - Waiver Closed";
+            string body = @"Your Waiver has been <span style=""color:green"">closed</span> by " + personClosing.displayname + "." +
+                "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Title: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.CreatedUserEmail, personClosing.mail, null, null);
+            AddEmailHistory(null, subject, body, waiver.CreatedUserFullName, waiver.CreatedUser, waiver.CreatedUserEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
 
             return RedirectToAction("Details", "PTNs", new { id = waiver.PTNId, tab = "Waivers" });
         }

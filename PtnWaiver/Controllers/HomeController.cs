@@ -20,16 +20,21 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver = contextPtnWaiver;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewBag.IsAdmin = _isAdmin;
             string username = _username;
             ViewBag.Username = username;
+            ViewBag.UserDisplayName = _userDisplayName;
 
+            DashboardViewModel dashboardVM = new DashboardViewModel();
 
-            //ViewBag.UserDisplayName = _userDisplayName;
+            dashboardVM.YourInProgressPtns = await _contextPtnWaiver.PTN.Where(m => m.Status == "Draft" || m.Status == "Pending Approval").ToListAsync();
+            dashboardVM.AdminInProgressPtns = await _contextPtnWaiver.PTN.Where(m => m.Status == "Pending Approval").ToListAsync();
+            dashboardVM.YourInProgressWaivers = await _contextPtnWaiver.Waiver.Where(m => m.Status == "Draft" || m.Status == "Pending Approval").ToListAsync();
+            dashboardVM.AdminInProgressWaivers = await _contextPtnWaiver.Waiver.Where(m => m.Status == "Pending Approval").ToListAsync();
 
-            return View();
+            return View(dashboardVM);
         }
 
         public IActionResult Privacy()

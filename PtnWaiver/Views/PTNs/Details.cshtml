@@ -659,11 +659,15 @@
                                         {
                                             @if (item.Status != "Draft" && item.Status != "Pending Approval")
                                             {
-                                                @Html.ActionLink("Revise","Revise","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-success ms-1"})
-                                            }                                            
+                                                @Html.ActionLink("Revise","Revise","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-success ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                            }
                                             @if (item.DeletedDate == null && item.Status == "Draft" && Model.PTN.Status == "Approved")
                                             {
-                                                @Html.ActionLink("Delete","Delete","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-danger ms-1"})
+                                                @Html.ActionLink("Delete","Delete","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-danger ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                            }
+                                            @if (item.Status == "Approved")
+                                            {
+                                                @Html.ActionLink("Close Waiver","CloseWaiver","Waivers",new {id=@item.Id},new {@class="btn btn-primary ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                             }
                                         }
                                     </td>

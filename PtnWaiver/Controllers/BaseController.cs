@@ -60,23 +60,22 @@ namespace PtnWaiver.Controllers
                 return subtract38352;
             }
         }
-
-        //public string _userDisplayName
-        //{
-        //    get
-        //    {
-        //        if (userDisplayName == null)
-        //        {
-        //            userDisplayName = _context.__mst_employee
-        //                .Where(m => m.onpremisessamaccountname == _username)
-        //                .Where(m => m.accountenabled == true)
-        //                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-        //                .Select(m => m.displayname)
-        //                .FirstOrDefault();
-        //        }
-        //        return String.IsNullOrWhiteSpace(userDisplayName) ? userName : userDisplayName;
-        //    }
-        //}
+        public string _userDisplayName
+        {
+            get
+            {
+                if (userDisplayName == null)
+                {
+                    userDisplayName = _contextMoc.__mst_employee
+                        .Where(m => m.onpremisessamaccountname == _username)
+                        .Where(m => m.accountenabled == true)
+                        .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                        .Select(m => m.displayname)
+                        .FirstOrDefault();
+                }
+                return String.IsNullOrWhiteSpace(userDisplayName) ? userName : userDisplayName;
+            }
+        }
 
         public bool _isAuthorized
         {

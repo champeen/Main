@@ -1,8 +1,224 @@
-﻿@{
+﻿@model PtnWaiver.ViewModels.DashboardViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="row">
+    <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+        <div>
+            @*<a asp-action="Create">Create New</a>*@
+            @Html.ActionLink("Create New PTN","Create","PTNs",new {source="Home"},new {@class="btn btn-primary"})
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="text-center">
+            @*<h1 class="display-4">DASHBOARD</h1>*@
+            <p>Process Test Notification dashboard for user: <span class="text-danger fw-bold">@ViewBag.UserDisplayName</span></p>
+        </div>
+    </div>
+    <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+        @* @Html.ActionLink("Create New Task","Create","Tasks",new {source="Home"},new {@class="btn btn-primary"}) *@
+    </div>
+</div>
+@{
+    var columnSpace = "";
+}
+@if (ViewBag.IsAdmin)
+{
+    columnSpace = "col-3";
+}
+else
+{
+    columnSpace = "col-6";
+}
+<div class="row">
+    <div class="@columnSpace p-3">
+        <div class="row">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Your Active PTNs
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        PTN Doc Id
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.YourInProgressPtns)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.DocId,"Details","PTNs",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            @if (Model.YourInProgressPtns.Count() == 0)
+                            {
+                                <tr>
+                                    <td>No data found</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="@columnSpace p-3">
+        <div class="row">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Your Active Waivers
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        Waiver Number
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.YourInProgressWaivers)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.WaiverNumber,"Details","Waivers",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            @if (Model.YourInProgressWaivers.Count() == 0)
+                            {
+                                <tr>
+                                    <td>No data found</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (ViewBag.IsAdmin)
+    {
+        <div class="col-3 p-3">
+            <div class="row">
+                <div class="col-12 border border-dark">
+                    <div class="my-3">
+                        <h5 class="text-center">
+                            Admin PTNs Pending Approval
+                        </h5>
+                        <div class="table-responsive">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped mt-3 ">
+                                    <thead class="align-top align-text-top table-primary">
+                                        <tr>
+                                            <th class="text-nowrap">
+                                                PTN Doc Id
+                                            </th>
+                                            <th class="text-nowrap">
+                                                Title/Description
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.AdminInProgressPtns)
+                                        {
+                                            <tr>
+                                                <td class="text-nowrap">
+                                                    @Html.ActionLink(item.DocId,"Details","PTNs",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
+                                                </td>
+                                                <td class="text-nowrap">
+                                                    @Html.DisplayFor(modelItem => item.Title)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    @if (Model.AdminInProgressPtns.Count() == 0)
+                                    {
+                                        <tr>
+                                            <td>No data found</td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 p-3">
+            <div class="row">
+                <div class="col-12 border border-dark">
+                    <div class="my-3">
+                        <h5 class="text-center">
+                            Admin Waivers Pending Approval
+                        </h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped mt-3 ">
+                                <thead class="align-top align-text-top table-primary">
+                                    <tr>
+                                        <th class="text-nowrap">
+                                            Waiver Number
+                                        </th>
+                                        <th class="text-nowrap">
+                                            Title/Description
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.AdminInProgressWaivers)
+                                    {
+                                        <tr>
+                                            <td class="text-nowrap">
+                                                @Html.ActionLink(item.WaiverNumber,"Details","Waivers",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
+                                            </td>
+                                            <td class="text-nowrap">
+                                                @Html.DisplayFor(modelItem => item.Description)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                @if (Model.AdminInProgressWaivers.Count() == 0)
+                                {
+                                    <tr>
+                                        <td>No data found</td>
+                                        <td></td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="col-12">
+    </div>
 </div>

@@ -39,12 +39,16 @@ namespace PtnWaiver.Controllers
                 statusFilter = prevStatusFilter;
             ViewBag.StatusList = getStatusFilter(statusFilter);
 
-            // Get 
+            // Get Ptns....
             var ptns = await _contextPtnWaiver.PTN
                 .Where(m => m.DeletedDate == null)
                 .OrderBy(m => m.CreatedDate)
                 .ThenBy(m => m.DocId)
                 .ToListAsync();
+
+            // get each Ptn's waivers...
+            foreach (var ptn in ptns)
+                ptn.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == ptn.Id).ToListAsync();
 
             switch (statusFilter)
             {
@@ -679,5 +683,40 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }
 
+        public async Task<IActionResult> ClosePtn(int id)
+        {
+            if (id == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == id);
+            if (ptn == null)
+                return RedirectToAction("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                ptn.ModifiedUser = userInfo.onpremisessamaccountname;
+                ptn.ModifiedUserFullName = userInfo.displayname;
+                ptn.ModifiedUserEmail = userInfo.mail;
+                ptn.ModifiedDate = DateTime.Now;
+                ptn.CompletedBylUser = userInfo.onpremisessamaccountname;
+                ptn.CompletedBylUserFullName = userInfo.displayname;
+                ptn.CompletedByDate = DateTime.Now;
+            }
+            ptn.Status = "Closed";
+
+            _contextPtnWaiver.PTN.Update(ptn);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            // email PTN creator to notify of PTN Rejection....
+            var personClosing = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            string subject = @"Process Test Notification (PTN) - PTN Closed";
+            string body = @"Your PTN has been <span style=""color:green"">closed</span> by " + personClosing.displayname + "." +
+                "<br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.CreatedUserEmail, personClosing.mail, null, null);
+            AddEmailHistory(null, subject, body, ptn.CreatedUserFullName, ptn.CreatedUser, ptn.CreatedUserEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+
+            return RedirectToAction("Index", new {});
+        }
     }
 }

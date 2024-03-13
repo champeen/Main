@@ -32,12 +32,15 @@ namespace PtnWaiver.Models
         public string? RejectedReason { get; set; }
         public string? SubmittedForAdminApprovalUser { get; set; }
         public string? SubmittedForAdminApprovalUserFullName { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? SubmittedForAdminApprovalDate { get; set; }
         public string? ApprovedByAdminlUser { get; set; }
         public string? ApprovedByAdminlUserFullName { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? ApprovedByAdminDate { get; set; }
         public string? CompletedBylUser { get; set; }
         public string? CompletedBylUserFullName { get; set; }
+        [DataType(DataType.Date)]
         public DateTime? CompletedByDate { get; set; }
 
         [ForeignKey("PTN")]
