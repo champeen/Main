@@ -1,4 +1,4 @@
-﻿For My Use * MJWII *
+﻿For My Use * MJWII * TEST
 
 -- ADD MIGRATION AND UPDATE DATABASE WHEN USING MULTIPLE DATA CONTEXT.....
 add-migration initialMigrationPtn -context PtnWaiverContext
