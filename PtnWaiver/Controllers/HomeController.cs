@@ -29,10 +29,10 @@ namespace PtnWaiver.Controllers
 
             DashboardViewModel dashboardVM = new DashboardViewModel();
 
-            dashboardVM.YourInProgressPtns = await _contextPtnWaiver.PTN.Where(m => m.Status == "Draft" || m.Status == "Pending Approval").ToListAsync();
-            dashboardVM.AdminInProgressPtns = await _contextPtnWaiver.PTN.Where(m => m.Status == "Pending Approval").ToListAsync();
-            dashboardVM.YourInProgressWaivers = await _contextPtnWaiver.Waiver.Where(m => m.Status == "Draft" || m.Status == "Pending Approval").ToListAsync();
-            dashboardVM.AdminInProgressWaivers = await _contextPtnWaiver.Waiver.Where(m => m.Status == "Pending Approval").ToListAsync();
+            dashboardVM.YourInProgressPtns = await _contextPtnWaiver.PTN.Where(m => m.CreatedUser == username && m.DeletedDate == null && (m.Status == "Draft" || m.Status == "Pending Approval" || m.Status == "Approved")).ToListAsync();
+            dashboardVM.PtnsAwaitingYourApproval = await _contextPtnWaiver.PTN.Where(m => m.Status == "Pending Approval" && m.DeletedDate == null && (m.PrimaryApproverUsername == username || m.SecondaryApproverUsername == username)).ToListAsync();
+            dashboardVM.YourInProgressWaivers = await _contextPtnWaiver.Waiver.Where(m => m.CreatedUser == username && m.DeletedDate == null && (m.Status == "Draft" || m.Status == "Pending Approval" || m.Status == "Approved")).ToListAsync();
+            dashboardVM.WaiversAwaitingYourApproval = await _contextPtnWaiver.Waiver.Where(m => m.Status == "Pending Approval" && m.DeletedDate == null && (m.PrimaryApproverUsername == username || m.SecondaryApproverUsername == username)).ToListAsync();
 
             return View(dashboardVM);
         }

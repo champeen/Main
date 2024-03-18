@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -11,9 +12,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240318170716_MakePrimaryApproverUsernameNull")]
+    partial class MakePrimaryApproverUsernameNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -332,13 +335,13 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ApprovedByDate")
+                    b.Property<DateTime?>("ApprovedByAdminDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("ApprovedByUser")
+                    b.Property<string>("ApprovedByAdminlUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("ApprovedByUserFullName")
+                    b.Property<string>("ApprovedByAdminlUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("Comments")
@@ -422,7 +425,7 @@ namespace PtnWaiver.Migrations
                     b.Property<bool?>("RejectedBeforeSubmission")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("RejectedByApprover")
+                    b.Property<bool?>("RejectedByAdmin")
                         .HasColumnType("boolean");
 
                     b.Property<string>("RejectedReason")
@@ -448,13 +451,13 @@ namespace PtnWaiver.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("SubmittedForApprovalDate")
+                    b.Property<DateTime?>("SubmittedForAdminApprovalDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("SubmittedForApprovalUser")
+                    b.Property<string>("SubmittedForAdminApprovalUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("SubmittedForApprovalUserFullName")
+                    b.Property<string>("SubmittedForAdminApprovalUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -777,13 +780,13 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ApprovedByDate")
+                    b.Property<DateTime?>("ApprovedByAdminDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("ApprovedByUser")
+                    b.Property<string>("ApprovedByAdminlUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("ApprovedByUserFullName")
+                    b.Property<string>("ApprovedByAdminlUserFullName")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CompletedByDate")
@@ -850,15 +853,18 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverTitle")
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverUsername")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ProductProcess")
@@ -871,7 +877,7 @@ namespace PtnWaiver.Migrations
                     b.Property<bool?>("RejectedBeforeSubmission")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("RejectedByApprover")
+                    b.Property<bool?>("RejectedByAdmin")
                         .HasColumnType("boolean");
 
                     b.Property<string>("RejectedReason")
@@ -881,28 +887,31 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("SecondaryApproverEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverTitle")
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverUsername")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("SubmittedForApprovalDate")
+                    b.Property<DateTime?>("SubmittedForAdminApprovalDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("SubmittedForApprovalUser")
+                    b.Property<string>("SubmittedForAdminApprovalUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("SubmittedForApprovalUserFullName")
+                    b.Property<string>("SubmittedForAdminApprovalUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("WaiverNumber")

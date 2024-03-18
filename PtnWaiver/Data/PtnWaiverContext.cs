@@ -24,7 +24,7 @@ namespace PtnWaiver.Data
         public DbSet<PtnWaiver.Models.PtnPin>? PtnPin { get; set; }
         public DbSet<PtnWaiver.Models.SubjectType>? SubjectType { get; set; }
         public DbSet<PtnWaiver.Models.Group>? Group { get; set; }
-        public DbSet<PtnWaiver.Models.Area>? Area { get; set; }
+        public DbSet<PtnWaiver.Models.GroupApprovers>? GroupApprovers { get; set; }
         public DbSet<PtnWaiver.Models.WaiverStatus>? WaiverStatus { get; set; }
         public DbSet<PtnWaiver.Models.PorProject>? PorProject { get; set; }
         public DbSet<PtnWaiver.Models.ProductProcess>? ProductProcess { get; set; }

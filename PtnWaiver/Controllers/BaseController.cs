@@ -243,25 +243,13 @@ namespace PtnWaiver.Controllers
             return subjectTypes;
         }
 
-        public List<SelectListItem> getAreas()
+        public List<SelectListItem> getGroupApprovers()
         {
-            var areaList = _contextPtnWaiver.Area.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
-            List<SelectListItem> areas = new List<SelectListItem>();
-            foreach (var rec in areaList)
-            {
-                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
-                areas.Add(item);
-            }
-            return areas;
-        }
-
-        public List<SelectListItem> getGroups()
-        {
-            var groupList = _contextPtnWaiver.Group.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            var groupList = _contextPtnWaiver.GroupApprovers.OrderBy(m => m.Order).ThenBy(m => m.Group).ToList();
             List<SelectListItem> groups = new List<SelectListItem>();
             foreach (var rec in groupList)
             {
-                SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+                SelectListItem item = new SelectListItem { Value = rec.Group, Text = rec.Group };
                 groups.Add(item);
             }
             return groups;

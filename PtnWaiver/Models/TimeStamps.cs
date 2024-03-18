@@ -6,7 +6,7 @@ namespace PtnWaiver.Models
     {
         [Display(Name = "Create Username")]
         public string CreatedUser { get; set; }
-        [Display(Name = "Create User Full Name")]
+        [Display(Name = "Create User")]
         public string? CreatedUserFullName { get; set; }
         [Display(Name = "Create User Email")]
         public string? CreatedUserEmail { get; set; }
@@ -15,7 +15,7 @@ namespace PtnWaiver.Models
         public DateTime CreatedDate { get; set; }
         [Display(Name = "Modified Username")]
         public string? ModifiedUser { get; set; }
-        [Display(Name = "Modified Usern Full Name")]
+        [Display(Name = "Modified User")]
         public string? ModifiedUserFullName { get; set; }
         [Display(Name = "Modified User Email")]
         public string? ModifiedUserEmail { get; set; }
@@ -24,7 +24,7 @@ namespace PtnWaiver.Models
         public DateTime? ModifiedDate { get; set; }
         [Display(Name = "Deleted Username")]
         public string? DeletedUser { get; set; }
-        [Display(Name = "Deleted User Full Name")]
+        [Display(Name = "Deleted User")]
         public string? DeletedUserFullName { get; set; }
         [Display(Name = "Deleted User Email")]
         public string? DeletedUserEmail { get; set; }

@@ -111,6 +111,14 @@
                                 Waivers
                             </a>
                         </li>
+                        <li class="nav-item me-3 ms-lg-auto">
+                            @* <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank"> *@
+                                <a class="nav-link text-light" href="~/PTN Waiver Flow.html" target="_blank">
+                                <i class="bi bi-diagram-2-fill" data-bs-toggle="tooltip" data-bs-html="true">
+                                </i>
+                                PTN Process Flow
+                            </a>
+                        </li>
                         @*                         <li class="nav-item me-3 ms-lg-auto">
                         <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank">
                         <i class="bi bi-diagram-2-fill" data-bs-toggle="tooltip" data-bs-html="true">
@@ -134,7 +142,7 @@
                         </li> *@
                         @if (ViewBag.IsAdmin == true)
                         {
-                            <li class="nav-item me-3 ms-lg-auto">
+                            <li class="nav-item me-3">
                                 <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">
                                     <i class="bi bi-person-fill-add" data-bs-toggle="tooltip" data-bs-html="true">
                                     </i>

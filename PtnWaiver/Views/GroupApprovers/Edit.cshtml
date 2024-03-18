@@ -1,14 +1,14 @@
-﻿@model PtnWaiver.Models.Area
+﻿@model PtnWaiver.Models.GroupApprovers
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Area</h1>
+<h1>Group/Approvers</h1>
 <h4 class="mt-5">Edit</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-6">
         <form asp-action="Edit">
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
@@ -26,21 +26,27 @@
             <input type="hidden" asp-for="DeletedUserEmail" />
             <input type="hidden" asp-for="DeletedDate" />
             <div class="form-group my-3">
-                <label asp-for="Code" class="control-label fw-bold mb-1"></label>
-                <input asp-for="Code" class="form-control"  />
-                <span asp-validation-for="Code" class="text-danger"></span>
+                <label asp-for="Group" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Group" class="form-control"  />
+                <span asp-validation-for="Group" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
-                @* <input asp-for="Description" class="form-control" /> *@
-                @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="PrimaryApproverUsername" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="PrimaryApproverUsername" class="form-control" /> *@
+                @Html.DropDownListFor(model => model.PrimaryApproverUsername, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:50%;"})
+                <span asp-validation-for="PrimaryApproverUsername" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
+                <label asp-for="SecondaryApproverUsername" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="SecondaryApproverUsername" class="form-control" /> *@
+                @Html.DropDownListFor(model => model.SecondaryApproverUsername, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:50%;"})
+                <span asp-validation-for="SecondaryApproverUsername" class="text-danger"></span>
+            </div>
+@*             <div class="form-group my-3">
                 <label asp-for="Order" class="control-label fw-bold mb-1"></label>
                 <input asp-for="Order" class="form-control" />
                 <span asp-validation-for="Order" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="form-group mt-5">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>

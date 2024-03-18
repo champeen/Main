@@ -11,12 +11,12 @@ using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
 {
-    public class AreasController : BaseController
+    public class GroupApproversController : BaseController
     {
         private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly MocContext _contextMoc;
 
-        public AreasController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
+        public GroupApproversController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
         {
             _contextPtnWaiver = contextPtnWaiver;
             _contextMoc = contextMoc;
@@ -33,8 +33,8 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _contextPtnWaiver.Area != null ?
-                          View(await _contextPtnWaiver.Area.OrderBy(m => m.Order).ThenBy(m => m.Description).ToListAsync()) :
+            return _contextPtnWaiver.GroupApprovers != null ?
+                          View(await _contextPtnWaiver.GroupApprovers.OrderBy(m => m.Order).ThenBy(m => m.Group).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.Area'  is null.");
         }
 
@@ -49,10 +49,10 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.Area == null)
+            if (id == null || _contextPtnWaiver.GroupApprovers == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.Area
+            var area = await _contextPtnWaiver.GroupApprovers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (area == null)
@@ -71,6 +71,7 @@ namespace PtnWaiver.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Users = getUserList();
 
             var userInfo = getUserInfo(_username);
             if (userInfo == null)
@@ -79,7 +80,7 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
-            Area area = new Area()
+            GroupApprovers departmentArea = new GroupApprovers()
             {
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
@@ -87,7 +88,7 @@ namespace PtnWaiver.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            return View(area);
+            return View(departmentArea);
         }
 
         // POST: Areas/Create
@@ -95,7 +96,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Area area)
+        public async Task<IActionResult> Create([Bind("Id,Group,PrimaryApproverUsername,SecondaryApproverUsername,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] GroupApprovers departmentArea)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -106,22 +107,44 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             // Make sure duplicates are not entered...
-            List<Area> checkDupes = await _contextPtnWaiver.Area
-                .Where(m => m.Code == area.Code)
+            List<GroupApprovers> checkDupes = await _contextPtnWaiver.GroupApprovers
+                .Where(m => m.Group == departmentArea.Group)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
                 ModelState.AddModelError("Code", "Area Code already exists.");
-                return View(area);
+
+            if (departmentArea.PrimaryApproverUsername != null)
+            {
+                var primaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.PrimaryApproverUsername);
+                if (primaryUser != null)
+                {
+                    departmentArea.PrimaryApproverEmail = primaryUser.mail;
+                    departmentArea.PrimaryApproverFullName = primaryUser.displayname;
+                    departmentArea.PrimaryApproverTitle = primaryUser.jobtitle;
+                }
+            }
+            else
+                ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
+
+            if (departmentArea.SecondaryApproverUsername != null)
+            {
+                var secondaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.SecondaryApproverUsername);
+                if (secondaryUser != null)
+                {
+                    departmentArea.SecondaryApproverEmail = secondaryUser.mail;
+                    departmentArea.SecondaryApproverFullName = secondaryUser.displayname;
+                    departmentArea.SecondaryApproverTitle = secondaryUser.jobtitle;
+                }
             }
 
             if (ModelState.IsValid)
             {
-                _contextPtnWaiver.Add(area);
+                _contextPtnWaiver.Add(departmentArea);
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(area);
+            ViewBag.Users = getUserList();
+            return View(departmentArea);
         }
 
         // GET: Areas/Edit/5
@@ -134,11 +157,12 @@ namespace PtnWaiver.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Users = getUserList();
 
-            if (id == null || _contextPtnWaiver.Area == null)
+            if (id == null || _contextPtnWaiver.GroupApprovers == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.Area.FindAsync(id);
+            var area = await _contextPtnWaiver.GroupApprovers.FindAsync(id);
 
             if (area == null)
                 return NotFound();
@@ -151,7 +175,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Area area)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Group,PrimaryApproverUsername,SecondaryApproverUsername,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] GroupApprovers departmentArea)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -161,41 +185,66 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != area.Id)
+            if (id != departmentArea.Id)
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<Area> checkDupes = await _contextPtnWaiver.Area
-                .Where(m => m.Code == area.Code && m.Id != area.Id)
+            List<GroupApprovers> checkDupes = await _contextPtnWaiver.GroupApprovers
+                .Where(m => m.Group == departmentArea.Group && m.Id != departmentArea.Id)
                 .ToListAsync();
             if (checkDupes.Count > 0)
                 ModelState.AddModelError("Code", "Area Code already exists.");
+
+            if (departmentArea.PrimaryApproverUsername != null)
+            {
+                var primaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.PrimaryApproverUsername);
+                if (primaryUser != null)
+                {
+                    departmentArea.PrimaryApproverEmail = primaryUser.mail;
+                    departmentArea.PrimaryApproverFullName = primaryUser.displayname;
+                    departmentArea.PrimaryApproverTitle = primaryUser.jobtitle;
+                }
+            }
+            else
+                ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
+
+            if (departmentArea.SecondaryApproverUsername != null)
+            {
+                var secondaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.SecondaryApproverUsername);
+                if (secondaryUser != null)
+                {
+                    departmentArea.SecondaryApproverEmail = secondaryUser.mail;
+                    departmentArea.SecondaryApproverFullName = secondaryUser.displayname;
+                    departmentArea.SecondaryApproverTitle = secondaryUser.jobtitle;
+                }
+            }
 
             if (ModelState.IsValid)
             {
                 var userInfo = getUserInfo(_username);
                 if (userInfo != null)
                 {
-                    area.ModifiedUser = userInfo.onpremisessamaccountname;
-                    area.ModifiedUserFullName = userInfo.displayname;
-                    area.ModifiedUserEmail = userInfo.mail;
-                    area.ModifiedDate = DateTime.Now;
+                    departmentArea.ModifiedUser = userInfo.onpremisessamaccountname;
+                    departmentArea.ModifiedUserFullName = userInfo.displayname;
+                    departmentArea.ModifiedUserEmail = userInfo.mail;
+                    departmentArea.ModifiedDate = DateTime.Now;
                 }
                 try
                 {
-                    _contextPtnWaiver.Update(area);
+                    _contextPtnWaiver.Update(departmentArea);
                     await _contextPtnWaiver.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AreaExists(area.Id))
+                    if (!AreaExists(departmentArea.Id))
                         return NotFound();
                     else
                         throw;
-                }
+                }                
                 return RedirectToAction(nameof(Index));
             }
-            return View(area);
+            ViewBag.Users = getUserList();
+            return View(departmentArea);
         }
 
         // GET: Areas/Delete/5
@@ -209,10 +258,10 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.Area == null)
+            if (id == null || _contextPtnWaiver.GroupApprovers == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.Area
+            var area = await _contextPtnWaiver.GroupApprovers
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (area == null)
@@ -234,13 +283,13 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (_contextPtnWaiver.Area == null)
+            if (_contextPtnWaiver.GroupApprovers == null)
                 return Problem("Entity set 'PtnWaiverContext.Area'  is null.");
 
-            var area = await _contextPtnWaiver.Area.FindAsync(id);
+            var area = await _contextPtnWaiver.GroupApprovers.FindAsync(id);
 
             if (area != null)
-                _contextPtnWaiver.Area.Remove(area);
+                _contextPtnWaiver.GroupApprovers.Remove(area);
 
             await _contextPtnWaiver.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -248,7 +297,7 @@ namespace PtnWaiver.Controllers
 
         private bool AreaExists(int id)
         {
-            return (_contextPtnWaiver.Area?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_contextPtnWaiver.GroupApprovers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -189,6 +189,14 @@ namespace PtnWaiver.Controllers
                 PTNId = ptnId,
                 PtnDocId = ptn.DocId,
                 Status = "Draft",
+                PrimaryApproverUsername = ptn.PrimaryApproverUsername,
+                PrimaryApproverEmail = ptn.PrimaryApproverEmail,
+                PrimaryApproverFullName = ptn.PrimaryApproverFullName,
+                PrimaryApproverTitle = ptn.PrimaryApproverTitle,
+                SecondaryApproverUsername = ptn.SecondaryApproverUsername,
+                SecondaryApproverEmail = ptn.SecondaryApproverEmail,
+                SecondaryApproverFullName = ptn.SecondaryApproverFullName,
+                SecondaryApproverTitle = ptn.SecondaryApproverTitle,
                 CreatedDate = DateTime.Now,
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
@@ -203,7 +211,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,Status,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
+        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -430,9 +438,9 @@ namespace PtnWaiver.Controllers
                 waiver.ModifiedUserFullName = userInfo.displayname;
                 waiver.ModifiedUserEmail = userInfo.mail;
                 waiver.ModifiedDate = DateTime.Now;
-                waiver.SubmittedForAdminApprovalUser = userInfo.onpremisessamaccountname;
-                waiver.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
-                waiver.SubmittedForAdminApprovalDate = DateTime.Now;
+                waiver.SubmittedForApprovalUser = userInfo.onpremisessamaccountname;
+                waiver.SubmittedForApprovalUserFullName = userInfo.displayname;
+                waiver.SubmittedForApprovalDate = DateTime.Now;
             }
             waiver.Status = "Pending Approval";
 
@@ -474,9 +482,9 @@ namespace PtnWaiver.Controllers
                 waiver.ModifiedUserFullName = userInfo.displayname;
                 waiver.ModifiedUserEmail = userInfo.mail;
                 waiver.ModifiedDate = DateTime.Now;
-                waiver.SubmittedForAdminApprovalUser = userInfo.onpremisessamaccountname;
-                waiver.SubmittedForAdminApprovalUserFullName = userInfo.displayname;
-                waiver.SubmittedForAdminApprovalDate = DateTime.Now;
+                waiver.SubmittedForApprovalUser = userInfo.onpremisessamaccountname;
+                waiver.SubmittedForApprovalUserFullName = userInfo.displayname;
+                waiver.SubmittedForApprovalDate = DateTime.Now;
             }
             waiver.RejectedReason = waiverIn.RejectedReason;
             waiver.RejectedBeforeSubmission = true;
@@ -513,9 +521,9 @@ namespace PtnWaiver.Controllers
                 waiver.ModifiedUserFullName = userInfo.displayname;
                 waiver.ModifiedUserEmail = userInfo.mail;
                 waiver.ModifiedDate = DateTime.Now;
-                waiver.ApprovedByAdminlUser = userInfo.onpremisessamaccountname;
-                waiver.ApprovedByAdminlUserFullName = userInfo.displayname;
-                waiver.ApprovedByAdminDate = DateTime.Now;
+                waiver.ApprovedByUser = userInfo.onpremisessamaccountname;
+                waiver.ApprovedByUserFullName = userInfo.displayname;
+                waiver.ApprovedByDate = DateTime.Now;
             }
             waiver.Status = "Approved";
 
@@ -554,12 +562,12 @@ namespace PtnWaiver.Controllers
                 waiver.ModifiedUserFullName = userInfo.displayname;
                 waiver.ModifiedUserEmail = userInfo.mail;
                 waiver.ModifiedDate = DateTime.Now;
-                waiver.ApprovedByAdminlUser = userInfo.onpremisessamaccountname;
-                waiver.ApprovedByAdminlUserFullName = userInfo.displayname;
-                waiver.ApprovedByAdminDate = DateTime.Now;
+                waiver.ApprovedByUser = userInfo.onpremisessamaccountname;
+                waiver.ApprovedByUserFullName = userInfo.displayname;
+                waiver.ApprovedByDate = DateTime.Now;
             }
             waiver.RejectedReason = waiverIn.RejectedReason;
-            waiver.RejectedByAdmin = true;
+            waiver.RejectedByApprover = true;
             waiver.Status = "Rejected";
 
             _contextPtnWaiver.Waiver.Update(waiver);
@@ -612,13 +620,13 @@ namespace PtnWaiver.Controllers
             waiver.DateClosed = null;
             waiver.RevisionNumber += 1;
             waiver.RejectedBeforeSubmission = false;
-            waiver.RejectedByAdmin = false;
-            waiver.SubmittedForAdminApprovalDate = null;
-            waiver.SubmittedForAdminApprovalUser = null;
-            waiver.SubmittedForAdminApprovalUserFullName = null;
-            waiver.ApprovedByAdminDate = null;
-            waiver.ApprovedByAdminlUser = null;
-            waiver.ApprovedByAdminlUserFullName = null;
+            waiver.RejectedByApprover = false;
+            waiver.SubmittedForApprovalDate = null;
+            waiver.SubmittedForApprovalUser = null;
+            waiver.SubmittedForApprovalUserFullName = null;
+            waiver.ApprovedByDate = null;
+            waiver.ApprovedByUser = null;
+            waiver.ApprovedByUserFullName = null;
             waiver.CompletedByDate = null;
             waiver.CompletedBylUser = null;
             waiver.CompletedBylUserFullName = null;

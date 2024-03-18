@@ -24,20 +24,37 @@ namespace PtnWaiver.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? CorrectiveActionDueDate { get; set; }
+        [Display(Name = "Primary Approver Username")]
+        public string? PrimaryApproverUsername { get; set; }
+        [Display(Name = "Primary Approver")]
+        public string? PrimaryApproverFullName { get; set; }
+        [Display(Name = "Primary Approver Email")]
+        public string? PrimaryApproverEmail { get; set; }
+        [Display(Name = "Primary Approver Title")]
+        public string? PrimaryApproverTitle { get; set; }
+        [Display(Name = "Secondary Approver Username")]
+        public string? SecondaryApproverUsername { get; set; }
+        [Display(Name = "Secondary Approver")]
+        public string? SecondaryApproverFullName { get; set; }
+        [Display(Name = "Secondary Approver Email")]
+        public string? SecondaryApproverEmail { get; set; }
+        [Display(Name = "Secondary Approver Title")]
+        public string? SecondaryApproverTitle { get; set; }
+
         [Display(Name = "Rejected Before Submission To Admin")]
         public bool? RejectedBeforeSubmission { get; set; }
         [Display(Name = "Rejected By Admin")]
-        public bool? RejectedByAdmin { get; set; }
+        public bool? RejectedByApprover { get; set; }
         [Display(Name = "Rejected Reason")]
         public string? RejectedReason { get; set; }
-        public string? SubmittedForAdminApprovalUser { get; set; }
-        public string? SubmittedForAdminApprovalUserFullName { get; set; }
+        public string? SubmittedForApprovalUser { get; set; }
+        public string? SubmittedForApprovalUserFullName { get; set; }
         [DataType(DataType.Date)]
-        public DateTime? SubmittedForAdminApprovalDate { get; set; }
-        public string? ApprovedByAdminlUser { get; set; }
-        public string? ApprovedByAdminlUserFullName { get; set; }
+        public DateTime? SubmittedForApprovalDate { get; set; }
+        public string? ApprovedByUser { get; set; }
+        public string? ApprovedByUserFullName { get; set; }
         [DataType(DataType.Date)]
-        public DateTime? ApprovedByAdminDate { get; set; }
+        public DateTime? ApprovedByDate { get; set; }
         public string? CompletedBylUser { get; set; }
         public string? CompletedBylUserFullName { get; set; }
         [DataType(DataType.Date)]

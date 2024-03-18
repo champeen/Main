@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -11,9 +12,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240315195452_UpdateWaiverTable2")]
+    partial class UpdateWaiverTable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,6 +100,88 @@ namespace PtnWaiver.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AllowedAttachmentExtensions");
+                });
+
+            modelBuilder.Entity("PtnWaiver.Models.Department_Area", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModifiedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModifiedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverUsername")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverUsername")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Department_Area");
                 });
 
             modelBuilder.Entity("PtnWaiver.Models.EmailHistory", b =>
@@ -242,88 +327,6 @@ namespace PtnWaiver.Migrations
                     b.ToTable("Group");
                 });
 
-            modelBuilder.Entity("PtnWaiver.Models.GroupApprovers", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedUser")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("DeletedUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeletedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeletedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Group")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("ModifiedUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ModifiedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ModifiedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Order")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverUsername")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverUsername")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GroupApprovers");
-                });
-
             modelBuilder.Entity("PtnWaiver.Models.PTN", b =>
                 {
                     b.Property<int>("Id")
@@ -332,13 +335,13 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ApprovedByDate")
+                    b.Property<DateTime?>("ApprovedByAdminDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("ApprovedByUser")
+                    b.Property<string>("ApprovedByAdminlUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("ApprovedByUserFullName")
+                    b.Property<string>("ApprovedByAdminlUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("Comments")
@@ -378,10 +381,14 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("DeletedUserFullName")
                         .HasColumnType("text");
 
+                    b.Property<string>("Department_Area")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("DocId")
                         .HasColumnType("text");
 
-                    b.Property<string>("GroupApprover")
+                    b.Property<string>("Group")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -401,15 +408,18 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverTitle")
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverUsername")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PtnPin")
@@ -422,22 +432,25 @@ namespace PtnWaiver.Migrations
                     b.Property<bool?>("RejectedBeforeSubmission")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("RejectedByApprover")
+                    b.Property<bool?>("RejectedByAdmin")
                         .HasColumnType("boolean");
 
                     b.Property<string>("RejectedReason")
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverTitle")
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverUsername")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
@@ -448,13 +461,13 @@ namespace PtnWaiver.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("SubmittedForApprovalDate")
+                    b.Property<DateTime?>("SubmittedForAdminApprovalDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("SubmittedForApprovalUser")
+                    b.Property<string>("SubmittedForAdminApprovalUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("SubmittedForApprovalUserFullName")
+                    b.Property<string>("SubmittedForAdminApprovalUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -777,13 +790,13 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("ApprovedByDate")
+                    b.Property<DateTime?>("ApprovedByAdminDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("ApprovedByUser")
+                    b.Property<string>("ApprovedByAdminlUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("ApprovedByUserFullName")
+                    b.Property<string>("ApprovedByAdminlUserFullName")
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("CompletedByDate")
@@ -850,15 +863,18 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverTitle")
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverUsername")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ProductProcess")
@@ -871,7 +887,7 @@ namespace PtnWaiver.Migrations
                     b.Property<bool?>("RejectedBeforeSubmission")
                         .HasColumnType("boolean");
 
-                    b.Property<bool?>("RejectedByApprover")
+                    b.Property<bool?>("RejectedByAdmin")
                         .HasColumnType("boolean");
 
                     b.Property<string>("RejectedReason")
@@ -881,28 +897,31 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("SecondaryApproverEmail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverFullName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverTitle")
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverUsername")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime?>("SubmittedForApprovalDate")
+                    b.Property<DateTime?>("SubmittedForAdminApprovalDate")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("SubmittedForApprovalUser")
+                    b.Property<string>("SubmittedForAdminApprovalUser")
                         .HasColumnType("text");
 
-                    b.Property<string>("SubmittedForApprovalUserFullName")
+                    b.Property<string>("SubmittedForAdminApprovalUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("WaiverNumber")

@@ -61,13 +61,6 @@
                 <span asp-validation-for="PtnPin" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Area" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @* <input asp-for="PtnPin" class="form-control" style="max-width:25%;" /> *@
-                @Html.DropDownListFor(model => model.Area, new SelectList(ViewBag.Areas, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
-                <span asp-validation-for="Area" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
                 <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @* <input asp-for="SubjectType" class="form-control" style="max-width:25%;" /> *@
@@ -75,23 +68,17 @@
                 <span asp-validation-for="SubjectType" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Group" class="control-label fw-bold mb-1"></label>
+                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @* <input asp-for="Group" class="form-control" style="max-width:25%;" /> *@
-                @Html.DropDownListFor(model => model.Group, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
-                <span asp-validation-for="Group" class="text-danger"></span>
+                @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                <span asp-validation-for="GroupApprover" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="TisNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="TisNumber" class="form-control" style="max-width:25%;" />
-                <span asp-validation-for="TisNumber" class="text-danger"></span>
+                <label asp-for="PtrNumber" class="control-label fw-bold mb-1"></label>
+                <input asp-for="PtrNumber" class="form-control" style="max-width:25%;" />
+                <span asp-validation-for="PtrNumber" class="text-danger"></span>
             </div>
-            @*             <div class="form-group my-3">
-            <label asp-for="Status" class="control-label fw-bold mb-1"></label>
-            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-            @Html.DropDownListFor(model => model.Status, new SelectList(ViewBag.Status, "Value", "Text"), new { @class="form-control form-select", @style="max-width:25%;"})
-            <span asp-validation-for="Status" class="text-danger"></span>
-            </div> *@
             <div class="form-group my-3">
                 <label asp-for="Title" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -99,10 +86,10 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Roadblocks" class="control-label fw-bold mb-1"></label>
+                <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
                 @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
-                @Html.TextAreaFor(model => model.Roadblocks, new {@class = "form-control", @rows = 3 })
-                <span asp-validation-for="Roadblocks" class="text-danger"></span>
+                @Html.TextAreaFor(model => model.Comments, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="Comments" class="text-danger"></span>
             </div>
             <div class="form-group mt-4">
                 <input type="submit" value="Save" class="btn btn-primary" />

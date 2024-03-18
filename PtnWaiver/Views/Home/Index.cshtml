@@ -7,7 +7,7 @@
     <div class="col-3 d-flex justify-content-center align-items-end mb-3">
         <div>
             @*<a asp-action="Create">Create New</a>*@
-            @Html.ActionLink("Create New PTN","Create","PTNs",new {source="Home"},new {@class="btn btn-primary"})
+            @Html.ActionLink("Create New PTN","Create","PTNs",new {source="Home"},new {@class="btn btn-success"})
         </div>
     </div>
     <div class="col-6">
@@ -36,9 +36,15 @@ else
         <div class="row">
             <div class="col-12 border border-dark">
                 <div class="my-3">
-                    <h5 class="text-center">
-                        Your Active PTNs
-                    </h5>
+                    <span class="text-nowrap">
+                        <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
+                            <span>
+                                Your Active PTNs
+                            </span>
+                            <i class="bi bi-info-circle ms-2" data-bs-toggle="tooltip" data-bs-html="true" title="All 'Draft', 'Pending Approval' and 'Approved' status PTNs will display.">
+                            </i>
+                        </div>
+                    </span>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped mt-3 ">
                             <thead class="align-top align-text-top table-primary">
@@ -48,6 +54,9 @@ else
                                     </th>
                                     <th class="text-nowrap">
                                         Title/Description
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Status
                                     </th>
                                 </tr>
                             </thead>
@@ -60,6 +69,9 @@ else
                                         </td>
                                         <td class="text-nowrap">
                                             @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.Status)
                                         </td>
                                     </tr>
                                 }
@@ -81,9 +93,15 @@ else
         <div class="row">
             <div class="col-12 border border-dark">
                 <div class="my-3">
-                    <h5 class="text-center">
-                        Your Active Waivers
-                    </h5>
+                    <span class="text-nowrap">
+                        <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
+                            <span>
+                                Your Active Waivers
+                            </span>
+                            <i class="bi bi-info-circle ms-2" data-bs-toggle="tooltip" data-bs-html="true" title="All 'Draft', 'Pending Approval' and 'Approved' status PTNs will display.">
+                            </i>
+                        </div>
+                    </span>
                     <div class="table-responsive">
                         <table class="table table-bordered table-striped mt-3 ">
                             <thead class="align-top align-text-top table-primary">
@@ -93,6 +111,9 @@ else
                                     </th>
                                     <th class="text-nowrap">
                                         Title/Description
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Status
                                     </th>
                                 </tr>
                             </thead>
@@ -105,6 +126,9 @@ else
                                         </td>
                                         <td class="text-nowrap">
                                             @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.Status)
                                         </td>
                                     </tr>
                                 }
@@ -128,9 +152,13 @@ else
             <div class="row">
                 <div class="col-12 border border-dark">
                     <div class="my-3">
-                        <h5 class="text-center">
-                            Admin PTNs Pending Approval
-                        </h5>
+                        <span class="text-nowrap">
+                            <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
+                                <span>
+                                    PTNs Pending Your Approval
+                                </span>
+                            </div>
+                        </span>
                         <div class="table-responsive">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped mt-3 ">
@@ -145,7 +173,7 @@ else
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach (var item in Model.AdminInProgressPtns)
+                                        @foreach (var item in Model.PtnsAwaitingYourApproval)
                                         {
                                             <tr>
                                                 <td class="text-nowrap">
@@ -157,7 +185,7 @@ else
                                             </tr>
                                         }
                                     </tbody>
-                                    @if (Model.AdminInProgressPtns.Count() == 0)
+                                    @if (Model.PtnsAwaitingYourApproval.Count() == 0)
                                     {
                                         <tr>
                                             <td>No data found</td>
@@ -175,9 +203,13 @@ else
             <div class="row">
                 <div class="col-12 border border-dark">
                     <div class="my-3">
-                        <h5 class="text-center">
-                            Admin Waivers Pending Approval
-                        </h5>
+                        <span class="text-nowrap">
+                            <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
+                                <span>
+                                    Waivers Pending Your Approval
+                                </span>
+                            </div>
+                        </span>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped mt-3 ">
                                 <thead class="align-top align-text-top table-primary">
@@ -191,7 +223,7 @@ else
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.AdminInProgressWaivers)
+                                    @foreach (var item in Model.WaiversAwaitingYourApproval)
                                     {
                                         <tr>
                                             <td class="text-nowrap">
@@ -203,7 +235,7 @@ else
                                         </tr>
                                     }
                                 </tbody>
-                                @if (Model.AdminInProgressWaivers.Count() == 0)
+                                @if (Model.WaiversAwaitingYourApproval.Count() == 0)
                                 {
                                     <tr>
                                         <td>No data found</td>

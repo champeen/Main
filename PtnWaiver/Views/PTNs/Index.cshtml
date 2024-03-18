@@ -44,19 +44,16 @@
                 @Html.DisplayNameFor(model => model.PtnPin)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Area)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.SubjectType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group)
+                @Html.DisplayNameFor(model => model.GroupApprover)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TisNumber)
+                @Html.DisplayNameFor(model => model.PtrNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -81,19 +78,16 @@
                     @Html.DisplayFor(modelItem => item.PtnPin)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Area)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.SubjectType)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Group)
+                    @Html.DisplayFor(modelItem => item.GroupApprover)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TisNumber)
+                    @Html.DisplayFor(modelItem => item.PtrNumber)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
@@ -119,8 +113,8 @@
                         {
                             @if (item.Status == "Approved")
                             {
-                                @Html.ActionLink("Close PTN","ClosePtn",new {id=@item.Id},new {@class="btn btn-primary ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
-                            }
+                                @Html.ActionLink("Close PTN","ClosePtn",new {id=@item.Id},new {@class="btn btn-primary ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');", @title="Can only close a PTN when there are no 'Draft' or 'Pending Approval' Waivers under it"})
+                        }
                             
                         }
                     }
@@ -132,7 +126,6 @@
     {
         <tr>
             <td>No data found</td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>

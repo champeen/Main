@@ -6,7 +6,7 @@ namespace PtnWaiver.ViewModels
     {
         public List<PTN>? YourInProgressPtns { get; set; }
         public List<Waiver>? YourInProgressWaivers { get; set; }
-        public List<PTN>? AdminInProgressPtns { get; set; }
-        public List<Waiver>? AdminInProgressWaivers { get; set; }
+        public List<PTN>? PtnsAwaitingYourApproval { get; set; }
+        public List<Waiver>? WaiversAwaitingYourApproval { get; set; }
     }
 }
