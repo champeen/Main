@@ -49,7 +49,8 @@
                 <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @* <input asp-for="SubjectType" class="form-control" style="max-width:25%;" /> *@
-                @Html.DropDownListFor(model => model.SubjectType, new SelectList(ViewBag.SubjectTypes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+@*                 @Html.DropDownListFor(model => model.SubjectType, new SelectList(ViewBag.SubjectTypes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"}) *@
+                @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=10 })
                 <span asp-validation-for="SubjectType" class="text-danger"></span>
             </div>
             <div class="form-group my-3">

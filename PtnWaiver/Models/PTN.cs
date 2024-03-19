@@ -11,7 +11,8 @@ namespace PtnWaiver.Models
         [Display(Name = "PTN/PIN")]
         public string PtnPin { get; set; }
         [Display(Name = "Subject Type")]
-        public string SubjectType { get; set; }
+        //public string SubjectType { get; set; }
+        public List<string> SubjectType { get; set; }
         public string Title { get; set; }
         [Display(Name = "Group/Approver")]
         public string GroupApprover { get; set; }

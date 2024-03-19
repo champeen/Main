@@ -66,10 +66,10 @@
             <a class="nav-link @Model.TabActiveAttachmentsWaiver fw-bolder" id="nav-attachmentsWaiver-tab" data-bs-toggle="tab" href="#nav-attachmentsWaiver" role="tab" aria-controls="nav-profile" aria-selected="false">Upload Waiver Template (@Model.AttachmentsWaiver.Count.ToString())</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @Model.TabActiveWaiverApproval @Model.Tab3Disabled fw-bolder" id="nav-waiverApproval-tab" data-bs-toggle="tab" href="#nav-waiverApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit Waiver for Admin Approval</a>
+            <a class="nav-link @Model.TabActiveWaiverApproval @Model.Tab3Disabled fw-bolder" id="nav-waiverApproval-tab" data-bs-toggle="tab" href="#nav-waiverApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit Waiver for Approval</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @Model.TabActiveWaiverAdminApproval @Model.Tab4Disabled fw-bolder" id="nav-waiverAdminApproval-tab" data-bs-toggle="tab" href="#nav-waiverAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Admin Approve Waiver</a>
+            <a class="nav-link @Model.TabActiveWaiverAdminApproval @Model.Tab4Disabled fw-bolder" id="nav-waiverAdminApproval-tab" data-bs-toggle="tab" href="#nav-waiverAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Approve Waiver</a>
         </li>
     </ul>
 </nav>
@@ -85,7 +85,7 @@
             <a class="mx-2" asp-action="Index">Back to List</a>*@
             <div class="row mt-5">
                 <div class="col-12 text-start">
-                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") && (Model.Ptn.Status == "Approved"))
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") @* && (Model.Ptn.Status == "Approved") *@)
                     {
                         @Html.ActionLink("Edit","Edit",new {id=@Model?.Waiver?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
                         @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
@@ -116,22 +116,12 @@
                     @Html.DisplayFor(model => model.Waiver.ProductProcess)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
                     @* @Html.DisplayNameFor(model => model.Waiver.DateClosed) *@
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @* @Html.DisplayFor(model => model.Waiver.DateClosed) *@
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
-                </dt>
-                <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.Waiver.CorrectiveActionDueDate)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                </dt>
-                <dd class="col-sm-4 my-1">
+                    @* @Html.DisplayFor(model => model.Waiver.DateClosed) *@
                 </dd>
             </div>
             <div class="row">
@@ -420,7 +410,7 @@
                     <input type="hidden" asp-for="@Model.Ptn.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
-                            @Html.ActionLink("Submit for Admin Approval","SubmitWaiverForAdminApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                            @Html.ActionLink("Submit for Approval","SubmitWaiverForApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                             <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                             @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
                         </div>
@@ -497,11 +487,11 @@
                         </h5>
                     </div>
                 </div>
-                <form asp-action="RejectWaiverAdmin" asp-route-id="@Model.Waiver.Id" asp-route-rejectedReason="@Model.Waiver.RejectedReason">
+                <form asp-action="RejectWaiverApprover" asp-route-id="@Model.Waiver.Id" asp-route-rejectedReason="@Model.Waiver.RejectedReason">
                     <input type="hidden" asp-for="@Model.Waiver.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
-                            @Html.ActionLink("Approve Waiver","ApproveWaiverAdmin","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                            @Html.ActionLink("Approve Waiver","ApproveWaiver","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                             <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                             @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
                         </div>

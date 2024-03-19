@@ -40,9 +40,9 @@ namespace PtnWaiver.Controllers
 
             // Get
             var waivers = await _contextPtnWaiver.Waiver
-                .Where(m=>m.DeletedDate == null)
-                .OrderBy(m=>m.CreatedDate)
-                .ThenBy(m=>m.WaiverNumber)
+                .Where(m => m.DeletedDate == null)
+                .OrderBy(m => m.CreatedDate)
+                .ThenBy(m => m.WaiverNumber)
                 .ToListAsync();
 
             switch (statusFilter)
@@ -63,7 +63,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: Waivers/Details/5
-        public async Task<IActionResult> Details(int? id, string tab="Waiver", string tabWaiver="Details", string fileAttachmentError = null, string rejectedReason = null)
+        public async Task<IActionResult> Details(int? id, string tab = "Waiver", string tabWaiver = "Details", string fileAttachmentError = null, string rejectedReason = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -242,13 +242,13 @@ namespace PtnWaiver.Controllers
                 //waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
                 _contextPtnWaiver.Add(waiver);
                 await _contextPtnWaiver.SaveChangesAsync();
-                return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab="Waivers" });
+                return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab = "Waivers" });
                 //return RedirectToAction(nameof(Index));
             }
             ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
             ViewBag.PorProjects = getPorProjects();
-            ViewBag.ProductProcess = getProductProcess();            
+            ViewBag.ProductProcess = getProductProcess();
             return View(waiver);
         }
 
@@ -325,7 +325,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
-            
+
             return View(waiver);
         }
 
@@ -370,15 +370,15 @@ namespace PtnWaiver.Controllers
 
             if (waiver != null)
                 _contextPtnWaiver.Waiver.Remove(waiver);
-            
+
             await _contextPtnWaiver.SaveChangesAsync();
-           
+
             return RedirectToAction("Details", "PTNs", new { id = waiver.PTNId, tab = "Waivers" });
         }
 
         private bool WaiverExists(int id)
         {
-          return (_contextPtnWaiver.Waiver?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_contextPtnWaiver.Waiver?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
@@ -447,17 +447,16 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver.Waiver.Update(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
 
-            // email administrators to review the Waiver and either Approve or Reject....
-            var admins = await _contextPtnWaiver.Administrators.Where(m => m.Approver == true).ToListAsync();
-            foreach (var admin in admins)
-            {
-                string subject = @"Process Test Notification (PTN) - Waiver Review Needed";
-                string body = @"Your Review is needed. Please follow link below and review/respond to the following Waiver request. <br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
-                __mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
+            // email Primary and Secondary Approvers to review and Approve/Reject...
+            string subject = @"Process Test Notification (PTN) - Waiver Review Needed";
+            string body = @"Your Review is needed. Please follow link below and review/respond to the following Waiver request. <br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+            //__mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
 
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, person.mail, null, null, null);
-                AddEmailHistory(null, subject, body, person.displayname, person.onpremisessamaccountname, person.mail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
-            }
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, waiver.PrimaryApproverEmail, waiver.SecondaryApproverEmail, null, null);
+            AddEmailHistory(null, subject, body, waiver.PrimaryApproverFullName, waiver.PrimaryApproverUsername, waiver.PrimaryApproverEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+            if (waiver.SecondaryApproverEmail != null)
+                AddEmailHistory(null, subject, body, waiver.SecondaryApproverFullName, waiver.SecondaryApproverUsername, waiver.SecondaryApproverEmail, waiver.PTNId, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }
 
@@ -505,7 +504,7 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverApproval" });
         }
 
-        public async Task<IActionResult> ApproveWaiverAdmin(int id)
+        public async Task<IActionResult> ApproveWaiver(int id)
         {
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -543,7 +542,7 @@ namespace PtnWaiver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RejectWaiverAdmin([Bind("Id,RejectedReason", Prefix = "Ptn")] PTN ptnIn, [Bind("Id,RejectedReason", Prefix = "Waiver")] Waiver waiverIn)
+        public async Task<IActionResult> RejectWaiverApprover([Bind("Id,RejectedReason", Prefix = "Ptn")] PTN ptnIn, [Bind("Id,RejectedReason", Prefix = "Waiver")] Waiver waiverIn)
         {
             if (waiverIn.Id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -654,7 +653,7 @@ namespace PtnWaiver.Controllers
 
             var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
             if (waiver == null)
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
 
             var userInfo = getUserInfo(_username);
             if (userInfo != null)

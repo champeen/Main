@@ -490,7 +490,7 @@
                         </h5>
                     </div>
                 </div>
-                <form asp-action="RejectPtnAdmin" asp-route-id="@Model.PTN.Id" asp-route-rejectedReason="@Model.PTN.RejectedReason">
+                <form asp-action="RejectPtnApprover" asp-route-id="@Model.PTN.Id" asp-route-rejectedReason="@Model.PTN.RejectedReason">
                     <input type="hidden" asp-for="@Model.PTN.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
