@@ -1,11 +1,9 @@
-﻿using PtnWaiver.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PtnWaiver.Data;
 using PtnWaiver.Models;
 using PtnWaiver.ViewModels;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Caching.Memory;
-using System.Net;
 
 namespace PtnWaiver.Controllers
 {
@@ -249,7 +247,7 @@ namespace PtnWaiver.Controllers
             List<SelectListItem> groups = new List<SelectListItem>();
             foreach (var rec in groupList)
             {
-                SelectListItem item = new SelectListItem { Value = rec.Group, Text = rec.Group };
+                SelectListItem item = new SelectListItem { Value = rec.Group, Text = rec.Group + " - (" + rec.PrimaryApproverFullName + "/" + rec.SecondaryApproverFullName + ")" };
                 groups.Add(item);
             }
             return groups;

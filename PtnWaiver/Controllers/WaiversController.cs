@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
@@ -219,6 +214,7 @@ namespace PtnWaiver.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            waiver.IsMostCurrentWaiver = true;
 
             if (ModelState.IsValid)
             {
@@ -282,7 +278,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,PorProject,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,PorProject,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -422,7 +418,7 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
         }
 
-        public async Task<IActionResult> SubmitWaiverForAdminApproval(int id)
+        public async Task<IActionResult> SubmitWaiverForApproval(int id)
         {
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -610,7 +606,8 @@ namespace PtnWaiver.Controllers
                 waiver.ModifiedDate = DateTime.Now;
             }
             waiver.RejectedReason = "Waiver Revised";
-            waiver.Status = "Closed";
+            waiver.IsMostCurrentWaiver = false;
+            //waiver.Status = "Closed";
 
             _contextPtnWaiver.Waiver.Update(waiver);
             await _contextPtnWaiver.SaveChangesAsync();
@@ -618,6 +615,7 @@ namespace PtnWaiver.Controllers
             waiver.Id = 0;
             waiver.DateClosed = null;
             waiver.RevisionNumber += 1;
+            waiver.IsMostCurrentWaiver = true;
             waiver.RejectedBeforeSubmission = false;
             waiver.RejectedByApprover = false;
             waiver.SubmittedForApprovalDate = null;

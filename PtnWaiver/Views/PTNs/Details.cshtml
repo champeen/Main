@@ -79,7 +79,7 @@
             <a class="mx-2" asp-action="Index">Back to List</a>*@
             <div class="row mt-5">
                 <div class="col-12 text-start">
-                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser) && (Model.PTN.Status == "Draft"))
+                    @if (ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser)
                     {
                         @Html.ActionLink("Edit","Edit",new {id=@Model?.PTN?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
                         @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
@@ -98,8 +98,23 @@
                 <dt class="col-sm-2 my-1 text-end">    
                     @Html.DisplayNameFor(model => model.PTN.SubjectType)
                 </dt>
-                <dd class="col-sm-4 my-1">    
+@*                 <dd class="col-sm-4 my-1">    
                     @Html.DisplayFor(model => model.PTN.SubjectType)
+                </dd> *@
+                <dd class="col-sm-4 my-1">
+                    @if (Model.PTN.SubjectType != null)
+                    {
+                        var counter = 0;
+                        @foreach (var subjectType in Model.PTN.SubjectType)
+                        {
+                            counter = counter + 1;
+                            <span>@subjectType</span>
+                            if (counter < Model.PTN.SubjectType.Count)
+                            {
+                                <span>,&nbsp;</span>
+                            }
+                        }
+                    }
                 </dd>
             </div>
             <div class="row">
@@ -276,9 +291,9 @@
             </div>
         </div>
         <hr />
-        <div class="row mt-4">
+        <div class="row mt-5">
             <div class="col-5 text-start">
-                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser) && (Model.PTN.Status == "Draft"))
+                @if (ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser)
                 {
                     @Html.ActionLink("Edit","Edit",new {id=@Model?.PTN?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
                     @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
@@ -295,22 +310,23 @@
             @*<h4 class="mt-5">Attachments</h4>*@
             @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
             @* @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"}) *@
-            <div class="row mb-5">
+            <div class="row mb-4">
                 <div class="col-12">
                     <div class="text-nowrap fs-5">
-                        <span class="fw-bold">STEP 1:</span> Download PTN Template (to download folder)
-                        @Html.ActionLink("Download PTN Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"})
+                        <span class="fw-bold">STEP 1:</span> Download PTN Template
+                        @* @Html.ActionLink("Download PTN Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"}) *@
+                        <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=TMP%2D0506" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get PTN Template</a>
                     </div>
                 </div>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-4">
                 <div class="col-12">
                     <div class="text-nowrap fs-5">
                         <span class="fw-bold">STEP 2:</span> Complete PTN Template
                     </div>
                 </div>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-4">
                 <div class="col-12">
                     <div class="text-nowrap fs-5">
                         <span class="fw-bold">STEP 3:</span> Upload Completed PTN Template
@@ -673,9 +689,9 @@
                                         @Html.ActionLink("Details","Details","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-secondary ms-1"})
                                         @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
                                         {
-                                            @if (item.Status != "Draft" && item.Status != "Pending Approval")
+                                            @if (item.Status != "Draft" && item.Status != "Pending Approval" && item.IsMostCurrentWaiver == true)
                                             {
-                                                @Html.ActionLink("Revise","Revise","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-success ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');", @title="Can revise any Waiver that is not in 'Draft' or 'Pending Approval' status"})
+                                                @Html.ActionLink("Revise","Revise","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-success ms-1", onclick="return DisplayProgressMessage(this, 'Saving...');", @title="Can revise any Waiver that is not in 'Draft' or 'Pending Approval' status, and must be the most current 'Waiver Number'."})
                                             }
                                             @if (item.DeletedDate == null && item.Status == "Draft" && Model.PTN.Status == "Approved")
                                             {

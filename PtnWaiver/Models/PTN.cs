@@ -10,7 +10,7 @@ namespace PtnWaiver.Models
         public string? DocId { get; set; }
         [Display(Name = "PTN/PIN")]
         public string PtnPin { get; set; }
-        [Display(Name = "Subject Type")]
+        [Display(Name = "Subject Type(s)")]
         //public string SubjectType { get; set; }
         public List<string> SubjectType { get; set; }
         public string Title { get; set; }

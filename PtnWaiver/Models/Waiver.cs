@@ -59,6 +59,7 @@ namespace PtnWaiver.Models
         public string? CompletedBylUserFullName { get; set; }
         [DataType(DataType.Date)]
         public DateTime? CompletedByDate { get; set; }
+        public bool? IsMostCurrentWaiver { get; set; }
 
         [ForeignKey("PTN")]
         public int PTNId { get; set; }

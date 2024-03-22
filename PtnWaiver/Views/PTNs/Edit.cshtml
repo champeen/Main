@@ -26,11 +26,15 @@
 
 <hr />
 <form asp-action="Edit">
+    @if (Model.Status != "Draft")
+    {
+        var _readOnly = "readonly";
+    }
     <div class="row my-4">
         <div class="col-12">
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a class="mx-2 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+                <a class="mx-1 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
             </div>
         </div>
     </div>
@@ -53,36 +57,81 @@
             <input type="hidden" asp-for="DeletedUserFullName" />
             <input type="hidden" asp-for="DeletedUserEmail" />
             <input type="hidden" asp-for="DeletedDate" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
             <div class="form-group my-3">
                 <label asp-for="PtnPin" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @* <input asp-for="PtnPin" class="form-control" style="max-width:25%;" /> *@
-                @Html.DropDownListFor(model => model.PtnPin, new SelectList(ViewBag.PtnPins, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                @if (Model.Status == "Draft")
+                {
+                    @Html.DropDownListFor(model => model.PtnPin, new SelectList(ViewBag.PtnPins, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.PtnPin, new SelectList(ViewBag.PtnPins, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;", disabled="disabled"})
+                    <input type="hidden" asp-for="PtnPin" />
+                }
                 <span asp-validation-for="PtnPin" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @* <input asp-for="SubjectType" class="form-control" style="max-width:25%;" /> *@
-                @Html.DropDownListFor(model => model.SubjectType, new SelectList(ViewBag.SubjectTypes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
-                <span asp-validation-for="SubjectType" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @* <input asp-for="Group" class="form-control" style="max-width:25%;" /> *@
-                @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                @if (Model.Status == "Draft")
+                {
+                    @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"})
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select", disabled="disabled"})
+                    <input type="hidden" asp-for="GroupApprover" />
+                }
                 <span asp-validation-for="GroupApprover" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="PtrNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="PtrNumber" class="form-control" style="max-width:25%;" />
+                <input asp-for="PtrNumber" class="form-control" />
                 <span asp-validation-for="PtrNumber" class="text-danger"></span>
             </div>
+        </div>
+        <div class="col-6">
+            <div class="form-group my-3">
+                <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
+                </i>
+                @if (Model.Status == "Draft")
+                {
+                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=9 })
+                }
+                else
+                {
+                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=9, disabled="disabled" })
+                    @for(int i = 0; i < Model.SubjectType.Count; i++) {
+                        @Html.HiddenFor(Model => Model.SubjectType[i])
+                    }
+                    //<input type="hidden" asp-for="SubjectType" />                    
+                }
+                <span asp-validation-for="SubjectType" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
             <div class="form-group my-3">
                 <label asp-for="Title" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3 })
+                                @if (Model.Status == "Draft")
+                {
+                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3 })
+                }
+                else
+                {
+                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3, disabled="disabled" })
+                    <input type="hidden" asp-for="Title" />
+
+                }
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
@@ -91,11 +140,11 @@
                 @Html.TextAreaFor(model => model.Comments, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="Comments" class="text-danger"></span>
             </div>
-            <div class="form-group mt-4">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a class="mx-2 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
-            </div>
         </div>
+    </div>
+    <div class="form-group mt-4">
+        <input type="submit" value="Save" class="btn btn-primary" />
+        <a class="mx-1 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
     </div>
 </form>
 

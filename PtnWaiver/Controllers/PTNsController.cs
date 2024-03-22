@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
@@ -305,6 +300,18 @@ namespace PtnWaiver.Controllers
             ViewBag.ClonedId = id;
 
             ptn.Status = "Draft";
+            ptn.ApprovedByDate = null;
+            ptn.ApprovedByUser = null;
+            ptn.ApprovedByUserFullName = null;
+            ptn.CompletedByDate = null;
+            ptn.CompletedBylUser = null;
+            ptn.CompletedBylUserFullName = null;
+            ptn.RejectedBeforeSubmission = null;
+            ptn.RejectedByApprover = null;
+            ptn.RejectedReason = null;
+            ptn.SubmittedForApprovalDate = null;
+            ptn.SubmittedForApprovalUser = null;
+            ptn.SubmittedForApprovalUserFullName = null;            
             ptn.CreatedUser = _username;
             ptn.CreatedUserFullName = ptnOwner.displayname;
             ptn.CreatedUserEmail = ptnOwner.mail;
@@ -432,7 +439,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,PtnPin,SubjectType,Title,GroupApprover,PdfLocation,Status,Comments,PtrNumber,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,PtnPin,SubjectType,Title,GroupApprover,PdfLocation,Status,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
