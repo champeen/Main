@@ -217,16 +217,30 @@ namespace PtnWaiver.Controllers
             }
             return status;
         }
-        public List<SelectListItem> getPtnPins()
+
+        public List<SelectListItem> getOriginatingGroups()
         {
-            var ptnPinList = _contextPtnWaiver.PtnPin.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
-            List<SelectListItem> ptnPins = new List<SelectListItem>();
-            foreach (var rec in ptnPinList)
+            var originatingGroupList = _contextPtnWaiver.OriginatingGroup.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> originatingGroups = new List<SelectListItem>();
+            foreach (var rec in originatingGroupList)
+            {
+                if (rec.BouleSizeRequired)
+                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description + " (Boule Size is Required)" });
+                else
+                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description });
+            }
+            return originatingGroups;
+        }
+        public List<SelectListItem> getBouleSizes()
+        {
+            var bouleSizeList = _contextPtnWaiver.BouleSize.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> bouleSizes = new List<SelectListItem>();
+            foreach (var rec in bouleSizeList)
             {
                 SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
-                ptnPins.Add(item);
+                bouleSizes.Add(item);
             }
-            return ptnPins;
+            return bouleSizes;
         }
 
         public List<SelectListItem> getSubjectTypes()
@@ -324,6 +338,22 @@ namespace PtnWaiver.Controllers
             .Where(m => !String.IsNullOrWhiteSpace(m.mail))
             //.Select(m => m.displayname)
             .FirstOrDefault();
+        }
+
+        public string getSerialNumberBasedOnYear(string year)
+        {
+            var lastSerialNumberForYear = _contextPtnWaiver.PTN.Where(m => m.OriginatorYear == year).Max(m => m.SerialNumber);
+            Int32.TryParse(lastSerialNumberForYear, out int serialNumber);   // returns zero if null value, which is ok
+            serialNumber += 1;
+            return serialNumber.ToString("000");
+        }
+
+        public string getOriginatorInitials()
+        {
+            var userInfo = getUserInfo(_username);
+            var firstInitial = userInfo.givenname == null || userInfo.givenname == "" ? "" : userInfo.givenname.Substring(0, 1);
+            var lastInitial = userInfo.surname == null || userInfo.surname == "" ? "" : userInfo.surname.Substring(0, 1);
+            return (firstInitial + lastInitial);
         }
 
         [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]

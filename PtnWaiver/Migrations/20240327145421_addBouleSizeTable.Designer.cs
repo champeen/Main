@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -12,9 +13,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240327145421_addBouleSizeTable")]
+    partial class addBouleSizeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -465,9 +468,6 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("ApprovedByUserFullName")
                         .HasColumnType("text");
 
-                    b.Property<string>("BouleSize")
-                        .HasColumnType("text");
-
                     b.Property<string>("Comments")
                         .HasColumnType("text");
 
@@ -524,16 +524,6 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("ModifiedUserFullName")
                         .HasColumnType("text");
 
-                    b.Property<string>("OriginatingGroup")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OriginatorInitials")
-                        .HasColumnType("text");
-
-                    b.Property<string>("OriginatorYear")
-                        .HasColumnType("text");
-
                     b.Property<string>("PdfLocation")
                         .HasColumnType("text");
 
@@ -547,6 +537,10 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverUsername")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PtnPin")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PtrNumber")
@@ -571,9 +565,6 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverUsername")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SerialNumber")
                         .HasColumnType("text");
 
                     b.Property<string>("Status")

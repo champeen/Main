@@ -39,11 +39,16 @@
             <span asp-validation-for="DocId" class="text-danger"></span>
             </div> *@
             <div class="form-group my-3">
-                <label asp-for="PtnPin" class="control-label fw-bold mb-1"></label>
+                <label asp-for="OriginatingGroup" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @* <input asp-for="PtnPin" class="form-control" style="max-width:25%;" /> *@
-                @Html.DropDownListFor(model => model.PtnPin, new SelectList(ViewBag.PtnPins, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
-                <span asp-validation-for="PtnPin" class="text-danger"></span>
+                @Html.DropDownListFor(model => model.OriginatingGroup, new SelectList(ViewBag.OriginatingGroups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                <span asp-validation-for="OriginatingGroup" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="BouleSize" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.DropDownListFor(model => model.BouleSize, new SelectList(ViewBag.BouleSizes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                <span asp-validation-for="BouleSize" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>

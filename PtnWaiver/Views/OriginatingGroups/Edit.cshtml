@@ -1,21 +1,30 @@
-﻿@model PtnWaiver.Models.PtnPin
+﻿@model PtnWaiver.Models.OriginatingGroup
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>PTN/PIN dropdown</h1>
-<h4 class="mt-5">Create</h4>
+<h1>Originating Groups</h1>
+<h4 class="mt-5">Edit</h4>
 <hr />
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
-            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="CreatedUser" />
             <input type="hidden" asp-for="CreatedUserFullName" />
             <input type="hidden" asp-for="CreatedUserEmail" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="ModifiedUser" />
+            <input type="hidden" asp-for="ModifiedUserFullName" />
+            <input type="hidden" asp-for="ModifiedUserEmail" />
+            <input type="hidden" asp-for="ModifiedDate" />
+            <input type="hidden" asp-for="DeletedUser" />
+            <input type="hidden" asp-for="DeletedUserFullName" />
+            <input type="hidden" asp-for="DeletedUserEmail" />
+            <input type="hidden" asp-for="DeletedDate" />
             <div class="form-group my-3">
                 <label asp-for="Code" class="control-label fw-bold mb-1"></label>
                 <input asp-for="Code" class="form-control" />
@@ -23,9 +32,13 @@
             </div>
             <div class="form-group my-3">
                 <label asp-for="Description" class="control-label fw-bold mb-1"></label>
-                @* <input asp-for="Description" class="form-control" /> *@
-                @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
+                <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check my-3">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="BouleSizeRequired" /> @Html.DisplayNameFor(model => model.BouleSizeRequired)
+                </label>
             </div>
             <div class="form-group my-3">
                 <label asp-for="Order" class="control-label fw-bold mb-1"></label>
@@ -33,7 +46,7 @@
                 <span asp-validation-for="Order" class="text-danger"></span>
             </div>
             <div class="form-group mt-5">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary" />
                 <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
             </div>
         </form>

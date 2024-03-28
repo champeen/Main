@@ -45,6 +45,11 @@
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="DocId" />
             <input type="hidden" asp-for="Status" />
+            <input type="hidden" asp-for="OriginatingGroup" />
+            <input type="hidden" asp-for="BouleSize" />
+            <input type="hidden" asp-for="OriginatorInitials" />
+            <input type="hidden" asp-for="OriginatorYear" />
+            <input type="hidden" asp-for="SerialNumber" />
             <input type="hidden" asp-for="CreatedUser" />
             <input type="hidden" asp-for="CreatedUserFullName" />
             <input type="hidden" asp-for="CreatedUserEmail" />
@@ -60,21 +65,54 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6">
+        <div class="col-12">
             <div class="form-group my-3">
-                <label asp-for="PtnPin" class="control-label fw-bold mb-1"></label>
+                <label asp-for="Title" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @if (Model.Status == "Draft")
                 {
-                    @Html.DropDownListFor(model => model.PtnPin, new SelectList(ViewBag.PtnPins, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3 })
                 }
                 else
                 {
-                    @Html.DropDownListFor(model => model.PtnPin, new SelectList(ViewBag.PtnPins, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;", disabled="disabled"})
-                    <input type="hidden" asp-for="PtnPin" />
+                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3, disabled="disabled" })
+                    <input type="hidden" asp-for="Title" />
+
                 }
-                <span asp-validation-for="PtnPin" class="text-danger"></span>
+                <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+@*             <div class="form-group my-3">
+                <label asp-for="OriginatingGroup" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @if (Model.Status == "Draft")
+                {
+                    @Html.DropDownListFor(model => model.OriginatingGroup, new SelectList(ViewBag.OriginatingGroups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.OriginatingGroup, new SelectList(ViewBag.OriginatingGroups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;", disabled="disabled"})
+                    <input type="hidden" asp-for="OriginatingGroup" />
+                }
+                <span asp-validation-for="OriginatingGroup" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="BouleSize" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @if (Model.Status == "Draft")
+                {
+                    @Html.DropDownListFor(model => model.BouleSize, new SelectList(ViewBag.BouleSizes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.BouleSize, new SelectList(ViewBag.BouleSizes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;", disabled="disabled"})
+                    <input type="hidden" asp-for="BouleSize" />
+                }
+                <span asp-validation-for="BouleSize" class="text-danger"></span>
+            </div> *@
             <div class="form-group my-3">
                 <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -119,21 +157,6 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <div class="form-group my-3">
-                <label asp-for="Title" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                                @if (Model.Status == "Draft")
-                {
-                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3 })
-                }
-                else
-                {
-                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3, disabled="disabled" })
-                    <input type="hidden" asp-for="Title" />
-
-                }
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
             <div class="form-group my-3">
                 <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
                 @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@

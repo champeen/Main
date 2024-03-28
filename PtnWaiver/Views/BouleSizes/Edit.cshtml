@@ -1,10 +1,10 @@
-﻿@model PtnWaiver.Models.PtnPin
+﻿@model PtnWaiver.Models.BouleSize
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>PTN/PIN Dropdown</h1>
+<h1>Boule Size Dropdown</h1>
 <h4 class="mt-5">Edit</h4>
 <hr />
 <div class="row">
@@ -27,7 +27,7 @@
             <input type="hidden" asp-for="DeletedDate" />
             <div class="form-group my-3">
                 <label asp-for="Code" class="control-label fw-bold mb-1"></label>
-                <input asp-for="Code" class="form-control" readonly/>
+                <input asp-for="Code" class="form-control" />
                 <span asp-validation-for="Code" class="text-danger"></span>
             </div>
             <div class="form-group my-3">

@@ -2,7 +2,7 @@
 
 namespace PtnWaiver.Models
 {
-    public class PtnPin : TimeStamps
+    public class BouleSize : TimeStamps
     {
         [Key]
         public int Id { get; set; }

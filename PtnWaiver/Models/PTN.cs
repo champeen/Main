@@ -8,10 +8,15 @@ namespace PtnWaiver.Models
         public int Id { get; set; }
         [Display(Name = "Doc Id")]
         public string? DocId { get; set; }
-        [Display(Name = "PTN/PIN")]
-        public string PtnPin { get; set; }
-        [Display(Name = "Subject Type(s)")]
+        [Display(Name = "Originating Group")]
+        public string OriginatingGroup { get; set; }
+        [Display(Name = "Boule Size")]        
+        public string? BouleSize { get; set; }
+        public string? OriginatorInitials { get; set; }
+        public string? OriginatorYear { get; set; }
+        public string? SerialNumber { get; set; }
         //public string SubjectType { get; set; }
+        [Display(Name = "Subject Type(s)")]
         public List<string> SubjectType { get; set; }
         public string Title { get; set; }
         [Display(Name = "Group/Approver")]

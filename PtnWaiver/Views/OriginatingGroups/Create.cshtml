@@ -1,0 +1,49 @@
+﻿@model PtnWaiver.Models.OriginatingGroup
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Originating Groups dropdown</h1>
+<h4 class="mt-5">Create</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="CreatedUserFullName" />
+            <input type="hidden" asp-for="CreatedUserEmail" />
+            <div class="form-group my-3">
+                <label asp-for="Code" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Code" class="form-control" />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check my-3">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="BouleSizeRequired" /> @Html.DisplayNameFor(model => model.BouleSizeRequired)
+                </label>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Order" class="form-control" />
+                <span asp-validation-for="Order" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-5">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

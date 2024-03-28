@@ -11,18 +11,18 @@ using PtnWaiver.ViewModels;
 
 namespace PtnWaiver.Controllers
 {
-    public class PtnPinsController : BaseController
+    public class BouleSizesController : BaseController
     {
         private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly MocContext _contextMoc;
 
-        public PtnPinsController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
+        public BouleSizesController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc) : base(contextPtnWaiver, contextMoc)
         {
             _contextPtnWaiver = contextPtnWaiver;
             _contextMoc = contextMoc;
         }
 
-        // GET: PtnPins
+        // GET: BouleSizes
         public async Task<IActionResult> Index()
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -32,12 +32,12 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _contextPtnWaiver.PtnPin != null ?
-                          View(await _contextPtnWaiver.PtnPin.OrderBy(m=>m.Order).ThenBy(m=>m.Description).ToListAsync()) :
-                          Problem("Entity set 'PtnWaiverContext.PtnPin'  is null.");
+            return _contextPtnWaiver.BouleSize != null ?
+                          View(await _contextPtnWaiver.BouleSize.OrderBy(m=>m.Order).ThenBy(m=>m.Description).ToListAsync()) :
+                          Problem("Entity set 'PtnWaiverContext.BouleSize'  is null.");
         }
 
-        // GET: PtnPins/Details/5
+        // GET: BouleSizes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -47,19 +47,19 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.PtnPin == null)
+            if (id == null || _contextPtnWaiver.BouleSize == null)
                 return NotFound();
 
-            var ptnPin = await _contextPtnWaiver.PtnPin
+            var bouleSize = await _contextPtnWaiver.BouleSize
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (ptnPin == null)
+            if (bouleSize == null)
                 return NotFound();
 
-            return View(ptnPin);
+            return View(bouleSize);
         }
 
-        // GET: PtnPins/Create
+        // GET: BouleSizes/Create
         public IActionResult Create()
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -76,7 +76,7 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
-            PtnPin ptnPin = new PtnPin()
+            BouleSize bouleSize = new BouleSize()
             {
                 CreatedUser = userInfo.onpremisessamaccountname,
                 CreatedUserFullName = userInfo.displayname,
@@ -84,15 +84,15 @@ namespace PtnWaiver.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            return View(ptnPin);
+            return View(bouleSize);
         }
 
-        // POST: PtnPins/Create
+        // POST: BouleSizes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PtnPin ptnPin)
+        public async Task<IActionResult> Create([Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] BouleSize bouleSize)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -102,22 +102,22 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             // Make sure duplicates are not entered...
-            List<PtnPin> checkDupes = await _contextPtnWaiver.PtnPin
-                .Where(m => m.Code == ptnPin.Code)
+            List<BouleSize> checkDupes = await _contextPtnWaiver.BouleSize
+                .Where(m => m.Code == bouleSize.Code)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-                ModelState.AddModelError("Code", "PtnPin Code already exists.");
+                ModelState.AddModelError("Code", "BouleSize Code already exists.");
 
             if (ModelState.IsValid)
             {
-                _contextPtnWaiver.Add(ptnPin);
+                _contextPtnWaiver.Add(bouleSize);
                 await _contextPtnWaiver.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(ptnPin);
+            return View(bouleSize);
         }
 
-        // GET: PtnPins/Edit/5
+        // GET: BouleSizes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -127,23 +127,23 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.PtnPin == null)
+            if (id == null || _contextPtnWaiver.BouleSize == null)
                 return NotFound();
 
-            var ptnPin = await _contextPtnWaiver.PtnPin.FindAsync(id);
+            var bouleSize = await _contextPtnWaiver.BouleSize.FindAsync(id);
 
-            if (ptnPin == null)
+            if (bouleSize == null)
                 return NotFound();
 
-            return View(ptnPin);
+            return View(bouleSize);
         }
 
-        // POST: PtnPins/Edit/5
+        // POST: BouleSizes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PtnPin ptnPin)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Description,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] BouleSize bouleSize)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -152,44 +152,44 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != ptnPin.Id)
+            if (id != bouleSize.Id)
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            List<PtnPin> checkDupes = await _contextPtnWaiver.PtnPin
-                .Where(m => m.Code == ptnPin.Code && m.Id != ptnPin.Id)
+            List<BouleSize> checkDupes = await _contextPtnWaiver.BouleSize
+                .Where(m => m.Code == bouleSize.Code && m.Id != bouleSize.Id)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-                ModelState.AddModelError("Code", "PtnPin Code already exists.");
+                ModelState.AddModelError("Code", "BouleSize Code already exists.");
 
             if (ModelState.IsValid)
             {
                 var userInfo = getUserInfo(_username);
                 if (userInfo != null)
                 {
-                    ptnPin.ModifiedDate = DateTime.Now;
-                    ptnPin.ModifiedUser = userInfo.onpremisessamaccountname;
-                    ptnPin.ModifiedUserFullName = userInfo.displayname;
-                    ptnPin.ModifiedUserEmail = userInfo.mail;
+                    bouleSize.ModifiedDate = DateTime.Now;
+                    bouleSize.ModifiedUser = userInfo.onpremisessamaccountname;
+                    bouleSize.ModifiedUserFullName = userInfo.displayname;
+                    bouleSize.ModifiedUserEmail = userInfo.mail;
                 }
                 try
                 {
-                    _contextPtnWaiver.Update(ptnPin);
+                    _contextPtnWaiver.Update(bouleSize);
                     await _contextPtnWaiver.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PtnPinExists(ptnPin.Id))
+                    if (!BouleSizeExists(bouleSize.Id))
                         return NotFound();
                     else
                         throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(ptnPin);
+            return View(bouleSize);
         }
 
-        // GET: PtnPins/Delete/5
+        // GET: BouleSizes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -199,19 +199,19 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _contextPtnWaiver.PtnPin == null)
+            if (id == null || _contextPtnWaiver.BouleSize == null)
                 return NotFound();
 
-            var ptnPin = await _contextPtnWaiver.PtnPin
+            var bouleSize = await _contextPtnWaiver.BouleSize
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (ptnPin == null)
+            if (bouleSize == null)
                 return NotFound();
 
-            return View(ptnPin);
+            return View(bouleSize);
         }
 
-        // POST: PtnPins/Delete/5
+        // POST: BouleSizes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -223,21 +223,21 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (_contextPtnWaiver.PtnPin == null)
-                return Problem("Entity set 'PtnWaiverContext.PtnPin'  is null.");
+            if (_contextPtnWaiver.BouleSize == null)
+                return Problem("Entity set 'PtnWaiverContext.BouleSize'  is null.");
 
-            var ptnPin = await _contextPtnWaiver.PtnPin.FindAsync(id);
+            var bouleSize = await _contextPtnWaiver.BouleSize.FindAsync(id);
 
-            if (ptnPin != null)
-                _contextPtnWaiver.PtnPin.Remove(ptnPin);
+            if (bouleSize != null)
+                _contextPtnWaiver.BouleSize.Remove(bouleSize);
 
             await _contextPtnWaiver.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PtnPinExists(int id)
+        private bool BouleSizeExists(int id)
         {
-            return (_contextPtnWaiver.PtnPin?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_contextPtnWaiver.BouleSize?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -181,7 +181,8 @@ namespace PtnWaiver.Controllers
             }
 
             ViewBag.Status = getPtnStatus();
-            ViewBag.PtnPins = getPtnPins();
+            ViewBag.OriginatingGroups = getOriginatingGroups();
+            ViewBag.BouleSizes = getBouleSizes();
             ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.Groups = getGroupApprovers();
 
@@ -203,7 +204,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DocId,PtnPin,Area,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
+        public async Task<IActionResult> Create([Bind("Id,DocId,OriginatingGroup,BouleSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -247,20 +248,22 @@ namespace PtnWaiver.Controllers
             else
                 ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
 
+            bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+            bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+
+            if (bouleSizeRequired == true && ptn.BouleSize == null)
+                ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
+
             if (ModelState.IsValid)
             {
-                // This weird naming convention is striaght from how they are doing it in the spreadsheet.....
-                int days = _getDaysSince1900;
-                string docId = "";
-                for (int i = 1; i < 10000; i++)
-                {
-                    docId = ptn.PtnPin + "-" + days.ToString() + "-" + i.ToString();
-                    PTN record = await _contextPtnWaiver.PTN
-                        .FirstOrDefaultAsync(m => m.DocId == docId);
-                    if (record == null)
-                        break;
-                }
-                ptn.DocId = docId;
+                // generate PTN Document Id......
+                ptn.OriginatorInitials = getOriginatorInitials();
+                ptn.OriginatorYear = DateTime.Now.Year.ToString();
+                ptn.SerialNumber = getSerialNumberBasedOnYear(ptn.OriginatorYear);
+                if (bouleSizeRequired == true)
+                    ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                else
+                    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
 
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
@@ -271,7 +274,8 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Status = getPtnStatus();
-            ViewBag.PtnPins = getPtnPins();
+            ViewBag.OriginatingGroups = getOriginatingGroups();
+            ViewBag.BouleSizes = getBouleSizes();
             ViewBag.Groups = getGroupApprovers();
             ViewBag.SubjectTypes = getSubjectTypes();
             return View(ptn);
@@ -294,7 +298,8 @@ namespace PtnWaiver.Controllers
             var ptnOwner = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
 
             ViewBag.Status = getPtnStatus();
-            ViewBag.PtnPins = getPtnPins();
+            ViewBag.OriginatingGroups = getOriginatingGroups();
+            ViewBag.BouleSizes = getBouleSizes();
             ViewBag.Groups = getGroupApprovers();
             ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.ClonedId = id;
@@ -311,7 +316,7 @@ namespace PtnWaiver.Controllers
             ptn.RejectedReason = null;
             ptn.SubmittedForApprovalDate = null;
             ptn.SubmittedForApprovalUser = null;
-            ptn.SubmittedForApprovalUserFullName = null;            
+            ptn.SubmittedForApprovalUserFullName = null;
             ptn.CreatedUser = _username;
             ptn.CreatedUserFullName = ptnOwner.displayname;
             ptn.CreatedUserEmail = ptnOwner.mail;
@@ -326,69 +331,66 @@ namespace PtnWaiver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CloneCreate([Bind("Id,DocId,PtnPin,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn, int clonedId, string? source = null)
+        public async Task<IActionResult> CloneCreate([Bind("Id,DocId,OriginatingGroup,BouleSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn, int clonedId, string? source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            //if (changeRequest.Estimated_Completion_Date == null)
-            //    ModelState.AddModelError("Estimated_Completion_Date", "Must Include a Valid Completion Date");
-
-            //if (changeRequest.Estimated_Completion_Date < DateTime.Today)
-            //    ModelState.AddModelError("Estimated_Completion_Date", "Date Cannot Be In The Past");
-
-            //if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
-            //    ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
-
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
+            // Get Primary/Secondary approver based on Group Selected....
+            var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == ptn.GroupApprover);
+            if (group != null)
+            {
+                // Primary Approver
+                if (group.PrimaryApproverUsername != null)
+                {
+                    var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
+                    if (primaryApprover != null)
+                    {
+                        ptn.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
+                        ptn.PrimaryApproverEmail = primaryApprover.mail;
+                        ptn.PrimaryApproverFullName = primaryApprover.displayname;
+                        ptn.PrimaryApproverTitle = primaryApprover.jobtitle;
+                    }
+                }
+                else
+                    ModelState.AddModelError("GroupApprover", "ERROR: Primary Approver setup for this GroupApprover is null. Contact Admin.");
+                // Secondary Approver
+                if (group.SecondaryApproverUsername != null)
+                {
+                    var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
+                    if (secondaryApprover != null)
+                    {
+                        ptn.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
+                        ptn.SecondaryApproverEmail = secondaryApprover.mail;
+                        ptn.SecondaryApproverFullName = secondaryApprover.displayname;
+                        ptn.SecondaryApproverTitle = secondaryApprover.jobtitle;
+                    }
+                }
+            }
+            else
+                ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
+
+            bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+            bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+
+            if (bouleSizeRequired == true && ptn.BouleSize == null)
+                ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
+
             if (ModelState.IsValid)
             {
-                // This weird naming convention is striaght from how they are doing it in the spreadsheet.....
-                int days = _getDaysSince1900;
-                string docId = "";
-                for (int i = 1; i < 10000; i++)
-                {
-                    docId = ptn.PtnPin + "-" + days.ToString() + "-" + i.ToString();
-                    PTN record = await _contextPtnWaiver.PTN
-                        .FirstOrDefaultAsync(m => m.DocId == docId);
-                    if (record == null)
-                        break;
-                }
-                ptn.DocId = docId;
-
-                // Get Primary/Secondary approver based on Group Selected....
-                var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == ptn.GroupApprover);
-                if (group != null)
-                {
-                    // Primary Approver
-                    if (group.PrimaryApproverUsername != null)
-                    {
-                        var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
-                        if (primaryApprover != null)
-                        {
-                            ptn.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
-                            ptn.PrimaryApproverEmail = primaryApprover.mail;
-                            ptn.PrimaryApproverFullName = primaryApprover.displayname;
-                            ptn.PrimaryApproverTitle = primaryApprover.jobtitle;
-                        }
-                    }
-                    // Secondary Approver
-                    if (group.SecondaryApproverUsername != null)
-                    {
-                        var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
-                        if (secondaryApprover != null)
-                        {
-                            ptn.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
-                            ptn.SecondaryApproverEmail = secondaryApprover.mail;
-                            ptn.SecondaryApproverFullName = secondaryApprover.displayname;
-                            ptn.SecondaryApproverTitle = secondaryApprover.jobtitle;
-                        }
-                    }
-                }
+                // generate PTN Document Id......
+                ptn.OriginatorInitials = getOriginatorInitials();
+                ptn.OriginatorYear = DateTime.Now.Year.ToString();
+                ptn.SerialNumber = getSerialNumberBasedOnYear(ptn.OriginatorYear);
+                if (bouleSizeRequired == true)
+                    ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                else
+                    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
 
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
@@ -400,7 +402,8 @@ namespace PtnWaiver.Controllers
             }
 
             ViewBag.Status = getPtnStatus();
-            ViewBag.PtnPins = getPtnPins();
+            ViewBag.OriginatingGroups = getOriginatingGroups();
+            ViewBag.BouleSizes = getBouleSizes();
             ViewBag.Groups = getGroupApprovers();
             ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.ClonedId = clonedId;
@@ -427,7 +430,8 @@ namespace PtnWaiver.Controllers
                 return NotFound();
 
             ViewBag.Status = getPtnStatus();
-            ViewBag.PtnPins = getPtnPins();
+            ViewBag.OriginatingGroups = getOriginatingGroups();
+            ViewBag.BouleSizes = getBouleSizes();
             ViewBag.Groups = getGroupApprovers();
             ViewBag.SubjectTypes = getSubjectTypes();
 
@@ -439,7 +443,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,PtnPin,SubjectType,Title,GroupApprover,PdfLocation,Status,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,OriginatingGroup,,BouleSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PdfLocation,Status,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -511,7 +515,8 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction("Details", new { id = pTN.Id });
             }
             ViewBag.Status = getPtnStatus();
-            ViewBag.PtnPins = getPtnPins();
+            ViewBag.OriginatingGroups = getOriginatingGroups();
+            ViewBag.BouleSizes = getBouleSizes();
             ViewBag.Groups = getGroupApprovers();
             ViewBag.SubjectTypes = getSubjectTypes();
             return View(pTN);

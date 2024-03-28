@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -12,9 +13,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20240327140016_addOriginatingGroupsTable")]
+    partial class addOriginatingGroupsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,66 +101,6 @@ namespace PtnWaiver.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AllowedAttachmentExtensions");
-                });
-
-            modelBuilder.Entity("PtnWaiver.Models.BouleSize", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Code")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("CreatedUser")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CreatedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("DeletedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("DeletedUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeletedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("DeletedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ModifiedDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("ModifiedUser")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ModifiedUserEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ModifiedUserFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Order")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BouleSize");
                 });
 
             modelBuilder.Entity("PtnWaiver.Models.EmailHistory", b =>
@@ -393,7 +336,7 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("BouleSizeRequired")
+                    b.Property<bool?>("BouleSizeRequired")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Code")
@@ -465,9 +408,6 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("ApprovedByUserFullName")
                         .HasColumnType("text");
 
-                    b.Property<string>("BouleSize")
-                        .HasColumnType("text");
-
                     b.Property<string>("Comments")
                         .HasColumnType("text");
 
@@ -524,16 +464,6 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("ModifiedUserFullName")
                         .HasColumnType("text");
 
-                    b.Property<string>("OriginatingGroup")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("OriginatorInitials")
-                        .HasColumnType("text");
-
-                    b.Property<string>("OriginatorYear")
-                        .HasColumnType("text");
-
                     b.Property<string>("PdfLocation")
                         .HasColumnType("text");
 
@@ -547,6 +477,10 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PrimaryApproverUsername")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PtnPin")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PtrNumber")
@@ -571,9 +505,6 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("SecondaryApproverUsername")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SerialNumber")
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
@@ -720,6 +651,66 @@ namespace PtnWaiver.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProductProcess");
+                });
+
+            modelBuilder.Entity("PtnWaiver.Models.PtnPin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModifiedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModifiedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PtnPin");
                 });
 
             modelBuilder.Entity("PtnWaiver.Models.PtnStatus", b =>

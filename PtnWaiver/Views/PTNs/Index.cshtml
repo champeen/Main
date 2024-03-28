@@ -40,14 +40,17 @@
             <th class="text-nowrap">
                 @Html.DisplayNameFor(model => model.DocId)
             </th>
+@*             <th>
+                @Html.DisplayNameFor(model => model.OriginatingGroup)
+            </th>
             <th>
-                @Html.DisplayNameFor(model => model.PtnPin)
+                @Html.DisplayNameFor(model => model.BouleSize)
+            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.SubjectType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.GroupApprover)
@@ -74,14 +77,30 @@
                 <td class="text-nowrap">
                     @Html.DisplayFor(modelItem => item.DocId)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PtnPin)
+@*                 <td>
+                    @Html.DisplayFor(modelItem => item.OriginatingGroup)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubjectType)
-                </td>
+                    @Html.DisplayFor(modelItem => item.BouleSize)
+                </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @if (item.SubjectType != null)
+                    {
+                        var counter = 0;
+                        @foreach (var subjectType in item.SubjectType)
+                        {
+                            counter = counter + 1;
+                            <span>@subjectType</span>
+                            if (counter < item.SubjectType.Count)
+                            {
+                                <span>,&nbsp;</span>
+                            }
+                        }
+                    }
+                    @* @Html.DisplayFor(modelItem => item.SubjectType) *@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.GroupApprover)
@@ -126,7 +145,7 @@
     {
         <tr>
             <td>No data found</td>
-            <td></td>
+@*             <td></td> *@
             <td></td>
             <td></td>
             <td></td>

@@ -90,10 +90,16 @@
             <hr />
             <div class="row">
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.PtnPin)
+                    @Html.DisplayNameFor(model => model.PTN.OriginatingGroup)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.PtnPin)
+                    @Html.DisplayFor(model => model.PTN.OriginatingGroup)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.PTN.BouleSize)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.BouleSize)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">    
                     @Html.DisplayNameFor(model => model.PTN.SubjectType)
@@ -116,14 +122,14 @@
                         }
                     }
                 </dd>
-            </div>
-            <div class="row">
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.PTN.GroupApprover)
                 </dt>
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.PTN.GroupApprover)
                 </dd>
+            </div>
+            <div class="row">
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.PTN.PtrNumber)
                 </dt>
