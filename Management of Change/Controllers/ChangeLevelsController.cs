@@ -112,7 +112,7 @@ namespace Management_of_Change.Controllers
                 .ToListAsync();
             if (checkDupes.Count > 0)
             {
-                ModelState.AddModelError("Level", "Change Level already exists.");
+                ModelState.AddModelError("Level", "Change Grade already exists.");
                 return View(changeLevel);
             }
 
@@ -164,14 +164,14 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            //List<ChangeLevel> checkDupes = await _context.ChangeLevel
-            //    .Where(m => m.Level == changeLevel.Level)
-            //    .ToListAsync();
-            //if (checkDupes.Count > 0)
-            //{
-            //    ModelState.AddModelError("Level", "Change Level already exists.");
-            //    return View(changeLevel);
-            //}
+            List<ChangeLevel> checkDupes = await _context.ChangeLevel
+                .Where(m => m.Level == changeLevel.Level && m.Id != changeLevel.Id)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+            {
+                ModelState.AddModelError("Level", "Change Grade already exists.");
+                return View(changeLevel);
+            }
 
             changeLevel.ModifiedUser = _username;
             changeLevel.ModifiedDate = DateTime.Now;

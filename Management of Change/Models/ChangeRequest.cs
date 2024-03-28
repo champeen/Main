@@ -26,7 +26,7 @@ namespace Management_of_Change.Models
         public string Scope_of_the_Change { get; set; }
         [Display(Name = "Justification of Change")]
         public string Justification_of_the_Change { get; set; }
-        [Display(Name = "Change Level")]
+        [Display(Name = "Change Grade")]
         public string Change_Level { get; set; }
         [Display(Name = "Area of Change")]
         public string Area_of_Change { get; set; }

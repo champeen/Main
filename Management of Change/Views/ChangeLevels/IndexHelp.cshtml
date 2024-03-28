@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Change Levels</h1>
+<h1>Change Grades</h1>
 
 <p class="mt-5 mb-3">
     @* <a asp-action="Create">Create New</a> *@
@@ -14,7 +14,8 @@
     <thead class="table-primary">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Level)
+                <span class="fw-bold">Grade</span>
+                @* @Html.DisplayNameFor(model => model.Level) *@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Change Level</h1>
+<h1>Change Grade</h1>
 
 <h4 class="mt-5">Create</h4>
 <hr />
@@ -15,7 +15,8 @@
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
             <div class="form-group my-3">
-                <label asp-for="Level" class="control-label fw-bold"></label>
+                <span class="control-label fw-bold">Grade</span>
+                @* <label asp-for="Level" class="control-label fw-bold"></label> *@
                 <input asp-for="Level" class="form-control" />
                 <span asp-validation-for="Level" class="text-danger"></span>
             </div>

@@ -109,7 +109,7 @@
                 @*@Html.DisplayNameFor(model => model.Change_Type)*@
             </th>
             <th>
-                @Html.ActionLink("Change Level","Index",new {sort="Level", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
+                @Html.ActionLink("Change Grade","Index",new {sort="Level", prevSort = ViewBag.PrevSort, statusFilter = ViewBag.PrevStatusFilter, prevStatusFilter = ViewBag.PrevStatusFilter},new {@style="color:black;"})
                 @if (ViewBag.PrevSort == "LevelAsc")
                 {
                     <i class="bi bi-arrow-up-circle-fill fw-bolder" style="color:green;" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
@@ -118,7 +118,7 @@
                 {
                     <i class="bi bi-arrow-down-circle-fill fw-bolder" style="color:green" data-bs-toggle="tooltip" data-bs-html="true" title="Sort Column"></i>
                 }
-                @* Change Level *@
+                @* Change Grade *@
                 @*@Html.DisplayNameFor(model => model.Change_Level)*@
             </th>
             <th>
