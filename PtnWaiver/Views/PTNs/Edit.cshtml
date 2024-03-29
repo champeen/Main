@@ -66,6 +66,11 @@
     </div>
     <div class="row">
         <div class="col-12">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
             <div class="form-group my-3">
                 <label asp-for="Title" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -81,10 +86,6 @@
                 }
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
 @*             <div class="form-group my-3">
                 <label asp-for="OriginatingGroup" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -141,11 +142,11 @@
                 </i>
                 @if (Model.Status == "Draft")
                 {
-                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=9 })
+                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=10 })
                 }
                 else
                 {
-                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=9, disabled="disabled" })
+                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=10, disabled="disabled" })
                     @for(int i = 0; i < Model.SubjectType.Count; i++) {
                         @Html.HiddenFor(Model => Model.SubjectType[i])
                     }

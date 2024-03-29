@@ -340,14 +340,6 @@ namespace PtnWaiver.Controllers
             .FirstOrDefault();
         }
 
-        public string getSerialNumberBasedOnYear(string year)
-        {
-            var lastSerialNumberForYear = _contextPtnWaiver.PTN.Where(m => m.OriginatorYear == year).Max(m => m.SerialNumber);
-            Int32.TryParse(lastSerialNumberForYear, out int serialNumber);   // returns zero if null value, which is ok
-            serialNumber += 1;
-            return serialNumber.ToString("000");
-        }
-
         public string getOriginatorInitials()
         {
             var userInfo = getUserInfo(_username);
@@ -356,33 +348,29 @@ namespace PtnWaiver.Controllers
             return (firstInitial + lastInitial);
         }
 
-        [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-        public class PreventDuplicateRequestAttribute : ActionFilterAttribute
+        public string getSerialNumberBasedOnYear(string year)
         {
-            public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+            var lastSerialNumberForYear = _contextPtnWaiver.PTN.Where(m => m.OriginatorYear == year).Max(m => m.SerialNumber);
+            Int32.TryParse(lastSerialNumberForYear, out int serialNumber);   // returns zero if null value, which is ok
+            serialNumber += 1;
+            return serialNumber.ToString("000");
+        }
+
+        public string getWaiverSerialNumber(string ptnDocId)
+        {
+            string waiverNumber = "";
+            for (int i = 1; i < 10000; i++)
             {
-                if (context.HttpContext.Request.Form.ContainsKey("__RequestVerificationToken"))
-                {
-                    await context.HttpContext.Session.LoadAsync();
-
-                    var currentToken = context.HttpContext.Request.Form["__RequestVerificationToken"].ToString();
-                    var lastToken = context.HttpContext.Session.GetString("LastProcessedToken");
-
-                    if (lastToken == currentToken)
-                    {
-                        context.ModelState.AddModelError(string.Empty, "Looks like you accidentally submitted the same form twice.");
-                    }
-                    else
-                    {
-                        context.HttpContext.Session.SetString("LastProcessedToken", currentToken);
-                        await context.HttpContext.Session.CommitAsync();
-                    }
-                }
-
-                await next();
+                waiverNumber = ptnDocId + "-W" + i.ToString("00");
+                var waiver = _contextPtnWaiver.Waiver.Where(m => m.WaiverNumber == waiverNumber).FirstOrDefault();
+                if (waiver == null)
+                    break;
             }
-
-
+            return waiverNumber;
+            //var lastSerialNumberForYear = _contextPtnWaiver.PTN.Where(m => m.OriginatorYear == year).Max(m => m.SerialNumber);
+            //Int32.TryParse(lastSerialNumberForYear, out int serialNumber);   // returns zero if null value, which is ok
+            //serialNumber += 1;
+            //return serialNumber.ToString("000");
         }
     }
 }

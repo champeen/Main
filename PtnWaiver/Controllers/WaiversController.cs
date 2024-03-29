@@ -218,18 +218,20 @@ namespace PtnWaiver.Controllers
 
             if (ModelState.IsValid)
             {
-                // This weird naming convention is striaght from how they are doing it in the spreadsheet.....
-                string year = DateTime.Now.Year.ToString();
-                string waiverNumber = "";
-                for (int i = 1; i < 10000; i++)
-                {
-                    waiverNumber = "INS" + DateTime.Now.Year.ToString() + "-" + i.ToString();
-                    Waiver record = await _contextPtnWaiver.Waiver
-                        .FirstOrDefaultAsync(m => m.WaiverNumber == waiverNumber);
-                    if (record == null)
-                        break;
-                }
-                waiver.WaiverNumber = waiverNumber;
+                //// This weird naming convention is striaght from how they are doing it in the spreadsheet.....
+                //string year = DateTime.Now.Year.ToString();
+                //string waiverNumber = "";
+                //for (int i = 1; i < 10000; i++)
+                //{
+                //    waiverNumber = "INS" + DateTime.Now.Year.ToString() + "-" + i.ToString();
+                //    Waiver record = await _contextPtnWaiver.Waiver
+                //        .FirstOrDefaultAsync(m => m.WaiverNumber == waiverNumber);
+                //    if (record == null)
+                //        break;
+                //}
+                //waiver.WaiverNumber = waiverNumber;
+
+                waiver.WaiverNumber = getWaiverSerialNumber(waiver.PtnDocId);
 
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
