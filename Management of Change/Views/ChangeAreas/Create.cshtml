@@ -9,7 +9,7 @@
 <h4 class="mt-5">Create</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CreatedDate" />
@@ -18,6 +18,18 @@
                 <label asp-for="Description" class="control-label fw-bold"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PrimaryApproverUsername" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="PrimaryApproverUsername" class="form-control" /> *@
+                @Html.DropDownListFor(model => model.PrimaryApproverUsername, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:25%;"})
+                <span asp-validation-for="PrimaryApproverUsername" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="SecondaryApproverUsername" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="SecondaryApproverUsername" class="form-control" /> *@
+                @Html.DropDownListFor(model => model.SecondaryApproverUsername, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:25%;"})
+                <span asp-validation-for="SecondaryApproverUsername" class="text-danger"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="Order" class="control-label fw-bold"></label>

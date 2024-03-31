@@ -6,8 +6,10 @@ namespace Management_of_Change.Models
     {
         [Key]
         public int Id { get; set; }
+        [Display(Name = "Grade")]
         public string Level { get; set; }
         public string? Description { get; set; }
+        public bool ReviewRequired { get; set; }
         public string? Order { get; set; }
     }
 }

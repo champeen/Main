@@ -19,6 +19,24 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.PrimaryApproverFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimaryApproverTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrimaryApproverEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecondaryApproverFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecondaryApproverTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SecondaryApproverEmail)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Order)
             </th>
             <th></th>
@@ -32,6 +50,24 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.PrimaryApproverFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimaryApproverTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimaryApproverEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SecondaryApproverFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SecondaryApproverTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SecondaryApproverEmail)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Order)
                 </td>
                 <td class="text-nowrap">
@@ -42,6 +78,20 @@
             </tr>
         }
     </tbody>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
 </table>
 
 @* 

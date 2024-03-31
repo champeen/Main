@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Management_of_Change.Migrations
 {
     [DbContext(typeof(Management_of_ChangeContext))]
-    partial class Management_of_ChangeContextModelSnapshot : ModelSnapshot
+    [Migration("20240329181244_addReviewRequiredFieldToChangeLevel")]
+    partial class addReviewRequiredFieldToChangeLevel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -169,30 +172,6 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Order")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverUsername")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverUsername")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

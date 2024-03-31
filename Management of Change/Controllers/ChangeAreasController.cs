@@ -81,6 +81,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Users = getUserList();
 
             ChangeArea changeArea = new ChangeArea
             {
@@ -96,7 +97,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
+        public async Task<IActionResult> Create([Bind("Id,Description,PrimaryApproverUsername,SecondaryApproverUsername,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -110,9 +111,30 @@ namespace Management_of_Change.Controllers
                 .Where(m => m.Description == changeArea.Description)
                 .ToListAsync();
             if (checkDupes.Count > 0)
-            {
                 ModelState.AddModelError("Description", "Change Area already exists.");
-                return View(changeArea);
+
+            if (changeArea.PrimaryApproverUsername != null)
+            {
+                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.PrimaryApproverUsername);
+                if (primaryUser != null)
+                {
+                    changeArea.PrimaryApproverEmail = primaryUser.mail;
+                    changeArea.PrimaryApproverFullName = primaryUser.displayname;
+                    changeArea.PrimaryApproverTitle = primaryUser.jobtitle;
+                }
+            }
+            else
+                ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
+
+            if (changeArea.SecondaryApproverUsername != null)
+            {
+                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.SecondaryApproverUsername);
+                if (secondaryUser != null)
+                {
+                    changeArea.SecondaryApproverEmail = secondaryUser.mail;
+                    changeArea.SecondaryApproverFullName = secondaryUser.displayname;
+                    changeArea.SecondaryApproverTitle = secondaryUser.jobtitle;
+                }
             }
 
             if (ModelState.IsValid)
@@ -121,6 +143,7 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Users = getUserList();
             return View(changeArea);
         }
 
@@ -133,6 +156,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Users = getUserList();
 
             if (id == null || _context.ChangeArea == null)
                 return NotFound();
@@ -150,7 +174,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,PrimaryApproverUsername,SecondaryApproverUsername,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -163,20 +187,40 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // Make sure duplicates are not entered...
-            //List<ChangeArea> checkDupes = await _context.ChangeArea
-            //    .Where(m => m.Description == changeArea.Description)
-            //    .ToListAsync();
-            //if (checkDupes.Count > 0)
-            //{
-            //    ModelState.AddModelError("Description", "Change Area already exists.");
-            //    return View(changeArea);
-            //}
+            List<ChangeArea> checkDupes = await _context.ChangeArea
+                .Where(m => m.Description == changeArea.Description && m.Id != changeArea.Id)
+                .ToListAsync();
+            if (checkDupes.Count > 0)
+                ModelState.AddModelError("Description", "Change Area already exists.");
 
-            changeArea.ModifiedUser = _username;
-            changeArea.ModifiedDate = DateTime.Now;
+            if (changeArea.PrimaryApproverUsername != null)
+            {
+                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.PrimaryApproverUsername);
+                if (primaryUser != null)
+                {
+                    changeArea.PrimaryApproverEmail = primaryUser.mail;
+                    changeArea.PrimaryApproverFullName = primaryUser.displayname;
+                    changeArea.PrimaryApproverTitle = primaryUser.jobtitle;
+                }
+            }
+            else
+                ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
+
+            if (changeArea.SecondaryApproverUsername != null)
+            {
+                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.SecondaryApproverUsername);
+                if (secondaryUser != null)
+                {
+                    changeArea.SecondaryApproverEmail = secondaryUser.mail;
+                    changeArea.SecondaryApproverFullName = secondaryUser.displayname;
+                    changeArea.SecondaryApproverTitle = secondaryUser.jobtitle;
+                }
+            }
 
             if (ModelState.IsValid)
             {
+                changeArea.ModifiedUser = _username;
+                changeArea.ModifiedDate = DateTime.Now;
                 try
                 {
                     _context.Update(changeArea);
@@ -191,6 +235,7 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Users = getUserList();
             return View(changeArea);
         }
 
