@@ -22,6 +22,9 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ReviewRequired)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Order)
             </th>
 @*            <th>
@@ -56,6 +59,9 @@
                     @Html.Raw(item.Description)
                 </td>
                 <td>
+                    @Html.Raw(item.ReviewRequired)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Order)
                 </td>
 @*                <td>
@@ -84,4 +90,14 @@
             </tr>
         }
     </tbody>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
 </table>

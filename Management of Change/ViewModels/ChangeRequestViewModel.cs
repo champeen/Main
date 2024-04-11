@@ -17,8 +17,10 @@ namespace Management_of_Change.ViewModels
         public string? Tab4Disabled { get; set; }
         public string? Tab5Disabled { get; set; }
         public string? Tab6Disabled { get; set; }
+        public string? TabChangeGradeReviewDisplayed { get; set; }
         public string? TabActiveDetail { get; set; }
         public string? TabActiveGeneralMocQuestions { get; set; }
+        public string? TabActiveChangeGradeReview {  get; set; }
         public string? TabActiveImpactAssessments { get; set; }
         public string? TabActiveFinalApprovals { get; set; }
         public string? TabActiveImplementation { get; set; }

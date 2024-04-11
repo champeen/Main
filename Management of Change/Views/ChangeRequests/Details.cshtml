@@ -38,6 +38,16 @@
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
             </li>
+            @if (Model.TabChangeGradeReviewDisplayed == "Yes")
+            {
+                <li class="nav-item">
+                    <a class="nav-link @Model.TabActiveChangeGradeReview fw-bolder" id="nav-changeGradeReview-tab" data-bs-toggle="tab" href="#nav-changeGradeReview" role="tab" aria-controls="nav-contact" aria-selected="false">
+                        Change Grade Review
+                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This Change Grade requires review to make sure no PCCB review is needed.">
+                        </i>
+                    </a>
+                </li>
+            }
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled fw-bolder" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
                     Impact Assessments
@@ -99,16 +109,16 @@
                         {
                             @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                             {
-@*                                 <div class="row">
-                                    <div class="col-12">
-                                        <button type="submit"
-                                                id="submitButton"
-                                                class="btn btn-primary"
-                                                onclick="return DisplayProgressMessage(this, 'Saving...');">
-                                            Save
-                                        </button>
-                                    </div>
-                                </div> *@
+                                @*                                 <div class="row">
+                        <div class="col-12">
+                        <button type="submit"
+                        id="submitButton"
+                        class="btn btn-primary"
+                        onclick="return DisplayProgressMessage(this, 'Saving...');">
+                        Save
+                        </button>
+                        </div>
+                        </div> *@
                                 <div class="row">
                                     <div class="col-xl-10 text-xl-end mt-2">
                                         <span class="bg-warning fw-bold">
@@ -116,7 +126,7 @@
                                         </span>
                                     </div>
                                     <div class="col-xl-2 col">
-                                        @Html.ActionLink("Submit for Review", "SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                        @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                     </div>
                                 </div>
                             }
@@ -380,7 +390,7 @@
                                         </span>
                                     </div>
                                     <div class="col-xl-2">
-                                        @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId2", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                        @Html.ActionLink("Submit for Review","CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId2", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                     </div>
                                 </div>
                             }
@@ -435,7 +445,7 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-2">
-                                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId3", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                            @Html.ActionLink("Submit for Review","CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId3", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                         </div>
                                     </div>
                                 }
@@ -522,7 +532,7 @@
                                             </span>
                                         </div>
                                         <div class="col-xl-2">
-                                            @Html.ActionLink("Submit for Review","SubmitForReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId4", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                            @Html.ActionLink("Submit for Review","CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId4", onclick="return DisplayProgressMessage(this, 'Saving...');"})
                                         </div>
                                     </div>
                                 }
@@ -532,6 +542,49 @@
                 </div>
             }
         </div>
+
+
+
+
+        @******************************************************************************************************************@
+        @*  CHANGE GRADE REVIEW TAB  **************************************************************************************@
+        @******************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveChangeGradeReview" id="nav-changeGradeReview" role="tabpanel" aria-labelledby="nav-changeGradeReview-tab">
+            <div class="text-nowrap text-center">
+                @*<h4 class="mt-5">Implementation</h4>*@
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @if (ViewBag.OpenPreImplementationTasks > 0)
+                {
+                    <div class="fw-bold text-danger my-5">
+                        Cannot close Implementation.  There are 'Open/In-Progress/On Hold' Pre-Implementation Tasks for this Change Request.
+                    </div>
+                }
+                else
+                {
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
+                    {
+                        @Html.ActionLink("Close Implementation","CloseoutImplementation", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                    }
+                    @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
+                    {
+                        <div class="fw-bold text-success my-5">
+                            Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
+                        </div>
+                    }
+                }
+                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
         @******************************************************************************************************************@
         @*  IMPACT ASSESSMENT REVIEWS TAB  ********************************************************************************@
         @******************************************************************************************************************@
@@ -603,10 +656,10 @@
                                         <span>
                                             @Html.ActionLink("Send Reminder","AssessmentReminder","ChangeRequests", new {id = @item.Id, tab="ImpactAssessments"}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
                                         </span>
-@*                                         <div id="Fade_area" class="overlay1"></div>
-                                        <div id="myModal" class="popup1">
-                                            @Html.Partial("~/Views/Shared/_Popup.cshtml")
-                                        </div> *@
+                                        @*                                         <div id="Fade_area" class="overlay1"></div>
+                            <div id="myModal" class="popup1">
+                            @Html.Partial("~/Views/Shared/_Popup.cshtml")
+                            </div> *@
                                     }
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
