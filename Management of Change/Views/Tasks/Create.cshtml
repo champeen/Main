@@ -14,7 +14,7 @@
                 <span class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
-                <span class="mx-2">
+                <span class="mx-1">
                     @if (ViewBag.Source == "Home")
                     {
                         @Html.ActionLink("Cancel","Index","Home",new {},new {@class="btn btn-secondary"})
@@ -139,7 +139,7 @@
             <div class="text-nowrap">
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
-                    <span class="mx-2">
+                    <span class="mx-1">
                         @if (ViewBag.Source == "Home")
                         {
                             @Html.ActionLink("Cancel","Index","Home",new {},new {@class="btn btn-secondary"})

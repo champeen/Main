@@ -93,7 +93,7 @@
             <div class="text-nowrap">
                 @*<h4 class="mt-5">Details</h4>*@
                 @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-                <a class="mx-2" asp-action="Index">Back to List</a>*@
+                <a class="mx-1" asp-action="Index">Back to List</a>*@
                 <div class="row mt-5">
                     <div class="col-5 text-start">
                         @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))

@@ -9,7 +9,7 @@
 <div>
     <div class="text-nowrap">
         @*<a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-        <a class="mx-2" asp-action="Index">Back to List</a>*@
+        <a class="mx-1" asp-action="Index">Back to List</a>*@
         @if (ViewBag.IsAdmin || ViewBag.Username == Model.AssignedByUser || ViewBag.Username == Model.AssignedToUser)
         {
             @Html.ActionLink("Edit","Edit",new {id=@Model.Id, tab="Details"},new {@class="btn btn-primary"})
