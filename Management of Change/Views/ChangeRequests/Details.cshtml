@@ -550,20 +550,25 @@
         @*  CHANGE GRADE REVIEW TAB  **************************************************************************************@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveChangeGradeReview" id="nav-changeGradeReview" role="tabpanel" aria-labelledby="nav-changeGradeReview-tab">
-            <div class="text-nowrap text-center">
-                @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewChangeGrade) && (Model.ChangeRequest.Change_Status == "ChangeGradeReview"))
-                {
-                    @Html.ActionLink("Approve Change Grade","ApproveChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
-                    @Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 mx-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
-                }
-                @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
-                {
-                    <div class="fw-bold text-success my-5">
-                        Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName) on @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)
-                    </div>
-                }
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+            @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewChangeGrade) && (Model.ChangeRequest.Change_Status == "ChangeGradeReview"))
+            {
+                            <div class="mx-5">
+                MoC needs Change Grade reviewed. As it stands, this MoC will NOT go to PCCB review. Please look over the MoC and either approve the change grade as is, which will bypass PCCB review, or reject the change grade, which will notify the MoC writer via email that the change grade was rejected, changing the MoC status back to 'Draft'.
             </div>
+                <div class="text-nowrap text-center mt-2">
+                    @Html.ActionLink("Approve Change Grade","ApproveChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                    @Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 ms-2 me-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                </div>
+            }
+            @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
+            {
+                <div class="text-nowrap text-center mt-2">
+                    <div class="fw-bold text-success my-5">
+                        Change Grade Review has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName) on @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)
+                    </div>
+                </div>
+            }
+            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
         </div>
 
 

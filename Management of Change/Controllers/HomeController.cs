@@ -41,6 +41,29 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToListAsync();
 
+            // Get all active ChangeGradeReviews for current user...
+            // fist get all active MoC's that are in 'ChangeGradeReview' status....
+            dashboardVM.ChangeGradeReviews = await _context.ChangeRequest
+                .Where(m => m.DeletedDate == null)
+                //.Where(m => m.Change_Owner == username)
+                .Where(m => m.Change_Status == "ChangeGradeReview")
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.Estimated_Completion_Date)
+                .ToListAsync();
+
+            // now remove any that do not have current user as primary or secondary ChangeGradeReviewer...
+            foreach (var rec in dashboardVM.ChangeGradeReviews)
+            {
+                ChangeArea changeArea = await _context.ChangeArea.Where(m => m.Description == rec.Area_of_Change).FirstOrDefaultAsync();
+                if (changeArea == null)
+                    dashboardVM.ChangeGradeReviews.Remove(rec);
+                else
+                {
+                    if (changeArea.PrimaryApproverUsername != _username && changeArea.SecondaryApproverUsername != _username)
+                        dashboardVM.ChangeGradeReviews.Remove(rec);
+                }                        
+            }
+
             // Get all incomplete Impact Assessments assigned to user...
             List<ChangeRequest> changeRequestsIA = await _context.ChangeRequest
                 .Where(m => m.DeletedDate == null)

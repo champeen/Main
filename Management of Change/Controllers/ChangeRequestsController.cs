@@ -1049,6 +1049,19 @@ namespace Management_of_Change.Controllers
                 changeRequest.ModifiedUser = _username;
                 _context.Update(changeRequest);
                 await _context.SaveChangesAsync();
+
+                // Send Email Out notifying person(s) responsible to review the Change Grade...
+                string subject = @"Management of Change (MoC) - Change Grade Review.";
+                string body = @"A Management of Change task has been created that needs to have its Change Grade reviewed. As it stands, this MoC will NOT go to PCCB review. Please look over the MoC and either accept the change grade as is, which will bypass PCCB review, or reject the change grade, which will notify the MoC writer via email that the change grade was rejected, changing the MoC status back to 'Draft'.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                var changeArea = await _context.ChangeArea.Where(m => m.Description == changeRequest.Area_of_Change).FirstOrDefaultAsync();
+
+                if (changeArea != null && changeArea.PrimaryApproverEmail != null)
+                {
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, changeArea.PrimaryApproverEmail, changeArea.SecondaryApproverEmail, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, changeArea.PrimaryApproverFullName, changeArea.PrimaryApproverUsername, changeArea.PrimaryApproverEmail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
+
                 return RedirectToAction("Details", new { id = id, tab = "ChangeGradeReview" });
             }
             else
@@ -1072,6 +1085,20 @@ namespace Management_of_Change.Controllers
             var changeRequest = await _context.ChangeRequest.FindAsync(id);
             if (changeRequest == null)
                 return NotFound();
+
+            changeRequest.Change_Status = "ImpactAssessmentReview";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
+            changeRequest.ChangeGradeApprovalUser = _username;
+            changeRequest.ChangeGradeApprovalUserFullName = _userDisplayName;
+            changeRequest.ChangeGradeApprovalDate = DateTime.Now;
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            // Email MoC Owner that their Change Request Grade was not accepted....
+            string subject = @"Management of Change (MoC) - Change Grade Accepted.";
+            string body = @"A Change Request has had its Change Grade approved. It is being moved onto Impact Assessment review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
             return RedirectToAction("SubmitForReview", new { id = id, tab = "ImpactAssessments", errorMessage = errorMessage });
         }
@@ -1100,8 +1127,15 @@ namespace Management_of_Change.Controllers
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
 
-            // Email Change Owner that their Change Request Grade was not accepted....
-            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            // Email MoC Owner that their Change Request Grade was not accepted....
+            string subject = @"Management of Change (MoC) - Change Grade Rejected.";
+            string body = @"A Change Request has had its Change Grade rejected. As it stands, this MoC will NOT go to PCCB review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName , changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
 
             return RedirectToAction("Details", new { id = id, tab = "Details" });
         }

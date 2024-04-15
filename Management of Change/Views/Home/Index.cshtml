@@ -21,9 +21,9 @@
     </div>
 </div>
 <div class="row">
-    <div col="col-12">
-        <script id="gnewtonjs" type="text/javascript" src="//recruitingbypaycor.com/career/iframe.action?clientId=8a7883d08145828d01814fc4a0a3041d"></script>
-    </div>
+    @*     <div col="col-12">
+    <script id="gnewtonjs" type="text/javascript" src="//recruitingbypaycor.com/career/iframe.action?clientId=8a7883d08145828d01814fc4a0a3041d"></script>
+    </div> *@
     <div class="col-3 p-3">
         <div class="row">
             <div class="col-12 border border-dark">
@@ -53,6 +53,66 @@
                                     <tr>
                                         <td class="text-nowrap">
                                             @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="GeneralMocQuestions", sourceScreen="Dashboard"},new {@class=""})
+                                            @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @if (item.Priority == "High")
+                                            {
+                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
+                                            }
+
+                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
+                                        </td>
+                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-5">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Your Change Grade Reviews
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        MOC #
+                                        @*@Html.DisplayNameFor(model => model.MOC_Number)*@
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Change Description
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Estimated Completion Date
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ChangeGradeReviews)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="ChangeGradeReview", sourceScreen="Dashboard"},new {@class=""})
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
@@ -275,6 +335,5 @@
 </div>
 <div class="row">
     <div class="col-12">
-        
     </div>
 </div>
