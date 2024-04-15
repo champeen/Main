@@ -551,26 +551,16 @@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveChangeGradeReview" id="nav-changeGradeReview" role="tabpanel" aria-labelledby="nav-changeGradeReview-tab">
             <div class="text-nowrap text-center">
-                @*<h4 class="mt-5">Implementation</h4>*@
-                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                @if (ViewBag.OpenPreImplementationTasks > 0)
+                @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewChangeGrade) && (Model.ChangeRequest.Change_Status == "ChangeGradeReview"))
                 {
-                    <div class="fw-bold text-danger my-5">
-                        Cannot close Implementation.  There are 'Open/In-Progress/On Hold' Pre-Implementation Tasks for this Change Request.
-                    </div>
+                    @Html.ActionLink("Approve Change Grade","ApproveChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                    @Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 mx-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
                 }
-                else
+                @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
                 {
-                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
-                    {
-                        @Html.ActionLink("Close Implementation","CloseoutImplementation", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
-                    }
-                    @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
-                    {
-                        <div class="fw-bold text-success my-5">
-                            Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
-                        </div>
-                    }
+                    <div class="fw-bold text-success my-5">
+                        Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName) on @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)
+                    </div>
                 }
                 @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
             </div>

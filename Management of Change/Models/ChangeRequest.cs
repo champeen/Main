@@ -54,6 +54,12 @@ namespace Management_of_Change.Models
         [Display(Name = "Estimated Completion Date")]
         [DataType(DataType.Date)]
         public DateTime? Estimated_Completion_Date { get; set; }
+        public String? ChangeGradeApprovalUser { get; set; }
+        [Display(Name = "Change Grade Approval User")]
+        public String? ChangeGradeApprovalUserFullName { get; set; }
+        [Display(Name = "Change Grade Approval Date")]
+        [DataType(DataType.Date)]
+        public DateTime? ChangeGradeApprovalDate { get; set; }
         [Display(Name = "Implementation Approval Date")]
         [DataType(DataType.Date)]
         public DateTime? Implementation_Approval_Date { get; set; }

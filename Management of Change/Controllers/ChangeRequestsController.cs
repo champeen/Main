@@ -398,13 +398,13 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.Tasks = tasks;
             // disable tab 3 (ImpactAssessments) if General MOC Responses have not been completed...
             int countGMR = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
-            changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" ? "disabled" : "";
+            changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" ? "disabled" : "";
             // disable tab4 (Final Review) if any Impact Assessment Responses have not been completed...
             int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview") ? "disabled" : "";
+            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview") ? "disabled" : "";
             // disable tab5 (Implementation) if any Final Approvals have not been completed...
             int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
+            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
             // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
             changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
             // if change request is not in "Draft" status, and ChangeLevel is one that is required to review, then show the extra 'Change Level Review' stage....
@@ -440,6 +440,9 @@ namespace Management_of_Change.Controllers
                 case "GeneralMocQuestions":
                     changeRequestViewModel.TabActiveGeneralMocQuestions = "active";
                     break;
+                case "ChangeGradeReview":
+                    changeRequestViewModel.TabActiveChangeGradeReview = "active";
+                    break;
                 case "ImpactAssessments":
                     changeRequestViewModel.TabActiveImpactAssessments = "active";
                     break;
@@ -457,9 +460,6 @@ namespace Management_of_Change.Controllers
                     break;
                 case "Tasks":
                     changeRequestViewModel.TabActiveTasks = "active";
-                    break;
-                case "ChangeGradeReview":
-                    changeRequestViewModel.TabActiveChangeGradeReview = "active";
                     break;
             }
 
@@ -509,6 +509,10 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.QuestionsSaved = questionsSaved;
+
+            // if change request is awaiting 'change grade review', get reviewer username...
+            if (changeRequest.Change_Status == "ChangeGradeReview" && changeLevel != null && changeLevel.ReviewRequired == true)
+                ViewBag.UserCanReviewChangeGrade = _context.ChangeArea.Where(m => m.PrimaryApproverUsername == _username || m.SecondaryApproverUsername == _username).Any();
 
             changeRequestViewModel.employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
 
@@ -1040,15 +1044,66 @@ namespace Management_of_Change.Controllers
             {
                 // CHANGE GRADE REVIEW NEEDED.  NEED TO SET STATUS TO 'SUBMITTED FOR CHANGE GRADE REVIEW', AND THEN GO BACK TO
                 changeRequest.Change_Status = "ChangeGradeReview";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
                 changeRequest.ModifiedDate = DateTime.Now;
                 changeRequest.ModifiedUser = _username;
                 _context.Update(changeRequest);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = id, tab = "ChangeGradeReview"});
+                return RedirectToAction("Details", new { id = id, tab = "ChangeGradeReview" });
             }
             else
                 // Change Grade Review is not needed. Go To Normal Process...
                 return RedirectToAction("SubmitForReview", new { id = id, tab = tab, errorMessage = errorMessage });
+        }
+
+        public async Task<IActionResult> ApproveChangeGrade(int id, string tab, string errorMessage = null)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            return RedirectToAction("SubmitForReview", new { id = id, tab = "ImpactAssessments", errorMessage = errorMessage });
+        }
+
+        public async Task<IActionResult> RejectChangeGrade(int id, string tab, string errorMessage = null)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            changeRequest.Change_Status = "Draft";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            // Email Change Owner that their Change Request Grade was not accepted....
+            // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            return RedirectToAction("Details", new { id = id, tab = "Details" });
         }
 
         // This closes out 'GeneralMocQuestions' and moves to 'ImpactAssessments' stage
