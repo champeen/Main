@@ -57,17 +57,20 @@ namespace Management_of_Change.Utilities
             if (environment == "Production")
             {
                 registryPath = Path.Combine(registryPath, "Prd");
-                WebsiteUrl = @"http://bay1vprd-moc01/";
+                //WebsiteUrl = @"http://bay1vprd-moc01/";
             }
             else if (environment == "Development")
             {
                 registryPath = Path.Combine(registryPath, "Dev");
-                WebsiteUrl = @"http://appdevbaub01/";
+                //WebsiteUrl = @"http://aub1vdev-app01/";
             }
             else
             {
                 throw new NullReferenceException("ERROR: registryPath: " + registryPath + " Key: Environment: " + environment + " is not equal to 'Development' or 'Production'");
             }
+
+            // get website url...
+            WebsiteUrl = GetRegistryKey(registryPath, "WebsiteUrl");
 
             // get error email box....
             EmailError = GetRegistryKey(registryPath, "EmailError");

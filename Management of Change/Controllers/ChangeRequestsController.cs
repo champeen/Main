@@ -311,7 +311,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null, string changeGradeReviewError = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -328,6 +328,7 @@ namespace Management_of_Change.Controllers
 
             ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
             changeRequestViewModel.FileAttachmentError = fileAttachmentError;
+            ViewBag.ChangeGradeReviewError = changeGradeReviewError;
 
             // Get all the General MOC Responses associated with this request...
             changeRequest.GeneralMocResponses = await _context.GeneralMocResponses
@@ -512,7 +513,7 @@ namespace Management_of_Change.Controllers
 
             // if change request is awaiting 'change grade review', get reviewer username...
             if (changeRequest.Change_Status == "ChangeGradeReview" && changeLevel != null && changeLevel.ReviewRequired == true)
-                ViewBag.UserCanReviewChangeGrade = _context.ChangeArea.Where(m => m.PrimaryApproverUsername == _username || m.SecondaryApproverUsername == _username).Any();
+                ViewBag.UserCanReviewChangeGrade = _context.ChangeArea.Where(m => m.ChangeGradePrimaryApproverUsername == _username || m.ChangeGradeSecondaryApproverUsername == _username).Any();
 
             changeRequestViewModel.employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
 
@@ -1056,10 +1057,10 @@ namespace Management_of_Change.Controllers
 
                 var changeArea = await _context.ChangeArea.Where(m => m.Description == changeRequest.Area_of_Change).FirstOrDefaultAsync();
 
-                if (changeArea != null && changeArea.PrimaryApproverEmail != null)
+                if (changeArea != null && changeArea.ChangeGradePrimaryApproverEmail != null)
                 {
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, changeArea.PrimaryApproverEmail, changeArea.SecondaryApproverEmail, null, changeRequest.Priority);
-                    AddEmailHistory(changeRequest.Priority, subject, body, changeArea.PrimaryApproverFullName, changeArea.PrimaryApproverUsername, changeArea.PrimaryApproverEmail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, changeArea.ChangeGradePrimaryApproverEmail, changeArea.ChangeGradeSecondaryApproverEmail, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, changeArea.ChangeGradePrimaryApproverFullName, changeArea.ChangeGradePrimaryApproverUsername, changeArea.ChangeGradePrimaryApproverEmail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
                 }
 
                 return RedirectToAction("Details", new { id = id, tab = "ChangeGradeReview" });
@@ -1091,6 +1092,10 @@ namespace Management_of_Change.Controllers
             changeRequest.ChangeGradeApprovalUser = _username;
             changeRequest.ChangeGradeApprovalUserFullName = _userDisplayName;
             changeRequest.ChangeGradeApprovalDate = DateTime.Now;
+            changeRequest.ChangeGradeRejectedUser = null;
+            changeRequest.ChangeGradeRejectedUserFullName = null;
+            changeRequest.ChangeGradeRejectedDate = null;
+            changeRequest.ChangeGradeRejectedReason = null;
             changeRequest.ModifiedDate = DateTime.Now;
             changeRequest.ModifiedUser = _username;
             _context.Update(changeRequest);
@@ -1103,7 +1108,7 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("SubmitForReview", new { id = id, tab = "ImpactAssessments", errorMessage = errorMessage });
         }
 
-        public async Task<IActionResult> RejectChangeGrade(int id, string tab, string errorMessage = null)
+        public async Task<IActionResult> RejectChangeGrade([Bind("Id, ChangeRequest, ChangeGradeRejectedReason")] ChangeRequestViewModel changeRequestViewModel)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -1112,18 +1117,25 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || id == 0)
+            if (changeRequestViewModel.ChangeRequest.Id == null || changeRequestViewModel.ChangeRequest.Id == 0)
                 return NotFound();
 
             // Get the Change Request
-            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            var changeRequest = await _context.ChangeRequest.FindAsync(changeRequestViewModel.ChangeRequest.Id);
             if (changeRequest == null)
                 return NotFound();
+
+            if (changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason == null)
+                return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "ChangeGradeReview", changeGradeReviewError = "Reject Reason Required"  });
 
             changeRequest.Change_Status = "Draft";
             changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
             changeRequest.ModifiedDate = DateTime.Now;
             changeRequest.ModifiedUser = _username;
+            changeRequest.ChangeGradeRejectedUser = _username;
+            changeRequest.ChangeGradeRejectedUserFullName = _userDisplayName;
+            changeRequest.ChangeGradeRejectedDate = DateTime.Now;
+            changeRequest.ChangeGradeRejectedReason = changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason;
             _context.Update(changeRequest);
             await _context.SaveChangesAsync();
 
@@ -1137,7 +1149,7 @@ namespace Management_of_Change.Controllers
                 AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName , changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
 
-            return RedirectToAction("Details", new { id = id, tab = "Details" });
+            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "Details" });
         }
 
         // This closes out 'GeneralMocQuestions' and moves to 'ImpactAssessments' stage

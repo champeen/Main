@@ -78,13 +78,19 @@
                                     </tr>
                                 }
                             </tbody>
+                            @if (Model.DraftMocs.Count() == 0)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-
-
         <div class="row mt-5">
             <div class="col-12 border border-dark">
                 <div class="my-3">
@@ -138,6 +144,14 @@
                                     </tr>
                                 }
                             </tbody>
+                            @if (Model.ChangeGradeReviews.Count() == 0)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                 </tr>
+                            }
                         </table>
                     </div>
                 </div>
@@ -197,6 +211,14 @@
                                     </tr>
                                 }
                             </tbody>
+                            @if (Model.IncompleteImpactAssessments.Count() == 0)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
                         </table>
                     </div>
                 </div>
@@ -255,6 +277,14 @@
                                     </tr>
                                 }
                             </tbody>
+                            @if (Model.IncompleteFinalApprovals.Count() == 0)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
                         </table>
                     </div>
                 </div>
@@ -326,6 +356,14 @@
                                     </tr>
                                 }
                             </tbody>
+                            @if (Model.OpenTasks.Count() == 0)
+                            {
+                                <tr>
+                                    <td>No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
                         </table>
                     </div>
                 </div>

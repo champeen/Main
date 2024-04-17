@@ -288,16 +288,40 @@
                 </dd>
                 <hr />
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Approval_Date)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.ChangeGradeRejectedUserFullName)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Implementation_Approval_Date)
+                    @Html.DisplayFor(model => model.ChangeRequest.ChangeGradeRejectedUserFullName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.Closeout_Date)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Username)
                 </dt>
                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Closeout_Date)
+                    @Html.DisplayFor(model => model.CancelDisplayName)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.ChangeGradeRejectedDate)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.ChangeGradeRejectedDate)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Date)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Cancel_Date)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.ChangeGradeRejectedReason)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.ChangeGradeRejectedReason)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Reason)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Cancel_Reason)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Username)
@@ -312,22 +336,16 @@
                     @Html.DisplayFor(model => model.CloseoutDisplayName)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Username)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Approval_Date)
                 </dt>
-                <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.CancelDisplayName)
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Implementation_Approval_Date)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Date)
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Closeout_Date)
                 </dt>
-                <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Cancel_Date)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Reason)
-                </dt>
-                <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Cancel_Reason)
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Closeout_Date)
                 </dd>
                 <hr />
                 <dt class="col-sm-2 my-1 text-end">
@@ -542,44 +560,56 @@
                 </div>
             }
         </div>
-
-
-
-
         @******************************************************************************************************************@
         @*  CHANGE GRADE REVIEW TAB  **************************************************************************************@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveChangeGradeReview" id="nav-changeGradeReview" role="tabpanel" aria-labelledby="nav-changeGradeReview-tab">
-            @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewChangeGrade) && (Model.ChangeRequest.Change_Status == "ChangeGradeReview"))
-            {
-                            <div class="mx-5">
-                MoC needs Change Grade reviewed. As it stands, this MoC will NOT go to PCCB review. Please look over the MoC and either approve the change grade as is, which will bypass PCCB review, or reject the change grade, which will notify the MoC writer via email that the change grade was rejected, changing the MoC status back to 'Draft'.
+            <div class="row">
+                <div class="col-12">
+                    @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewChangeGrade) && (Model.ChangeRequest.Change_Status == "ChangeGradeReview"))
+                    {
+                        <div class="mx-5">
+                            MoC needs Change Grade reviewed. As it stands, this MoC will NOT go to PCCB review. Please look over the MoC and either approve the change grade as is, which will bypass PCCB review, or reject the change grade, which will notify the MoC writer via email that the change grade was rejected, changing the MoC status back to 'Draft'.
+                        </div>
+                        <div class="text-center mt-2">
+                            <form asp-action="RejectChangeGrade">
+                                <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
+                                <div class="row mt-5">
+                                    <div class="col-6 text-end">
+                                        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary m-1"})
+                                        @Html.ActionLink("Approve Change Grade","ApproveChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success m-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                                        @*@Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 ms-2 me-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"}) *@
+                                        <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <div class="row">
+                                            <div class="col-2 text-start">
+                                                <label asp-for="ChangeRequest.ChangeGradeRejectedReason" class="control-label fw-bold m-1"></label>
+                                            </div>
+                                            <div class="col-10">
+                                                <input asp-for="ChangeRequest.ChangeGradeRejectedReason" class="form-control m-1" />
+                                                <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
+                                                @* @Html.TextAreaFor(model => model.ChangeRequest.ChangeGradeRejectedReason, new {@class = "form-control", /* @style="display: inline-table !important", */ @rows = 1 }) *@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <span></span>
+                        </div>
+                    }
+                    @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
+                    {
+                        <div class="text-nowrap text-center mt-2">
+                            <div class="my-5">
+                                Change Grade Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)</span>.
+                            </div>
+                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+                        </div>
+                    }
+                </div>
             </div>
-                <div class="text-nowrap text-center mt-2">
-                    @Html.ActionLink("Approve Change Grade","ApproveChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
-                    @Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 ms-2 me-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
-                </div>
-            }
-            @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
-            {
-                <div class="text-nowrap text-center mt-2">
-                    <div class="fw-bold text-success my-5">
-                        Change Grade Review has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName) on @Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)
-                    </div>
-                </div>
-            }
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
         </div>
-
-
-
-
-
-
-
-
-
-
         @******************************************************************************************************************@
         @*  IMPACT ASSESSMENT REVIEWS TAB  ********************************************************************************@
         @******************************************************************************************************************@

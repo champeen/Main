@@ -113,27 +113,27 @@ namespace Management_of_Change.Controllers
             if (checkDupes.Count > 0)
                 ModelState.AddModelError("Description", "Change Area already exists.");
 
-            if (changeArea.PrimaryApproverUsername != null)
+            if (changeArea.ChangeGradePrimaryApproverUsername != null)
             {
-                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.PrimaryApproverUsername);
+                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradePrimaryApproverUsername);
                 if (primaryUser != null)
                 {
-                    changeArea.PrimaryApproverEmail = primaryUser.mail;
-                    changeArea.PrimaryApproverFullName = primaryUser.displayname;
-                    changeArea.PrimaryApproverTitle = primaryUser.jobtitle;
+                    changeArea.ChangeGradePrimaryApproverEmail = primaryUser.mail;
+                    changeArea.ChangeGradePrimaryApproverFullName = primaryUser.displayname;
+                    changeArea.ChangeGradePrimaryApproverTitle = primaryUser.jobtitle;
                 }
             }
             else
                 ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
 
-            if (changeArea.SecondaryApproverUsername != null)
+            if (changeArea.ChangeGradeSecondaryApproverUsername != null)
             {
-                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.SecondaryApproverUsername);
+                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradeSecondaryApproverUsername);
                 if (secondaryUser != null)
                 {
-                    changeArea.SecondaryApproverEmail = secondaryUser.mail;
-                    changeArea.SecondaryApproverFullName = secondaryUser.displayname;
-                    changeArea.SecondaryApproverTitle = secondaryUser.jobtitle;
+                    changeArea.ChangeGradeSecondaryApproverEmail = secondaryUser.mail;
+                    changeArea.ChangeGradeSecondaryApproverFullName = secondaryUser.displayname;
+                    changeArea.ChangeGradeSecondaryApproverTitle = secondaryUser.jobtitle;
                 }
             }
 
@@ -193,27 +193,27 @@ namespace Management_of_Change.Controllers
             if (checkDupes.Count > 0)
                 ModelState.AddModelError("Description", "Change Area already exists.");
 
-            if (changeArea.PrimaryApproverUsername != null)
+            if (changeArea.ChangeGradePrimaryApproverUsername != null)
             {
-                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.PrimaryApproverUsername);
+                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradePrimaryApproverUsername);
                 if (primaryUser != null)
                 {
-                    changeArea.PrimaryApproverEmail = primaryUser.mail;
-                    changeArea.PrimaryApproverFullName = primaryUser.displayname;
-                    changeArea.PrimaryApproverTitle = primaryUser.jobtitle;
+                    changeArea.ChangeGradePrimaryApproverEmail = primaryUser.mail;
+                    changeArea.ChangeGradePrimaryApproverFullName = primaryUser.displayname;
+                    changeArea.ChangeGradePrimaryApproverTitle = primaryUser.jobtitle;
                 }
             }
             else
                 ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
 
-            if (changeArea.SecondaryApproverUsername != null)
+            if (changeArea.ChangeGradeSecondaryApproverUsername != null)
             {
-                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.SecondaryApproverUsername);
+                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradeSecondaryApproverUsername);
                 if (secondaryUser != null)
                 {
-                    changeArea.SecondaryApproverEmail = secondaryUser.mail;
-                    changeArea.SecondaryApproverFullName = secondaryUser.displayname;
-                    changeArea.SecondaryApproverTitle = secondaryUser.jobtitle;
+                    changeArea.ChangeGradeSecondaryApproverEmail = secondaryUser.mail;
+                    changeArea.ChangeGradeSecondaryApproverFullName = secondaryUser.displayname;
+                    changeArea.ChangeGradeSecondaryApproverTitle = secondaryUser.jobtitle;
                 }
             }
 

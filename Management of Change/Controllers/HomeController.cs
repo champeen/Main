@@ -59,7 +59,7 @@ namespace Management_of_Change.Controllers
                     dashboardVM.ChangeGradeReviews.Remove(rec);
                 else
                 {
-                    if (changeArea.PrimaryApproverUsername != _username && changeArea.SecondaryApproverUsername != _username)
+                    if (changeArea.ChangeGradePrimaryApproverUsername != _username && changeArea.ChangeGradeSecondaryApproverUsername != _username)
                         dashboardVM.ChangeGradeReviews.Remove(rec);
                 }                        
             }
