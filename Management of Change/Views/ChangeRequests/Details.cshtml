@@ -587,7 +587,8 @@
                                                 <label asp-for="ChangeRequest.ChangeGradeRejectedReason" class="control-label fw-bold m-1"></label>
                                             </div>
                                             <div class="col-10">
-                                                <input asp-for="ChangeRequest.ChangeGradeRejectedReason" class="form-control m-1" />
+                                                @* <input asp-for="ChangeRequest.ChangeGradeRejectedReason" class="form-control m-1" /> *@
+                                                @Html.TextBoxFor(m=>m.ChangeRequest.ChangeGradeRejectedReason,new {@class="form-control m-1", placeholder="* Required if Rejected *"})
                                                 <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
                                                 @* @Html.TextAreaFor(model => model.ChangeRequest.ChangeGradeRejectedReason, new {@class = "form-control", /* @style="display: inline-table !important", */ @rows = 1 }) *@
                                             </div>
