@@ -345,7 +345,8 @@ namespace PtnWaiver.Controllers
             var userInfo = getUserInfo(_username);
             var firstInitial = userInfo.givenname == null || userInfo.givenname == "" ? "" : userInfo.givenname.Substring(0, 1);
             var lastInitial = userInfo.surname == null || userInfo.surname == "" ? "" : userInfo.surname.Substring(0, 1);
-            return (firstInitial + lastInitial);
+            var middleInitial = userInfo.initials == null || userInfo.initials == "" ? "" : userInfo.initials.Substring(0, 1);
+            return (firstInitial + middleInitial + lastInitial);
         }
 
         public string getSerialNumberBasedOnYear(string year)
