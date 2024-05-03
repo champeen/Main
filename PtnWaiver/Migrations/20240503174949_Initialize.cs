@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PtnWaiver.Migrations
 {
     /// <inheritdoc />
-    public partial class initialize : Migration
+    public partial class Initialize : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,33 @@ namespace PtnWaiver.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AllowedAttachmentExtensions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BouleSize",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Order = table.Column<string>(type: "text", nullable: true),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    CreatedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BouleSize", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,6 +177,75 @@ namespace PtnWaiver.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GroupApproversReview",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    SourceId = table.Column<int>(type: "integer", nullable: false),
+                    SourceTable = table.Column<string>(type: "text", nullable: false),
+                    Group = table.Column<string>(type: "text", nullable: false),
+                    PrimaryApproverUsername = table.Column<string>(type: "text", nullable: false),
+                    PrimaryApproverFullName = table.Column<string>(type: "text", nullable: true),
+                    PrimaryApproverEmail = table.Column<string>(type: "text", nullable: true),
+                    PrimaryApproverTitle = table.Column<string>(type: "text", nullable: true),
+                    SecondaryApproverUsername = table.Column<string>(type: "text", nullable: true),
+                    SecondaryApproverFullName = table.Column<string>(type: "text", nullable: true),
+                    SecondaryApproverEmail = table.Column<string>(type: "text", nullable: true),
+                    SecondaryApproverTitle = table.Column<string>(type: "text", nullable: true),
+                    AdminUsername = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<string>(type: "text", nullable: true),
+                    ReviewDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ReviewedBy = table.Column<string>(type: "text", nullable: true),
+                    Comment = table.Column<string>(type: "text", nullable: true),
+                    Order = table.Column<string>(type: "text", nullable: true),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    CreatedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupApproversReview", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OriginatingGroup",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Code = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    BouleSizeRequired = table.Column<bool>(type: "boolean", nullable: false),
+                    Order = table.Column<string>(type: "text", nullable: true),
+                    CreatedUser = table.Column<string>(type: "text", nullable: false),
+                    CreatedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    CreatedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    ModifiedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    DeletedUser = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserFullName = table.Column<string>(type: "text", nullable: true),
+                    DeletedUserEmail = table.Column<string>(type: "text", nullable: true),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OriginatingGroup", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PorProject",
                 columns: table => new
                 {
@@ -210,22 +306,18 @@ namespace PtnWaiver.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     DocId = table.Column<string>(type: "text", nullable: true),
-                    PtnPin = table.Column<string>(type: "text", nullable: false),
+                    OriginatingGroup = table.Column<string>(type: "text", nullable: false),
+                    BouleSize = table.Column<string>(type: "text", nullable: false),
+                    OriginatorInitials = table.Column<string>(type: "text", nullable: true),
+                    OriginatorYear = table.Column<string>(type: "text", nullable: true),
+                    SerialNumber = table.Column<string>(type: "text", nullable: true),
                     SubjectType = table.Column<List<string>>(type: "text[]", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
-                    GroupApprover = table.Column<string>(type: "text", nullable: false),
+                    GroupApprover = table.Column<List<string>>(type: "text[]", nullable: false),
                     PtrNumber = table.Column<string>(type: "text", nullable: true),
                     PdfLocation = table.Column<string>(type: "text", nullable: true),
                     Status = table.Column<string>(type: "text", nullable: false),
                     Comments = table.Column<string>(type: "text", nullable: true),
-                    PrimaryApproverUsername = table.Column<string>(type: "text", nullable: true),
-                    PrimaryApproverFullName = table.Column<string>(type: "text", nullable: true),
-                    PrimaryApproverEmail = table.Column<string>(type: "text", nullable: true),
-                    PrimaryApproverTitle = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverUsername = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverFullName = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverEmail = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverTitle = table.Column<string>(type: "text", nullable: true),
                     RejectedBeforeSubmission = table.Column<bool>(type: "boolean", nullable: true),
                     RejectedByApprover = table.Column<bool>(type: "boolean", nullable: true),
                     RejectedReason = table.Column<string>(type: "text", nullable: true),
@@ -254,33 +346,6 @@ namespace PtnWaiver.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PTN", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PtnPin",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Order = table.Column<string>(type: "text", nullable: true),
-                    CreatedUser = table.Column<string>(type: "text", nullable: false),
-                    CreatedUserFullName = table.Column<string>(type: "text", nullable: true),
-                    CreatedUserEmail = table.Column<string>(type: "text", nullable: true),
-                    CreatedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    ModifiedUser = table.Column<string>(type: "text", nullable: true),
-                    ModifiedUserFullName = table.Column<string>(type: "text", nullable: true),
-                    ModifiedUserEmail = table.Column<string>(type: "text", nullable: true),
-                    ModifiedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    DeletedUser = table.Column<string>(type: "text", nullable: true),
-                    DeletedUserFullName = table.Column<string>(type: "text", nullable: true),
-                    DeletedUserEmail = table.Column<string>(type: "text", nullable: true),
-                    DeletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PtnPin", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -374,20 +439,13 @@ namespace PtnWaiver.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     WaiverNumber = table.Column<string>(type: "text", nullable: true),
                     RevisionNumber = table.Column<int>(type: "integer", nullable: false),
-                    PorProject = table.Column<string>(type: "text", nullable: false),
+                    PorProject = table.Column<string>(type: "text", nullable: true),
                     Description = table.Column<string>(type: "text", nullable: false),
                     ProductProcess = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false),
+                    GroupApprover = table.Column<List<string>>(type: "text[]", nullable: false),
                     DateClosed = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     CorrectiveActionDueDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    PrimaryApproverUsername = table.Column<string>(type: "text", nullable: true),
-                    PrimaryApproverFullName = table.Column<string>(type: "text", nullable: true),
-                    PrimaryApproverEmail = table.Column<string>(type: "text", nullable: true),
-                    PrimaryApproverTitle = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverUsername = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverFullName = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverEmail = table.Column<string>(type: "text", nullable: true),
-                    SecondaryApproverTitle = table.Column<string>(type: "text", nullable: true),
                     RejectedBeforeSubmission = table.Column<bool>(type: "boolean", nullable: true),
                     RejectedByApprover = table.Column<bool>(type: "boolean", nullable: true),
                     RejectedReason = table.Column<string>(type: "text", nullable: true),
@@ -400,6 +458,7 @@ namespace PtnWaiver.Migrations
                     CompletedBylUser = table.Column<string>(type: "text", nullable: true),
                     CompletedBylUserFullName = table.Column<string>(type: "text", nullable: true),
                     CompletedByDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsMostCurrentWaiver = table.Column<bool>(type: "boolean", nullable: true),
                     PTNId = table.Column<int>(type: "integer", nullable: false),
                     PtnDocId = table.Column<string>(type: "text", nullable: true),
                     CreatedUser = table.Column<string>(type: "text", nullable: false),
@@ -442,6 +501,9 @@ namespace PtnWaiver.Migrations
                 name: "AllowedAttachmentExtensions");
 
             migrationBuilder.DropTable(
+                name: "BouleSize");
+
+            migrationBuilder.DropTable(
                 name: "EmailHistory");
 
             migrationBuilder.DropTable(
@@ -451,13 +513,16 @@ namespace PtnWaiver.Migrations
                 name: "GroupApprovers");
 
             migrationBuilder.DropTable(
+                name: "GroupApproversReview");
+
+            migrationBuilder.DropTable(
+                name: "OriginatingGroup");
+
+            migrationBuilder.DropTable(
                 name: "PorProject");
 
             migrationBuilder.DropTable(
                 name: "ProductProcess");
-
-            migrationBuilder.DropTable(
-                name: "PtnPin");
 
             migrationBuilder.DropTable(
                 name: "PtnStatus");

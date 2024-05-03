@@ -225,7 +225,7 @@ namespace PtnWaiver.Controllers
             foreach (var rec in originatingGroupList)
             {
                 if (rec.BouleSizeRequired)
-                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description + " (Boule Size is Required)" });
+                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description /*+ " (Boule Size is Required)"*/ });
                 else
                     originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description });
             }

@@ -31,5 +31,6 @@ namespace PtnWaiver.Data
         public DbSet<PtnWaiver.Models.ProductProcess>? ProductProcess { get; set; }
         public DbSet<PtnWaiver.Models.AllowedAttachmentExtensions>? AllowedAttachmentExtensions { get; set; }
         public DbSet<PtnWaiver.Models.EmailHistory>? EmailHistory { get; set; }
+        public DbSet<PtnWaiver.Models.GroupApproversReview>? GroupApproversReview { get; set; }
     }
 }

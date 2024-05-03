@@ -22,6 +22,7 @@
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="RevisionNumber" />
+            <input type="hidden" asp-for="PorProject" />
             <input type="hidden" asp-for="IsMostCurrentWaiver" />
             <input type="hidden" asp-for="Status" />
             <input type="hidden" asp-for="CreatedUser" />
@@ -51,11 +52,11 @@
                 @Html.DropDownListFor(model => model.PTNId, new SelectList(ViewBag.Ptns,"Value","Text"), "-- select --", new { @class="form-control form-select"})
                 <span asp-validation-for="PTNId" class="text-danger fw-bold"></span>
             </div>
-            <div class="form-group my-3">
+@*             <div class="form-group my-3">
                 <label asp-for="PorProject" class="control-label fw-bold mb-1"></label>
                 @Html.DropDownListFor(model => model.PorProject, new SelectList(ViewBag.PorProjects,"Value","Text"), new { @class="form-control form-select", @style="max-width:20%;"})
                 <span asp-validation-for="PorProject" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="form-group my-3">
                 <label asp-for="Description" class="control-label fw-bold mb-1"></label>
                 @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })

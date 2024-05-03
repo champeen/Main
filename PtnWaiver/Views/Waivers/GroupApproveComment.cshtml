@@ -1,0 +1,98 @@
+﻿@model PtnWaiver.ViewModels.GroupApproverReviewVM
+
+@* @{
+    ViewData["Title"] = "View";
+    Layout = "GroupApproveComment";
+} *@
+
+<h1>Review Comment</h1>
+@* <h4></h4> *@
+<div class="mt-5"></div>
+<hr />
+<div class="row">
+    <div class="col-12">
+        <form asp-action="GroupApprove">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.GroupApproversReview.Id" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.SourceId" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.SourceTable" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.Group" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.Status" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ReviewDate" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ReviewedBy" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ReviewedBy" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ReviewDate" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.PrimaryApproverUsername" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.PrimaryApproverFullName" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.PrimaryApproverEmail" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.PrimaryApproverTitle" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.SecondaryApproverUsername" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.SecondaryApproverFullName" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.SecondaryApproverEmail" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.SecondaryApproverTitle" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.Order" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.CreatedUser" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.CreatedUserFullName" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.CreatedUserEmail" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.CreatedDate" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ModifiedUser" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ModifiedUserFullName" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ModifiedUserEmail" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.ModifiedDate" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.DeletedUser" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.DeletedUserFullName" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.DeletedUserEmail" />
+            <input type="hidden" asp-for="@Model.GroupApproversReview.DeletedDate" />
+            <div class="row mt-1">
+                <div class="col-3">
+                    <div class="row">
+                        <dt class="col-sm-2 my-1">
+                            @Html.DisplayNameFor(model => model.PTN.DocId):
+                        </dt>
+                        <dd class="col-sm-10 my-1">
+                            @Html.DisplayFor(model => model.PTN.DocId)
+                        </dd>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="row">
+                        <dt class="col-sm-2 my-1">
+                            @Html.DisplayNameFor(model => model.PTN.Title):
+                        </dt>
+                        <dd class="col-sm-10 my-1">
+                            @Html.DisplayFor(model => model.PTN.Title)
+                        </dd>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="row">
+                        <dt class="col-sm-2 my-1">
+                            @Html.DisplayNameFor(model => model.PTN.Status):
+                        </dt>
+                        <dd class="col-sm-10 my-1 mark">
+                            @Html.DisplayFor(model => model.PTN.Status)
+                        </dd>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="form-group">
+                <label asp-for="@Model.GroupApproversReview.Comment" class="control-label fw-bold mt-3"></label>
+                @Html.TextAreaFor(model => model.GroupApproversReview.Comment, new { @class = "form-control mt-1", @rows = 3 })
+                <span asp-validation-for="@Model.GroupApproversReview.Comment" class="text-danger fw-bold mt-1"></span>
+            </div>
+            <div class="text-nowrap mt-5">
+                <span class="text-nowrap">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a class="btn btn-secondary" asp-action="Details" asp-route-id=@Model.GroupApproversReview.SourceId asp-route-tab="PtnAdminApproval" asp-route-tabWaiver="WaiverAdminApproval">Cancel</a>
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

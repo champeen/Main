@@ -77,6 +77,8 @@ namespace PtnWaiver.Controllers
             if (pTN == null)
                 return NotFound();
 
+            var groupApproversReviews = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == pTN.Id && m.SourceTable == "PTN").OrderBy(m => m.Group).ToListAsync();
+
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.RejectedReason = rejectedReason;
@@ -84,6 +86,7 @@ namespace PtnWaiver.Controllers
             PtnViewModel ptnVM = new PtnViewModel();
             ptnVM.FileAttachmentError = fileAttachmentError;
             ptnVM.PTN = pTN;
+            ptnVM.GroupApproversReview = groupApproversReviews;
 
             ptnVM.TabActiveDetail = "";
             ptnVM.TabActiveAttachmentsPtn = "";
@@ -214,40 +217,6 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            // Get Primary/Secondary approver based on Group Selected....
-            var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == ptn.GroupApprover);
-            if (group != null)
-            {
-                // Primary Approver
-                if (group.PrimaryApproverUsername != null)
-                {
-                    var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
-                    if (primaryApprover != null)
-                    {
-                        ptn.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
-                        ptn.PrimaryApproverEmail = primaryApprover.mail;
-                        ptn.PrimaryApproverFullName = primaryApprover.displayname;
-                        ptn.PrimaryApproverTitle = primaryApprover.jobtitle;
-                    }
-                }
-                else
-                    ModelState.AddModelError("GroupApprover", "ERROR: Primary Approver setup for this GroupApprover is null. Contact Admin.");
-                // Secondary Approver
-                if (group.SecondaryApproverUsername != null)
-                {
-                    var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
-                    if (secondaryApprover != null)
-                    {
-                        ptn.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
-                        ptn.SecondaryApproverEmail = secondaryApprover.mail;
-                        ptn.SecondaryApproverFullName = secondaryApprover.displayname;
-                        ptn.SecondaryApproverTitle = secondaryApprover.jobtitle;
-                    }
-                }
-            }
-            else
-                ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
-
             bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
             bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
 
@@ -341,40 +310,6 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            // Get Primary/Secondary approver based on Group Selected....
-            var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == ptn.GroupApprover);
-            if (group != null)
-            {
-                // Primary Approver
-                if (group.PrimaryApproverUsername != null)
-                {
-                    var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
-                    if (primaryApprover != null)
-                    {
-                        ptn.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
-                        ptn.PrimaryApproverEmail = primaryApprover.mail;
-                        ptn.PrimaryApproverFullName = primaryApprover.displayname;
-                        ptn.PrimaryApproverTitle = primaryApprover.jobtitle;
-                    }
-                }
-                else
-                    ModelState.AddModelError("GroupApprover", "ERROR: Primary Approver setup for this GroupApprover is null. Contact Admin.");
-                // Secondary Approver
-                if (group.SecondaryApproverUsername != null)
-                {
-                    var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
-                    if (secondaryApprover != null)
-                    {
-                        ptn.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
-                        ptn.SecondaryApproverEmail = secondaryApprover.mail;
-                        ptn.SecondaryApproverFullName = secondaryApprover.displayname;
-                        ptn.SecondaryApproverTitle = secondaryApprover.jobtitle;
-                    }
-                }
-            }
-            else
-                ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
-
             bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
             bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
 
@@ -455,40 +390,6 @@ namespace PtnWaiver.Controllers
 
             if (id != pTN.Id)
                 return NotFound();
-
-            // Get Primary/Secondary approver based on Group Selected....
-            var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == pTN.GroupApprover);
-            if (group != null)
-            {
-                // Primary Approver
-                if (group.PrimaryApproverUsername != null)
-                {
-                    var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
-                    if (primaryApprover != null)
-                    {
-                        pTN.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
-                        pTN.PrimaryApproverEmail = primaryApprover.mail;
-                        pTN.PrimaryApproverFullName = primaryApprover.displayname;
-                        pTN.PrimaryApproverTitle = primaryApprover.jobtitle;
-                    }
-                }
-                else
-                    ModelState.AddModelError("GroupApprover", "ERROR: Primary Approver setup for this GroupApprover is null. Contact Admin.");
-                // Secondary Approver
-                if (group.SecondaryApproverUsername != null)
-                {
-                    var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
-                    if (secondaryApprover != null)
-                    {
-                        pTN.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
-                        pTN.SecondaryApproverEmail = secondaryApprover.mail;
-                        pTN.SecondaryApproverFullName = secondaryApprover.displayname;
-                        pTN.SecondaryApproverTitle = secondaryApprover.jobtitle;
-                    }
-                }
-            }
-            else
-                ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
 
             if (ModelState.IsValid)
             {
@@ -648,16 +549,69 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver.PTN.Update(ptn);
             await _contextPtnWaiver.SaveChangesAsync();
 
-            // email Primary and Secondary Approvers to review and Approve/Reject...
+            // Setup email Primary and Secondary Approvers to review and Approve/Reject (for below)...
             string subject = @"Process Test Notification (PTN) - PTN Review Needed";
             string body = @"Your Review is needed. Please follow link below and review/respond to the following PTN request. <br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
-            //__mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
 
-            Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.PrimaryApproverEmail, ptn.SecondaryApproverEmail, null, null);
-            AddEmailHistory(null, subject, body, ptn.PrimaryApproverFullName, ptn.PrimaryApproverUsername, ptn.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
-            if (ptn.SecondaryApproverEmail != null)
-                AddEmailHistory(null, subject, body, ptn.SecondaryApproverFullName, ptn.SecondaryApproverUsername, ptn.SecondaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+            // create the GroupApproverReviews 
+            foreach (var approver in ptn.GroupApprover)
+            {
+                GroupApproversReview groupApproversReview = new GroupApproversReview();
+                var record = await _contextPtnWaiver.GroupApprovers.Where(m => m.Group == approver).FirstOrDefaultAsync();
+                if (record != null)
+                {
+                    groupApproversReview.SourceId = ptn.Id;
+                    groupApproversReview.SourceTable = "PTN";
+                    groupApproversReview.Group = record.Group;
+                    groupApproversReview.PrimaryApproverUsername = record.PrimaryApproverUsername;
+                    groupApproversReview.PrimaryApproverFullName = record.PrimaryApproverFullName;
+                    groupApproversReview.PrimaryApproverEmail = record.PrimaryApproverEmail;
+                    groupApproversReview.PrimaryApproverTitle = record.PrimaryApproverTitle;
+                    groupApproversReview.SecondaryApproverUsername = record.SecondaryApproverUsername;
+                    groupApproversReview.SecondaryApproverFullName = record.SecondaryApproverFullName;
+                    groupApproversReview.SecondaryApproverEmail = record.SecondaryApproverEmail;
+                    groupApproversReview.SecondaryApproverTitle = record.SecondaryApproverTitle;
+                    groupApproversReview.CreatedDate = DateTime.Now;
+                    groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
+                    groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
+                    groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
 
+                    _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
+
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
+                    AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                    if (groupApproversReview.PrimaryApproverEmail != null)
+                        AddEmailHistory(null, subject, body, groupApproversReview.SecondaryApproverFullName, groupApproversReview.SecondaryApproverUsername, groupApproversReview.SecondaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                }
+            }
+
+            // add PTN creators manager to the GroupApproverReviews....
+            if (userInfo != null && userInfo.manager != null)
+            {
+                var manager = await _contextMoc.__mst_employee.Where(m => m.displayname == userInfo.manager).FirstOrDefaultAsync();
+                if (manager != null)
+                {
+                    GroupApproversReview groupApproversReview = new GroupApproversReview();
+                    groupApproversReview.SourceId = ptn.Id;
+                    groupApproversReview.SourceTable = "PTN";
+                    groupApproversReview.Group = "Manager";
+                    groupApproversReview.PrimaryApproverUsername = manager.onpremisessamaccountname;
+                    groupApproversReview.PrimaryApproverFullName = manager.displayname;
+                    groupApproversReview.PrimaryApproverEmail = manager.mail;
+                    groupApproversReview.PrimaryApproverTitle = manager.jobtitle;
+                    groupApproversReview.CreatedDate = DateTime.Now;
+                    groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
+                    groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
+                    groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
+
+                    _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
+
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
+                    AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                }
+            }
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }
 
@@ -820,6 +774,112 @@ namespace PtnWaiver.Controllers
             AddEmailHistory(null, subject, body, ptn.CreatedUserFullName, ptn.CreatedUser, ptn.CreatedUserEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
 
             return RedirectToAction("Index", new { });
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> GroupApprove(int ptnId, int groupApproverId, string status /*, [Bind("Id,RejectedReason")] PTN pTN*/)
+        {
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (groupApproverId == null)
+                return NotFound();
+
+            var groupApprove = await _contextPtnWaiver.GroupApproversReview.FirstOrDefaultAsync(m => m.Id == groupApproverId);
+            if (groupApprove == null)
+                return NotFound();
+
+            groupApprove.Status = status;
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApprove.SourceId);
+            if (ptn == null)
+                return NotFound();
+
+            //if (pTN.RejectedReason == null)
+            //    return RedirectToAction("Details", new { id = pTN.Id, tab = "PtnApproval", rejectedReason = "If PTN is Rejected, Rejected Reason is Required" });
+
+            var groupApproverReviewVM = new GroupApproverReviewVM();
+            groupApproverReviewVM.PTN = ptn;
+            groupApproverReviewVM.GroupApproversReview = groupApprove;
+
+            return View("GroupApproveComment", groupApproverReviewVM);
+
+            //return RedirectToAction("Details", new { id = ptnId, tab = "GroupApprove" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GroupApprove([Bind("Id,SourceId,SourceTable,Group,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,ReviewedBy,ReviewDate,Comment,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate", Prefix = "GroupApproversReview")] GroupApproversReview groupApproversReview)
+        {
+            {
+                ViewBag.IsAdmin = _isAdmin;
+                ViewBag.Username = _username;
+
+                if (groupApproversReview.Id == null)
+                    return NotFound();
+
+                if (groupApproversReview.Comment == null && groupApproversReview.Status == "Rejected")
+                    ModelState.AddModelError("groupApproversReview.Comment", "ERROR: If Rejecting, Comment is Required");
+
+                if (ModelState.IsValid)
+                {
+                    var userInfo = getUserInfo(_username);
+                    if (userInfo != null)
+                    {
+                        groupApproversReview.ReviewedBy = userInfo.displayname;
+                        groupApproversReview.ReviewDate = DateTime.Now;
+                        groupApproversReview.Comment = groupApproversReview.Comment;
+                        groupApproversReview.ModifiedUser = userInfo.onpremisessamaccountname;
+                        groupApproversReview.ModifiedUserFullName = userInfo.displayname;
+                        groupApproversReview.ModifiedUserEmail = userInfo.mail;
+                        groupApproversReview.ModifiedDate = DateTime.Now;
+                    }
+                    _contextPtnWaiver.Update(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
+
+                    // See if all Reviews have been approved. If they have been, automatically Approve PTN ....
+                    int count = _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == groupApproversReview.SourceId && m.SourceTable == "PTN" && m.Status != "Approved").Count();
+                    if (count == 0)
+                    {
+                        var ptnRec = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApproversReview.SourceId);
+                        if (ptnRec == null)
+                            return RedirectToAction("Index");
+
+                        ptnRec.ModifiedUser = "System";
+                        ptnRec.ModifiedUserFullName = "System";
+                        ptnRec.ModifiedUserEmail = "System";
+                        ptnRec.ModifiedDate = DateTime.Now;
+                        ptnRec.ApprovedByUser = "System";
+                        ptnRec.ApprovedByUserFullName = "System";
+                        ptnRec.ApprovedByDate = DateTime.Now;
+                        ptnRec.Status = "Approved";
+
+                        _contextPtnWaiver.Update(ptnRec);
+                        await _contextPtnWaiver.SaveChangesAsync();
+
+                        // email PTN creator that the PTN was Approved....
+                        //var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+                        string subject = @"Process Test Notification (PTN) - PTN Approved";
+                        string body = @"Your PTN has been <span style=""color:green"">Approved</span>. <br/><br/><strong>DocId: </strong>" + ptnRec.DocId + @"<br/><strong>PTN Title: </strong>" + ptnRec.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, ptnRec.CreatedUserEmail, null, null, null);
+                        AddEmailHistory(null, subject, body, ptnRec.CreatedUserFullName, ptnRec.CreatedUser, ptnRec.CreatedUserEmail, ptnRec.Id, null, null, "PTN", ptnRec.Status, DateTime.Now, _username);
+                    }
+
+                    return RedirectToAction("Details", new { id = groupApproversReview.SourceId, tab = "PtnAdminApproval" });
+                }
+
+                var groupApproverReviewVM = new GroupApproverReviewVM();
+
+                var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApproversReview.SourceId);
+                if (ptn == null)
+                    return NotFound();
+
+                groupApproverReviewVM.PTN = ptn;
+                groupApproverReviewVM.GroupApproversReview = groupApproversReview;
+
+                return View("GroupApproveComment", groupApproverReviewVM);
+            }
         }
     }
 }

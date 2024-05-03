@@ -101,7 +101,7 @@ namespace PtnWaiver.Provider
                     //else
                     //    smtpClient.Send(mailMessage);
 
-                    smtpClient.Send(mailMessage);
+//                    smtpClient.Send(mailMessage);
                 }
             }
             //return true;

@@ -33,7 +33,7 @@
     <div class="row my-4">
         <div class="col-12">
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary"  />
                 <a class="mx-1 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
             </div>
         </div>
@@ -114,24 +114,17 @@
                 }
                 <span asp-validation-for="BouleSize" class="text-danger"></span>
             </div> *@
-            <div class="form-group my-3">
-                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @if (Model.Status == "Draft")
-                {
-                    @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"})
-                }
-                else
-                {
-                    @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select", disabled="disabled"})
-                    <input type="hidden" asp-for="GroupApprover" />
-                }
-                <span asp-validation-for="GroupApprover" class="text-danger"></span>
-            </div>
+
             <div class="form-group my-3">
                 <label asp-for="PtrNumber" class="control-label fw-bold mb-1"></label>
                 <input asp-for="PtrNumber" class="form-control" />
                 <span asp-validation-for="PtrNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
+                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", @rows = 3 })
+                <span asp-validation-for="Comments" class="text-danger"></span>
             </div>
         </div>
         <div class="col-6">
@@ -154,15 +147,21 @@
                 }
                 <span asp-validation-for="SubjectType" class="text-danger"></span>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
             <div class="form-group my-3">
-                <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
-                @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
-                @Html.TextAreaFor(model => model.Comments, new {@class = "form-control", @rows = 3 })
-                <span asp-validation-for="Comments" class="text-danger"></span>
+                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @if (Model.Status == "Draft")
+                {
+                    @*                     @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"}) *@
+                    @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10 })
+                }
+                else
+                {
+                    @*                     @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select", disabled="disabled"}) *@
+                    @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10, disabled = "disabled" })
+                    <input type="hidden" asp-for="GroupApprover" />
+                }
+                <span asp-validation-for="GroupApprover" class="text-danger"></span>
             </div>
         </div>
     </div>
