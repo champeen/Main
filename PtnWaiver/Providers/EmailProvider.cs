@@ -45,8 +45,8 @@ namespace PtnWaiver.Provider
                 if (to == null)
                     throw new Exception("To Email Address Cannot Be Null");
 
-                mailMessage.Subject = subject;
-                mailMessage.Body = body;
+                mailMessage.Subject = "TEST: " + subject;
+                mailMessage.Body = "TEST: " + body;
                 mailMessage.IsBodyHtml = true;
                 if (priority == "High")
                 {
@@ -101,7 +101,7 @@ namespace PtnWaiver.Provider
                     //else
                     //    smtpClient.Send(mailMessage);
 
-//                    smtpClient.Send(mailMessage);
+                    smtpClient.Send(mailMessage);
                 }
             }
             //return true;

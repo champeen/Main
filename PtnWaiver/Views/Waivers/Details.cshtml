@@ -141,11 +141,24 @@
                 </div>
                 <div class="col-6">
                     <div class="row">
-                        <dt class="col-3 my-1 text-end">
+                        <dt class="col-sm-2 my-1 text-end">
                             @Html.DisplayNameFor(model => model.Waiver.GroupApprover)
                         </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.GroupApprover)
+                        <dd class="col-sm-4 my-1">
+                            @if (Model.Waiver.GroupApprover != null)
+                            {
+                                var counter = 0;
+                                @foreach (var groupApprover in Model.Waiver.GroupApprover)
+                                {
+                                    counter = counter + 1;
+                                    <span>@groupApprover</span>
+                                    if (counter < Model.Waiver.GroupApprover.Count)
+                                    {
+                                        <span>,&nbsp;</span>
+                                    }
+                                }
+                            }
+                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
                         </dd>
                     </div>
                 </div>
