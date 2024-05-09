@@ -217,11 +217,11 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
-            bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+            //bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+            //bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
 
-            if (bouleSizeRequired == true && ptn.BouleSize == null)
-                ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
+            //if (bouleSizeRequired == true && ptn.BouleSize == null)
+            //    ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
 
             if (ModelState.IsValid)
             {
@@ -229,10 +229,10 @@ namespace PtnWaiver.Controllers
                 ptn.OriginatorInitials = getOriginatorInitials();
                 ptn.OriginatorYear = DateTime.Now.Year.ToString();
                 ptn.SerialNumber = getSerialNumberBasedOnYear(ptn.OriginatorYear);
-                if (bouleSizeRequired == true)
-                    ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
-                else
-                    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                //if (bouleSizeRequired == true)
+                ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                //else
+                //    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
 
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
@@ -310,11 +310,11 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
-            bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+            //bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
+            //bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
 
-            if (bouleSizeRequired == true && ptn.BouleSize == null)
-                ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
+            //if (bouleSizeRequired == true && ptn.BouleSize == null)
+            //    ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
 
             if (ModelState.IsValid)
             {
@@ -322,10 +322,10 @@ namespace PtnWaiver.Controllers
                 ptn.OriginatorInitials = getOriginatorInitials();
                 ptn.OriginatorYear = DateTime.Now.Year.ToString();
                 ptn.SerialNumber = getSerialNumberBasedOnYear(ptn.OriginatorYear);
-                if (bouleSizeRequired == true)
+                //if (bouleSizeRequired == true)
                     ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
-                else
-                    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                //else
+                //    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
 
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
@@ -835,8 +835,34 @@ namespace PtnWaiver.Controllers
                         groupApproversReview.ModifiedUserEmail = userInfo.mail;
                         groupApproversReview.ModifiedDate = DateTime.Now;
                     }
+
                     _contextPtnWaiver.Update(groupApproversReview);
                     await _contextPtnWaiver.SaveChangesAsync();
+
+                    // if rejected, we need to reject the PTN and send email to PTN owner that it has been rejected and why....
+                    if (groupApproversReview.Status == "Rejected")
+                    {
+                        var ptnRec = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApproversReview.SourceId);
+                        if (ptnRec == null)
+                            return RedirectToAction("Index");
+
+                        ptnRec.Status = "Rejected";
+                        ptnRec.RejectedReason = groupApproversReview.Comment;
+                        ptnRec.RejectedByApprover = true;
+                        ptnRec.ModifiedDate = DateTime.Now;
+                        ptnRec.ModifiedUser = _username;
+                        ptnRec.ModifiedUserFullName = userInfo.displayname;
+                        ptnRec.ModifiedUserEmail= userInfo.mail;
+
+                        _contextPtnWaiver.Update(ptnRec);
+                        await _contextPtnWaiver.SaveChangesAsync();
+
+                        // email PTN creator that the PTN was Approved....
+                        string subject = @"Process Test Notification (PTN) - PTN Rejected";
+                        string body = @"Your PTN has been <span style=""color:red"">Rejected</span> by " + userInfo.displayname + ". <br/><br/><strong>DocId: </strong>" + ptnRec.DocId + @"<br/><strong>PTN Title: </strong>" + ptnRec.Title + "<br/><strong>Rejected Reason: " + groupApproversReview.Comment + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, ptnRec.CreatedUserEmail, null, null, null);
+                        AddEmailHistory(null, subject, body, ptnRec.CreatedUserFullName, ptnRec.CreatedUser, ptnRec.CreatedUserEmail, ptnRec.Id, null, null, "PTN", ptnRec.Status, DateTime.Now, _username);
+                    }
 
                     // See if all Reviews have been approved. If they have been, automatically Approve PTN ....
                     int count = _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == groupApproversReview.SourceId && m.SourceTable == "PTN" && m.Status != "Approved").Count();
@@ -865,7 +891,6 @@ namespace PtnWaiver.Controllers
                         Initialization.EmailProviderSmtp.SendMessage(subject, body, ptnRec.CreatedUserEmail, null, null, null);
                         AddEmailHistory(null, subject, body, ptnRec.CreatedUserFullName, ptnRec.CreatedUser, ptnRec.CreatedUserEmail, ptnRec.Id, null, null, "PTN", ptnRec.Status, DateTime.Now, _username);
                     }
-
                     return RedirectToAction("Details", new { id = groupApproversReview.SourceId, tab = "PtnAdminApproval" });
                 }
 

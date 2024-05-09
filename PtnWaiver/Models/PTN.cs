@@ -19,7 +19,7 @@ namespace PtnWaiver.Models
         [Display(Name = "Subject Type(s)")]
         public List<string> SubjectType { get; set; }
         public string Title { get; set; }
-        [Display(Name = "Group/Approver")]
+        [Display(Name = "Group/Approver(s)")]
         public List<string> GroupApprover { get; set; }
         [Display(Name = "PTR Number (Completed)")]
         public string? PtrNumber { get; set; }

@@ -72,6 +72,19 @@
     <tbody id="waiverIndexTable">
         @foreach (var item in Model)
         {
+            var color = "";
+            if (item.Status == "Rejected")
+            {
+                color = "text-danger fw-bold";
+            }
+            else if (item.Status == "Approved")
+            {
+                color = "text-success fw-bold";
+            }
+            else if (item.Status == "Closed")
+            {
+                color = "text-success fw-bold";
+            }
             <tr>
                 @*                 <td>
             @Html.DisplayFor(modelItem => item.PTN.DocId)
@@ -95,7 +108,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ProductProcess)
                 </td>
-                <td>
+                <td class="@color">
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>

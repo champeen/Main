@@ -73,122 +73,126 @@
     @*  DETAIL TAB ****************************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
-        <div>
-            @*<h4 class="mt-5">Details</h4>*@
-            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-            <a class="mx-2" asp-action="Index">Back to List</a>*@
-            <div class="row mt-5">
-                <div class="col-12 text-start">
-                    @if (ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser)
-                    {
-                        @Html.ActionLink("Edit", "Edit", new { id = @Model?.PTN?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
-                        @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
-                    }
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+        @*<h4 class="mt-5">Details</h4>*@
+        @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+        <a class="mx-2" asp-action="Index">Back to List</a>*@
+        <div class="row mt-5">
+            <div class="col-12 text-start">
+                @if (ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model?.PTN?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
+                    @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
+                }
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        @Html.DisplayNameFor(model => model.PTN.Title)
+                    </dt>
+                    <dd class="col-sm-9 my-1">
+                        @Html.DisplayFor(model => model.PTN.Title)
+                    </dd>
+                </div>
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        @Html.DisplayNameFor(model => model.PTN.OriginatingGroup)
+                    </dt>
+                    <dd class="col-sm-9 my-1">
+                        @Html.DisplayFor(model => model.PTN.OriginatingGroup)
+                    </dd>
+                </div>
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        @Html.DisplayNameFor(model => model.PTN.BouleSize)
+                    </dt>
+                    <dd class="col-sm-9 my-1">
+                        @Html.DisplayFor(model => model.PTN.BouleSize)
+                    </dd>
+                </div>
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        @Html.DisplayNameFor(model => model.PTN.PtrNumber)
+                    </dt>
+                    <dd class="col-sm-9 my-1">
+                        @Html.DisplayFor(model => model.PTN.PtrNumber)
+                    </dd>
+                </div>
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        @Html.DisplayNameFor(model => model.PTN.Comments)
+                    </dt>
+                    <dd class="col-sm-9 my-1">
+                        @Html.DisplayFor(model => model.PTN.Comments)
+                    </dd>
+                </div>
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        @Html.DisplayNameFor(model => model.PTN.RejectedReason)
+                    </dt>
+                    <dd class="col-sm-9 my-1">
+                        @Html.DisplayFor(model => model.PTN.RejectedReason)
+                    </dd>
                 </div>
             </div>
-            <hr />
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.OriginatingGroup)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.OriginatingGroup)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.BouleSize)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.BouleSize)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.SubjectType)
-                </dt>
-                @*                 <dd class="col-sm-4 my-1">
-                @Html.DisplayFor(model => model.PTN.SubjectType)
-                </dd> *@
-                <dd class="col-sm-4 my-1">
-                    @if (Model.PTN.SubjectType != null)
-                    {
-                        var counter = 0;
-                        @foreach (var subjectType in Model.PTN.SubjectType)
+            <div class="col-6">
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        @Html.DisplayNameFor(model => model.PTN.SubjectType)
+                    </dt>
+                    @*                 <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.PTN.SubjectType)
+                    </dd> *@
+                    <dd class="col-sm-9 my-1">
+                        @if (Model.PTN.SubjectType != null)
                         {
-                            counter = counter + 1;
-                            <span>@subjectType</span>
-                            if (counter < Model.PTN.SubjectType.Count)
+                            var counter = 0;
+                            @foreach (var subjectType in Model.PTN.SubjectType)
                             {
-                                <span>,&nbsp;</span>
+                                counter = counter + 1;
+                                <span>@subjectType</span>
+                                if (counter < Model.PTN.SubjectType.Count)
+                                {
+                                    <span>,&nbsp;</span>
+                                }
                             }
                         }
-                    }
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.GroupApprover)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @if (Model.PTN.GroupApprover != null)
-                    {
-                        var counter = 0;
-                        @foreach (var groupApprover in Model.PTN.GroupApprover)
+                    </dd>
+                </div>
+                <div class="row">
+                    <dt class="col-sm-3 my-1 text-sm-end">
+                        Group / Approver(s)
+                    </dt>
+                    <dd class="col-sm-9 my-1">
+                        @if (Model.PTN.GroupApprover != null)
                         {
-                            counter = counter + 1;
-                            <span>@groupApprover</span>
-                            if (counter < Model.PTN.GroupApprover.Count)
+                            var counter = 0;
+                            @foreach (var groupApprover in Model.PTN.GroupApprover)
                             {
-                                <span>,&nbsp;</span>
+                                counter = counter + 1;
+                                <span>@groupApprover</span>
+                                if (counter < Model.PTN.GroupApprover.Count)
+                                {
+                                    <span>,&nbsp;</span>
+                                }
                             }
                         }
-                    }
-                    @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.PtrNumber)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.PtrNumber)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.Title)
-                </dt>
-                <dd class="col-10 my-1">
-                    @Html.DisplayFor(model => model.PTN.Title)
-                </dd>
-            </div>
-            @*                 <dt class="col-sm-2 my-1 text-end">
-            @Html.DisplayNameFor(model => model.PTN.Status)
-            </dt>
-            <dd class="col-sm-4 my-1">
-            @Html.DisplayFor(model => model.PTN.Status)
-            </dd> *@
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.Comments)
-                </dt>
-                <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.PTN.Comments)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.PTN.RejectedReason)
-                </dt>
-                <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.PTN.RejectedReason)
-                </dd>
+                        @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
+                    </dd>
+                </div>
             </div>
             <hr / class="mt-3">
             <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.CreatedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.PTN.CreatedUser)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.CreatedUserFullName)
                 </dt>
                 <dd class="col-sm-4 my-1">
@@ -196,13 +200,13 @@
                 </dd>
             </div>
             <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.CreatedUserEmail)
                 </dt>
                 <dd class="col-sm-4 mt-1 mb-3">
                     @Html.DisplayFor(model => model.PTN.CreatedUserEmail)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.CreatedDate)
                 </dt>
                 <dd class="col-sm-4 mt-1 mb-3">
@@ -210,13 +214,13 @@
                 </dd>
             </div>
             <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.ModifiedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.PTN.ModifiedUser)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.ModifiedUserFullName)
                 </dt>
                 <dd class="col-sm-4 my-1">
@@ -224,13 +228,13 @@
                 </dd>
             </div>
             <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.ModifiedUserEmail)
                 </dt>
                 <dd class="col-sm-4 mt-1 mb-3">
                     @Html.DisplayFor(model => model.PTN.ModifiedUserEmail)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.ModifiedDate)
                 </dt>
                 <dd class="col-sm-4 mt-1 mb-3">
@@ -238,13 +242,13 @@
                 </dd>
             </div>
             <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.DeletedUser)
                 </dt>
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.PTN.DeletedUser)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.DeletedUserFullName)
                 </dt>
                 <dd class="col-sm-4 my-1">
@@ -252,13 +256,13 @@
                 </dd>
             </div>
             <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.DeletedUserEmail)
                 </dt>
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.PTN.DeletedUserEmail)
                 </dd>
-                <dt class="col-sm-2 my-1 text-end">
+                <dt class="col-sm-2 my-1 text-sm-end">
                     @Html.DisplayNameFor(model => model.PTN.DeletedDate)
                 </dt>
                 <dd class="col-sm-4 my-1">
@@ -396,7 +400,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h5>
-                            Once submitted for administrator approval, you cannot modify the PTN or the Template.  Make sure everything is complete before submitting for administrator approval.  If you no longer want to submit this PTN for review, reject.
+                            Once submitted for approval, you can only edit the comment field.  Make sure everything is complete before submitting for approval.
                         </h5>
                     </div>
                 </div>
@@ -406,19 +410,19 @@
                     <div class="row mt-5">
                         <div class="col-12">
                             @Html.ActionLink("Submit for Approval", "SubmitPtnForApproval", "PTNs", new { id = Model.PTN.Id }, new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
-                            <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
-                            @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
+                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary ms-1" })
+                            @* <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" /> *@
                         </div>
-                        <div class="row mt-3 mb-1">
-                            <div class="col-12">
-                                <label asp-for="PTN.RejectedReason" class="control-label fw-bold mb-1"></label>
-                                @Html.TextAreaFor(model => model.PTN.RejectedReason, new { @class = "form-control", @rows = 3 })
-                                @if (@ViewBag.RejectedReason != null)
-                                {
-                                    <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
-                                }
-                            </div>
-                        </div>
+                        @*                         <div class="row mt-3 mb-1">
+                <div class="col-12">
+                <label asp-for="PTN.RejectedReason" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PTN.RejectedReason, new { @class = "form-control", @rows = 3 })
+                @if (@ViewBag.RejectedReason != null)
+                {
+                <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
+                }
+                </div>
+                </div> *@
                     </div>
                 </form>
             }
@@ -427,7 +431,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h5>
-                            PTN Creater or PTN administrator must submit this PTN for administrator approval in order to move on to next phase.
+                            PTN Creater or PTN administrator must submit this PTN for approval in order to move on to next phase.
                         </h5>
                     </div>
                 </div>
@@ -455,17 +459,12 @@
                 {
                     <div class="row">
                         <div class="col-12">
-                            PTN has been <span class="text-success fw-bold">submitted for administrator approval</span> by <span class="fw-bold">@Model.PTN.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.PTN.SubmittedForApprovalDate</span>.
+                            PTN has been <span class="text-success fw-bold">submitted for approval</span> by <span class="fw-bold">@Model.PTN.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.PTN.SubmittedForApprovalDate</span>.
                         </div>
                     </div>
                 }
             }
         }
-        <div class="row mt-5">
-            <div class="col-12 text-start">
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
-            </div>
-        </div>
     </div>
     @******************************************************************************************************************@
     @*  PTN REVIEW APPROVAL *******************************************************************************************@
@@ -540,9 +539,9 @@
                                 @Html.DisplayFor(modelItem => item.Comment)
                         </td>
                         <td class="text-nowrap">
-                                @if (ViewBag.IsAdmin == true || ViewBag.Username == item.PrimaryApproverUsername || ViewBag.Username == item.SecondaryApproverUsername)
+                                @if (Model.PTN.Status == "Pending Approval" && (ViewBag.IsAdmin == true || ViewBag.Username == item.PrimaryApproverUsername || ViewBag.Username == item.SecondaryApproverUsername))
                                 {
-                                    @if (item.Status == null || item.Status == "" || item.Status == "Rejected")
+                                    @if (item.Status == null || item.Status == "")
                                     {
                                         @* <input type="submit" value="Save" class="btn btn-primary" /> *@
                                         @Html.ActionLink("Approve", "GroupApprove", new { ptnId = Model.PTN.Id, groupApproverId = @item.Id, status = "Approved" }, new { @class = "btn btn-success" })
@@ -571,7 +570,7 @@
                 </tr>
             }
         </table>
-        <div class="row mt-5">
+        <div class="row mt-3">
             <div class="col-12 text-start">
                 @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
             </div>
@@ -656,6 +655,19 @@
                         <tbody id="waiverIndexTable">
                             @foreach (var item in Model.PTN.Waivers)
                             {
+                                var color = "";
+                                if (item.Status == "Rejected")
+                                {
+                                    color = "text-danger fw-bold";
+                                }
+                                else if (item.Status == "Approved")
+                                {
+                                    color = "text-success fw-bold";
+                                }
+                                else if (item.Status == "Closed")
+                                {
+                                    color = "text-success fw-bold";
+                                }
                                 <tr>
                                     @*                 <td>
                                 @Html.DisplayFor(modelItem => item.PTN.DocId)
@@ -675,7 +687,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ProductProcess)
                                     </td>
-                                    <td>
+                                    <td class="@color">
                                         @Html.DisplayFor(modelItem => item.Status)
                                     </td>
                                     <td>

@@ -690,6 +690,7 @@ namespace PtnWaiver.Controllers
                 waiver.CompletedBylUser = userInfo.onpremisessamaccountname;
                 waiver.CompletedBylUserFullName = userInfo.displayname;
                 waiver.CompletedByDate = DateTime.Now;
+                waiver.DateClosed = DateTime.Now;
             }
             waiver.Status = "Closed";
 
@@ -772,6 +773,31 @@ namespace PtnWaiver.Controllers
                     _contextPtnWaiver.Update(groupApproversReview);
                     await _contextPtnWaiver.SaveChangesAsync();
 
+                    // if rejected, we need to reject the Waiver and send email to Waiver owner that it has been rejected and why....
+                    if (groupApproversReview.Status == "Rejected")
+                    {
+                        var waiverRec = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == groupApproversReview.SourceId);
+                        if (waiverRec == null)
+                            return RedirectToAction("Index");
+
+                        waiverRec.Status = "Rejected";
+                        waiverRec.RejectedReason = groupApproversReview.Comment;
+                        waiverRec.RejectedByApprover = true;
+                        waiverRec.ModifiedDate = DateTime.Now;
+                        waiverRec.ModifiedUser = _username;
+                        waiverRec.ModifiedUserFullName = userInfo.displayname;
+                        waiverRec.ModifiedUserEmail = userInfo.mail;
+
+                        _contextPtnWaiver.Update(waiverRec);
+                        await _contextPtnWaiver.SaveChangesAsync();
+
+                        // email Waiver creator that the Waiver was Rejected....
+                        string subject = @"Process Test Notification (PTN) - Waiver Rejected";
+                        string body = @"Your Waiver has been <span style=""color:red"">Rejected</span> by " + userInfo.displayname + ". <br/><br/><strong>Waiver#: </strong>" + waiverRec.WaiverNumber + @"<br/><strong>PTN Title: </strong>" + waiverRec.Description + "<br/><strong>Rejected Reason: " + groupApproversReview.Comment + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, waiverRec.CreatedUserEmail, null, null, null);
+                        AddEmailHistory(null, subject, body, waiverRec.CreatedUserFullName, waiverRec.CreatedUser, waiverRec.CreatedUserEmail, null, waiverRec.Id, null, "Waiver", waiverRec.Status, DateTime.Now, _username);
+                    }
+
                     // See if all Reviews have been approved. If they have been, automatically Approve PTN ....
                     int count = _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == groupApproversReview.SourceId && m.SourceTable == "Waiver" && m.Status != "Approved").Count();
                     if (count == 0)
@@ -795,7 +821,7 @@ namespace PtnWaiver.Controllers
                         // email Waiver creator that the Waiver was Approved....
                         //var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
                         string subject = @"Process Test Notification (PTN) - Waiver Approved";
-                        string body = @"Your Waiver has been <span style=""color:green"">Approved</span>. <br/><br/><strong>DocId: </strong>" + waiverRec.PtnDocId + @"<br/><strong>Waiver Title: </strong>" + waiverRec.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                        string body = @"Your Waiver has been <span style=""color:green"">Approved</span>. <br/><br/><strong>Waiver#: </strong>" + waiverRec.WaiverNumber + @"<br/><strong>Waiver Title: </strong>" + waiverRec.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
                         Initialization.EmailProviderSmtp.SendMessage(subject, body, waiverRec.CreatedUserEmail, null, null, null);
                         AddEmailHistory(null, subject, body, waiverRec.CreatedUserFullName, waiverRec.CreatedUser, waiverRec.CreatedUserEmail, null, waiverRec.Id, null, "Waiver", waiverRec.Status, DateTime.Now, _username);
                     }
