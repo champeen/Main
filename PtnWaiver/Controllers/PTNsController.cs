@@ -590,7 +590,11 @@ namespace PtnWaiver.Controllers
             if (userInfo != null && userInfo.manager != null)
             {
                 var manager = await _contextMoc.__mst_employee.Where(m => m.displayname == userInfo.manager).FirstOrDefaultAsync();
-                if (manager != null)
+
+                // if manager already happens to be setup to approve above, do not add them again as an approver (do not duplicate)....
+                bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m=>m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
+
+                if (manager != null && managerAlreadyReviewer == false) // if manager found AND not already setup as Reviewer, add them...
                 {
                     GroupApproversReview groupApproversReview = new GroupApproversReview();
                     groupApproversReview.SourceId = ptn.Id;

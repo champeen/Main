@@ -77,7 +77,7 @@
                 </i>
                 @* <input asp-for="Group" class="form-control" style="max-width:25%;" /> *@
                 @*                 @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"}) *@
-                @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10 })
+                @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", ViewBag.PtnGroupApprovers), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10 })
                 <span asp-validation-for="GroupApprover" class="text-danger"></span>
             </div>
         </div>

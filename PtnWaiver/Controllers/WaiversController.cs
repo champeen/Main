@@ -173,15 +173,16 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = "Invalid Username: " + _username });
             }
 
+            PTN ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == ptnId);
+            if (ptn == null)
+                return NotFound();
+
             //ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
             ViewBag.Groups = getGroupApprovers();
-
-            PTN ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == ptnId);
-            if (ptn == null)
-                return NotFound();
+            ViewBag.PtnGroupApprovers = ptn.GroupApprover;
 
             Waiver waiver = new Waiver()
             {
@@ -239,11 +240,18 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab = "Waivers" });
                 //return RedirectToAction(nameof(Index));
             }
+
+            PTN ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == waiver.PTNId);
+            if (ptn == null)
+                return NotFound();
+
             ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
             ViewBag.Groups = getGroupApprovers();
+            ViewBag.PtnGroupApprovers = ptn.GroupApprover;
+
             return View(waiver);
         }
 
