@@ -1,0 +1,97 @@
+﻿@model Management_of_Change.Models.PccbInvitees
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>PccbInvitees</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullName" class="control-label"></label>
+                <input asp-for="FullName" class="form-control" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Attended" class="control-label"></label>
+                <input asp-for="Attended" class="form-control" />
+                <span asp-validation-for="Attended" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                <input asp-for="Status" class="form-control" />
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comments" class="control-label"></label>
+                <input asp-for="Comments" class="form-control" />
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PccbId" class="control-label"></label>
+                <select asp-for="PccbId" class ="form-control" asp-items="ViewBag.PccbId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MocId" class="control-label"></label>
+                <input asp-for="MocId" class="form-control" />
+                <span asp-validation-for="MocId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedUser" class="control-label"></label>
+                <input asp-for="CreatedUser" class="form-control" />
+                <span asp-validation-for="CreatedUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <input asp-for="CreatedDate" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedUser" class="control-label"></label>
+                <input asp-for="ModifiedUser" class="form-control" />
+                <span asp-validation-for="ModifiedUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedDate" class="control-label"></label>
+                <input asp-for="ModifiedDate" class="form-control" />
+                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedUser" class="control-label"></label>
+                <input asp-for="DeletedUser" class="form-control" />
+                <span asp-validation-for="DeletedUser" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeletedDate" class="control-label"></label>
+                <input asp-for="DeletedDate" class="form-control" />
+                <span asp-validation-for="DeletedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

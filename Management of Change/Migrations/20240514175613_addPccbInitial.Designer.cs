@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Management_of_Change.Migrations
 {
     [DbContext(typeof(Management_of_ChangeContext))]
-    partial class Management_of_ChangeContextModelSnapshot : ModelSnapshot
+    [Migration("20240514175613_addPccbInitial")]
+    partial class addPccbInitial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,9 +211,6 @@ namespace Management_of_Change.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("ChangeGradeReviewRequired")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -240,7 +240,7 @@ namespace Management_of_Change.Migrations
                     b.Property<string>("Order")
                         .HasColumnType("text");
 
-                    b.Property<bool>("PccbReviewRequired")
+                    b.Property<bool>("ReviewRequired")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");

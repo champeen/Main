@@ -7,22 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Management_of_Change.Data;
 using Management_of_Change.Models;
-using Management_of_Change.Utilities;
 using Management_of_Change.ViewModels;
-//using Management_of_Change.Migrations;
+using Management_of_Change.Utilities;
 
 namespace Management_of_Change.Controllers
 {
-    public class ChangeLevelsController : BaseController
+    public class PccbInviteesController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
 
-        public ChangeLevelsController(Management_of_ChangeContext context) : base(context)
+        public PccbInviteesController(Management_of_ChangeContext context) : base(context)
         {
             _context = context;
         }
 
-        // GET: ChangeLevels
+        // GET: PccbInvitees
         public async Task<IActionResult> Index()
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -32,26 +31,12 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _context.ChangeLevel != null ? 
-                          View(await _context.ChangeLevel.OrderBy(m => m.Order).ThenBy(m => m.Level).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ChangeLevel'  is null.");
+            return _context.PccbInvitees != null ? 
+                          View(await _context.PccbInvitees.ToListAsync()) :
+                          Problem("Entity set 'Management_of_ChangeContext.PccbInvitees'  is null.");
         }
 
-        public async Task<IActionResult> IndexHelp()
-        {
-            ErrorViewModel errorViewModel = CheckAuthorization();
-            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
-                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
-
-            return _context.ChangeLevel != null ?
-                          View(await _context.ChangeLevel.OrderBy(m => m.Order).ThenBy(m => m.Level).ToListAsync()) :
-                          Problem("Entity set 'Management_of_ChangeContext.ChangeLevel'  is null.");
-        }
-
-        // GET: ChangeLevels/Details/5
+        // GET: PccbInvitees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -61,19 +46,18 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _context.ChangeLevel == null)
-                 return NotFound();
-
-            var changeLevel = await _context.ChangeLevel
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (changeLevel == null)
+            if (id == null || _context.PccbInvitees == null)
                 return NotFound();
 
-            return View(changeLevel);
+            var pccbInvitees = await _context.PccbInvitees
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (pccbInvitees == null)
+                return NotFound();
+
+            return View(pccbInvitees);
         }
 
-        // GET: ChangeLevels/Create
+        // GET: PccbInvitees/Create
         public IActionResult Create()
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -83,21 +67,15 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            ChangeLevel changeLevel = new ChangeLevel
-            {
-                CreatedUser = _username,
-                CreatedDate = DateTime.Now
-            };
-
-            return View(changeLevel);
+            return View();
         }
 
-        // POST: ChangeLevels/Create
+        // POST: PccbInvitees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Level,Description,ChangeGradeReviewRequired,PccbReviewRequired,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeLevel changeLevel)
+        public async Task<IActionResult> Create([Bind("Id,Username,FullName,Title,Attended,Status,Comments,PccbId,MocId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PccbInvitees pccbInvitees)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -106,26 +84,16 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            // Make sure duplicates are not entered...
-            List<ChangeLevel> checkDupes = await _context.ChangeLevel
-                .Where(m => m.Level == changeLevel.Level)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Level", "Change Grade already exists.");
-                return View(changeLevel);
-            }
-
             if (ModelState.IsValid)
             {
-                _context.Add(changeLevel);
+                _context.Add(pccbInvitees);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(changeLevel);
+            return View(pccbInvitees);
         }
 
-        // GET: ChangeLevels/Edit/5
+        // GET: PccbInvitees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -135,23 +103,22 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _context.ChangeLevel == null)
+            if (id == null || _context.PccbInvitees == null)
                 return NotFound();
 
-            var changeLevel = await _context.ChangeLevel.FindAsync(id);
-
-            if (changeLevel == null)
+            var pccbInvitees = await _context.PccbInvitees.FindAsync(id);
+            if (pccbInvitees == null)
                 return NotFound();
 
-            return View(changeLevel);
+            return View(pccbInvitees);
         }
 
-        // POST: ChangeLevels/Edit/5
+        // POST: PccbInvitees/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Level,Description,ChangeGradeReviewRequired,PccbReviewRequired,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeLevel changeLevel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Username,FullName,Title,Attended,Status,Comments,PccbId,MocId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PccbInvitees pccbInvitees)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -160,42 +127,29 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != changeLevel.Id)
+            if (id != pccbInvitees.Id)
                 return NotFound();
-
-            // Make sure duplicates are not entered...
-            List<ChangeLevel> checkDupes = await _context.ChangeLevel
-                .Where(m => m.Level == changeLevel.Level && m.Id != changeLevel.Id)
-                .ToListAsync();
-            if (checkDupes.Count > 0)
-            {
-                ModelState.AddModelError("Level", "Change Grade already exists.");
-                return View(changeLevel);
-            }
-
-            changeLevel.ModifiedUser = _username;
-            changeLevel.ModifiedDate = DateTime.Now;
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(changeLevel);
+                    _context.Update(pccbInvitees);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ChangeLevelExists(changeLevel.Id))
+                    if (!PccbInviteesExists(pccbInvitees.Id))
                         return NotFound();
                     else
                         throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(changeLevel);
+            return View(pccbInvitees);
         }
 
-        // GET: ChangeLevels/Delete/5
+        // GET: PccbInvitees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -205,19 +159,18 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id == null || _context.ChangeLevel == null)
+            if (id == null || _context.PccbInvitees == null)
                 return NotFound();
 
-            var changeLevel = await _context.ChangeLevel
+            var pccbInvitees = await _context.PccbInvitees
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (changeLevel == null)
+            if (pccbInvitees == null)
                 return NotFound();
 
-            return View(changeLevel);
+            return View(pccbInvitees);
         }
 
-        // POST: ChangeLevels/Delete/5
+        // POST: PccbInvitees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -229,21 +182,21 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (_context.ChangeLevel == null)
-                return Problem("Entity set 'Management_of_ChangeContext.ChangeLevel'  is null.");
-
-            var changeLevel = await _context.ChangeLevel.FindAsync(id);
-
-            if (changeLevel != null)
-                _context.ChangeLevel.Remove(changeLevel);
+            if (_context.PccbInvitees == null)
+            {
+                return Problem("Entity set 'Management_of_ChangeContext.PccbInvitees'  is null.");
+            }
+            var pccbInvitees = await _context.PccbInvitees.FindAsync(id);
+            if (pccbInvitees != null)
+                _context.PccbInvitees.Remove(pccbInvitees);
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ChangeLevelExists(int id)
+        private bool PccbInviteesExists(int id)
         {
-          return (_context.ChangeLevel?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.PccbInvitees?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

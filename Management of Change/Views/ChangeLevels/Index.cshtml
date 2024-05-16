@@ -22,7 +22,10 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReviewRequired)
+                @Html.DisplayNameFor(model => model.ChangeGradeReviewRequired)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PccbReviewRequired)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Order)
@@ -59,7 +62,10 @@
                     @Html.Raw(item.Description)
                 </td>
                 <td>
-                    @Html.Raw(item.ReviewRequired)
+                    @Html.Raw(item.ChangeGradeReviewRequired)
+                </td>
+                <td>
+                    @Html.Raw(item.PccbReviewRequired)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Order)

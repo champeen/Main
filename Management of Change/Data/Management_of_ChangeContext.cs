@@ -71,5 +71,9 @@ namespace Management_of_Change.Data
         }
 
         public DbSet<Management_of_Change.Models.AdditionalImpactAssessmentReviewers>? AdditionalImpactAssessmentReviewers { get; set; }
+
+        public DbSet<Management_of_Change.Models.PCCB>? PCCB { get; set; }
+
+        public DbSet<Management_of_Change.Models.PccbInvitees>? PccbInvitees { get; set; }
     }
 }

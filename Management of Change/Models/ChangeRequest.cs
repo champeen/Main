@@ -92,5 +92,6 @@ namespace Management_of_Change.Models
         public List<GeneralMocResponses>? GeneralMocResponses { get; set; }
         public List<ImpactAssessmentResponse>? ImpactAssessmentResponses { get; set; }
         public List<ImplementationFinalApprovalResponse>? ImplementationFinalApprovalResponses { get; set; }
+        public List<PCCB>? PccbMeetings { get; set; }
     }
 }

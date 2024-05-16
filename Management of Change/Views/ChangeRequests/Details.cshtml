@@ -55,6 +55,16 @@
                     </i>
                 </a>
             </li>
+            @if (Model.TabPccbReviewDisplayed == "Yes")
+            {
+                <li class="nav-item">
+                    <a class="nav-link @Model.TabActivePccbReview fw-bolder" id="nav-pccbReview-tab" data-bs-toggle="tab" href="#nav-pccbReview" role="tab" aria-controls="nav-contact" aria-selected="false">
+                        PCCB Review
+                        @*                         <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This Change Grade requires review to make sure no PCCB review is needed.">
+                    </i> *@
+                    </a>
+                </li>
+            }
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled fw-bolder" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
                     Final Approvals
@@ -701,6 +711,144 @@
         </div>
 
         @******************************************************************************************************************@
+        @*  PCCB REVIEW TAB  **********************************************************************************************@
+        @******************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActivePccbReview" id="nav-pccbReview" role="tabpanel" aria-labelledby="nav-pccbReview-tab">
+            <div class="row">
+                <div class="col-12">
+                    <p>
+                        @Html.ActionLink("Create New", "Create","PCCBs", new { id = Model.ChangeRequest.Id, tab = "PccbReview" }, new { @class = "btn btn-success" })
+                    </p>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Title
+                                </th>
+                                <th>
+                                    Meeting Date
+                                </th>
+                                <th>
+                                    Meeting Time
+                                </th>
+                                <th>
+                                    Meeting DateTime
+                                </th>
+                                <th>
+                                    Agenda
+                                </th>
+                                <th>
+                                   Decisions
+                                </th>
+                                <th>
+                                    Action Items
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ChangeRequest.PccbMeetings)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MeetingDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MeetingTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MeetingDateTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Agenda)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Decisions)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ActionItems)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Status)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        @if (Model.ChangeRequest.PccbMeetings.Count() == 0)
+                        {
+                            <tr>
+                                <td class="text-nowrap">No data found</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        }
+                    </table>
+
+
+
+
+
+@*                     @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewPccb) && (Model.ChangeRequest.Change_Status == "PccbReview"))
+                    {
+                        <div class="mx-5">
+                            MoC needs PCCB review.
+                        </div>
+                        <div class="text-center mt-2">
+                            <form asp-action="RejectChangeGrade">
+                                <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
+                                <div class="row mt-5">
+                                    <div class="col-6 text-end">
+                                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary m-1" })
+                                        @Html.ActionLink("Approve Change Grade", "ApproveChangeGrade", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                                        <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
+                                    </div>
+                                    <div class="col-6 text-start">
+                                        <div class="row">
+                                            <div class="col-2 text-start">
+                                                <label asp-for="ChangeRequest.ChangeGradeRejectedReason" class="control-label fw-bold m-1"></label>
+                                            </div>
+                                            <div class="col-10">
+                                                @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Required if Rejected *" })
+                                                <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <span></span>
+                        </div>
+                    }
+                    @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
+                    {
+                        <div class="text-nowrap text-center mt-2">
+                            <div class="my-5">
+                                Change Grade Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)</span>.
+                            </div>
+                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                        </div>
+                    } *@
+                </div>
+            </div>
+        </div>
+
+        @******************************************************************************************************************@
         @*  FINAL APPROVALS TAB  ******************************************************************************************@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveFinalApprovals" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
@@ -1014,4 +1162,3 @@
         if (anchor != null) { anchor.scrollIntoView(true); }
     });
 </script>
-

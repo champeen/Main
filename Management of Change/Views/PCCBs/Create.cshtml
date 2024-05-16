@@ -1,0 +1,73 @@
+﻿@model Management_of_Change.Models.PCCB
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>PCCB Review</h1>
+
+<h4 class="mt-5">Create</h4>
+<hr />
+<form asp-action="Create">
+    <input type="hidden" asp-for="ChangeRequestId" />
+    <input type="hidden" asp-for="CreatedUser" />
+    <input type="hidden" asp-for="CreatedDate" />
+    <input type="hidden" asp-for="Status" />
+    @Html.AntiForgeryToken()
+    <div class="form-group my-3">
+        <input type="submit" value="Create" class="btn btn-success" />
+        @Html.ActionLink("Cancel", "Details", "ChangeRequests", new { id = Model.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary" })
+    </div>
+    <div>
+        @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group my-3">
+                <label asp-for="Title" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.Title, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="Title" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="MeetingDate" class="control-label fw-bold mb-1"></label>
+                <input asp-for="MeetingDate" class="form-control" style="width:25%" onclick="this.showPicker()" />
+                <span asp-validation-for="MeetingDate" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="MeetingTime" class="control-label fw-bold mb-1"></label>
+                <input asp-for="MeetingTime" class="form-control" style="width:25%" onclick="this.showPicker()"  />
+                <span asp-validation-for="MeetingTime" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="MeetingDateTime" class="control-label fw-bold mb-1"></label>
+                <input asp-for="MeetingDateTime" class="form-control" style="width:25%" onclick="this.showPicker()"  />
+                <span asp-validation-for="MeetingDateTime" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Agenda" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.Agenda, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="Agenda" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Decisions" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.Decisions, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="Decisions" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="ActionItems" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.ActionItems, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="ActionItems" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group mt-5">
+                <input type="submit" value="Create" class="btn btn-success" />
+                @Html.ActionLink("Cancel", "Details","ChangeRequests", new {id = Model.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

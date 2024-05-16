@@ -9,7 +9,10 @@ namespace Management_of_Change.Models
         [Display(Name = "Grade")]
         public string Level { get; set; }
         public string? Description { get; set; }
-        public bool ReviewRequired { get; set; }
+        [Display(Name = "Change Grade Review Required")]
+        public bool ChangeGradeReviewRequired { get; set; }
+        [Display(Name = "PCCB Review Required")]
+        public bool PccbReviewRequired { get; set; }
         public string? Order { get; set; }
     }
 }
