@@ -1,4 +1,5 @@
 ﻿using Management_of_Change.Data;
+using Management_of_Change.Migrations;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
 using Management_of_Change.ViewModels;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Identity.Client;
+using System.Globalization;
 using System.Threading.Tasks;
 //using Management_of_Change.Migrations;
 
@@ -543,6 +545,12 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
 
             //return View("Details" + (string.IsNullOrEmpty(rec) ? "" : "#" + rec), changeRequestViewModel);
+
+            //foreach (var rec in changeRequestViewModel.ChangeRequest.PccbMeetings)
+            //    rec.MeetingTime = rec.MeetingTime.ToString();
+            //@Html.DisplayFor(modelItem => item.MeetingTime.ToString("h:mm:ss tt", new CultureInfo("en-US")))
+            //@item.MeetingTime.ToString("h:mm:ss t", new CultureInfo("en-US"));
+
             return View(changeRequestViewModel);
         }
 

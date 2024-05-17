@@ -16,7 +16,7 @@
     @Html.AntiForgeryToken()
     <div class="form-group my-3">
         <input type="submit" value="Create" class="btn btn-success" />
-        @Html.ActionLink("Cancel", "Details", "ChangeRequests", new { id = Model.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary" })
+        @Html.ActionLink("Cancel", "Details", "ChangeRequests", new { id = Model.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1" })
     </div>
     <div>
         @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
@@ -60,7 +60,7 @@
             </div>
             <div class="form-group mt-5">
                 <input type="submit" value="Create" class="btn btn-success" />
-                @Html.ActionLink("Cancel", "Details","ChangeRequests", new {id = Model.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary" })
+                @Html.ActionLink("Cancel", "Details", "ChangeRequests", new { id = Model.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1" })
             </div>
         </div>
     </div>

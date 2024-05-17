@@ -5,6 +5,7 @@ namespace Management_of_Change.Models
 {
     public class PCCB : TimeStamps
     {
+        [Key]
         public int Id { get; set; }
         public string Title { get; set; }
         [Display(Name = "Meeting Date")]
@@ -12,6 +13,7 @@ namespace Management_of_Change.Models
         public DateTime? MeetingDate { get; set; }
         [Display(Name = "Meeting Time")]
         [DataType(DataType.Time)]
+        //[DisplayFormat(DataFormatString = "{h:mm tt}")]
         public DateTime? MeetingTime { get; set; }
         [Display(Name = "Meeting Date/Time")]
         [DataType(DataType.DateTime)]

@@ -752,6 +752,7 @@
                         <tbody>
                             @foreach (var item in Model.ChangeRequest.PccbMeetings)
                             {
+                                @* var blah = Convert.ToDateTime(item.MeetingTime); *@                                
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Title)
@@ -763,7 +764,8 @@
                                         @Html.DisplayFor(modelItem => item.MeetingTime)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.MeetingDateTime)
+                                        @Html.DisplayFor(modelItem => item.MeetingDateTime/* .Value.ToShortTimeString() */)
+                                        
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Agenda)
