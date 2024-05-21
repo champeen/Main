@@ -286,7 +286,7 @@
     @*  ATTACHMENTS TAB  **********************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveAttachmentsPtn" id="nav-attachmentsPtn" role="tabpanel" aria-labelledby="nav-attachmentsPtn-tab">
-        <div class="text-nowrap mt-5">
+        <div class="mt-5">
             @*<h4 class="mt-5">Attachments</h4>*@
             @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
             @* @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"}) *@
@@ -321,14 +321,14 @@
                     </div>
                     <div class="form-group mb-3">
                         <div class="row">
-                            <div class="col-10">
+                            <div class="col-9">
                                 <input type="file" name="fileAttachment" class="form-control" @ViewBag.Disable />
                                 <div class="form-group text-danger fw-bold">
                                     @*<input asp-for="FileAttachmentError" class="form-control" />*@
                                     @Html.DisplayFor(m => m.FileAttachmentError)
                                 </div>
                             </div>
-                            <div class="col-2">
+                            <div class="col-xl-3 block">
                                 <input type="submit" value="Upload Completed PTN Template" class="form-control btn btn-success" @ViewBag.Disable>
                             </div>
                         </div>
