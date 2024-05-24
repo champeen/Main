@@ -10,7 +10,7 @@
 <form asp-controller="ChangeRequests" asp-action="Index">
     <input hidden value=@ViewBag.PrevSort id="PrevSortId" />
     <input hidden value=@ViewBag.PrevStatusFilter id="PrevStatusFilterId" />
-    <div class="row mt-3">
+    <div class="row mt-5">
         <div class="col-6 text-start">
             @*<a asp-action="Create">Create New</a>*@
             @*            @Html.ActionLink("Create New","Create")*@
@@ -39,7 +39,7 @@
         </div>*@
     </div>
 </form>
-<table class="table table-bordered table-striped mt-5 ">
+<table class="table table-bordered table-striped mt-3 ">
     <thead class="align-top align-text-top table-primary">
         <tr>
             <th class="text-nowrap">

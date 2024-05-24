@@ -373,7 +373,7 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.MeetingTime)
                 .ToListAsync();
 
-            // Get all PCCB Meeting Invitees...
+            //Get all PCCB Meeting Invitees...
            if (changeRequest.PccbMeetings.Any())
             {
                 foreach (var record in changeRequest.PccbMeetings)

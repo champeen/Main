@@ -10,7 +10,7 @@
                 Change Request
             </span>
             <span class="" title="Create New MoC based on this MoC.  Include all Details and General MoC Questions only. Status will be set to 'Draft' and ChangeOwner will be you.">
-                @Html.ActionLink("Clone","Clone", new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-success align-middle"})
+                @Html.ActionLink("Clone", "Clone", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-success align-middle" })
                 @* @Html.ActionLink("Download New Equipment Checklist","DownloadNewEquipmentChecklist","ChangeRequests", new {id=@Model.ChangeRequest.Id}, new {@class="btn btn-secondary", title="Download 'New Equipment Checklist' Spreadsheet to Download Folder"}) *@
             </span>
         </h1>
@@ -100,18 +100,20 @@
         @*  DETAIL TAB ****************************************************************************************************@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
-            <div class="text-nowrap">
+            <div class="">
                 @*<h4 class="mt-5">Details</h4>*@
                 @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
                 <a class="mx-1" asp-action="Index">Back to List</a>*@
                 <div class="row mt-5">
                     <div class="col-5 text-start">
-                        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
-                        {
-                            @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
-                            @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success ms-1"})
-                        }
-                        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                        <div class="btn-group">
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                            {
+                                @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
+                                @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                            }
+                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                        </div>
                     </div>
                     @* <div class="col-6 text-end"> *@
                     <div class="col-lg-7">
@@ -119,24 +121,14 @@
                         {
                             @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                             {
-                                @*                                 <div class="row">
-                        <div class="col-12">
-                        <button type="submit"
-                        id="submitButton"
-                        class="btn btn-primary"
-                        onclick="return DisplayProgressMessage(this, 'Saving...');">
-                        Save
-                        </button>
-                        </div>
-                        </div> *@
                                 <div class="row">
-                                    <div class="col-xl-10 text-xl-end mt-2">
+                                    <div class="col-xl-10 text-xl-end mt-1">
                                         <span class="bg-warning fw-bold">
                                             WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
                                         </span>
                                     </div>
-                                    <div class="col-xl-2 col">
-                                        @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId1", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                    <div class="col-xl-2 mt-1">
+                                        @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId1", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
                                     </div>
                                 </div>
                             }
@@ -275,20 +267,20 @@
                     @Html.DisplayNameFor(model => model.ChangeRequest.Title_Change_Description)
                 </dt>
                 <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Title_Change_Description, new {@rows = 3})
+                    @Html.DisplayFor(model => model.ChangeRequest.Title_Change_Description, new { @rows = 3 })
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Justification_of_the_Change)
                 </dt>
                 <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Justification_of_the_Change, new {@rows = 2})
+                    @Html.DisplayFor(model => model.ChangeRequest.Justification_of_the_Change, new { @rows = 2 })
                 </dd>
                 @*<hr />*@
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Scope_of_the_Change)
                 </dt>
                 <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.ChangeRequest.Scope_of_the_Change, new {@rows = 3})
+                    @Html.DisplayFor(model => model.ChangeRequest.Scope_of_the_Change, new { @rows = 3 })
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
@@ -396,15 +388,17 @@
                 </dd>
                 <hr />
             </dl>
-            <div class="text-nowrap">
+            <div class="">
                 <div class="row">
                     <div class="col-5 text-start">
-                        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
-                        {
-                            @Html.ActionLink("Edit","Edit",new {id=@Model?.ChangeRequest?.Id, tab="Details"},new {@class="btn btn-primary"})
-                            @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success ms-1"})
-                        }
-                        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                        <div class="btn-group">
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                            {
+                                @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
+                                @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                            }
+                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                        </div>
                     </div>
                     <div class="col-lg-7">
                         @if (@Model.ButtonSubmitForReview == true)
@@ -412,13 +406,13 @@
                             @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                             {
                                 <div class="row">
-                                    <div class="col-xl-10 text-xl-end mt-2">
+                                    <div class="col-xl-10 text-xl-end mt-1">
                                         <span class="bg-warning fw-bold">
                                             WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
                                         </span>
                                     </div>
-                                    <div class="col-xl-2">
-                                        @Html.ActionLink("Submit for Review","CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId2", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                    <div class="col-xl-2 mt-1">
+                                        @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId1", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
                                     </div>
                                 </div>
                             }
@@ -448,16 +442,16 @@
                     </div>
                 }
                 @*<h4 class="mt-5">General MOC Questions</h4>*@
-                <div class="text-nowrap">
+                <div class="">
                     <div class="row mt-5">
                         <div class="col-5">
-                            <div class="text-nowrap">
+                            <div class="btn-group">
                                 @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                                 {
-                                    <input type="submit" value="Save Changes" class="btn btn-primary" />
-                                    @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
+                                    <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
+                                    @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
                                 }
-                                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary text-start"})
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary text-start mt-1" })
                             </div>
                         </div>
                         <div class="col-lg-7">
@@ -467,13 +461,13 @@
                                 @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                                 {
                                     <div class="row">
-                                        <div class="col-xl-10 text-xl-end mt-2">
+                                        <div class="col-xl-10 text-xl-end mt-1 me-1">
                                             <span class="bg-warning fw-bold">
                                                 WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
                                             </span>
                                         </div>
-                                        <div class="col-xl-2">
-                                            @Html.ActionLink("Submit for Review","CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId3", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                        <div class="col-xl-2 mt=1">
+                                            @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId3", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
                                         </div>
                                     </div>
                                 }
@@ -522,8 +516,8 @@
                                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                                     {
                                         @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
-                            new SelectList(ViewBag.Responses), "--Select--",
-                            new { @class="form-control form-select"})
+                                                 new SelectList(ViewBag.Responses), "--Select--",
+                                                 new { @class = "form-control form-select" })
                                     }
                                     else
                                     {
@@ -540,13 +534,14 @@
                 <div class="text-nowrap">
                     <div class="row">
                         <div class="col-5">
-
-                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
-                            {
-                                <input type="submit" value="Save Changes" class="btn btn-primary" />
-                                @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {changeRequestId=Model.ChangeRequest.Id, tab="GeneralMocQuestions"}, new {@class="btn btn-success"})
-                            }
-                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                            <div class="btn-group">
+                                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                                {
+                                    <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
+                                    @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
+                                }
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary text-start mt-1" })
+                            </div>
                         </div>
                         <div class="col-lg-7">
                             @if (@Model.ButtonSubmitForReview == true)
@@ -554,13 +549,13 @@
                                 @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                                 {
                                     <div class="row">
-                                        <div class="col-xl-10 text-xl-end mt-2">
+                                        <div class="col-xl-10 text-xl-end mt-1 me-1">
                                             <span class="bg-warning fw-bold">
                                                 WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
                                             </span>
                                         </div>
-                                        <div class="col-xl-2">
-                                            @Html.ActionLink("Submit for Review","CheckForChangeGradeReview", new {id=@Model.ChangeRequest.Id, tab="Details"}, new {@class="btn btn-success text-start text-nowrap", title="Once submitted for Review, Details and MoC Questions will be Locked.", id="SubmitForReviewId4", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                        <div class="col-xl-2 mt-1">
+                                            @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId4", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
                                         </div>
                                     </div>
                                 }
@@ -586,8 +581,8 @@
                                 <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
                                 <div class="row mt-5">
                                     <div class="col-6 text-end">
-                                        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary m-1"})
-                                        @Html.ActionLink("Approve Change Grade","ApproveChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success m-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary m-1" })
+                                        @Html.ActionLink("Approve Change Grade", "ApproveChangeGrade", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                                         @*@Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 ms-2 me-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"}) *@
                                         <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                                     </div>
@@ -598,7 +593,7 @@
                                             </div>
                                             <div class="col-10">
                                                 @* <input asp-for="ChangeRequest.ChangeGradeRejectedReason" class="form-control m-1" /> *@
-                                                @Html.TextBoxFor(m=>m.ChangeRequest.ChangeGradeRejectedReason,new {@class="form-control m-1", placeholder="* Required if Rejected *"})
+                                                @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Required if Rejected *" })
                                                 <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
                                                 @* @Html.TextAreaFor(model => model.ChangeRequest.ChangeGradeRejectedReason, new {@class = "form-control", /* @style="display: inline-table !important", */ @rows = 1 }) *@
                                             </div>
@@ -615,7 +610,7 @@
                             <div class="my-5">
                                 Change Grade Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)</span>.
                             </div>
-                            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
                         </div>
                     }
                 </div>
@@ -628,7 +623,7 @@
             <div class="text-nowrap mt-5">
                 @*<h4 class="mt-5">Change Evaluations - Impact Assessments</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
             </div>
             <table class="table table-bordered table-striped mt-3">
                 <thead class="table-primary">
@@ -686,11 +681,11 @@
                             {
                             @Html.ActionLink("Edit","Edit","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-primary"})
                             }*@
-                                    @Html.ActionLink("Review","Details","ImpactAssessmentResponses",new {id=@item.Id, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
+                                    @Html.ActionLink("Review", "Details", "ImpactAssessmentResponses", new { id = @item.Id, tab = "ImpactAssessments" }, new { @class = "btn btn-secondary" })
                                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.ReviewCompleted != true))
                                     {
                                         <span>
-                                            @Html.ActionLink("Send Reminder","AssessmentReminder","ChangeRequests", new {id = @item.Id, tab="ImpactAssessments"}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
+                                            @Html.ActionLink("Send Reminder", "AssessmentReminder", "ChangeRequests", new { id = @item.Id, tab = "ImpactAssessments" }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
                                         </span>
                                         @*                                         <div id="Fade_area" class="overlay1"></div>
                             <div id="myModal" class="popup1">
@@ -699,7 +694,7 @@
                                     }
                                     @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
                                     {
-                                        @Html.ActionLink("Mark as Complete","MarkImpactAssessmentComplete","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", recId=recId},new {@class="btn btn-success", title="Once Marked as Complete, You CANNOT Edit Again", onclick="return DisplayProgressMessage(this, 'Saving...');"})
+                                        @Html.ActionLink("Mark as Complete", "MarkImpactAssessmentComplete", "ChangeRequests", new { id = @item.Id, tab = "ImpactAssessments", recId = recId }, new { @class = "btn btn-success", title = "Once Marked as Complete, You CANNOT Edit Again", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
                                     }
                                 </td>
                             </tr>
@@ -707,7 +702,7 @@
                     }
                 </tbody>
             </table>
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
         </div>
 
         @******************************************************************************************************************@
@@ -717,28 +712,29 @@
             <div class="row">
                 <div class="col-12">
                     <p>
-                        @Html.ActionLink("Create New", "Create","PCCBs", new { id = Model.ChangeRequest.Id, tab = "PccbReview" }, new { @class = "btn btn-success" })
+                        @Html.ActionLink("Create New", "Create", "PCCBs", new { id = Model.ChangeRequest.Id, tab = "PccbReview" }, new { @class = "btn btn-success" })
+                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary ms-1" })
                     </p>
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>
-                                    Title
-                                </th>
-                                <th>
+@*                                 <th>
                                     Meeting Date
                                 </th>
                                 <th>
                                     Meeting Time
-                                </th>
+                                </th> *@
                                 <th>
                                     Meeting DateTime
+                                </th>
+                                <th>
+                                    Title
                                 </th>
                                 <th>
                                     Agenda
                                 </th>
                                 <th>
-                                   Decisions
+                                    Decisions
                                 </th>
                                 <th>
                                     Action Items
@@ -752,21 +748,20 @@
                         <tbody>
                             @foreach (var item in Model.ChangeRequest.PccbMeetings)
                             {
-                                @* var blah = Convert.ToDateTime(item.MeetingTime); *@                                
+                                @* var blah = Convert.ToDateTime(item.MeetingTime); *@
                                 <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MeetingDateTime/* .Value.ToShortTimeString() */)
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Title)
                                     </td>
-                                    <td>
+@*                                     <td>
                                         @Html.DisplayFor(modelItem => item.MeetingDate)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.MeetingTime)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.MeetingDateTime/* .Value.ToShortTimeString() */)
-                                        
-                                    </td>
+                                    </td> *@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Agenda)
                                     </td>
@@ -780,9 +775,9 @@
                                         @Html.DisplayFor(modelItem => item.Status)
                                     </td>
                                     <td>
-                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                                        <a asp-action="Edit" asp-controller="PCCB" asp-route-id="@item.Id" class="btn btn-primary me-1">Edit</a>
+                                        <a asp-action="Details" asp-controller="PCCB" asp-route-id="@item.Id" class="btn btn-secondary me-1">Details</a>
+                                        <a asp-action="Delete" asp-controller="PCCB" asp-route-id="@item.Id" class="btn btn-danger me-1">Delete</a>
                                     </td>
                                 </tr>
                             }
@@ -807,44 +802,44 @@
 
 
 
-@*                     @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewPccb) && (Model.ChangeRequest.Change_Status == "PccbReview"))
+                    @*                     @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewPccb) && (Model.ChangeRequest.Change_Status == "PccbReview"))
                     {
-                        <div class="mx-5">
-                            MoC needs PCCB review.
-                        </div>
-                        <div class="text-center mt-2">
-                            <form asp-action="RejectChangeGrade">
-                                <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
-                                <div class="row mt-5">
-                                    <div class="col-6 text-end">
-                                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary m-1" })
-                                        @Html.ActionLink("Approve Change Grade", "ApproveChangeGrade", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
-                                        <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
-                                    </div>
-                                    <div class="col-6 text-start">
-                                        <div class="row">
-                                            <div class="col-2 text-start">
-                                                <label asp-for="ChangeRequest.ChangeGradeRejectedReason" class="control-label fw-bold m-1"></label>
-                                            </div>
-                                            <div class="col-10">
-                                                @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Required if Rejected *" })
-                                                <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                            <span></span>
-                        </div>
+                    <div class="mx-5">
+                    MoC needs PCCB review.
+                    </div>
+                    <div class="text-center mt-2">
+                    <form asp-action="RejectChangeGrade">
+                    <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
+                    <div class="row mt-5">
+                    <div class="col-6 text-end">
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary m-1" })
+                    @Html.ActionLink("Approve Change Grade", "ApproveChangeGrade", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                    <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
+                    </div>
+                    <div class="col-6 text-start">
+                    <div class="row">
+                    <div class="col-2 text-start">
+                    <label asp-for="ChangeRequest.ChangeGradeRejectedReason" class="control-label fw-bold m-1"></label>
+                    </div>
+                    <div class="col-10">
+                    @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Required if Rejected *" })
+                    <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
+                    </div>
+                    </div>
+                    </div>
+                    </div>
+                    </form>
+                    <span></span>
+                    </div>
                     }
                     @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
                     {
-                        <div class="text-nowrap text-center mt-2">
-                            <div class="my-5">
-                                Change Grade Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)</span>.
-                            </div>
-                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
-                        </div>
+                    <div class="text-nowrap text-center mt-2">
+                    <div class="my-5">
+                    Change Grade Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)</span>.
+                    </div>
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                    </div>
                     } *@
                 </div>
             </div>
@@ -855,7 +850,7 @@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveFinalApprovals" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
             <div class="text-nowrap mt-5">
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mt-3 ">
@@ -902,7 +897,7 @@
                                     @Html.DisplayFor(modelItem => item.ReviewCompleted)
                                 </td>
                                 <td class="text-center">
-                                    @Html.DisplayFor(modelItem => item.DateCompleted,"yyyy/MM/dd")
+                                    @Html.DisplayFor(modelItem => item.DateCompleted, "yyyy/MM/dd")
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.ReviewResult)
@@ -915,25 +910,25 @@
                                     {
                                         if (item.ReviewCompleted != true)
                                         {
-                                            @Html.ActionLink("Review","Edit","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-primary", title="Must Fill Out 'Review Result' to be able to Complete Review"})
+                                            @Html.ActionLink("Review", "Edit", "ImplementationFinalApprovalResponses", new { id = @item.Id, tab = "FinalApprovals" }, new { @class = "btn btn-primary", title = "Must Fill Out 'Review Result' to be able to Complete Review" })
                                         }
                                         else
                                         {
-                                            @Html.ActionLink("Details","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                            @Html.ActionLink("Details", "Details", "ImplementationFinalApprovalResponses", new { id = @item.Id, tab = "FinalApprovals" }, new { @class = "btn btn-secondary" })
                                         }
                                         if (item.ReviewResult != null && item.ReviewResult != "" && item.ReviewCompleted != true)
                                         {
-                                            @Html.ActionLink("Mark Complete","CompleteFinalReview","ChangeRequests",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-success ms-2", title="Must Fill Out 'Review Result' to be able to Complete Review", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                                            @Html.ActionLink("Mark Complete", "CompleteFinalReview", "ChangeRequests", new { id = @item.Id, tab = "FinalApprovals" }, new { @class = "btn btn-success ms-2", title = "Must Fill Out 'Review Result' to be able to Complete Review", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                                         }
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("Details","Details","ImplementationFinalApprovalResponses",new {id=@item.Id, tab="FinalApprovals"},new {@class="btn btn-secondary"})
+                                        @Html.ActionLink("Details", "Details", "ImplementationFinalApprovalResponses", new { id = @item.Id, tab = "FinalApprovals" }, new { @class = "btn btn-secondary" })
                                     }
                                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "FinalApprovals") && (item.ReviewCompleted != true))
                                     {
                                         <span>
-                                            @Html.ActionLink("Send Reminder","FinalApprovalReminder","ChangeRequests", new {id = @item.Id, tab="FinalApprovals"}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
+                                            @Html.ActionLink("Send Reminder", "FinalApprovalReminder", "ChangeRequests", new { id = @item.Id, tab = "FinalApprovals" }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
                                         </span>
                                     }
                                 </td>
@@ -942,7 +937,7 @@
                     </tbody>
                 </table>
             </div>
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
         </div>
         @******************************************************************************************************************@
         @*  IMPLEMENTATION TAB  *******************************************************************************************@
@@ -961,7 +956,7 @@
                 {
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
                     {
-                        @Html.ActionLink("Close Implementation","CloseoutImplementation", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"})
+                        @Html.ActionLink("Close Implementation", "CloseoutImplementation", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                     }
                     @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
                     {
@@ -970,7 +965,7 @@
                         </div>
                     }
                 }
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
             </div>
         </div>
         @******************************************************************************************************************@
@@ -990,16 +985,16 @@
                 {
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Closeout"))
                     {
-                        @Html.ActionLink("Close-Out/Complete","CloseoutComplete", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-success mt-3"})
+                        @Html.ActionLink("Close-Out/Complete", "CloseoutComplete", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3" })
                     }
                     @if (Model.ChangeRequest.Change_Status == "Closed")
                     {
                         <div class="fw-bold text-success my-5">
-                            Change Request has been Closed/Completed by @Html.DisplayFor(Model => Model.ChangeRequest.Closeout_Username) on @Html.DisplayFor(Model =>  Model.ChangeRequest.Closeout_Date)
+                            Change Request has been Closed/Completed by @Html.DisplayFor(Model => Model.ChangeRequest.Closeout_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Closeout_Date)
                         </div>
                     }
                 }
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
             </div>
         </div>
         @******************************************************************************************************************@
@@ -1009,7 +1004,7 @@
             <div class="text-nowrap mt-5">
                 @*<h4 class="mt-5">Attachments</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
 
                 @using (Html.BeginForm("SaveFile", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
                 {
@@ -1063,10 +1058,10 @@
                             <td>
                                 @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
                                 @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
-                                @Html.ActionLink("Download File","DownloadFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
+                                @Html.ActionLink("Download File", "DownloadFile", "ChangeRequests", new { id = @Model.ChangeRequest.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
                                 @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
                                 {
-                                    @Html.ActionLink("Delete","DeleteFile","ChangeRequests",new {id=@Model.ChangeRequest.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
+                                    @Html.ActionLink("Delete", "DeleteFile", "ChangeRequests", new { id = @Model.ChangeRequest.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-danger", title = "Delete Attachment" })
                                 }
                                 @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
                             </td>
@@ -1074,7 +1069,7 @@
                     }
                 </tbody>
             </table>
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
         </div>
         @******************************************************************************************************************@
         @*  TASKS TAB  ****************************************************************************************************@
@@ -1083,8 +1078,8 @@
             <div class="text-nowrap mt-5">
                 @*<h4 class="mt-5">Tasks</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                @Html.ActionLink("Create New","CreateTask", new {changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks"},new {@class="btn btn-success"})
-                @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
+                @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success" })
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
             </div>
             <table class="table table-bordered table-striped mt-5">
                 <thead class="align-top table-primary">
@@ -1121,7 +1116,7 @@
                         <tr>
                             <td>
                                 @*@Html.DisplayFor(modelItem => item.Id)*@
-                                @Html.ActionLink("Task#" + item.Id.ToString(),"Details","Tasks",new {id=@item.Id, tab="Tasks"},new {@class=""})
+                                @Html.ActionLink("Task#" + item.Id.ToString(), "Details", "Tasks", new { id = @item.Id, tab = "Tasks" }, new { @class = "" })
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ImplementationType)
@@ -1148,8 +1143,8 @@
                     }
                 </tbody>
             </table>
-            @Html.ActionLink("Create New","CreateTask", new {changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks"},new {@class="btn btn-success mt-3"})
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary mt-3"})
+            @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success mt-3" })
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
         </div>
 
     </div>

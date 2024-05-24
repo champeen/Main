@@ -59,14 +59,19 @@ namespace Management_of_Change.Controllers
 
         // GET: PCCBs/Create
         public IActionResult Create(int id, string tab = null)
-        {
+        {         
             PCCB pccb = new PCCB();
             pccb.ChangeRequestId = id;
             pccb.CreatedUser = _username;
             pccb.CreatedDate = DateTime.Now;
             pccb.Status = "Open";
 
-            return View(pccb);
+            PccbVM pccbVM = new PccbVM();
+            pccbVM.PCCB = pccb;
+
+            ViewBag.Employees = getUserList();
+
+            return View(pccbVM);
         }
 
         // POST: PCCBs/Create
@@ -74,34 +79,66 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,MeetingDate,MeetingTime,MeetingDateTime,Agenda,Decisions,ActionItems,Status,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PCCB pCCB)
+        public async Task<IActionResult> Create(/*[Bind("Id,Title,MeetingDateTime, Invitees,Agenda,Decisions,ActionItems,Status,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")]*/ PccbVM pccbVM)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            if (pCCB.MeetingDate == null)
-                ModelState.AddModelError("MeetingDate", "Must Include a Valid Meeting Date");
-
-            if (pCCB.MeetingDate < DateTime.Today)
-                ModelState.AddModelError("MeetingDate", "Date Cannot Be In The Past");
-
-            if (pCCB.MeetingTime == null)
-                ModelState.AddModelError("MeetingTime", "Must Include a Valid Meeting Time");
-
-            if (pCCB.MeetingDateTime == null)
-                ModelState.AddModelError("MeetingDateTime", "Must Include a Valid Meeting Date/Time");
-
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
+            //if (pCCB.MeetingDate == null)
+            //    ModelState.AddModelError("MeetingDate", "Must Include a Valid Meeting Date");
+
+            //if (pCCB.MeetingDate < DateTime.Today)
+            //    ModelState.AddModelError("MeetingDate", "Date Cannot Be In The Past");
+
+            //if (pCCB.MeetingTime == null)
+            //    ModelState.AddModelError("MeetingTime", "Must Include a Valid Meeting Time");
+
+            if (pccbVM.PCCB.MeetingDateTime == null)
+                ModelState.AddModelError("MeetingDateTime", "Must Include a Valid Meeting Date/Time");
+
+            if (pccbVM.Invitees == null || pccbVM.Invitees.Count == 0)
+                ModelState.AddModelError("Invitees", "Must Invite at least 1 Person");
+
             if (ModelState.IsValid)
             {
-                _context.Add(pCCB);
+                List<PccbInvitees> pccbInvitees = new List<PccbInvitees>();
+
+                foreach (var invite in pccbVM.Invitees)
+                {
+                    var employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == invite).FirstOrDefaultAsync();
+                    if (employee != null)
+                    {
+                        PccbInvitees invitee = new PccbInvitees();
+                        invitee.Username = employee.onpremisessamaccountname;
+                        invitee.FullName = employee.displayname;
+                        invitee.Title = employee.jobtitle;
+                        invitee.Email = employee.mail;
+                        invitee.Status = "Invited"; // "Attended" "No Show"
+                        invitee.Attended = false;
+                        invitee.MocId = pccbVM.PCCB.ChangeRequestId;
+                        invitee.PccbId = pccbVM.PCCB.Id; // CHECK THIS MAKE SURE IT IS FILLED
+                        invitee.CreatedDate = DateTime.Now;
+                        invitee.CreatedUser = _username;
+
+                        pccbInvitees.Add(invitee);
+                        //_context.Add(pccvVM.PCCB);
+                        //await _context.SaveChangesAsync();
+                    }
+                }
+                pccbVM.PCCB.Invitees = pccbInvitees;
+
+                _context.Add(pccbVM.PCCB);
+                //_context.Add(pccvVM.PCCB.Invitees);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Details", "ChangeRequests", new { id = pccbVM.PCCB.ChangeRequestId, tab = "PccbReview" });
             }
-            return View(pCCB);
+            ViewBag.Employees = getUserList();
+            return View(pccbVM);
         }
 
         // GET: PCCBs/Edit/5

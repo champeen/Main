@@ -13,7 +13,6 @@ namespace Management_of_Change.Models
         public DateTime? MeetingDate { get; set; }
         [Display(Name = "Meeting Time")]
         [DataType(DataType.Time)]
-        //[DisplayFormat(DataFormatString = "{h:mm tt}")]
         public DateTime? MeetingTime { get; set; }
         [Display(Name = "Meeting Date/Time")]
         [DataType(DataType.DateTime)]
@@ -23,10 +22,13 @@ namespace Management_of_Change.Models
         [Display(Name = "Action Items")]
         public string? ActionItems { get; set; }
         public string Status { get; set; }  // Scheduled/Closed
+        public List<PccbInvitees>? Invitees { get; set; }
+        //public List<PccbInvitees> Invitees2 { get; set; }
+
 
         [ForeignKey("ChangeRequest")]
         public int ChangeRequestId { get; set; }
 
-        public List<PccbInvitees>? Invitees { get; set; }
+        
     }
 }

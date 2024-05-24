@@ -117,6 +117,8 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.DueDate)
                 .ToListAsync();
 
+            ViewBag.Employees = getUserList();
+
             return View(dashboardVM);
         }
 

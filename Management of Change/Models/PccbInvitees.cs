@@ -8,6 +8,7 @@ namespace Management_of_Change.Models
         public string Username { get; set; }
         public string? FullName { get; set; }
         public string? Title { get; set; }
+        public string? Email { get; set; }
         public bool? Attended { get; set; }
         public string? Status { get; set; }
         public string? Comments { get; set; }
