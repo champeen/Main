@@ -7,7 +7,7 @@
     <div class="col-3 d-flex justify-content-center align-items-end mb-3">
         <div>
             @*<a asp-action="Create">Create New</a>*@
-            @Html.ActionLink("Create New PTN","Create","PTNs",new {source="Home"},new {@class="btn btn-success"})
+            @Html.ActionLink("Create New PTN", "Create", "PTNs", new { source = "Home" }, new { @class = "btn btn-success" })
         </div>
     </div>
     <div class="col-6">
@@ -50,28 +50,42 @@ else
                             <thead class="align-top align-text-top table-primary">
                                 <tr>
                                     <th class="text-nowrap">
+                                        Status
+                                    </th>
+                                    <th class="text-nowrap">
                                         PTN Doc Id
                                     </th>
-                                    <th class="text-nowrap">
+                                    <th class="">
                                         Title/Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Status
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.YourInProgressPtns)
                                 {
+
+                                    var color = "";
+                                    if (item.Status == "Draft")
+                                    {
+                                        color = "text-warning fw-bold";
+                                    }
+                                    else if (item.Status == "Pending Approval")
+                                    {
+                                        color = "text-primary fw-bold";
+                                    }
+                                    else if (item.Status == "Approved")
+                                    {
+                                        color = "text-success fw-bold";
+                                    }
                                     <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.DocId,"Details","PTNs",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @Html.DisplayFor(modelItem => item.Title)
-                                        </td>
-                                        <td class="text-nowrap">
+                                        <td class="@color">
                                             @Html.DisplayFor(modelItem => item.Status)
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.DocId, "Details", "PTNs", new { id = @item.Id, tab = "Details", sourceScreen = "Dashboard" }, new { @class = "" })
+                                        </td>
+                                        <td class="">
+                                            @Html.DisplayFor(modelItem => item.Title)
                                         </td>
                                     </tr>
                                 }
@@ -108,28 +122,41 @@ else
                             <thead class="align-top align-text-top table-primary">
                                 <tr>
                                     <th class="text-nowrap">
+                                        Status
+                                    </th>
+                                    <th class="text-nowrap">
                                         Waiver Number
                                     </th>
-                                    <th class="text-nowrap">
+                                    <th class="">
                                         Title/Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Status
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.YourInProgressWaivers)
                                 {
+                                    var color = "";
+                                    if (item.Status == "Draft")
+                                    {
+                                        color = "text-warning fw-bold";
+                                    }
+                                    else if (item.Status == "Pending Approval")
+                                    {
+                                        color = "text-primary fw-bold";
+                                    }
+                                    else if (item.Status == "Approved")
+                                    {
+                                        color = "text-success fw-bold";
+                                    }
                                     <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.WaiverNumber,"Details","Waivers",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @Html.DisplayFor(modelItem => item.Description)
-                                        </td>
-                                        <td class="text-nowrap">
+                                        <td class="@color">
                                             @Html.DisplayFor(modelItem => item.Status)
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.WaiverNumber, "Details", "Waivers", new { id = @item.Id, tab = "Details", sourceScreen = "Dashboard" }, new { @class = "" })
+                                        </td>
+                                        <td class="">
+                                            @Html.DisplayFor(modelItem => item.Description)
                                         </td>
                                     </tr>
                                 }
@@ -179,7 +206,7 @@ else
                                         {
                                             <tr>
                                                 <td class="text-nowrap">
-                                                    @Html.ActionLink(item.DocId,"Details","PTNs",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
+                                                    @Html.ActionLink(item.DocId, "Details", "PTNs", new { id = @item.Id, tab = "Details", sourceScreen = "Dashboard" }, new { @class = "" })
                                                 </td>
                                                 <td class="text-nowrap">
                                                     @Html.DisplayFor(modelItem => item.Title)
@@ -229,7 +256,7 @@ else
                                     {
                                         <tr>
                                             <td class="text-nowrap">
-                                                @Html.ActionLink(item.WaiverNumber,"Details","Waivers",new {id=@item.Id, tab="Details", sourceScreen="Dashboard"},new {@class=""})
+                                                @Html.ActionLink(item.WaiverNumber, "Details", "Waivers", new { id = @item.Id, tab = "Details", sourceScreen = "Dashboard" }, new { @class = "" })
                                             </td>
                                             <td class="text-nowrap">
                                                 @Html.DisplayFor(modelItem => item.Description)

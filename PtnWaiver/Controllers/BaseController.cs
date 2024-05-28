@@ -261,7 +261,17 @@ namespace PtnWaiver.Controllers
             List<SelectListItem> groups = new List<SelectListItem>();
             foreach (var rec in groupList)
             {
-                SelectListItem item = new SelectListItem { Value = rec.Group, Text = rec.Group + " - (" + rec.PrimaryApproverFullName + "/" + rec.SecondaryApproverFullName + ")" };
+                SelectListItem item = new SelectListItem();
+                if (rec.SecondaryApproverFullName != null)
+                {
+                    item.Value = rec.Group;
+                    item.Text = rec.Group + " - (" + rec.PrimaryApproverFullName + "/" + rec.SecondaryApproverFullName + ")";
+                }
+                else
+                {
+                    item.Value = rec.Group;
+                    item.Text = rec.Group + " - (" + rec.PrimaryApproverFullName + ")";
+                }
                 groups.Add(item);
             }
             return groups;

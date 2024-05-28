@@ -240,7 +240,7 @@ namespace PtnWaiver.Controllers
 
                 _contextPtnWaiver.Add(ptn);
                 await _contextPtnWaiver.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","Home");
             }
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
