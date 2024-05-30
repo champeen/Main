@@ -35,22 +35,6 @@
     </div>
     <div class="row">
         <div class="col-6">
-            @*             <div class="form-group my-3">
-            <div class="control-label fw-bold mb-1">PTN/PIN</div>
-            @Html.DropDownListFor(model => model.PTNId, new SelectList(ViewBag.Ptns,"Value","Text"), "-- select --", new { @class="form-control form-select"})
-            <span asp-validation-for="PTNId" class="text-danger fw-bold"></span>
-            </div> *@
-            @*             <div class="form-group my-3">
-            <label asp-for="WaiverNumber" class="control-label fw-bold mb-1"></label>
-            <input asp-for="WaiverNumber" class="form-control" />
-            <span asp-validation-for="WaiverNumber" class="text-danger fw-bold"></span>
-            </div> *@
-            @*             <div class="form-group my-3">
-            <label asp-for="PorProject" class="control-label fw-bold mb-1"></label>
-            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-            @Html.DropDownListFor(model => model.PorProject, new SelectList(ViewBag.PorProjects,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:20%;"})
-            <span asp-validation-for="PorProject" class="text-danger fw-bold"></span>
-            </div> *@
             <div class="form-group my-3">
                 <label asp-for="Description" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -60,14 +44,14 @@
             <div class="form-group my-3">
                 <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @style = "max-width:20%;" })
+                @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @style = "max-width:50%;" })
                 <span asp-validation-for="ProductProcess" class="text-danger fw-bold"></span>
             </div>
-            <div class="form-group my-3">
+@*             <div class="form-group my-3">
                 <label asp-for="CorrectiveActionDueDate" class="control-label fw-bold mb-1"></label>
                 <input asp-for="CorrectiveActionDueDate" class="form-control" style="max-width:50%" onclick="this.showPicker()" />
                 <span asp-validation-for="CorrectiveActionDueDate" class="text-danger fw-bold"></span>
-            </div>
+            </div> *@
         </div>
         <div class="col-6">
             <div class="form-group my-3">
@@ -75,10 +59,16 @@
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
                 </i>
-                @* <input asp-for="Group" class="form-control" style="max-width:25%;" /> *@
-                @*                 @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"}) *@
-                @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", ViewBag.PtnGroupApprovers), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10 })
-                <span asp-validation-for="GroupApprover" class="text-danger"></span>
+@*                 @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", ViewBag.PtnGroupApprovers), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 8 }) *@
+@*                 @Html.DropDownListFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "WaiverCreateGroupApprovers" }) *@
+                <select asp-for=GroupApprover id="WaiverCreateGroupApprovers" multiple="multiple" style="width:100%;">
+                    @foreach (SelectListItem item in ViewBag.Groups)
+                    {
+                        <option value=@item.Value selected="@item.Selected" >@item.Text </option>
+                        @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
+                    }
+                </select>
+                <span asp-validation-for="GroupApprover" class="text-danger fw-bold mt-1"></span>
             </div>
         </div>
     </div>
@@ -95,6 +85,14 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#WaiverCreateGroupApprovers').select2({
+            placeholder: "Select Group/Approver(s)"
+        });
+    });
+</script>
 
 @section Scripts {
     @{

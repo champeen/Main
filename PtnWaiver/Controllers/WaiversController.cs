@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
@@ -181,8 +182,20 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
-            ViewBag.Groups = getGroupApprovers();
+            //ViewBag.Groups = getGroupApprovers();
             ViewBag.PtnGroupApprovers = ptn.GroupApprover;
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = ptn.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
 
             Waiver waiver = new Waiver()
             {
@@ -249,8 +262,20 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
-            ViewBag.Groups = getGroupApprovers();
+            //ViewBag.Groups = getGroupApprovers();
             ViewBag.PtnGroupApprovers = ptn.GroupApprover;
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = waiver.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
 
             return View(waiver);
         }
@@ -268,7 +293,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
-            ViewBag.Groups = getGroupApprovers();
+            //ViewBag.Groups = getGroupApprovers();
 
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
@@ -277,6 +302,18 @@ namespace PtnWaiver.Controllers
 
             if (waiver == null)
                 return NotFound();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = waiver.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
 
             return View(waiver);
         }
@@ -329,7 +366,20 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
-            ViewBag.Groups = getGroupApprovers();
+            //ViewBag.Groups = getGroupApprovers();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = waiver.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+                    
+            }
+            ViewBag.Groups = groups;
 
             return View(waiver);
         }

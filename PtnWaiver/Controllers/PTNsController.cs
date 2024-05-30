@@ -4,6 +4,8 @@ using PtnWaiver.Data;
 using PtnWaiver.Models;
 using PtnWaiver.Utilities;
 using PtnWaiver.ViewModels;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PtnWaiver.Controllers
 {
@@ -62,7 +64,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: PTNs/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string rejectedReason = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string sourceString = "Dashboard", string fileAttachmentError = null, string rejectedReason = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -82,6 +84,7 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.RejectedReason = rejectedReason;
+            ViewBag.SourceString = sourceString;
 
             PtnViewModel ptnVM = new PtnViewModel();
             ptnVM.FileAttachmentError = fileAttachmentError;
@@ -189,7 +192,6 @@ namespace PtnWaiver.Controllers
             ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.Groups = getGroupApprovers();
 
-
             PTN ptn = new PTN()
             {
                 Status = "Draft",
@@ -240,13 +242,38 @@ namespace PtnWaiver.Controllers
 
                 _contextPtnWaiver.Add(ptn);
                 await _contextPtnWaiver.SaveChangesAsync();
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
             ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = ptn.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = ptn.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
+
             return View(ptn);
         }
 
@@ -269,9 +296,33 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
             ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.ClonedId = id;
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = ptn.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = ptn.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
 
             ptn.Status = "Draft";
             ptn.ApprovedByDate = null;
@@ -323,7 +374,7 @@ namespace PtnWaiver.Controllers
                 ptn.OriginatorYear = DateTime.Now.Year.ToString();
                 ptn.SerialNumber = getSerialNumberBasedOnYear(ptn.OriginatorYear);
                 //if (bouleSizeRequired == true)
-                    ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
                 //else
                 //    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
 
@@ -339,9 +390,33 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
             ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.ClonedId = clonedId;
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = ptn.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = ptn.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
 
             return View("Clone", ptn);
         }
@@ -367,8 +442,32 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
             ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = pTN.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = pTN.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
 
             return View(pTN);
         }
@@ -418,8 +517,33 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
             ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = pTN.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = pTN.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
+
             return View(pTN);
         }
 
@@ -592,7 +716,7 @@ namespace PtnWaiver.Controllers
                 var manager = await _contextMoc.__mst_employee.Where(m => m.displayname == userInfo.manager).FirstOrDefaultAsync();
 
                 // if manager already happens to be setup to approve above, do not add them again as an approver (do not duplicate)....
-                bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m=>m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
+                bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
 
                 if (manager != null && managerAlreadyReviewer == false) // if manager found AND not already setup as Reviewer, add them...
                 {
@@ -856,7 +980,7 @@ namespace PtnWaiver.Controllers
                         ptnRec.ModifiedDate = DateTime.Now;
                         ptnRec.ModifiedUser = _username;
                         ptnRec.ModifiedUserFullName = userInfo.displayname;
-                        ptnRec.ModifiedUserEmail= userInfo.mail;
+                        ptnRec.ModifiedUserEmail = userInfo.mail;
 
                         _contextPtnWaiver.Update(ptnRec);
                         await _contextPtnWaiver.SaveChangesAsync();

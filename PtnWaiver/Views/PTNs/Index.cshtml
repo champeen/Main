@@ -40,12 +40,6 @@
             <th class="text-nowrap">
                 @Html.DisplayNameFor(model => model.DocId)
             </th>
-            @*             <th>
-            @Html.DisplayNameFor(model => model.OriginatingGroup)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.BouleSize)
-            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
@@ -74,9 +68,13 @@
         @foreach (var item in Model)
         {
             var color = "";
-            if (item.Status == "Rejected")
+            if (item.Status == "Draft")
             {
-                color = "text-danger fw-bold";
+                color = "text-warning fw-bold";
+            }
+            else if (item.Status == "Pending Approval")
+            {
+                color = "text-primary fw-bold";
             }
             else if (item.Status == "Approved")
             {
@@ -86,16 +84,14 @@
             {
                 color = "text-success fw-bold";
             }
+            else if (item.Status == "Rejected")
+            {
+                color = "text-danger fw-bold";
+            }
             <tr>
                 <td class="text-nowrap">
                     @Html.DisplayFor(modelItem => item.DocId)
                 </td>
-                @*                 <td>
-            @Html.DisplayFor(modelItem => item.OriginatingGroup)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.BouleSize)
-            </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
@@ -144,7 +140,7 @@
                 </td>
                 <td class="text-nowrap">
                     @* @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"}) *@
-                    @Html.ActionLink("Details", "Details", new { id = @item.Id, tab = "Details" }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Details", "Details", new { id = @item.Id, tab = "Details", sourceString = "Index" }, new { @class = "btn btn-secondary" })
                     @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
                     {
                         @if (item.DeletedDate == null && item.Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS

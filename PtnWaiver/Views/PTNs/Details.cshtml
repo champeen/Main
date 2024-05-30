@@ -83,7 +83,14 @@
                     @Html.ActionLink("Edit", "Edit", new { id = @Model?.PTN?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
                     @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
                 }
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index","Home", new { }, new { @class = "btn btn-secondary" })
+                }
             </div>
         </div>
         <hr />
@@ -278,7 +285,14 @@
                     @Html.ActionLink("Edit", "Edit", new { id = @Model?.PTN?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
                     @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
                 }
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                }
             </div>
         </div>
     </div>
@@ -385,7 +399,14 @@
                         </tr>
                     }
                 </table>
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                }
             </div>
         </div>
     </div>
@@ -400,7 +421,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h5>
-                            Once submitted for approval, you can only edit the comment field.  Make sure everything is complete before submitting for approval.
+                            Once submitted for approval, you can only edit the comment or PTR Number field.  Make sure everything is complete before submitting for approval.
                         </h5>
                     </div>
                 </div>
@@ -410,7 +431,14 @@
                     <div class="row mt-5">
                         <div class="col-12">
                             @Html.ActionLink("Submit for Approval", "SubmitPtnForApproval", "PTNs", new { id = Model.PTN.Id }, new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
-                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary ms-1" })
+                            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                            {
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                            }
                             @* <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" /> *@
                         </div>
                         @*                         <div class="row mt-3 mb-1">
@@ -472,7 +500,14 @@
     <div class="tab-pane fade show @Model.TabActivePtnAdminApproval" id="nav-ptnAdminApproval" role="tabpanel" aria-labelledby="nav-ptnAdminApproval-tab">
         <div class="row my-3">
             <div class="col-12 text-start">
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                }
             </div>
         </div>
         <table class="table table-bordered table-striped">
@@ -572,7 +607,14 @@
         </table>
         <div class="row mt-3">
             <div class="col-12 text-start">
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                }
             </div>
         </div>
     </div>
@@ -603,7 +645,14 @@
                                             {
                                                 @Html.ActionLink("Create New", "Create", "Waivers", new { ptnId = Model?.PTN?.Id, tab = "Waivers" }, new { @class = "btn btn-success me-1" })
                                             }
-                                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                                            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                                            {
+                                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                                            }
                                         </span>
                                     </div>
                                     @*                                     <div class="col-3 text-center">
@@ -646,9 +695,9 @@
                                 <th>
                                     Date Closed
                                 </th>
-                                <th>
+@*                                 <th>
                                     Corrective Action Due Date
-                                </th>
+                                </th> *@
                                 <th></th>
                             </tr>
                         </thead>
@@ -693,9 +742,9 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.DateClosed)
                                     </td>
-                                    <td>
+@*                                     <td>
                                         @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
-                                    </td>
+                                    </td> *@
                                     <td class="text-nowrap">
                                         @* @Html.ActionLink("Edit","Edit","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-primary"}) *@
                                         @Html.ActionLink("Details", "Details", "Waivers", new { id = @item.Id, tab = "Waivers" }, new { @class = "btn btn-secondary ms-1" })
@@ -729,7 +778,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td></td>
+@*                                 <td></td> *@
                             </tr>
                         }
                     </table>

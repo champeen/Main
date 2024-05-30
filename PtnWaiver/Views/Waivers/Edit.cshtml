@@ -75,11 +75,11 @@
                 @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess,"Value","Text"), new { @class="form-control form-select", @style="max-width:50%;"})
                 <span asp-validation-for="ProductProcess" class="text-danger fw-bold"></span>
             </div>
-            <div class="form-group my-3">
+@*             <div class="form-group my-3">
                 <label asp-for="CorrectiveActionDueDate" class="control-label fw-bold mb-1"></label>
                 <input asp-for="CorrectiveActionDueDate" class="form-control" style="max-width:25%" onclick="this.showPicker()" />
                 <span asp-validation-for="CorrectiveActionDueDate" class="text-danger fw-bold"></span>
-            </div>
+            </div> *@
             <div class="form-group mt-5">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 @Html.ActionLink("Cancel","Details","Waivers",new {id=Model.Id, tab="Details"},new {@class="btn btn-secondary mx-2"})
@@ -93,12 +93,27 @@
                 </i>
                 @* <input asp-for="Group" class="form-control" style="max-width:25%;" /> *@
                 @*                 @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"}) *@
-                @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select mt-1", multiple = true, data_placeholder = "Select Approver(s)", size = 12 })
+                @*                 @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select mt-1", multiple = true, data_placeholder = "Select Approver(s)", size = 12 })*@                
+                <select asp-for=GroupApprover id="WaiverEditGroupApprovers" multiple="multiple" style="width:100%;">
+                    @foreach (SelectListItem item in ViewBag.Groups)
+                    {
+                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                        @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
+                    }                    
+                </select>
                 <span asp-validation-for="GroupApprover" class="text-danger fw-bold mt-1"></span>
             </div>
         </div>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#WaiverEditGroupApprovers').select2({
+            placeholder: "Select Group/Approver(s)"
+        });
+    });
+</script>
 
 @section Scripts {
     @{
