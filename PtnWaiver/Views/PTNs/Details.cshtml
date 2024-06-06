@@ -114,10 +114,10 @@
                 </div>
                 <div class="row">
                     <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.BouleSize)
+                        @Html.DisplayNameFor(model => model.PTN.ProductSize)
                     </dt>
                     <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.BouleSize)
+                        @Html.DisplayFor(model => model.PTN.ProductSize)
                     </dd>
                 </div>
                 <div class="row">
@@ -366,7 +366,7 @@
                     <tbody>
                         @foreach (var item in Model.AttachmentsPtn)
                         {
-                            <tr>
+                            <tr>                                                                  
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
@@ -374,7 +374,11 @@
                                     @Html.DisplayFor(modelItem => item.CreatedDate)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Size)
+                                    @{
+                                        var size = item.Size / 1000 < 1 ? item.Size.ToString() + " bytes" : (item.Size / 1000).ToString("N0") + " KB";
+                                    }
+                                    @* @Html.DisplayFor(modelItem => item.Size.ToString("#,##0")) KB *@
+                                    @size
                                 </td>
                                 <td>
                                     @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
@@ -690,6 +694,9 @@
                                     Product/Process
                                 </th>
                                 <th>
+                                    Group/Approver
+                                </th>
+                                <th>
                                     Status
                                 </th>
                                 <th>
@@ -705,9 +712,13 @@
                             @foreach (var item in Model.PTN.Waivers)
                             {
                                 var color = "";
-                                if (item.Status == "Rejected")
+                                if (item.Status == "Draft")
                                 {
-                                    color = "text-danger fw-bold";
+                                    color = "text-warning fw-bold";
+                                }
+                                else if (item.Status == "Pending Approval")
+                                {
+                                    color = "text-primary fw-bold";
                                 }
                                 else if (item.Status == "Approved")
                                 {
@@ -716,6 +727,10 @@
                                 else if (item.Status == "Closed")
                                 {
                                     color = "text-success fw-bold";
+                                }
+                                else if (item.Status == "Rejected")
+                                {
+                                    color = "text-danger fw-bold";
                                 }
                                 <tr>
                                     @*                 <td>
@@ -735,6 +750,9 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ProductProcess)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.GroupApprover)
                                     </td>
                                     <td class="@color">
                                         @Html.DisplayFor(modelItem => item.Status)
@@ -773,6 +791,7 @@
                                 <td>No data found</td>
                                 <td></td>
                                 @* <td></td> *@
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

@@ -21,7 +21,7 @@ namespace PtnWaiver.Data
         {
         }
         public DbSet<PtnWaiver.Models.PtnStatus>? PtnStatus { get; set; }
-        public DbSet<PtnWaiver.Models.BouleSize>? BouleSize { get; set; }
+        public DbSet<PtnWaiver.Models.ProductSize>? ProductSize { get; set; }
         public DbSet<PtnWaiver.Models.SubjectType>? SubjectType { get; set; }
         public DbSet<PtnWaiver.Models.Group>? Group { get; set; }
         public DbSet<PtnWaiver.Models.GroupApprovers>? GroupApprovers { get; set; }

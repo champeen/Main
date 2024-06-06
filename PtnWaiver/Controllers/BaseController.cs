@@ -224,23 +224,23 @@ namespace PtnWaiver.Controllers
             List<SelectListItem> originatingGroups = new List<SelectListItem>();
             foreach (var rec in originatingGroupList)
             {
-                if (rec.BouleSizeRequired)
-                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description /*+ " (Boule Size is Required)"*/ });
+                if (rec.ProductSizeRequired)
+                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description /*+ " (Product Size is Required)"*/ });
                 else
                     originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description });
             }
             return originatingGroups;
         }
-        public List<SelectListItem> getBouleSizes()
+        public List<SelectListItem> getProductSizes()
         {
-            var bouleSizeList = _contextPtnWaiver.BouleSize.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
-            List<SelectListItem> bouleSizes = new List<SelectListItem>();
-            foreach (var rec in bouleSizeList)
+            var productSizeList = _contextPtnWaiver.ProductSize.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> productSizes = new List<SelectListItem>();
+            foreach (var rec in productSizeList)
             {
                 SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
-                bouleSizes.Add(item);
+                productSizes.Add(item);
             }
-            return bouleSizes;
+            return productSizes;
         }
 
         public List<SelectListItem> getSubjectTypes()

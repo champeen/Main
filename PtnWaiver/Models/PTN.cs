@@ -10,8 +10,8 @@ namespace PtnWaiver.Models
         public string? DocId { get; set; }
         [Display(Name = "Originating Group")]
         public string OriginatingGroup { get; set; }
-        [Display(Name = "Boule Size")]        
-        public string BouleSize { get; set; }
+        [Display(Name = "Product Size")]        
+        public string ProductSize { get; set; }
         public string? OriginatorInitials { get; set; }
         public string? OriginatorYear { get; set; }
         public string? SerialNumber { get; set; }

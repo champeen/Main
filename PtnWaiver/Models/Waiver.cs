@@ -14,9 +14,9 @@ namespace PtnWaiver.Models
         [Display(Name = "POR or Project")]
         public string? PorProject { get; set; }
         public string Description { get; set; }
-        [Display(Name = "Product/Process")]
-        public string ProductProcess { get; set; }
         public string Status { get; set; }
+        [Display(Name = "Product/Process")]
+        public List<string> ProductProcess { get; set; }
         [Display(Name = "Group/Approver(s)")]
         public List<string> GroupApprover { get; set; }
         [Display(Name = "Date Closed")]

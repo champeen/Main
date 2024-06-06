@@ -44,7 +44,14 @@
             <div class="form-group my-3">
                 <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @style = "max-width:50%;" })
+@*                 @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @style = "max-width:50%;" }) *@
+                <select asp-for=ProductProcess id="WaiverCreateProductProcess" multiple="multiple" style="width:100%;">
+                    @foreach (SelectListItem item in ViewBag.ProductProcess)
+                    {
+                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                        @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
+                    }
+                </select>
                 <span asp-validation-for="ProductProcess" class="text-danger fw-bold"></span>
             </div>
 @*             <div class="form-group my-3">
@@ -90,6 +97,9 @@
     $(document).ready(function () {
         $('#WaiverCreateGroupApprovers').select2({
             placeholder: "Select Group/Approver(s)"
+        });
+        $('#WaiverCreateProductProcess').select2({
+            placeholder: "Select Product/Processes"
         });
     });
 </script>
