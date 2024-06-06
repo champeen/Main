@@ -112,14 +112,9 @@
                             @Html.DisplayFor(model => model.Waiver.RevisionNumber)
                         </dd>
                     </div>
-                    <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.ProductProcess)
-                        </dd>
-                    </div>
+@*                     <div class="row">
+
+                    </div> *@
 @*                     <div class="row">
                         <dt class="col-3 my-1 text-end">
                             @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
@@ -139,10 +134,31 @@
                 </div>
                 <div class="col-6">
                     <div class="row">
-                        <dt class="col-sm-2 my-1 text-end">
+                        <dt class="col-sm-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
+                        </dt>
+                        <dd class="col-sm-9 my-1">
+                            @if (Model.Waiver.ProductProcess != null)
+                            {
+                                var counter = 0;
+                                @foreach (var productProcess in Model.Waiver.ProductProcess)
+                                {
+                                    counter = counter + 1;
+                                    <span>@productProcess</span>
+                                    if (counter < Model.Waiver.ProductProcess.Count)
+                                    {
+                                        <span>,&nbsp;</span>
+                                    }
+                                }
+                            }
+                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
+                        </dd>
+                    </div>
+                    <div class="row">
+                        <dt class="col-sm-3 my-1 text-end">
                             @Html.DisplayNameFor(model => model.Waiver.GroupApprover)
                         </dt>
-                        <dd class="col-sm-4 my-1">
+                        <dd class="col-sm-9 my-1">
                             @if (Model.Waiver.GroupApprover != null)
                             {
                                 var counter = 0;

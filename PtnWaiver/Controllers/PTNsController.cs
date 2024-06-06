@@ -710,36 +710,36 @@ namespace PtnWaiver.Controllers
                 }
             }
 
-            //// add PTN creators manager to the GroupApproverReviews....  MJWII
-            //if (userInfo != null && userInfo.manager != null)
-            //{
-            //    var manager = await _contextMoc.__mst_employee.Where(m => m.displayname == userInfo.manager).FirstOrDefaultAsync();
+            // add PTN creators manager to the GroupApproverReviews....  MJWII
+            if (userInfo != null && userInfo.manager != null)
+            {
+                var manager = await _contextMoc.__mst_employee.Where(m => m.displayname == userInfo.manager).FirstOrDefaultAsync();
 
-            //    // if manager already happens to be setup to approve above, do not add them again as an approver (do not duplicate)....
-            //    bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
+                // if manager already happens to be setup to approve above, do not add them again as an approver (do not duplicate)....
+                bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
 
-            //    if (manager != null && managerAlreadyReviewer == false) // if manager found AND not already setup as Reviewer, add them...
-            //    {
-            //        GroupApproversReview groupApproversReview = new GroupApproversReview();
-            //        groupApproversReview.SourceId = ptn.Id;
-            //        groupApproversReview.SourceTable = "PTN";
-            //        groupApproversReview.Group = "Manager";
-            //        groupApproversReview.PrimaryApproverUsername = manager.onpremisessamaccountname;
-            //        groupApproversReview.PrimaryApproverFullName = manager.displayname;
-            //        groupApproversReview.PrimaryApproverEmail = manager.mail;
-            //        groupApproversReview.PrimaryApproverTitle = manager.jobtitle;
-            //        groupApproversReview.CreatedDate = DateTime.Now;
-            //        groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
-            //        groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
-            //        groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
+                if (manager != null && managerAlreadyReviewer == false) // if manager found AND not already setup as Reviewer, add them...
+                {
+                    GroupApproversReview groupApproversReview = new GroupApproversReview();
+                    groupApproversReview.SourceId = ptn.Id;
+                    groupApproversReview.SourceTable = "PTN";
+                    groupApproversReview.Group = "Manager";
+                    groupApproversReview.PrimaryApproverUsername = manager.onpremisessamaccountname;
+                    groupApproversReview.PrimaryApproverFullName = manager.displayname;
+                    groupApproversReview.PrimaryApproverEmail = manager.mail;
+                    groupApproversReview.PrimaryApproverTitle = manager.jobtitle;
+                    groupApproversReview.CreatedDate = DateTime.Now;
+                    groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
+                    groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
+                    groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
 
-            //        _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
-            //        await _contextPtnWaiver.SaveChangesAsync();
+                    _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
 
-            //        Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
-            //        AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
-            //    }
-            //}
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
+                    AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                }
+            }
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }
 

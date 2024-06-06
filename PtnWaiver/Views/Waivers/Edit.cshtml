@@ -28,11 +28,11 @@
     <input type="hidden" asp-for="DeletedDate" />
     <input type="hidden" asp-for="PtnDocId" />
     <input type="hidden" asp-for="DateClosed" />
-    <div class="row my-4">
+    <div class="row mt-4">
         <div class="col-12">
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                @Html.ActionLink("Cancel","Details","Waivers",new {id=Model.Id, tab="Details"},new {@class="btn btn-secondary mx-2"})
+                @Html.ActionLink("Cancel", "Details", "Waivers", new { id = Model.Id, tab = "Details" }, new { @class = "btn btn-secondary mx-2" })
             </div>
         </div>
     </div>
@@ -42,37 +42,35 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
-            <div class="form-group my-1">
-                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
-                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @rows = 3 })
-                <span asp-validation-for="Description" class="text-danger fw-bold"></span>
-            </div>
-        </div>
-    </div>
-    <div class="row">
         <div class="col-md-6">
             <div class="form-group my-3">
                 <label asp-for="WaiverNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="WaiverNumber" class="form-control" style="max-width:25%;" readonly/>
+                <input asp-for="WaiverNumber" class="form-control" readonly />
                 <span asp-validation-for="WaiverNumber" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
                 <div class="control-label fw-bold mb-1">PTN</div>
-                @*                <label  "Change Request" class="control-label fw-bold"></label>*@
-                @*<input asp-for="ChangeRequestId" class="form-control" />*@
-                @*@Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests), new { @class="form-control form-select"})*@
-                @Html.DropDownListFor(model => model.PTNId, new SelectList(ViewBag.Ptns,"Value","Text"), "-- select --", new { @class="form-control form-select"})
+                @Html.DropDownListFor(model => model.PTNId, new SelectList(ViewBag.Ptns, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @disabled = "disabled"})
                 <span asp-validation-for="PTNId" class="text-danger fw-bold"></span>
             </div>
-@*             <div class="form-group my-3">
-                <label asp-for="PorProject" class="control-label fw-bold mb-1"></label>
-                @Html.DropDownListFor(model => model.PorProject, new SelectList(ViewBag.PorProjects,"Value","Text"), new { @class="form-control form-select", @style="max-width:20%;"})
-                <span asp-validation-for="PorProject" class="text-danger"></span>
-            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @rows = 3 })
+                <span asp-validation-for="Description" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group mt-5">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Cancel", "Details", "Waivers", new { id = Model.Id, tab = "Details" }, new { @class = "btn btn-secondary mx-2" })
+            </div>
+        </div>
+        <div class="col-6">
             <div class="form-group my-3">
                 <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
-@*                 @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess,"Value","Text"), new { @class="form-control form-select", @style="max-width:50%;"}) *@
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
+                </i>
+                @*                 @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess,"Value","Text"), new { @class="form-control form-select", @style="max-width:50%;"}) *@
                 <select asp-for=ProductProcess id="WaiverEditProductProcess" multiple="multiple" style="width:100%;">
                     @foreach (SelectListItem item in ViewBag.ProductProcess)
                     {
@@ -82,17 +80,6 @@
                 </select>
                 <span asp-validation-for="ProductProcess" class="text-danger fw-bold"></span>
             </div>
-@*             <div class="form-group my-3">
-                <label asp-for="CorrectiveActionDueDate" class="control-label fw-bold mb-1"></label>
-                <input asp-for="CorrectiveActionDueDate" class="form-control" style="max-width:25%" onclick="this.showPicker()" />
-                <span asp-validation-for="CorrectiveActionDueDate" class="text-danger fw-bold"></span>
-            </div> *@
-            <div class="form-group mt-5">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                @Html.ActionLink("Cancel","Details","Waivers",new {id=Model.Id, tab="Details"},new {@class="btn btn-secondary mx-2"})
-            </div>
-        </div>
-        <div class="col-6">
             <div class="form-group my-3">
                 <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -100,13 +87,13 @@
                 </i>
                 @* <input asp-for="Group" class="form-control" style="max-width:25%;" /> *@
                 @*                 @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"}) *@
-                @*                 @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select mt-1", multiple = true, data_placeholder = "Select Approver(s)", size = 12 })*@                
+                @*                 @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select mt-1", multiple = true, data_placeholder = "Select Approver(s)", size = 12 })*@
                 <select asp-for=GroupApprover id="WaiverEditGroupApprovers" multiple="multiple" style="width:100%;">
                     @foreach (SelectListItem item in ViewBag.Groups)
                     {
                         <option value=@item.Value selected="@item.Selected">@item.Text </option>
                         @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
-                    }                    
+                    }
                 </select>
                 <span asp-validation-for="GroupApprover" class="text-danger fw-bold mt-1"></span>
             </div>

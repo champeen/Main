@@ -25,18 +25,18 @@
 }
 @if (ViewBag.IsAdmin)
 {
-    columnSpace = "col-3";
+    columnSpace = "col-lg-3";
 }
 else
 {
-    columnSpace = "col-6";
+    columnSpace = "col-lg-6";
 }
 <div class="row">
     <div class="@columnSpace p-3">
         <div class="row">
             <div class="col-12 border border-dark">
                 <div class="my-3">
-                    <span class="text-nowrap">
+                    <span class="flex-md-nowrap">
                         <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
                             <span>
                                 Your Active PTNs
@@ -107,7 +107,7 @@ else
         <div class="row">
             <div class="col-12 border border-dark">
                 <div class="my-3">
-                    <span class="text-nowrap">
+                    <span class="flex-md-nowrap">
                         <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
                             <span>
                                 Your Active Waivers
@@ -176,11 +176,11 @@ else
     </div>
     @if (ViewBag.IsAdmin)
     {
-        <div class="col-3 p-3">
+        <div class="col-lg-3 p-3">
             <div class="row">
                 <div class="col-12 border border-dark">
                     <div class="my-3">
-                        <span class="text-nowrap">
+                        <span class="flex-lg-nowrap">
                             <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
                                 <span>
                                     PTNs Pending Your Approval
@@ -227,11 +227,11 @@ else
                 </div>
             </div>
         </div>
-        <div class="col-3 p-3">
+        <div class="col-lg-3 p-3">
             <div class="row">
                 <div class="col-12 border border-dark">
                     <div class="my-3">
-                        <span class="text-nowrap">
+                        <span class="flex-lg-nowrap">
                             <div class="text-center" style="font-weight:500; font-size: 1.25rem; line-height: 1.2;">
                                 <span>
                                     Waivers Pending Your Approval
