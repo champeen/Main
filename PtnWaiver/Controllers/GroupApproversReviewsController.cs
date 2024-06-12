@@ -33,7 +33,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             return _contextPtnWaiver.GroupApproversReview != null ? 
-                          View(await _contextPtnWaiver.GroupApproversReview.ToListAsync()) :
+                          View(await _contextPtnWaiver.GroupApproversReview.OrderBy(m => m.Order).ThenBy(m => m.Group).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.GroupApproversReview'  is null.");
         }
 
