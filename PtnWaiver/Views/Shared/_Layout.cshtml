@@ -15,8 +15,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
     </script>
 
-
-
     <script>
         function DisplayProgressMessage(ctl, msg) {
             $("body").addClass("submit-progress-bg");
@@ -119,6 +117,22 @@
                         </li>
                         <li class="nav-item me-3 ms-lg-auto">
                             @* <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank"> *@
+                            <a class="nav-link text-light" href="~/lib\PTN and Waivers - Legacy\PTN_PIN Database Spreadsheet 2024.html" target="_blank">
+                                <i class="bi bi-book" data-bs-toggle="tooltip" data-bs-html="true">
+                                </i>
+                                Legacy PTNs
+                            </a>
+                        </li>
+                        <li class="nav-item me-3">
+                            @* <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank"> *@
+                            <a class="nav-link text-light" href="~/lib\PTN and Waivers - Legacy\Waiver Tracker 2024.html" target="_blank">
+                                <i class="bi bi-book" data-bs-toggle="tooltip" data-bs-html="true">
+                                </i>
+                                Legacy Waivers
+                            </a>
+                        </li>
+                        <li class="nav-item me-3">
+                            @* <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank"> *@
                                 <a class="nav-link text-light" href="~/PTN Waiver Flow.html" target="_blank">
                                 <i class="bi bi-diagram-2-fill" data-bs-toggle="tooltip" data-bs-html="true">
                                 </i>
@@ -161,9 +175,9 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid">
+    <div class="container-fluid overflow-hidden vh-100 d-flex flex-column">
         <main role="main" class="pb-3 mx-5" style="margin-top: 100px;">
-            <div class="row">
+            <div class="row flex-grow-1">
                 <div class="col-12">
                     @RenderBody()
                 </div>
