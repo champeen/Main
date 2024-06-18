@@ -369,8 +369,7 @@ namespace Management_of_Change.Controllers
             // Get all the PCCB reviews for this change requests...
             changeRequest.PccbMeetings = await _context.PCCB
                 .Where(m => m.ChangeRequestId == changeRequest.Id)
-                .OrderBy(m => m.MeetingDate)
-                .ThenBy(m => m.MeetingTime)
+                .OrderBy(m => m.MeetingDateTime)
                 .ToListAsync();
 
             //Get all PCCB Meeting Invitees...

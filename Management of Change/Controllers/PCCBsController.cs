@@ -31,7 +31,7 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _context.PCCB != null ? 
+            return _context.PCCB != null ?
                           View(await _context.PCCB.ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.PCCB'  is null.");
         }
@@ -49,17 +49,18 @@ namespace Management_of_Change.Controllers
             if (id == null || _context.PCCB == null)
                 return NotFound();
 
-            var pCCB = await _context.PCCB
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var pCCB = await _context.PCCB.FirstOrDefaultAsync(m => m.Id == id);
             if (pCCB == null)
                 return NotFound();
+
+            pCCB.Invitees = await _context.PccbInvitees.Where(m => m.PccbId == id).ToListAsync();
 
             return View(pCCB);
         }
 
         // GET: PCCBs/Create
         public IActionResult Create(int id, string tab = null)
-        {         
+        {
             PCCB pccb = new PCCB();
             pccb.ChangeRequestId = id;
             pccb.CreatedUser = _username;
@@ -125,14 +126,11 @@ namespace Management_of_Change.Controllers
                         invitee.CreatedUser = _username;
 
                         pccbInvitees.Add(invitee);
-                        //_context.Add(pccvVM.PCCB);
-                        //await _context.SaveChangesAsync();
                     }
                 }
                 pccbVM.PCCB.Invitees = pccbInvitees;
 
                 _context.Add(pccbVM.PCCB);
-                //_context.Add(pccvVM.PCCB.Invitees);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("Details", "ChangeRequests", new { id = pccbVM.PCCB.ChangeRequestId, tab = "PccbReview" });
@@ -236,14 +234,75 @@ namespace Management_of_Change.Controllers
             var pCCB = await _context.PCCB.FindAsync(id);
             if (pCCB != null)
                 _context.PCCB.Remove(pCCB);
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PCCBExists(int id)
         {
-          return (_context.PCCB?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.PCCB?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        public async Task<IActionResult> Attended(int? inviteeId)
+        {
+            PccbInvitees pccbInvitee = await _context.PccbInvitees.FindAsync(inviteeId);
+            if (pccbInvitee == null)
+                return RedirectToAction("Index", "Home");
+
+            pccbInvitee.Status = "Attended";
+            pccbInvitee.ModifiedDate = DateTime.Now;
+            pccbInvitee.ModifiedUser = _username;
+            _context.Update(pccbInvitee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+        }
+
+        public async Task<IActionResult> Invited(int? inviteeId)
+        {
+            PccbInvitees pccbInvitee = await _context.PccbInvitees.FindAsync(inviteeId);
+            if (pccbInvitee == null)
+                return RedirectToAction("Index", "Home");
+
+            pccbInvitee.Status = "Invited";
+            pccbInvitee.ModifiedDate = DateTime.Now;
+            pccbInvitee.ModifiedUser = _username;
+            _context.Update(pccbInvitee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+        }
+
+        public async Task<IActionResult> Declined(int? inviteeId)
+        {
+            PccbInvitees pccbInvitee = await _context.PccbInvitees.FindAsync(inviteeId);
+            if (pccbInvitee == null)
+                return RedirectToAction("Index", "Home");
+
+            pccbInvitee.Status = "Declined";
+            pccbInvitee.ModifiedDate = DateTime.Now;
+            pccbInvitee.ModifiedUser = _username;
+            _context.Update(pccbInvitee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+        }
+
+        public async Task<IActionResult> NoShow(int? inviteeId)
+        {
+            PccbInvitees pccbInvitee = await _context.PccbInvitees.FindAsync(inviteeId);
+            if (pccbInvitee == null)
+                return RedirectToAction("Index", "Home");
+
+            pccbInvitee.Status = "No Show";
+            pccbInvitee.ModifiedDate = DateTime.Now;
+            pccbInvitee.ModifiedUser = _username;
+            _context.Update(pccbInvitee);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+        }
+
     }
 }

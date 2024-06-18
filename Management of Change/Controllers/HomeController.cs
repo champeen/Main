@@ -5,6 +5,8 @@ using System.Diagnostics;
 using Management_of_Change.ViewModels;
 using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Humanizer;
 
 namespace Management_of_Change.Controllers
 {
@@ -89,6 +91,15 @@ namespace Management_of_Change.Controllers
                 .OrderBy(m => m.Priority)
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToList();
+
+            // Get all MOCs with incomplete PCCB reviews....
+            List<PCCB> openPccbs = await _context.PCCB.Where(m => m.Status == "Open").ToListAsync();
+
+            var IncompletePccbMocs = _context.PCCB
+                .Where(m => m.Status == "Open")
+                .GroupBy(m => m.ChangeRequestId)
+                .Select(m => m.Key).ToList();
+            dashboardVM.IncompletePccbReviews = _context.ChangeRequest.Where(m => IncompletePccbMocs.Contains(m.Id)).ToList();
 
             // Get all incomplete Final Approvals assigned to user...
             List<ChangeRequest> changeRequestsFA = await _context.ChangeRequest
