@@ -15,12 +15,10 @@
     <input type="hidden" asp-for="PCCB.Status" />
     @* <input type="hidden" asp-for="Invitees2" id="thiss" /> *@
     @Html.AntiForgeryToken()
-    <div>
-        @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
-    </div>
     <div class="form-group my-3">
         <input type="submit" value="Create" class="btn btn-success" />
         @Html.ActionLink("Cancel", "Details", "ChangeRequests", new { id = Model.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
     </div>
     <div class="row">
         <div class="col-12">
@@ -50,7 +48,7 @@
                 @* <select id="PccbCreateInvitees" asp-for="Invitees" asp-items="@ViewBag.Employees" multiple class="form-control form-select"> </select> *@
                 @* <select required id="PccbCreateInvitees" name="Invitees" multiple="multiple" asp-items="@ViewBag.Employees"></select>  *@
                  @Html.DropDownListFor(model => model.Invitees, new MultiSelectList(ViewBag.Employees, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple=true, @id = "PccbCreateInvitees"})
-                <span asp-validation-for="PCCB.Invitees" class="text-danger fw-bold"></span>
+                <span asp-validation-for="Invitees" class="text-danger fw-bold"></span>
             </div>
             @*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*@
             <div class="form-group my-3">

@@ -37,7 +37,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: PCCBs/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -53,9 +53,48 @@ namespace Management_of_Change.Controllers
             if (pCCB == null)
                 return NotFound();
 
-            pCCB.Invitees = await _context.PccbInvitees.Where(m => m.PccbId == id).ToListAsync();
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == pCCB.ChangeRequestId);
+            if (changeRequest == null)
+                return NotFound();
 
-            return View(pCCB);
+            PccbVM pccbVM = new PccbVM();
+            pccbVM.FileAttachmentError = fileAttachmentError;
+            pccbVM.PCCB = pCCB;
+            pccbVM.PCCB.Invitees = await _context.PccbInvitees.Where(m => m.PccbId == id).ToListAsync();
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // MEETING ATTACHMENTS                                                                                   \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, pCCB.Id.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, pCCB.Id.ToString())))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<ViewModels.Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            pccbVM.Attachments = attachments.OrderBy(m => m.Name).ToList();
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            return View(pccbVM);
         }
 
         // GET: PCCBs/Create
@@ -99,7 +138,7 @@ namespace Management_of_Change.Controllers
             //    ModelState.AddModelError("MeetingTime", "Must Include a Valid Meeting Time");
 
             if (pccbVM.PCCB.MeetingDateTime == null)
-                ModelState.AddModelError("MeetingDateTime", "Must Include a Valid Meeting Date/Time");
+                ModelState.AddModelError("PCCB.MeetingDateTime", "Must Include a Valid Meeting Date/Time");
 
             if (pccbVM.Invitees == null || pccbVM.Invitees.Count == 0)
                 ModelState.AddModelError("Invitees", "Must Invite at least 1 Person");
@@ -164,7 +203,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,MeetingDate,MeetingTime,MeetingDateTime,Agenda,Decisions,ActionItems,Status,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PCCB pCCB)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,MeetingDate,MeetingTime,MeetingDateTime,Agenda,Decisions,ActionItems,Status,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PccbVM pccbVM)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -173,26 +212,26 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != pCCB.Id)
+            if (id != pccbVM.PCCB.Id)
                 return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(pCCB);
+                    _context.Update(pccbVM.PCCB);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PCCBExists(pCCB.Id))
+                    if (!PCCBExists(pccbVM.PCCB.Id))
                         return NotFound();
                     else
                         throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "ChangeRequests", new { id = pccbVM.PCCB.ChangeRequestId, tab = "PccbReview" });
             }
-            return View(pCCB);
+            return View(pccbVM);
         }
 
         // GET: PCCBs/Delete/5
@@ -302,6 +341,42 @@ namespace Management_of_Change.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+        }
+
+        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _context.PCCB == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", "PCCBs", new { id = id, tab = "PccbReview", fileAttachmentError = "No File Has Been Selected For Upload" });
+
+            // get PCCB (meeting) record...
+            var pccbRec = await _context.PCCB.FindAsync(id);
+            if (pccbRec == null)
+                return RedirectToAction("Index", "Home");
+
+            // get ChangeRequest
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == pccbRec.ChangeRequestId);
+            if (changeRequest == null)
+                return RedirectToAction("Index","Home");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _context.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new { id = id, tab = "PccbReview", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type." });
+
+            string filePath = Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, pccbRec.Id.ToString(), fileAttachment.FileName);
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction("Details", new { id = id, tab = "PccbReview" });
         }
 
     }

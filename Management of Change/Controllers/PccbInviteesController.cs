@@ -31,7 +31,7 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            return _context.PccbInvitees != null ? 
+            return _context.PccbInvitees != null ?
                           View(await _context.PccbInvitees.ToListAsync()) :
                           Problem("Entity set 'Management_of_ChangeContext.PccbInvitees'  is null.");
         }
@@ -58,16 +58,29 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: PccbInvitees/Create
-        public IActionResult Create()
+        public IActionResult Create(int pccbId)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
+            PCCB pccbRec = _context.PCCB.Find(pccbId);
+            if (pccbRec == null)
+                return View("Index", "Home");
+
+            PccbInvitees pccbInvitees = new PccbInvitees
+            {
+                MocId = pccbRec.ChangeRequestId,
+                PccbId = pccbId,
+                CreatedDate = DateTime.Now,
+                CreatedUser = _username
+            };
+
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Employees = getUserList();
 
-            return View();
+            return View(pccbInvitees);
         }
 
         // POST: PccbInvitees/Create
@@ -75,7 +88,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Username,FullName,Title,Attended,Status,Comments,PccbId,MocId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PccbInvitees pccbInvitees)
+        public async Task<IActionResult> Create([Bind("Username,FullName,Title,Attended,Status,Comments,PccbId,MocId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PccbInvitees pccbInvitees)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -84,12 +97,27 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (ModelState.IsValid)
+            bool found = await _context.PccbInvitees.AnyAsync(x=>x.Username == pccbInvitees.Username);
+            if (found)
+                ModelState.AddModelError("Username", "Employee is already invited");
+
+            var employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == pccbInvitees.Username).FirstOrDefaultAsync();
+            if (employee != null)
             {
-                _context.Add(pccbInvitees);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    pccbInvitees.FullName = employee.displayname;
+                    pccbInvitees.Email = employee.mail;
+                    pccbInvitees.Title = employee.jobtitle;
+
+                    _context.Add(pccbInvitees);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", "PCCBs", new { id = pccbInvitees.PccbId, tab="PccbReview" });
+                    //return RedirectToAction(nameof(Index));
+                }
             }
+
+            ViewBag.Employees = getUserList();
             return View(pccbInvitees);
         }
 
@@ -167,6 +195,7 @@ namespace Management_of_Change.Controllers
             if (pccbInvitees == null)
                 return NotFound();
 
+            //return RedirectToAction("Details","PCCBs", new {id = pccbInvitees.PccbId, tab="PccbReview"});
             return View(pccbInvitees);
         }
 
@@ -189,14 +218,15 @@ namespace Management_of_Change.Controllers
             var pccbInvitees = await _context.PccbInvitees.FindAsync(id);
             if (pccbInvitees != null)
                 _context.PccbInvitees.Remove(pccbInvitees);
-            
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitees.PccbId, tab = "PccbReview" });
+            //return RedirectToAction(nameof(Index));
         }
 
         private bool PccbInviteesExists(int id)
         {
-          return (_context.PccbInvitees?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.PccbInvitees?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

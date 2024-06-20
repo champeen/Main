@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Management_of_Change.ViewModels;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Management_of_Change.Models
@@ -22,9 +23,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Action Items")]
         public string? ActionItems { get; set; }
         public string Status { get; set; }  // Scheduled/Closed
-        public List<PccbInvitees>? Invitees { get; set; }
-        //public List<PccbInvitees> Invitees2 { get; set; }
-
+        public List<PccbInvitees>? Invitees { get; set; }     
 
         [ForeignKey("ChangeRequest")]
         public int ChangeRequestId { get; set; }

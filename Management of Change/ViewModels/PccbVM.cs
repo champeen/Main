@@ -5,5 +5,7 @@ namespace Management_of_Change.ViewModels
     {
         public PCCB PCCB { get; set; }
         public List<String>? Invitees { get; set; }
+        public List<Attachment>? Attachments { get; set; }
+        public string? FileAttachmentError { get; set; }
     }
 }

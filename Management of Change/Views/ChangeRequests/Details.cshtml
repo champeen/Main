@@ -581,7 +581,7 @@
                                 <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
                                 <div class="row mt-5">
                                     <div class="col-6 text-end">
-                                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary m-1" })
+                                        @Html.ActionLink("Back to List", "Index","Home", new { }, new { @class = "btn btn-secondary m-1" })
                                         @Html.ActionLink("Approve Change Grade", "ApproveChangeGrade", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                                         @*@Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 ms-2 me-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"}) *@
                                         <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
@@ -610,7 +610,7 @@
                             <div class="my-5">
                                 Change Grade Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)</span>.
                             </div>
-                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                            @Html.ActionLink("Back to List", "Index","Home", new { }, new { @class = "btn btn-secondary mt-3" })
                         </div>
                     }
                 </div>
@@ -718,17 +718,11 @@
                         }                        
                         @Html.ActionLink("Back", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
                     </p>
-                    <table class="table">
-                        <thead>
+                    <table class="table table-striped table-bordered">
+                        <thead class="table-primary">
                             <tr>
-@*                                 <th>
-                                    Meeting Date
-                                </th>
                                 <th>
-                                    Meeting Time
-                                </th> *@
-                                <th>
-                                    Meeting DateTime
+                                    Meeting Date/Time
                                 </th>
                                 <th>
                                     Title
@@ -817,10 +811,6 @@
                             </tr>
                         }
                     </table>
-
-
-
-
 
                     @*                     @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewPccb) && (Model.ChangeRequest.Change_Status == "PccbReview"))
                     {

@@ -537,6 +537,7 @@ namespace Management_of_Change.Controllers
             ViewBag.Username = _username;
             ViewBag.QuestionsSaved = questionsSaved;
 
+            ViewBag.UserCanReviewChangeGrade = false;
             // if change request is awaiting 'change grade review', get reviewer username...
             if (changeRequest.Change_Status == "ChangeGradeReview" && changeLevel != null && changeLevel.ChangeGradeReviewRequired == true)
                 ViewBag.UserCanReviewChangeGrade = _context.ChangeArea.Where(m => m.ChangeGradePrimaryApproverUsername == _username || m.ChangeGradeSecondaryApproverUsername == _username).Any();
