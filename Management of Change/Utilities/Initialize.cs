@@ -35,6 +35,7 @@ namespace Management_of_Change.Utilities
         public static string WebsiteUrl { get; set; }
         public static string ConnectionString { get; set; }
         public static string AttachmentDirectory { get; set; }
+        public static string TaskDirectory { get; set; }
 
         private static string registryPath = @"Software\\SKSiltron\\MoC";
         public static string EmailError { get; set; }
@@ -89,8 +90,9 @@ namespace Management_of_Change.Utilities
             ConnectionString = GetRegistryKey(registryPath, "ConnectionString");
             //ConnectionString = builder.Configuration.GetConnectionString("PostgreSQLprd");
 
-            // Get Attachment Directory
+            // Get Attachment Directorys
             AttachmentDirectory = GetRegistryKey(registryPath, "AttachmentDirectory");
+            TaskDirectory = GetRegistryKey(registryPath, "TaskDirectory");
 
             // Teams Provider for Error Channel
             teamsErrorUrl = GetRegistryKey(registryPath, "TeamsErrorUrl");

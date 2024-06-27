@@ -124,7 +124,7 @@ namespace Management_of_Change.Controllers
                 }
             }
             else
-                ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
+                ModelState.AddModelError("ChangeGradePrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
 
             if (changeArea.ChangeGradeSecondaryApproverUsername != null)
             {
@@ -174,7 +174,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,PrimaryApproverUsername,SecondaryApproverUsername,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Description,ChangeGradePrimaryApproverUsername,ChangeGradeSecondaryApproverUsername,Order,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] ChangeArea changeArea)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -204,7 +204,7 @@ namespace Management_of_Change.Controllers
                 }
             }
             else
-                ModelState.AddModelError("PrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
+                ModelState.AddModelError("ChangeGradePrimaryApproverUsername", "Primary Approver needs to be selected or does not exist in database.");
 
             if (changeArea.ChangeGradeSecondaryApproverUsername != null)
             {

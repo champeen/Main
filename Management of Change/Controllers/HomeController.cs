@@ -93,13 +93,15 @@ namespace Management_of_Change.Controllers
                 .ToList();
 
             // Get all MOCs with incomplete PCCB reviews....
-            List<PCCB> openPccbs = await _context.PCCB.Where(m => m.Status == "Open").ToListAsync();
+            //List<PCCB> openPccbs = await _context.PCCB.Where(m => m.Status == "Open").ToListAsync();
 
-            var IncompletePccbMocs = _context.PCCB
-                .Where(m => m.Status == "Open")
-                .GroupBy(m => m.ChangeRequestId)
-                .Select(m => m.Key).ToList();
-            dashboardVM.IncompletePccbReviews = _context.ChangeRequest.Where(m => IncompletePccbMocs.Contains(m.Id)).ToList();
+            //var IncompletePccbMocs = _context.PCCB
+            //    .Where(m => m.Status == "Open")
+            //    .GroupBy(m => m.ChangeRequestId)
+            //    .Select(m => m.Key).ToList();
+            //dashboardVM.IncompletePccbReviews = _context.ChangeRequest.Where(m => IncompletePccbMocs.Contains(m.Id)).ToList();
+
+            dashboardVM.IncompletePccbReviews = await _context.ChangeRequest.Where(m => m.Change_Status == "PccbReview").ToListAsync();
 
             // Get all incomplete Final Approvals assigned to user...
             List<ChangeRequest> changeRequestsFA = await _context.ChangeRequest

@@ -373,7 +373,7 @@ namespace Management_of_Change.Controllers
                 .ToListAsync();
 
             //Get all PCCB Meeting Invitees...
-           if (changeRequest.PccbMeetings.Any())
+            if (changeRequest.PccbMeetings.Any())
             {
                 foreach (var record in changeRequest.PccbMeetings)
                 {
@@ -383,6 +383,10 @@ namespace Management_of_Change.Controllers
                         .ToListAsync();
                 }
             }
+
+            ViewBag.ShowCloseoutButton = false;
+            if (changeRequest.PccbMeetings.Count() > 0 && changeRequest.PccbMeetings.Where(m => m.Status != "Closed").Count() == 0)
+                ViewBag.ShowCloseoutButton = true;
 
             // Get all the tasks associated with this ChangeRequest...
             List<Models.Task> tasks = await _context.Task
@@ -507,10 +511,10 @@ namespace Management_of_Change.Controllers
             FileInfo[] Files = path.GetFiles();
 
             // Display the file names
-            List<ViewModels.Attachment> attachments = new List<ViewModels.Attachment>();
+            List<ViewModels.Attachment> attachments = new List<Attachment>();
             foreach (FileInfo i in Files)
             {
-                ViewModels.Attachment attachment = new ViewModels.Attachment
+                Attachment attachment = new Attachment
                 {
                     Directory = i.DirectoryName,
                     Name = i.Name,
@@ -1667,7 +1671,7 @@ namespace Management_of_Change.Controllers
                     }
 
                     return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "PccbReview", rec = rec });
-                } 
+                }
                 else   // THE BELOW PART WILL BE NEEDED AFTER APPROVAL OF PCCB REVIEW !!!!!!!!
                 {
                     changeRequest.Change_Status = "FinalApprovals";
@@ -1748,6 +1752,46 @@ namespace Management_of_Change.Controllers
                 var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = tab });
+        }
+
+        public async Task<IActionResult> ClosePccbReview(int id)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // There are no incomplete final approvals.  Advance to next stage.
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == id);
+            if (changeRequest != null)
+            {
+                changeRequest.Change_Status = "FinalApprovals";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "FinalApprovals").Select(m => m.Description).FirstOrDefaultAsync();
+                changeRequest.ModifiedDate = DateTime.Now;
+                changeRequest.ModifiedUser = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
+            }
+
+            changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
+                .Where(m => m.ChangeRequestId == changeRequest.Id)
+                .ToListAsync();
+
+            // Email All Users Implementation Final Approval links...
+            foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
+            {
+                string subject = @"Management of Change (MoC) - Final Approval Needed";
+                string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, null, record.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
+            return RedirectToAction("Details", new { id = id, tab = "FinalApprovals" });
         }
 
         // This closes out 'FinalApprovals' and moves to 'Implementation' phase

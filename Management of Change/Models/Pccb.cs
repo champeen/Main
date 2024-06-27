@@ -23,6 +23,7 @@ namespace Management_of_Change.Models
         [Display(Name = "Action Items")]
         public string? ActionItems { get; set; }
         public string Status { get; set; }  // Scheduled/Closed
+        public string? Notes { get; set; }
         public List<PccbInvitees>? Invitees { get; set; }     
 
         [ForeignKey("ChangeRequest")]

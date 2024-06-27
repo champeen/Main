@@ -306,7 +306,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null, string destinationPage = null, string previousAction = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -321,14 +321,51 @@ namespace Management_of_Change.Controllers
             if (task == null)
                 return NotFound();
 
+            TaskVM taskVM = new TaskVM();
+            taskVM.Task = task;
+
             ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.CreatedUserDisplayName = getUserDisplayName(task.CreatedUser);
             ViewBag.ModifiedUserDisplayName = getUserDisplayName(task.ModifiedUser);
             ViewBag.DeletedUserDisplayName = getUserDisplayName(task.DeletedUser);
+            ViewBag.PreviousAction = previousAction;
+            ViewBag.FileAttachmentError = fileAttachmentError;
+            ViewBag.DestinationPage = destinationPage;
 
-            return View(task);
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // TASK ATTACHMENTS                                                                                   \\BAY1VPRD-MOC01\Tasks\{task Id}
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.TaskDirectory, task.Id.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.TaskDirectory, task.Id.ToString())))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<ViewModels.Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            taskVM.Attachments = attachments.OrderBy(m => m.Name).ToList();
+
+            return View(taskVM);
         }
 
         // GET: Tasks/Create
@@ -702,6 +739,58 @@ namespace Management_of_Change.Controllers
             }
             //await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { id = id });
+        }
+
+        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _context.Task == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", "Tasks", new { id = id, fileAttachmentError = "No File Has Been Selected For Upload" });
+
+            // get PCCB (meeting) record...
+            var taskRec = await _context.Task.FindAsync(id);
+            if (taskRec == null)
+                return RedirectToAction("Index", "Task");
+
+            //// get ChangeRequest
+            //var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == taskRec.ChangeRequestId);
+            //if (changeRequest == null)
+            //    return RedirectToAction("Index", "Home");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _context.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new
+                {
+                    id = id,
+                    fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type."
+                });
+
+            string filePath = Path.Combine(Initialization.TaskDirectory, taskRec.Id.ToString(), fileAttachment.FileName);
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction("Details", new { id = id, previousAction = "File Uploaded" });
+        }
+
+        public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
+            return File(fileBytes, "application/x-msdownload", fileName);
+        }
+
+        public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, previousAction = "File Deleted" });
         }
     }
 }

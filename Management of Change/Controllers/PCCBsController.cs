@@ -37,7 +37,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: PCCBs/Details/5
-        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null)
+        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null, string destinationPage = null, string previousAction = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -60,7 +60,10 @@ namespace Management_of_Change.Controllers
             PccbVM pccbVM = new PccbVM();
             pccbVM.FileAttachmentError = fileAttachmentError;
             pccbVM.PCCB = pCCB;
-            pccbVM.PCCB.Invitees = await _context.PccbInvitees.Where(m => m.PccbId == id).ToListAsync();
+            pccbVM.PCCB.Invitees = await _context.PccbInvitees.Where(m => m.PccbId == id).OrderBy(m=>m.FullName).ToListAsync();
+
+            ViewBag.ChangeRequest = changeRequest.MOC_Number;
+            ViewBag.PreviousAction = previousAction;
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // MEETING ATTACHMENTS                                                                                   \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
@@ -93,8 +96,15 @@ namespace Management_of_Change.Controllers
             }
             pccbVM.Attachments = attachments.OrderBy(m => m.Name).ToList();
             ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-            return View(pccbVM);
+         
+            if (destinationPage == "ManageMeeting")
+                return View("DetailsManageMeeting",pccbVM);
+            else if (destinationPage == "ManageInvitees")
+                return View("DetailsManageInvitees", pccbVM);
+            else if (destinationPage == "ManageAttachments")
+                return View("DetailsManageAttachments", pccbVM);
+            else
+                return View(pccbVM);
         }
 
         // GET: PCCBs/Create
@@ -203,7 +213,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,MeetingDate,MeetingTime,MeetingDateTime,Agenda,Decisions,ActionItems,Status,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] PccbVM pccbVM)
+        public async Task<IActionResult> Edit([Bind("Id,Title,MeetingDate,MeetingTime,MeetingDateTime,Agenda,Decisions,ActionItems,Status,Notes,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate", Prefix = "PCCB")] PCCB pccbRec)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -212,25 +222,27 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            if (id != pccbVM.PCCB.Id)
-                return NotFound();
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(pccbVM.PCCB);
+                    pccbRec.ModifiedDate = DateTime.Now;
+                    pccbRec.ModifiedUser = _username;
+                    _context.Update(pccbRec);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PCCBExists(pccbVM.PCCB.Id))
+                    if (!PCCBExists(pccbRec.Id))
                         return NotFound();
                     else
                         throw;
                 }
-                return RedirectToAction("Details", "ChangeRequests", new { id = pccbVM.PCCB.ChangeRequestId, tab = "PccbReview" });
+                return RedirectToAction("Details", "PCCBs", new { id = pccbRec.Id, destinationPage = "ManageMeeting", previousAction = "Changes have been saved" });
+                //return RedirectToAction("Details", "ChangeRequests", new { id = pccbRec.ChangeRequestId, tab = "PccbReview" });
             }
+            PccbVM pccbVM = new PccbVM();
+            pccbVM.PCCB = pccbRec;
             return View(pccbVM);
         }
 
@@ -295,7 +307,7 @@ namespace Management_of_Change.Controllers
             _context.Update(pccbInvitee);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, destinationPage = "ManageInvitees" });
         }
 
         public async Task<IActionResult> Invited(int? inviteeId)
@@ -310,7 +322,7 @@ namespace Management_of_Change.Controllers
             _context.Update(pccbInvitee);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, destinationPage = "ManageInvitees" });
         }
 
         public async Task<IActionResult> Declined(int? inviteeId)
@@ -325,7 +337,7 @@ namespace Management_of_Change.Controllers
             _context.Update(pccbInvitee);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, destinationPage = "ManageInvitees" });
         }
 
         public async Task<IActionResult> NoShow(int? inviteeId)
@@ -340,7 +352,7 @@ namespace Management_of_Change.Controllers
             _context.Update(pccbInvitee);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, tab = "PccbReview" });
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, destinationPage = "ManageInvitees" });
         }
 
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
@@ -349,7 +361,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             if (fileAttachment == null || fileAttachment.Length == 0)
-                return RedirectToAction("Details", "PCCBs", new { id = id, tab = "PccbReview", fileAttachmentError = "No File Has Been Selected For Upload" });
+                return RedirectToAction("Details", "PCCBs", new { id = id, destinationPage = "ManageAttachments", fileAttachmentError = "No File Has Been Selected For Upload" });
 
             // get PCCB (meeting) record...
             var pccbRec = await _context.PCCB.FindAsync(id);
@@ -368,7 +380,8 @@ namespace Management_of_Change.Controllers
                 .Any();
 
             if (!found)
-                return RedirectToAction("Details", new { id = id, tab = "PccbReview", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type." });
+                return RedirectToAction("Details", new { id = id,
+                    destinationPage = "ManageInvitees", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type." });
 
             string filePath = Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, pccbRec.Id.ToString(), fileAttachment.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
@@ -376,8 +389,19 @@ namespace Management_of_Change.Controllers
                 await fileAttachment.CopyToAsync(fileStream);
             }
 
-            return RedirectToAction("Details", new { id = id, tab = "PccbReview" });
+            return RedirectToAction("Details", new { id = id, destinationPage = "ManageAttachments", previousAction = "File Uploaded" });
         }
 
+        public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
+            return File(fileBytes, "application/x-msdownload", fileName);
+        }
+
+        public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, destinationPage = "ManageAttachments", previousAction = "File Deleted" });
+        }
     }
 }

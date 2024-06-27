@@ -97,7 +97,7 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            bool found = await _context.PccbInvitees.AnyAsync(x=>x.Username == pccbInvitees.Username);
+            bool found = await _context.PccbInvitees.AnyAsync(x=>x.Username == pccbInvitees.Username && x.PccbId == pccbInvitees.PccbId);
             if (found)
                 ModelState.AddModelError("Username", "Employee is already invited");
 
@@ -112,7 +112,7 @@ namespace Management_of_Change.Controllers
 
                     _context.Add(pccbInvitees);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", "PCCBs", new { id = pccbInvitees.PccbId, tab="PccbReview" });
+                    return RedirectToAction("Details", "PCCBs", new { id = pccbInvitees.PccbId, destinationPage="ManageInvitees" });
                     //return RedirectToAction(nameof(Index));
                 }
             }
@@ -220,7 +220,7 @@ namespace Management_of_Change.Controllers
                 _context.PccbInvitees.Remove(pccbInvitees);
 
             await _context.SaveChangesAsync();
-            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitees.PccbId, tab = "PccbReview" });
+            return RedirectToAction("Details", "PCCBs", new { id = pccbInvitees.PccbId, destinationPage = "ManageInvitees" });
             //return RedirectToAction(nameof(Index));
         }
 
