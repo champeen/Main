@@ -795,9 +795,12 @@
                                     </td>
                                     <td>
                                         @if (ViewBag.IsAdmin)
-                                        {                                            
-                                            <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@item.Id" asp-route-destinationPage="ManageMeeting" class="btn btn-primary me-1">Manage Meeting</a>
-                                            <a asp-action="Delete" asp-controller="PCCBs" asp-route-id="@item.Id" class="btn btn-danger me-1">Delete</a>
+                                        {        
+                                            if (Model.ChangeRequest.Change_Status != "Closed")
+                                            {
+                                                <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@item.Id" asp-route-destinationPage="ManageMeeting" class="btn btn-primary me-1">Manage Meeting</a>
+                                                <a asp-action="Delete" asp-controller="PCCBs" asp-route-id="@item.Id" class="btn btn-danger me-1">Delete</a>
+                                            }                                            
                                             <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@item.Id" class="btn btn-primary me-1">View Meeting</a>
                                         }
                                         else

@@ -101,7 +101,7 @@ namespace Management_of_Change.Controllers
             //    .Select(m => m.Key).ToList();
             //dashboardVM.IncompletePccbReviews = _context.ChangeRequest.Where(m => IncompletePccbMocs.Contains(m.Id)).ToList();
 
-            dashboardVM.IncompletePccbReviews = await _context.ChangeRequest.Where(m => m.Change_Status == "PccbReview").ToListAsync();
+            dashboardVM.IncompletePccbReviews = await _context.ChangeRequest.Where(m => m.Change_Status == "PccbReview" && (m.CreatedUser == username || _isAdmin)).ToListAsync();
 
             // Get all incomplete Final Approvals assigned to user...
             List<ChangeRequest> changeRequestsFA = await _context.ChangeRequest
