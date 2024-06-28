@@ -43,7 +43,7 @@
         </li>
         @* <li class="nav-item ms-auto"> *@
         <li class="nav-item">
-            <a class="nav-link @Model.TabActiveAttachmentsPtn fw-bolder" id="nav-attachmentsPtn-tab" data-bs-toggle="tab" href="#nav-attachmentsPtn" role="tab" aria-controls="nav-profile" aria-selected="false">Upload PTN Template (@Model.AttachmentsPtn.Count.ToString())</a>
+            <a class="nav-link @Model.TabActiveAttachmentsPtn fw-bolder" id="nav-attachmentsPtn-tab" data-bs-toggle="tab" href="#nav-attachmentsPtn" role="tab" aria-controls="nav-profile" aria-selected="false">Upload Template (@Model.AttachmentsPtn.Count.ToString())</a>
         </li>
         <li class="nav-item">
             <a class="nav-link @Model.TabActivePtnApproval @Model.Tab3Disabled fw-bolder" id="nav-ptnApproval-tab" data-bs-toggle="tab" href="#nav-ptnApproval" role="tab" aria-controls="nav-profile" aria-selected="false">
@@ -307,23 +307,25 @@
             <div class="row mb-4">
                 <div class="col-12">
                     <div class="text-nowrap fs-5">
-                        <span class="fw-bold">STEP 1:</span> Download PTN Template
+                        <span class="fw-bold">STEP 1:</span> Download PTN (PCCB) Template
                         @* @Html.ActionLink("Download PTN Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"}) *@
-                        <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=TMP%2D0506" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get PTN Template</a>
+@*                      <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=TMP%2D0506" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get PTN (PCCB) Template</a> *@
+                        <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=PCCB%20Template%2Epptx%20TMP%2D0506" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get PTN (PCCB) Template</a>
+                        
                     </div>
                 </div>
             </div>
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="text-nowrap fs-5">
-                        <span class="fw-bold">STEP 2:</span> Complete PTN Template
+                        <span class="fw-bold">STEP 2:</span> Complete PTN (PCCB) Template
                     </div>
                 </div>
             </div>
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="text-nowrap fs-5">
-                        <span class="fw-bold">STEP 3:</span> Upload Completed PTN Template
+                        <span class="fw-bold">STEP 3:</span> Upload Completed PTN (PCCB) Template
                     </div>
                 </div>
             </div>
@@ -331,7 +333,7 @@
                 @using (Html.BeginForm("SaveFile", "PTNs", new { id = Model.PTN.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
                 {
                     <div class="control-label fw-bold mt-5 mb-2">
-                        <strong>Upload Completed PTF Template:</strong>
+                        <strong>Upload Completed PTF (PCCB) Template:</strong>
                     </div>
                     <div class="form-group mb-3">
                         <div class="row">
@@ -343,7 +345,7 @@
                                 </div>
                             </div>
                             <div class="col-xl-3 block">
-                                <input type="submit" value="Upload Completed PTN Template" class="form-control btn btn-success" @ViewBag.Disable>
+                                <input type="submit" value="Upload Completed PTN (PCCB) Template" class="form-control btn btn-success" @ViewBag.Disable>
                             </div>
                         </div>
                     </div>
@@ -405,11 +407,11 @@
                 </table>
                 @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
                 {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
                 }
                 else
                 {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
                 }
             </div>
         </div>
