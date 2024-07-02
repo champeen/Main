@@ -137,61 +137,62 @@
 @***********************************************************************************************************************************************@
 @** DETAILS                                                                                                                                   **@
 @***********************************************************************************************************************************************@
-    <div class="mt-5">
-        <span style="font-size: 1.5rem;  font-weight:500; line-height:1.2;" class="me-1">Details</span>
+<div class="mt-5">
+    <span style="font-size: 1.5rem;  font-weight:500; line-height:1.2;" class="me-1">Details</span>
     <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@Model.PCCB.Id" asp-route-destinationPage="ManageMeeting" class="btn btn-primary ms-2 mb-2" target="_blank">Manage Invitees</a>
-        @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1 mb-2" })
+    @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1 mb-2" })
+</div>
+<div class="ms-5">
+    @*         <div class="row">
+    <div class="col-12">
+
     </div>
-    <div class="ms-5">
-        <div class="row">
-            <div class="col-12">
-                <div class="form-group my-1">
-                    <label asp-for="PCCB.Title" class="control-label fw-bold mb-1"></label>
-                    @Html.TextAreaFor(model => model.PCCB.Title, new { @class = "form-control", @rows = 3, @readonly = true })
-                    @*<input asp-for="Title_Change_Description" class="form-control" />*@
-                    <span asp-validation-for="PCCB.Title" class="text-danger fw-bold"></span>
-                </div>
+    </div> *@
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group my-1">
+                <label asp-for="PCCB.Title" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.Title, new { @class = "form-control", @rows = 3, @readonly = true })
+                @*<input asp-for="Title_Change_Description" class="form-control" />*@
+                <span asp-validation-for="PCCB.Title" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-1">
+                <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 12, @readonly = true })
+                @*<input asp-for="Title_Change_Description" class="form-control" />*@
+                <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
             </div>
         </div>
-        <div class="row">
-            <div class="col-6">
-                <div class="form-group my-1">
-                    <label asp-for="PCCB.MeetingDateTime" class="control-label fw-bold mb-1"></label>
-                    <input asp-for="PCCB.MeetingDateTime" class="form-control" onclick="this.showPicker()" readonly="true" />
-                    <span asp-validation-for="PCCB.MeetingDateTime" class="text-danger fw-bold"></span>
-                </div>
-                <div class="form-group my-1">
-                    <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
-                    @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 8, @readonly = true })
-                    @*<input asp-for="Title_Change_Description" class="form-control" />*@
-                    <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
-                </div>
+        <div class="col-6">
+            <div class="form-group my-1">
+                <label asp-for="PCCB.MeetingDateTime" class="control-label fw-bold mb-1"></label>
+                <input asp-for="PCCB.MeetingDateTime" class="form-control" onclick="this.showPicker()" readonly="true" />
+                <span asp-validation-for="PCCB.MeetingDateTime" class="text-danger fw-bold"></span>
             </div>
-            <div class="col-6">
-                <div class="form-group my-1">
-                    <label asp-for="PCCB.Status" class="control-label fw-bold mb-1"></label>
-                    @Html.TextBoxFor(model => model.PCCB.Status, new { @class = "form-control form-select", @readonly = true })
-                    @*                 @Html.DropDownListFor(model => model.Status,
-                new List<SelectListItem>{
-                new SelectListItem {Value="Open", Text="Open"},
-                new SelectListItem {Value="Closed", Text="Closed"}},
-                new { @class = "form-control form-select", @readonly = true }) *@
-                    <span asp-validation-for="PCCB.Status" class="text-danger fw-bold"></span>
-                </div>
-                <div class="form-group my-1">
-                    <label asp-for="PCCB.Decisions" class="control-label fw-bold mb-1"></label>
-                    @Html.TextAreaFor(model => model.PCCB.Decisions, new { @class = "form-control", @rows = 3, @readonly = true })
-                    @*<input asp-for="Title_Change_Description" class="form-control" />*@
-                    <span asp-validation-for="PCCB.Decisions" class="text-danger fw-bold"></span>
-                </div>
-                <div class="form-group my-1">
-                    <label asp-for="PCCB.ActionItems" class="control-label fw-bold mb-1"></label>
-                    @Html.TextAreaFor(model => model.PCCB.ActionItems, new { @class = "form-control", @rows = 3, @readonly = true })
-                    @*<input asp-for="Title_Change_Description" class="form-control" />*@
-                    <span asp-validation-for="PCCB.ActionItems" class="text-danger fw-bold"></span>
-                </div>
+            <div class="form-group my-1">
+                <label asp-for="PCCB.Step" class="control-label fw-bold mb-1"></label>
+                <input asp-for="PCCB.Step" class="form-control" readonly="true" />
+                <span asp-validation-for="PCCB.Step" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-1">
+                <label asp-for="PCCB.Status" class="control-label fw-bold mb-1"></label>
+                @Html.TextBoxFor(model => model.PCCB.Status, new { @class = "form-control form-select", @readonly = true })
+                <span asp-validation-for="PCCB.Status" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-1">
+                <label asp-for="PCCB.Decisions" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.Decisions, new { @class = "form-control", @rows = 3, @readonly = true })
+                @*<input asp-for="Title_Change_Description" class="form-control" />*@
+                <span asp-validation-for="PCCB.Decisions" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-1">
+                <label asp-for="PCCB.ActionItems" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.ActionItems, new { @class = "form-control", @rows = 3, @readonly = true })
+                @*<input asp-for="Title_Change_Description" class="form-control" />*@
+                <span asp-validation-for="PCCB.ActionItems" class="text-danger fw-bold"></span>
             </div>
         </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="form-group my-1">
@@ -202,7 +203,7 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 
 @* <div class="mt-4">
     @if (ViewBag.IsAdmin)
@@ -217,9 +218,9 @@
 @***********************************************************************************************************************************************@
 <div class="mt-5">
     <span style="font-size: 1.7rem;  font-weight:600; line-height:1.2;">Invitees</span>
-@*     @if (ViewBag.IsAdmin)
+    @*     @if (ViewBag.IsAdmin)
     {
-        <span>@Html.ActionLink("Add New", "Create", "PccbInvitees", new { pccbId = @Model?.PCCB.Id, tab = "Details" }, new { @class = "btn btn-success align-middle ms-2 mb-2" })</span>
+    <span>@Html.ActionLink("Add New", "Create", "PccbInvitees", new { pccbId = @Model?.PCCB.Id, tab = "Details" }, new { @class = "btn btn-success align-middle ms-2 mb-2" })</span>
     } *@
     <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@Model.PCCB.Id" asp-route-destinationPage="ManageInvitees" class="btn btn-primary ms-2 mb-2" target="_blank">Manage Invitees</a>
     @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1 mb-2" })

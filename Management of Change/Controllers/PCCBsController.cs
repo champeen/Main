@@ -64,6 +64,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.ChangeRequest = changeRequest.MOC_Number;
             ViewBag.PreviousAction = previousAction;
+            ViewBag.Steps = getPccbSteps();
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // MEETING ATTACHMENTS                                                                                   \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
@@ -120,6 +121,7 @@ namespace Management_of_Change.Controllers
             pccbVM.PCCB = pccb;
 
             ViewBag.Employees = getUserList();
+            ViewBag.Steps = getPccbSteps();
 
             return View(pccbVM);
         }
@@ -185,6 +187,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction("Details", "ChangeRequests", new { id = pccbVM.PCCB.ChangeRequestId, tab = "PccbReview" });
             }
             ViewBag.Employees = getUserList();
+            ViewBag.Steps = getPccbSteps();
             return View(pccbVM);
         }
 
@@ -197,6 +200,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Steps = getPccbSteps();
 
             if (id == null || _context.PCCB == null)
                 return NotFound();
@@ -213,7 +217,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,Title,MeetingDate,MeetingTime,MeetingDateTime,Agenda,Decisions,ActionItems,Status,Notes,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate", Prefix = "PCCB")] PCCB pccbRec)
+        public async Task<IActionResult> Edit([Bind("Id,Title,MeetingDateTime,Step,Agenda,Decisions,ActionItems,Status,Notes,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate", Prefix = "PCCB")] PCCB pccbRec)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -243,6 +247,7 @@ namespace Management_of_Change.Controllers
             }
             PccbVM pccbVM = new PccbVM();
             pccbVM.PCCB = pccbRec;
+            ViewBag.Steps = getPccbSteps();
             return View(pccbVM);
         }
 
@@ -287,7 +292,7 @@ namespace Management_of_Change.Controllers
                 _context.PCCB.Remove(pCCB);
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Details", "ChangeRequests", new { id = pCCB.ChangeRequestId, tab = "PccbReview", previousAction = "Changes have been saved" });
         }
 
         private bool PCCBExists(int id)

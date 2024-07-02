@@ -16,13 +16,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MeetingDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MeetingTime)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.MeetingDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Step)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Agenda)
@@ -46,14 +43,11 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MeetingDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MeetingTime)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.MeetingDateTime)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Step)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Agenda)
             </td>
@@ -78,7 +72,6 @@
     {
         <tr>
             <td class="text-nowrap">No data found</td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>

@@ -1917,6 +1917,7 @@ namespace Management_of_Change.Controllers
             }
 
             // Create a task for the ChangeRequest Owner to notify Administrator when ChangeRequest has been fully implemented
+            var mocOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
             Models.Task task = new Models.Task
             {
                 ChangeRequestId = changeRequest.Id,
@@ -1926,6 +1927,8 @@ namespace Management_of_Change.Controllers
                 Priority = changeRequest.Priority,
                 AssignedByUser = changeRequest.Change_Owner,
                 AssignedToUser = changeRequest.Change_Owner,
+                AssignedByUserEmail = mocOwner?.mail,
+                AssignedByUserFullName = mocOwner?.displayname,
                 Title = @"Implementation Completion Notification",
                 Description = @"Notify MoC admin when this MoC is completely implemented.",
                 DueDate = DateTime.Now.AddMonths(1),

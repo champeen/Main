@@ -1,4 +1,4 @@
-﻿@model Management_of_Change.Models.PCCB
+﻿@model Management_of_Change.Models.EmailLists
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,7 +6,7 @@
 
 <h1>Edit</h1>
 
-<h4>PCCB</h4>
+<h4>EmailLists</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,49 +14,19 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <label asp-for="ListName" class="control-label"></label>
+                <input asp-for="ListName" class="form-control" />
+                <span asp-validation-for="ListName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="MeetingDateTime" class="control-label"></label>
-                <input asp-for="MeetingDateTime" class="form-control" />
-                <span asp-validation-for="MeetingDateTime" class="text-danger"></span>
+                <label asp-for="Emails" class="control-label"></label>
+                <input asp-for="Emails" class="form-control" />
+                <span asp-validation-for="Emails" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Step" class="control-label"></label>
-                <input asp-for="Step" class="form-control" />
-                <span asp-validation-for="Step" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Agenda" class="control-label"></label>
-                <input asp-for="Agenda" class="form-control" />
-                <span asp-validation-for="Agenda" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Decisions" class="control-label"></label>
-                <input asp-for="Decisions" class="form-control" />
-                <span asp-validation-for="Decisions" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ActionItems" class="control-label"></label>
-                <input asp-for="ActionItems" class="form-control" />
-                <span asp-validation-for="ActionItems" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ChangeRequestId" class="control-label"></label>
-                <select asp-for="ChangeRequestId" class="form-control" asp-items="ViewBag.ChangeRequestId"></select>
-                <span asp-validation-for="ChangeRequestId" class="text-danger"></span>
+                <label asp-for="Order" class="control-label"></label>
+                <input asp-for="Order" class="form-control" />
+                <span asp-validation-for="Order" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="CreatedUser" class="control-label"></label>

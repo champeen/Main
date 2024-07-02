@@ -67,18 +67,27 @@
         }
     </div>
     <div class="ms-5">
-        <div class="row">
+@*         <div class="row">
             <div class="col-12">
+
+            </div>
+        </div> *@
+        <div class="row">
+            <div class="col-6">
                 <div class="form-group my-1">
                     <label asp-for="PCCB.Title" class="control-label fw-bold mb-1"></label>
                     <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                    @Html.TextAreaFor(model => model.PCCB.Title, new { @class = "form-control", @rows = 3 })
+                    @Html.TextAreaFor(model => model.PCCB.Title, new { @class = "form-control", @rows = 4 })
                     @*<input asp-for="Title_Change_Description" class="form-control" />*@
                     <span asp-validation-for="PCCB.Title" class="text-danger fw-bold"></span>
                 </div>
+                <div class="form-group my-1">
+                    <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
+                    @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 11 })
+                    @*<input asp-for="Title_Change_Description" class="form-control" />*@
+                    <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
+                </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-6">
                 <div class="form-group my-1">
                     <label asp-for="PCCB.MeetingDateTime" class="control-label fw-bold mb-1"></label>
@@ -87,13 +96,10 @@
                     <span asp-validation-for="PCCB.MeetingDateTime" class="text-danger fw-bold"></span>
                 </div>
                 <div class="form-group my-1">
-                    <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
-                    @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 8 })
-                    @*<input asp-for="Title_Change_Description" class="form-control" />*@
-                    <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
+                    <label asp-for="PCCB.Step" class="control-label fw-bold mb-1"></label>
+                    @Html.DropDownListFor(model => model.PCCB.Step, new SelectList(ViewBag.Steps, "Value", "Text"), "-- select --", new { @class = "form-control form-select" })
+                    <span asp-validation-for="PCCB.Step" class="text-danger fw-bold"></span>
                 </div>
-            </div>
-            <div class="col-6">
                 <div class="form-group my-1">
                     <label asp-for="PCCB.Status" class="control-label fw-bold"></label>
                     <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>

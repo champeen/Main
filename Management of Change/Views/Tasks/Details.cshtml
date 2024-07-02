@@ -229,12 +229,19 @@
     @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary ms-2 mb-2" })
     @if (ViewBag.PreviousAction != null)
     {
-        <span class="alert alert-success alert-dismissible d-flex align-items-center mt-3" role="alert">
+        <div class="alert alert-success alert-dismissible d-flex align-items-center mt-3" role="alert">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
             <span>
-                @ViewBag.PreviousAction
+                <strong>@ViewBag.PreviousAction</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </span>
-        </span>
+        </div>
+
+@*         <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+            <strong>MoC Responses have been Saved</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div> *@
     }
 </div>
 <div class="ms-5">

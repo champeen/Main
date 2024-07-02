@@ -203,6 +203,18 @@ namespace Management_of_Change.Utilities
             return ptns;
         }
 
+        public List<SelectListItem> getPccbSteps()
+        {
+            var pccbStepList = _context.PccbStep.Where(m => m.DeletedDate == null).OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> pccbSteps = new List<SelectListItem>();
+            foreach (var request in pccbStepList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Description, Text = request.Description};
+                pccbSteps.Add(item);
+            }
+            return pccbSteps;
+        }
+
         public EmailHistory AddEmailHistory(string? priority, string? subject, string? body, string? sentToDisplayName, string? sentToUsername, string? sentToEmail, int? changeRequestId, int? impactAssessmentResponseId, int? implementationFinalApprovalResponseId, int? taskId, string? type, string? status, DateTime createdDate, string? username)
         {
             EmailHistory emailHistory = new EmailHistory

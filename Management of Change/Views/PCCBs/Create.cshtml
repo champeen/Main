@@ -44,6 +44,12 @@
                 <input asp-for="PCCB.MeetingDateTime" class="form-control" style="width:25%" onclick="this.showPicker()" />
                 <span asp-validation-for="PCCB.MeetingDateTime" class="text-danger fw-bold"></span>
             </div>
+            <div class="form-group my-3">
+                <label asp-for="PCCB.Step" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="PCCB.Step" class="form-control" style="width:25%" onclick="this.showPicker()" /> *@
+                @Html.DropDownListFor(model => model.PCCB.Step, new SelectList(ViewBag.Steps, "Value", "Text"), "-- select --", new { @class = "form-control form-select"})
+                <span asp-validation-for="PCCB.Step" class="text-danger fw-bold"></span>
+            </div>
             @*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*@
             <div class="form-group my-3">
                 <label asp-for="PCCB.Invitees" class="control-label fw-bold mb-1"></label>
