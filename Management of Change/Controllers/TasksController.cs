@@ -553,11 +553,11 @@ namespace Management_of_Change.Controllers
                 var originalTaskStatus = await _context.Task.Where(m => m.Id == task.Id).Select(m => m.Status).FirstOrDefaultAsync();
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
                 // get assigned-to person info....
-                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
                 task.AssignedToUserFullName = toPerson.displayname;
                 task.AssignedToUserEmail = toPerson.mail;
                 // get assigned-by person info....
-                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedByUser).FirstOrDefaultAsync();
+                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedByUser.ToLower()).FirstOrDefaultAsync();
                 task.AssignedByUserFullName = fromPerson.displayname;
                 task.AssignedByUserEmail = fromPerson.mail;
                 task.ModifiedUser = _username;
