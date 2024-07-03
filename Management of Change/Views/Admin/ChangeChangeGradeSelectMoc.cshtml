@@ -1,0 +1,69 @@
+﻿@model Management_of_Change.ViewModels.ChangeChangeGradeVM
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Change Request</h1>
+<div class="mt-5 mb-3">
+    <h4>Enter an MoC Number to Cancel</h4>
+</div>
+
+<div>
+    <form asp-action="ChangeChangeGradeSelectMoc">
+        @Html.AntiForgeryToken()
+        @if (Model != null && @Model.ChangeRequest != null)
+        {
+            <div>@Model.ChangeRequest?.Id</div>
+            <div>@Model.ChangeRequest.CreatedUser</div>
+        }
+
+@*         @Html.HiddenFor(m => m.ChangeRequest)
+        @Html.HiddenFor(m => m.ChangeRequest.Id) *@
+        <div class="form-group my-3">
+            <label asp-for="@Model.ChangeRequest.Id" class="control-label fw-bold mb-1"></label>
+            @* <input asp-for="@Model.ChangeRequest.Id" class="form-control form-select" readonly /> *@
+            @* @Html.DisplayFor(m=>m.ChangeRequest.Id) *@
+            @* @Html.DisplayTextFor(m=>m.ChangeRequest.Id) *@
+            @* @Html.TextBoxFor(model => model.ChangeRequest.Id, null, new {@class="form-control"}) *@
+            @Html.ValueFor(model => model.ChangeRequest.Id)
+            @* @Html.IdFor(m=>m.ChangeRequest.Id) *@
+        </div>
+        <div class="form-group my-3">
+            <label asp-for="@Model.ChangeRequest.CreatedUser" class="control-label fw-bold mb-1"></label>
+            @* <input asp-for="@Model.ChangeRequest.CreatedUser" class="form-control" /> *@
+            @Html.TextBoxFor(model => model.ChangeRequest.CreatedUser, null, new { @class = "form-control"})
+        </div>
+        <div class="form-group my-3">
+            <label asp-for="MocNumber" class="control-label fw-bold mb-1"></label>
+            @if (ViewBag.ShowChangeGrade != null && ViewBag.ShowChangeGrade == true)
+            {
+                <input asp-for="MocNumber" class="form-control" readonly />
+            }
+            else
+            {
+                <input asp-for="MocNumber" class="form-control" />
+            }
+            <span asp-validation-for="MocNumber" class="text-danger fw-bold"></span>
+        </div>
+        @if (ViewBag.ShowChangeGrade != null && ViewBag.ShowChangeGrade == true)
+        {
+            <div class="form-group my-3">
+                <label asp-for="@Model.ChangeRequest.Change_Level" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @*<input asp-for="Change_Level" class="form-control" />*@
+                @Html.DropDownListFor(model => model.ChangeRequest.Change_Level, new SelectList(ViewBag.Levels, "Value", "Value"), new { @class = "form-control form-select" })
+            </div>
+        }
+        @* <input type="hidden" asp-for="MocNumber" /> *@
+        @if (ViewBag.ShowChangeGrade != null && ViewBag.ShowChangeGrade == true)
+        {
+            <input type="submit" value="Save" class="btn btn-primary me-1 mt-2" />
+        }
+        else
+        {
+            <input type="submit" value="Select MoC" class="btn btn-primary me-1 mt-2" />
+        }
+        @Html.ActionLink("Back", "Index", "Admin", new { }, new { @class = "btn btn-secondary mt-2" })
+    </form>
+</div>

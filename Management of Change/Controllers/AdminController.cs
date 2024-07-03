@@ -124,5 +124,66 @@ namespace Management_of_Change.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> ChangeChangeGradeSelectMoc()
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            return View();
+        }
+
+        [HttpPost, ActionName("ChangeChangeGradeSelectMoc")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeChangeGradeSelectMoc(/*[Bind("Id,Change_Level,CreatedUser", Prefix = "ChangeRequest")] ChangeRequest changeRequestIn,*/ ChangeChangeGradeVM changeChangeGradeVM)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+            ViewBag.ShowChangeGrade = false;
+
+            if (string.IsNullOrWhiteSpace(changeChangeGradeVM.MocNumber))
+            {
+                ModelState.AddModelError("MocNumber", "MoC Number is Required");
+                return View("ChangeChangeGradeSelectMoc", changeChangeGradeVM);
+            }
+
+            // if change request is already filled, user selected it already. Save and leave.
+            if (changeChangeGradeVM != null && changeChangeGradeVM.ChangeRequest != null && changeChangeGradeVM.ChangeRequest.Change_Level != null) 
+            {
+                ChangeRequest oldChangeRequest = await _context.ChangeRequest.Where(m => m.MOC_Number == changeChangeGradeVM.MocNumber).FirstOrDefaultAsync();
+                if (oldChangeRequest != null) 
+                {
+                    oldChangeRequest.ModifiedDate = DateTime.Now;
+                    oldChangeRequest.ModifiedUser = _username;
+                    oldChangeRequest.Change_Level = changeChangeGradeVM.ChangeRequest.Change_Level;
+                    _context.Update(oldChangeRequest);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            changeChangeGradeVM.ChangeRequest = await _context.ChangeRequest.Where(m => m.MOC_Number == changeChangeGradeVM.MocNumber).FirstOrDefaultAsync();
+            if (changeChangeGradeVM.ChangeRequest == null)
+            {
+                ModelState.AddModelError("MocNumber", "Change Request Does Not Exist - Enter A Valid MoC Number");
+                return View("ChangeChangeGradeSelectMoc");
+            }
+
+            ViewBag.ShowChangeGrade = true;
+            ViewBag.Levels = getChangeLevels();
+
+            return View(changeChangeGradeVM);
+        }
     }
 }

@@ -4,69 +4,47 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Email List</h1>
 
-<h4>EmailLists</h4>
+<h4 action="mt-5">Create</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ListName" class="control-label"></label>
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <div class="form-group my-3">
+                <label asp-for="ListName" class="control-label fw-bold mb-1"></label>
                 <input asp-for="ListName" class="form-control" />
-                <span asp-validation-for="ListName" class="text-danger"></span>
+                <span asp-validation-for="ListName" class="text-danger fw-bold mt-1"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Emails" class="control-label"></label>
-                <input asp-for="Emails" class="form-control" />
-                <span asp-validation-for="Emails" class="text-danger"></span>
+            <div class="form-group my-3">
+                <label asp-for="Emails" class="control-label fw-bold mb-1"></label>
+                @Html.DropDownListFor(model => model.Emails, new MultiSelectList(ViewBag.Employees, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "EmailListCreate" })
+                @* <input asp-for="Emails" class="form-control" /> *@
+                <span asp-validation-for="Emails" class="text-danger fw-bold mt-1"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Order" class="control-label"></label>
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label fw-bold mb-1"></label>
                 <input asp-for="Order" class="form-control" />
-                <span asp-validation-for="Order" class="text-danger"></span>
+                <span asp-validation-for="Order" class="text-danger fw-bold mt-1"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CreatedUser" class="control-label"></label>
-                <input asp-for="CreatedUser" class="form-control" />
-                <span asp-validation-for="CreatedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedUser" class="control-label"></label>
-                <input asp-for="ModifiedUser" class="form-control" />
-                <span asp-validation-for="ModifiedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedDate" class="control-label"></label>
-                <input asp-for="ModifiedDate" class="form-control" />
-                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedUser" class="control-label"></label>
-                <input asp-for="DeletedUser" class="form-control" />
-                <span asp-validation-for="DeletedUser" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeletedDate" class="control-label"></label>
-                <input asp-for="DeletedDate" class="form-control" />
-                <span asp-validation-for="DeletedDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group my-4">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="mx-1 btn btn-secondary" asp-action="Index">Cancel</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script>
+    $(document).ready(function () {
+        $('#EmailListCreate').select2({
+            placeholder: "Select Employee(s)"
+        });
+    });
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

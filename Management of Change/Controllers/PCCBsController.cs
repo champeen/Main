@@ -161,11 +161,11 @@ namespace Management_of_Change.Controllers
 
                 foreach (var invite in pccbVM.Invitees)
                 {
-                    var employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == invite).FirstOrDefaultAsync();
+                    var employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == invite.ToLower()).FirstOrDefaultAsync();
                     if (employee != null)
                     {
                         PccbInvitees invitee = new PccbInvitees();
-                        invitee.Username = employee.onpremisessamaccountname;
+                        invitee.Username = employee?.onpremisessamaccountname;
                         invitee.FullName = employee.displayname;
                         invitee.Title = employee.jobtitle;
                         invitee.Email = employee.mail;

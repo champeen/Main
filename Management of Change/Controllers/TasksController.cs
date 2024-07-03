@@ -299,10 +299,6 @@ namespace Management_of_Change.Controllers
             ViewBag.Username = _username;
 
             return View("Index", taskList);
-
-            //return _context.Task != null ?
-            //            View(await _context.Task.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync()) :
-            //            Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
         }
 
         // GET: Tasks/Details/5
@@ -457,14 +453,14 @@ namespace Management_of_Change.Controllers
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
 
                 // get assigned-to person info....
-                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
-                task.AssignedToUserFullName = toPerson.displayname;
-                task.AssignedToUserEmail = toPerson.mail;
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedToUserFullName = toPerson?.displayname;
+                task.AssignedToUserEmail = toPerson?.mail;
 
                 // get assigned-by person info....
-                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedByUser).FirstOrDefaultAsync();
-                task.AssignedByUserFullName = fromPerson.displayname;
-                task.AssignedByUserEmail = fromPerson.mail;
+                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedByUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedByUserFullName = fromPerson?.displayname;
+                task.AssignedByUserEmail = fromPerson?.mail;
 
                 _context.Add(task);
                 await _context.SaveChangesAsync();
@@ -475,8 +471,8 @@ namespace Management_of_Change.Controllers
 
                 if (toPerson != null)
                 {
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
+                    AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                     //EmailHistory emailHistory = new EmailHistory
                     //{
@@ -587,13 +583,13 @@ namespace Management_of_Change.Controllers
                 var originalTaskStatus = await _context.Task.Where(m => m.Id == task.Id).Select(m => m.Status).FirstOrDefaultAsync();
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
                 // get assigned-to person info....
-                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
-                task.AssignedToUserFullName = toPerson.displayname;
-                task.AssignedToUserEmail = toPerson.mail;
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedToUserFullName = toPerson?.displayname;
+                task.AssignedToUserEmail = toPerson?.mail;
                 // get assigned-by person info....
-                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedByUser).FirstOrDefaultAsync();
-                task.AssignedByUserFullName = fromPerson.displayname;
-                task.AssignedByUserEmail = fromPerson.mail;
+                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedByUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedByUserFullName = fromPerson?.displayname;
+                task.AssignedByUserEmail = fromPerson?.mail;
                 task.ModifiedUser = _username;
                 task.ModifiedDate = DateTime.Now;
                 _context.Update(task);
@@ -606,11 +602,11 @@ namespace Management_of_Change.Controllers
                     string subject = @"Management of Change (MoC) - Task has been completed.";
                     string body = @"A Management of Change task has been completed.  The task is listed under your Change Request, in the Tasks tab. <br/><br/>
                             <strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-                    var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.CreatedUser).FirstOrDefaultAsync();
+                    var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.CreatedUser.ToLower()).FirstOrDefaultAsync();
                     if (toPerson != null)
                     {
-                        Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null, task.Priority);
-                        AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, ccPerson?.mail, null, task.Priority);
+                        AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                         //EmailHistory emailHistory = new EmailHistory
                         //{
@@ -715,11 +711,11 @@ namespace Management_of_Change.Controllers
             // Send Email Out notifying the person who is assigned the task
             string subject = @"Management of Change (MoC) - Impact Assessment Response Task Reminder.";
             string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
             if (toPerson != null)
             {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                var emailHistory = AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
+                var emailHistory = AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
                 //EmailHistory emailHistory = new EmailHistory
                 //{
                 //    Priority = task.Priority,

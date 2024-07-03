@@ -144,11 +144,11 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // make sure all selected employee data is found, valid and correct
-            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == implementationFinalApprovalResponse.Username);
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == implementationFinalApprovalResponse.Username.ToLower());
             if (employee != null)
             {
-                implementationFinalApprovalResponse.Reviewer = employee.displayname;
-                implementationFinalApprovalResponse.ReviewerEmail = employee.mail;
+                implementationFinalApprovalResponse.Reviewer = employee?.displayname;
+                implementationFinalApprovalResponse.ReviewerEmail = employee?.mail;
             }
             else
                 ModelState.AddModelError("Username", "Employee record not found for Username: " + implementationFinalApprovalResponse.Username);

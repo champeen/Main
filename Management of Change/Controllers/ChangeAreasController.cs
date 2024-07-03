@@ -115,7 +115,7 @@ namespace Management_of_Change.Controllers
 
             if (changeArea.ChangeGradePrimaryApproverUsername != null)
             {
-                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradePrimaryApproverUsername);
+                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == changeArea.ChangeGradePrimaryApproverUsername.ToLower());
                 if (primaryUser != null)
                 {
                     changeArea.ChangeGradePrimaryApproverEmail = primaryUser.mail;
@@ -128,7 +128,7 @@ namespace Management_of_Change.Controllers
 
             if (changeArea.ChangeGradeSecondaryApproverUsername != null)
             {
-                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradeSecondaryApproverUsername);
+                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == changeArea.ChangeGradeSecondaryApproverUsername.ToLower());
                 if (secondaryUser != null)
                 {
                     changeArea.ChangeGradeSecondaryApproverEmail = secondaryUser.mail;
@@ -195,7 +195,7 @@ namespace Management_of_Change.Controllers
 
             if (changeArea.ChangeGradePrimaryApproverUsername != null)
             {
-                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradePrimaryApproverUsername);
+                var primaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == changeArea.ChangeGradePrimaryApproverUsername.ToLower());
                 if (primaryUser != null)
                 {
                     changeArea.ChangeGradePrimaryApproverEmail = primaryUser.mail;
@@ -208,7 +208,7 @@ namespace Management_of_Change.Controllers
 
             if (changeArea.ChangeGradeSecondaryApproverUsername != null)
             {
-                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == changeArea.ChangeGradeSecondaryApproverUsername);
+                var secondaryUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == changeArea.ChangeGradeSecondaryApproverUsername.ToLower());
                 if (secondaryUser != null)
                 {
                     changeArea.ChangeGradeSecondaryApproverEmail = secondaryUser.mail;

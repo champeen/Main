@@ -101,14 +101,14 @@ namespace Management_of_Change.Controllers
             if (found)
                 ModelState.AddModelError("Username", "Employee is already invited");
 
-            var employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == pccbInvitees.Username).FirstOrDefaultAsync();
+            var employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == pccbInvitees.Username.ToLower()).FirstOrDefaultAsync();
             if (employee != null)
             {
                 if (ModelState.IsValid)
                 {
-                    pccbInvitees.FullName = employee.displayname;
-                    pccbInvitees.Email = employee.mail;
-                    pccbInvitees.Title = employee.jobtitle;
+                    pccbInvitees.FullName = employee?.displayname;
+                    pccbInvitees.Email = employee?.mail;
+                    pccbInvitees.Title = employee?.jobtitle;
 
                     _context.Add(pccbInvitees);
                     await _context.SaveChangesAsync();

@@ -65,6 +65,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Employees = getEmailList();
 
             EmailLists emailList = new EmailLists
             {
@@ -102,6 +103,7 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Employees = getEmailList();
             return View(emailLists);
         }
 
@@ -113,7 +115,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
+            ViewBag.Username = _username;            
 
             if (id == null || _context.EmailLists == null)
                 return NotFound();
@@ -121,6 +123,8 @@ namespace Management_of_Change.Controllers
             var emailLists = await _context.EmailLists.FindAsync(id);
             if (emailLists == null)
                 return NotFound();
+
+            ViewBag.Employees = getEmailList(emailLists.Emails);
 
             return View(emailLists);
         }
@@ -167,6 +171,7 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Employees = getEmailList();
             return View(emailLists);
         }
 
