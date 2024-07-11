@@ -41,12 +41,13 @@
     @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-2 mb-2" })
     @if (ViewBag.PreviousAction != null)
     {
-        <span class="alert alert-success alert-dismissible d-flex align-items-center mt-3" role="alert">
+        <div class="alert alert-success alert-dismissible d-flex align-items-center mt-3" role="alert">
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
             <span>
                 @ViewBag.PreviousAction
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </span>
-        </span>
+        </div>
     }
 </div>
 <div class="ms-5">
@@ -158,7 +159,7 @@
             </div>
             <div class="form-group my-1">
                 <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
-                @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 12, @readonly = true })
+                @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 15, @readonly = true })
                 @*<input asp-for="Title_Change_Description" class="form-control" />*@
                 <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
             </div>
@@ -178,6 +179,11 @@
                 <label asp-for="PCCB.Status" class="control-label fw-bold mb-1"></label>
                 @Html.TextBoxFor(model => model.PCCB.Status, new { @class = "form-control form-select", @readonly = true })
                 <span asp-validation-for="PCCB.Status" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PCCB.NotificationList" class="control-label fw-bold mb-1"></label>
+                @Html.TextBoxFor(model => model.PCCB.NotificationList, new { @class = "form-control form-select", @readonly = true })
+                <span asp-validation-for="PCCB.NotificationList" class="text-danger fw-bold mt-1"></span>
             </div>
             <div class="form-group my-1">
                 <label asp-for="PCCB.Decisions" class="control-label fw-bold mb-1"></label>
@@ -290,8 +296,4 @@
         }
     </table>
 </div>
-
-
-
-
 @* @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary mt-3" }) *@

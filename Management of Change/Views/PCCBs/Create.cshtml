@@ -26,7 +26,7 @@
                 <label asp-for="PCCB.Title" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @Html.TextAreaFor(model => model.PCCB.Title, new { @class = "form-control", @rows = 2 })
-                <span asp-validation-for="PCCB.Title" class="text-danger fw-bold"></span>
+                <span asp-validation-for="PCCB.Title" class="text-danger fw-bold mt-1"></span>
             </div>
             @*             <div class="form-group my-3">
             <label asp-for="MeetingDate" class="control-label fw-bold mb-1"></label>
@@ -42,28 +42,38 @@
                 <label asp-for="PCCB.MeetingDateTime" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 <input asp-for="PCCB.MeetingDateTime" class="form-control" style="width:25%" onclick="this.showPicker()" />
-                <span asp-validation-for="PCCB.MeetingDateTime" class="text-danger fw-bold"></span>
+                <span asp-validation-for="PCCB.MeetingDateTime" class="text-danger fw-bold mt-1"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="PCCB.Step" class="control-label fw-bold mb-1"></label>
                 @* <input asp-for="PCCB.Step" class="form-control" style="width:25%" onclick="this.showPicker()" /> *@
                 @Html.DropDownListFor(model => model.PCCB.Step, new SelectList(ViewBag.Steps, "Value", "Text"), "-- select --", new { @class = "form-control form-select"})
-                <span asp-validation-for="PCCB.Step" class="text-danger fw-bold"></span>
+                <span asp-validation-for="PCCB.Step" class="text-danger fw-bold mt-1"></span>
             </div>
             @*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*@
-            <div class="form-group my-3">
+@*             <div class="form-group my-3">
                 <label asp-for="PCCB.Invitees" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @* <select id="PccbCreateInvitees" asp-for="Invitees" asp-items="@ViewBag.Employees" multiple class="form-control form-select"> </select> *@
-                @* <select required id="PccbCreateInvitees" name="Invitees" multiple="multiple" asp-items="@ViewBag.Employees"></select>  *@
                  @Html.DropDownListFor(model => model.Invitees, new MultiSelectList(ViewBag.Employees, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple=true, @id = "PccbCreateInvitees"})
                 <span asp-validation-for="Invitees" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="PCCB.InviteeList" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.DropDownListFor(model => model.PCCB.InviteeList, new SelectList(ViewBag.EmailLists, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbCreateInvitees" })
+                <span asp-validation-for="PCCB.InviteeList" class="text-danger fw-bold mt-1"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PCCB.NotificationList" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.DropDownListFor(model => model.PCCB.NotificationList, new SelectList(ViewBag.EmailLists, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbCreateNotifications" })
+                <span asp-validation-for="PCCB.NotificationList" class="text-danger fw-bold mt-1"></span>
             </div>
             @*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*@
             <div class="form-group my-3">
                 <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
                 @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 2 })
-                <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
+                <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold mt-1"></span>
             </div>
 @*             <div class="form-group my-3">
                 <label asp-for="PCCB.Decisions" class="control-label fw-bold mb-1"></label>
@@ -87,6 +97,10 @@
     $(document).ready(function () {
         $('#PccbCreateInvitees').select2({
             placeholder: "Select Invitee(s)"
+        });
+
+        $('#PccbCreateNotifications').select2({
+            placeholder: "Select Employee(s) to Notify"
         });
     });
 </script>

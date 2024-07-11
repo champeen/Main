@@ -548,13 +548,6 @@ namespace Management_of_Change.Controllers
 
             changeRequestViewModel.employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == changeRequest.Change_Owner.ToLower()).FirstOrDefaultAsync();
 
-            //return View("Details" + (string.IsNullOrEmpty(rec) ? "" : "#" + rec), changeRequestViewModel);
-
-            //foreach (var rec in changeRequestViewModel.ChangeRequest.PccbMeetings)
-            //    rec.MeetingTime = rec.MeetingTime.ToString();
-            //@Html.DisplayFor(modelItem => item.MeetingTime.ToString("h:mm:ss tt", new CultureInfo("en-US")))
-            //@item.MeetingTime.ToString("h:mm:ss t", new CultureInfo("en-US"));
-
             return View(changeRequestViewModel);
         }
 
@@ -592,22 +585,6 @@ namespace Management_of_Change.Controllers
             ViewBag.Source = source;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
-
-            // test mjwii
-            //SelectListGroup group1 = new SelectListGroup() { Name = "GroupOne" };
-            //SelectListGroup group2 = new SelectListGroup() { Name = "GroupTwo" };
-            //List<SelectListItem> testSelectList = new List<SelectListItem>()
-            //{
-            //    new SelectListItem("One","1",false,false),
-            //    new SelectListItem() { Value = "2", Text = "Two", Group = group1 },
-            //    new SelectListItem() { Value = "3", Text = "Three", Group = group1 },
-            //    new SelectListItem() { Value = "4", Text = "Four", Group = group2 },
-            //    new SelectListItem() { Value = "5", Text = "Five", Group = group2 },
-            //    new SelectListItem() { Value = "6", Text = "Six" },
-            //    new SelectListItem() { Value = "7", Text = "Seven", Group = group1 }
-            //};
-            //ViewBag.Test = testSelectList;
-            // end test mjwii
 
             return View(changeRequest);
         }
@@ -1141,6 +1118,12 @@ namespace Management_of_Change.Controllers
             // Email MoC Owner that their Change Request Grade was not accepted....
             string subject = @"Management of Change (MoC) - Change Grade Accepted.";
             string body = @"A Change Request has had its Change Grade approved. It is being moved onto Impact Assessment review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
 
             return RedirectToAction("SubmitForReview", new { id = id, tab = "ImpactAssessments", errorMessage = errorMessage });
         }

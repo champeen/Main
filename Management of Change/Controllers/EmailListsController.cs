@@ -65,7 +65,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
-            ViewBag.Employees = getEmailList();
+            ViewBag.Employees = getUserEmailList();
 
             EmailLists emailList = new EmailLists
             {
@@ -103,7 +103,7 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Employees = getEmailList();
+            ViewBag.Employees = getUserEmailList();
             return View(emailLists);
         }
 
@@ -124,7 +124,7 @@ namespace Management_of_Change.Controllers
             if (emailLists == null)
                 return NotFound();
 
-            ViewBag.Employees = getEmailList(emailLists.Emails);
+            ViewBag.Employees = getUserEmailList(emailLists.Emails);
 
             return View(emailLists);
         }
@@ -171,7 +171,7 @@ namespace Management_of_Change.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewBag.Employees = getEmailList();
+            ViewBag.Employees = getUserEmailList(emailLists.Emails);
             return View(emailLists);
         }
 

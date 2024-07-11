@@ -65,6 +65,7 @@ namespace Management_of_Change.Controllers
             ViewBag.ChangeRequest = changeRequest.MOC_Number;
             ViewBag.PreviousAction = previousAction;
             ViewBag.Steps = getPccbSteps();
+            ViewBag.EmailLists = getEmailList();
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // MEETING ATTACHMENTS                                                                                   \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
@@ -122,6 +123,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.Employees = getUserList();
             ViewBag.Steps = getPccbSteps();
+            ViewBag.EmailLists = getEmailList();
 
             return View(pccbVM);
         }
@@ -152,32 +154,36 @@ namespace Management_of_Change.Controllers
             if (pccbVM.PCCB.MeetingDateTime == null)
                 ModelState.AddModelError("PCCB.MeetingDateTime", "Must Include a Valid Meeting Date/Time");
 
-            if (pccbVM.Invitees == null || pccbVM.Invitees.Count == 0)
-                ModelState.AddModelError("Invitees", "Must Invite at least 1 Person");
+            //if (pccbVM.Invitees == null || pccbVM.Invitees.Count == 0)
+            //    ModelState.AddModelError("Invitees", "Must Invite at least 1 Person");
 
             if (ModelState.IsValid)
             {
+                // Setup Invitees from List Selected.....
                 List<PccbInvitees> pccbInvitees = new List<PccbInvitees>();
-
-                foreach (var invite in pccbVM.Invitees)
-                {
-                    var employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == invite.ToLower()).FirstOrDefaultAsync();
-                    if (employee != null)
+                if (pccbVM.PCCB.InviteeList != null)
+                {                    
+                    EmailLists emailList = await _context.EmailLists.Where(m => m.ListName == pccbVM.PCCB.InviteeList).FirstOrDefaultAsync();
+                    foreach (var email in emailList.Emails)
                     {
-                        PccbInvitees invitee = new PccbInvitees();
-                        invitee.Username = employee?.onpremisessamaccountname;
-                        invitee.FullName = employee.displayname;
-                        invitee.Title = employee.jobtitle;
-                        invitee.Email = employee.mail;
-                        invitee.Status = "Invited"; // "Attended" "No Show"
-                        invitee.Attended = false;
-                        invitee.MocId = pccbVM.PCCB.ChangeRequestId;
-                        invitee.PccbId = pccbVM.PCCB.Id; // CHECK THIS MAKE SURE IT IS FILLED
-                        invitee.CreatedDate = DateTime.Now;
-                        invitee.CreatedUser = _username;
+                        var employee = await _context.__mst_employee.Where(m => m.mail.ToLower() == email.ToLower()).FirstOrDefaultAsync();
+                        if (employee != null)
+                        {
+                            PccbInvitees invitee = new PccbInvitees();
+                            invitee.Username = employee?.onpremisessamaccountname;
+                            invitee.FullName = employee.displayname;
+                            invitee.Title = employee.jobtitle;
+                            invitee.Email = employee.mail;
+                            invitee.Status = "Invited"; // "Attended" "No Show"
+                            invitee.Attended = false;
+                            invitee.MocId = pccbVM.PCCB.ChangeRequestId;
+                            invitee.PccbId = pccbVM.PCCB.Id; // CHECK THIS MAKE SURE IT IS FILLED
+                            invitee.CreatedDate = DateTime.Now;
+                            invitee.CreatedUser = _username;
 
-                        pccbInvitees.Add(invitee);
-                    }
+                            pccbInvitees.Add(invitee);
+                        }
+                    }                    
                 }
                 pccbVM.PCCB.Invitees = pccbInvitees;
 
@@ -188,6 +194,7 @@ namespace Management_of_Change.Controllers
             }
             ViewBag.Employees = getUserList();
             ViewBag.Steps = getPccbSteps();
+            ViewBag.EmailLists = getEmailList();
             return View(pccbVM);
         }
 
@@ -201,6 +208,7 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.Steps = getPccbSteps();
+            ViewBag.EmailLists = getEmailList();
 
             if (id == null || _context.PCCB == null)
                 return NotFound();
@@ -217,7 +225,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit([Bind("Id,Title,MeetingDateTime,Step,Agenda,Decisions,ActionItems,Status,Notes,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate", Prefix = "PCCB")] PCCB pccbRec)
+        public async Task<IActionResult> Edit([Bind("Id,Title,MeetingDateTime,Step,NotificationList,Agenda,Decisions,ActionItems,Status,Notes,ChangeRequestId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate", Prefix = "PCCB")] PCCB pccbRec)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -226,8 +234,42 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
+            if (pccbRec.MeetingDateTime == null)
+                ModelState.AddModelError("PCCB.MeetingDateTime", "Must Include a Valid Meeting Date/Time");
+
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == pccbRec.ChangeRequestId);
+
             if (ModelState.IsValid)
             {
+                // See if status changed to 'Closed'. If so, send out notifications of the meeting to all who are in the Notification List Group....
+                string oldStatus = await _context.PCCB.Where(m=>m.Id == pccbRec.Id).Select(m=>m.Status).FirstOrDefaultAsync();
+                if (oldStatus != null && changeRequest != null)
+                {
+                    if (oldStatus != pccbRec.Status && pccbRec.Status == "Closed")
+                    {
+                        if (pccbRec.NotificationList != null)
+                        {
+                            var emailList = await _context.EmailLists.Where(m => m.ListName == pccbRec.NotificationList).FirstOrDefaultAsync();
+                            if (emailList != null)
+                            {
+                                // setup basic email content for each email ....
+                                foreach (var email in emailList.Emails)
+                                {
+                                    // Email person in Notification List informing them of the PCCB meeting that was just closed....
+                                    string subject = @"Management of Change (MoC) - PCCB Meeting Completed (notification).";
+                                    string body = @"A Change Request has had a PCCB Meeting Completed. Please follow link below and review the meeting content. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "/PCCBs/Details/" + pccbRec.Id.ToString() + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                                    if (changeRequest != null && email != null)
+                                    {
+                                        Initialization.EmailProviderSmtp.SendMessage(subject, body, email, null, null, changeRequest.Priority);
+                                        AddEmailHistory(changeRequest.Priority, subject, body, null, null, email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
                 try
                 {
                     pccbRec.ModifiedDate = DateTime.Now;
@@ -245,10 +287,51 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction("Details", "PCCBs", new { id = pccbRec.Id, destinationPage = "ManageMeeting", previousAction = "Changes have been saved" });
                 //return RedirectToAction("Details", "ChangeRequests", new { id = pccbRec.ChangeRequestId, tab = "PccbReview" });
             }
+
+            // ERROR - return to edit screen.....
             PccbVM pccbVM = new PccbVM();
             pccbVM.PCCB = pccbRec;
+
+            if (changeRequest == null)
+                return NotFound();
+            ViewBag.ChangeRequest = changeRequest.MOC_Number;
+            pccbVM.PCCB.Invitees = await _context.PccbInvitees.Where(m => m.PccbId == pccbRec.Id).OrderBy(m => m.FullName).ToListAsync();
             ViewBag.Steps = getPccbSteps();
-            return View(pccbVM);
+            ViewBag.EmailLists = getEmailList();
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // MEETING ATTACHMENTS                                                                                   \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, pccbRec.Id.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, pccbRec.Id.ToString())))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<ViewModels.Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            pccbVM.Attachments = attachments.OrderBy(m => m.Name).ToList();
+
+            //return RedirectToAction("Details", "PCCBs", new { id = pccbRec.Id, destinationPage = "ManageMeeting" });
+            return View("DetailsManageMeeting", pccbVM);
         }
 
         // GET: PCCBs/Delete/5

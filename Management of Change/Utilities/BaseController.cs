@@ -165,7 +165,7 @@ namespace Management_of_Change.Utilities
             return users;
         }
 
-        public List<SelectListItem> getEmailList(List<string> emailLists = null)
+        public List<SelectListItem> getUserEmailList(List<string> emailLists = null)
         {
             // Create Dropdown List of Users...
             var userList = _context.__mst_employee
@@ -180,13 +180,30 @@ namespace Management_of_Change.Utilities
             foreach (var user in userList)
             {
                 SelectListItem item = new SelectListItem { Value = user.mail, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                if (emailLists.Contains(user.mail))
-                    item.Selected = true;
-                //if (user.onpremisessamaccountname == username)
-                //    item.Selected = true;
+                if (emailLists != null)
+                    if (emailLists.Contains(user.mail))
+                        item.Selected = true;
                 users.Add(item);
             }
             return users;
+        }
+
+        public List<SelectListItem> getEmailList(List<string> emailLists = null)
+        {
+            // Create Dropdown List of Users...
+            var emailList = _context.EmailLists.OrderBy(m => m.Order).ThenBy(m => m.ListName).ToList();
+            List<SelectListItem> list = new List<SelectListItem>();
+            foreach (var user in emailList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.ListName, Text = user.ListName};
+                if (emailLists != null)
+                    if (emailLists.Contains(user.ListName))
+                        item.Selected = true;
+                //if (user.onpremisessamaccountname == username)
+                //    item.Selected = true;
+                list.Add(item);
+            }
+            return list;
         }
 
         public List<SelectListItem> getChangeTypes()
@@ -233,7 +250,7 @@ namespace Management_of_Change.Utilities
             List<SelectListItem> pccbSteps = new List<SelectListItem>();
             foreach (var request in pccbStepList)
             {
-                SelectListItem item = new SelectListItem { Value = request.Description, Text = request.Description};
+                SelectListItem item = new SelectListItem { Value = request.Description, Text = request.Description };
                 pccbSteps.Add(item);
             }
             return pccbSteps;

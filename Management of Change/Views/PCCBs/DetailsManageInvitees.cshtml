@@ -176,7 +176,7 @@
             </div>
             <div class="form-group my-1">
                 <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
-                @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 12, @readonly = true })
+                @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 15, @readonly = true })
                 @*<input asp-for="Title_Change_Description" class="form-control" />*@
                 <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
             </div>
@@ -201,6 +201,11 @@
                 new SelectListItem {Value="Closed", Text="Closed"}},
                 new { @class = "form-control form-select", @readonly = true }) *@
                 <span asp-validation-for="PCCB.Status" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PCCB.NotificationList" class="control-label fw-bold mb-1"></label>
+                @Html.TextBoxFor(model => model.PCCB.NotificationList, new { @class = "form-control form-select", @readonly = true })
+                <span asp-validation-for="PCCB.NotificationList" class="text-danger fw-bold mt-1"></span>
             </div>
             <div class="form-group my-1">
                 <label asp-for="PCCB.Decisions" class="control-label fw-bold mb-1"></label>

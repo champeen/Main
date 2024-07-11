@@ -67,10 +67,10 @@
         }
     </div>
     <div class="ms-5">
-@*         <div class="row">
-            <div class="col-12">
+        @*         <div class="row">
+        <div class="col-12">
 
-            </div>
+        </div>
         </div> *@
         <div class="row">
             <div class="col-6">
@@ -83,7 +83,7 @@
                 </div>
                 <div class="form-group my-1">
                     <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
-                    @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 11 })
+                    @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 14 })
                     @*<input asp-for="Title_Change_Description" class="form-control" />*@
                     <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
                 </div>
@@ -109,6 +109,11 @@
                     new SelectListItem {Value="Closed", Text="Closed"}},
                              new { @class = "form-control form-select" })
                     <span asp-validation-for="PCCB.Status" class="text-danger fw-bold"></span>
+                </div>
+                <div class="form-group my-3">
+                    <label asp-for="PCCB.NotificationList" class="control-label fw-bold mb-1"></label>
+                    @Html.DropDownListFor(model => model.PCCB.NotificationList, new SelectList(ViewBag.EmailLists, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbDetailsNotifications" })
+                    <span asp-validation-for="PCCB.NotificationList" class="text-danger fw-bold mt-1"></span>
                 </div>
                 <div class="form-group my-1">
                     <label asp-for="PCCB.Decisions" class="control-label fw-bold mb-1"></label>
@@ -152,10 +157,6 @@
     <table class="table table-striped table-bordered mt-2">
         <thead class="table-primary">
             <tr>
-                @if (ViewBag.IsAdmin)
-                {
-                    <th></th>
-                }
                 <th>
                     Name
                 </th>
@@ -168,10 +169,6 @@
                 <th>
                     Status
                 </th>
-                @if (ViewBag.IsAdmin)
-                {
-                    <th></th>
-                }
             </tr>
         </thead>
         <tbody>
@@ -334,4 +331,13 @@
         }
     </table>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#PccbDetailsNotifications').select2({
+            placeholder: "Select Employee(s) to Notify",
+            allowClear: true
+        });
+    });
+</script>
 @* @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary mt-3" }) *@
