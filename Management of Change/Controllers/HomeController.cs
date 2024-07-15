@@ -7,6 +7,8 @@ using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Humanizer;
+using Azure.Identity;
+using System.Collections.Immutable;
 
 namespace Management_of_Change.Controllers
 {
@@ -129,6 +131,27 @@ namespace Management_of_Change.Controllers
                 .OrderBy(m => m.Priority)
                 .ThenBy(m => m.DueDate)
                 .ToListAsync();
+
+            // Get Count of Overdue Tasks grouped by User
+            //dashboardVM.OverdueTasks = await _context.Task
+            var overdueTasks = (await _context.Task
+                .Where(m=>m.DueDate.Value.Date < DateTime.Now.Date && m.CompletionDate == null)
+                .GroupBy(m => m.AssignedToUserFullName)
+                .Select(m => new { UserName = m.Key, Count = m.Count() })  
+                .OrderByDescending(m => m.Count)
+                .ThenBy(m=>m.UserName)
+                .ToListAsync()).Take(10);
+
+            dashboardVM.OverdueTasks = new List<OverdueTasks>();
+            foreach (var overdueTask in overdueTasks)
+            {
+                OverdueTasks rec = new OverdueTasks
+                {
+                    UserName = overdueTask.UserName,
+                    Count = overdueTask.Count
+                };
+                dashboardVM.OverdueTasks.Add(rec);
+            }
 
             ViewBag.Employees = getUserList();
 

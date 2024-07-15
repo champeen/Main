@@ -9,5 +9,6 @@ namespace Management_of_Change.ViewModels
         public List<ChangeRequest>? IncompletePccbReviews { get; set; }
         public List<ChangeRequest>? IncompleteFinalApprovals { get; set; }
         public List<Models.Task>? OpenTasks { get; set; }
+        public List<OverdueTasks>? OverdueTasks { get; set;}
     }
 }

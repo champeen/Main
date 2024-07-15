@@ -9,7 +9,7 @@
     <div class="col-3 d-flex justify-content-center align-items-end mb-3">
         <div>
             @*<a asp-action="Create">Create New</a>*@
-            @Html.ActionLink("Create New Change Request","Create","ChangeRequests",new {source="Home"},new {@class="btn btn-success"})
+            @Html.ActionLink("Create New Change Request", "Create", "ChangeRequests", new { source = "Home" }, new { @class = "btn btn-success" })
         </div>
     </div>
     <div class="col-6">
@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="col-3 d-flex justify-content-center align-items-end mb-3">
-        @Html.ActionLink("Create New Task","Create","Tasks",new {source="Home"},new {@class="btn btn-success"})
+        @Html.ActionLink("Create New Task", "Create", "Tasks", new { source = "Home" }, new { @class = "btn btn-success" })
     </div>
 </div>
 <div class="row">
@@ -51,7 +51,7 @@
                                 {
                                     <tr>
                                         <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="GeneralMocQuestions", sourceScreen="Dashboard"},new {@class=""})
+                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "GeneralMocQuestions", sourceScreen = "Dashboard" }, new { @class = "" })
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
@@ -120,7 +120,7 @@
                                 {
                                     <tr>
                                         <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="ImpactAssessments", sourceScreen="Dashboard"},new {@class=""})
+                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ImpactAssessments", sourceScreen = "Dashboard" }, new { @class = "" })
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
@@ -186,7 +186,7 @@
                                 {
                                     <tr>
                                         <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number,"Details","ChangeRequests",new {id=@item.Id, tab="FinalApprovals", sourceScreen="Dashboard"},new {@class=""})
+                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" }, new { @class = "" })
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
@@ -253,7 +253,7 @@
                                 {
                                     <tr>
                                         <td class="text-nowrap">
-                                            @Html.ActionLink("Task# " + item.Id.ToString(),"Details","Tasks",new {id=@item.Id, tab="FinalApprovals", sourceScreen="Dashboard"},new {@class=""})
+                                            @Html.ActionLink("Task# " + item.Id.ToString(), "Details", "Tasks", new { id = @item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" }, new { @class = "" })
                                             @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
                                         </td>
                                         <td class="text-nowrap">
@@ -442,4 +442,58 @@
             </div>
         </div>
     </div>
+    <div class="col-3 p-3">
+    </div>
+
+    <div class="col-3 p-3">
+        <div class="row mt-1">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
+                        Overdue Tasks * OR * Wall of Shame top 10
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        Assigned User
+                                        @*@Html.DisplayNameFor(model => model.MOC_Number)*@
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Overdue Tasks
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.OverdueTasks)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.DisplayFor(modelItem => item.UserName)
+                                        </td>
+                                        <td class="fw-bolder text-danger">
+                                            @Html.DisplayFor(modelItem => item.Count)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            @if (Model.OverdueTasks.Count() == 0)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 </div>
