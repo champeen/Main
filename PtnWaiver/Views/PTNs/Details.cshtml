@@ -89,7 +89,7 @@
                 }
                 else
                 {
-                    @Html.ActionLink("Back to List", "Index","Home", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
                 }
             </div>
         </div>
@@ -191,90 +191,138 @@
                     </dd>
                 </div>
             </div>
-            <hr / class="mt-3">
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.CreatedUser)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.CreatedUser)
-                </dd>
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.CreatedUserFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.CreatedUserFullName)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.CreatedUserEmail)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.PTN.CreatedUserEmail)
-                </dd>
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.CreatedDate)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.PTN.CreatedDate)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.ModifiedUser)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.ModifiedUser)
-                </dd>
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.ModifiedUserFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.ModifiedUserFullName)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.ModifiedUserEmail)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.PTN.ModifiedUserEmail)
-                </dd>
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.ModifiedDate)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.PTN.ModifiedDate)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.DeletedUser)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.DeletedUser)
-                </dd>
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.DeletedUserFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.DeletedUserFullName)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.DeletedUserEmail)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.DeletedUserEmail)
-                </dd>
-                <dt class="col-sm-2 my-1 text-sm-end">
-                    @Html.DisplayNameFor(model => model.PTN.DeletedDate)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.DeletedDate)
-                </dd>
+        </div>
+        <hr />
+        <div class="accordion" id="accordionPtnDetails">
+            <div class="accordion-item ">
+                <h2 class="accordion-header" id="headingPtnDetails">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePtnDetails" aria-expanded="false" aria-controls="collapsePtnDetails">
+                        <strong>User/Timestamp Info</strong>
+                    </button>
+                </h2>
+                <div id="collapsePtnDetails" class="accordion-collapse collapse" aria-labelledby="headingPtnDetails" data-bs-parent="#accordionPtnDetails">
+                    <div class="accordion-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="row mt-1">
+                                    <div class="col-12 text-center">
+                                        <h4>Created</h4>
+                                    </div>
+                                </div> 
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Username
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.CreatedUser)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Full Name
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.CreatedUserFullName)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Email
+                                    </dt>
+                                    <dd class="col-lg-9 mt-1 mb-3">
+                                        @Html.DisplayFor(model => model.PTN.CreatedUserEmail)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Date
+                                    </dt>
+                                    <dd class="col-lg-9 mt-1 mb-3">
+                                        @Html.DisplayFor(model => model.PTN.CreatedDate)
+                                    </dd>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row mt-1">
+                                    <div class="col-12 text-center">
+                                        <h4>Modified</h4>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Username
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.ModifiedUser)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Full Name
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.ModifiedUserFullName)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Email
+                                    </dt>
+                                    <dd class="col-lg-9 mt-1 mb-3">
+                                        @Html.DisplayFor(model => model.PTN.ModifiedUserEmail)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Date
+                                    </dt>
+                                    <dd class="col-lg-9 mt-1 mb-3">
+                                        @Html.DisplayFor(model => model.PTN.ModifiedDate)
+                                    </dd>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="row mt-1">
+                                    <div class="col-12 text-center">
+                                        <h4>Deleted</h4>
+                                    </div>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Username
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.DeletedUser)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Full Name
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.DeletedUserFullName)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Email
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.DeletedUserEmail)
+                                    </dd>
+                                </div>
+                                <div class="row mt-1">
+                                    <dt class="col-lg-3 my-1 text-lg-end">
+                                        Date
+                                    </dt>
+                                    <dd class="col-lg-9 my-1">
+                                        @Html.DisplayFor(model => model.PTN.DeletedDate)
+                                    </dd>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <hr />
@@ -309,9 +357,9 @@
                     <div class="text-nowrap fs-5">
                         <span class="fw-bold">STEP 1:</span> Download PTN (PCCB) Template
                         @* @Html.ActionLink("Download PTN Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"}) *@
-@*                      <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=TMP%2D0506" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get PTN (PCCB) Template</a> *@
+                        @*                      <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=TMP%2D0506" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get PTN (PCCB) Template</a> *@
                         <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=PCCB%20Template%2Epptx%20TMP%2D0506" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get PTN (PCCB) Template</a>
-                        
+
                     </div>
                 </div>
             </div>
@@ -368,7 +416,7 @@
                     <tbody>
                         @foreach (var item in Model.AttachmentsPtn)
                         {
-                            <tr>                                                                  
+                            <tr>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
@@ -704,8 +752,8 @@
                                 <th>
                                     Date Closed
                                 </th>
-@*                                 <th>
-                                    Corrective Action Due Date
+                                @*                                 <th>
+                                Corrective Action Due Date
                                 </th> *@
                                 <th></th>
                             </tr>
@@ -762,9 +810,9 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.DateClosed)
                                     </td>
-@*                                     <td>
-                                        @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
-                                    </td> *@
+                                    @*                                     <td>
+                                @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
+                                </td> *@
                                     <td class="text-nowrap">
                                         @* @Html.ActionLink("Edit","Edit","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-primary"}) *@
                                         @Html.ActionLink("Details", "Details", "Waivers", new { id = @item.Id, tab = "Waivers" }, new { @class = "btn btn-secondary ms-1" })
@@ -799,7 +847,7 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-@*                                 <td></td> *@
+                                @*                                 <td></td> *@
                             </tr>
                         }
                     </table>
