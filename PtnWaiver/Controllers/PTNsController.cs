@@ -492,6 +492,11 @@ namespace PtnWaiver.Controllers
 
             if (ModelState.IsValid)
             {
+                // attachment storage file path should already exist, but just make sure....
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId)))
+                    path.Create();
+
                 var userInfo = getUserInfo(_username);
                 if (userInfo != null)
                 {
@@ -627,6 +632,11 @@ namespace PtnWaiver.Controllers
 
             if (!found)
                 return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
+
+            // attachment storage file path should already exist, but just make sure....
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
+                path.Create();
 
             string filePath = Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId, fileAttachment.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))

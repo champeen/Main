@@ -45,7 +45,8 @@
         <div class="col-md-6">
             <div class="form-group my-3">
                 <label asp-for="WaiverNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="WaiverNumber" class="form-control" readonly />
+                @* <input asp-for="WaiverNumber" class="form-control" readonly /> *@
+                <input asp-for="WaiverNumber" class="form-control"/>
                 <span asp-validation-for="WaiverNumber" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">

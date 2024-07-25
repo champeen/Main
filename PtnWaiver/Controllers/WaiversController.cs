@@ -339,6 +339,11 @@ namespace PtnWaiver.Controllers
             {
                 try
                 {
+                    // attachment storage file path should already exist, but just make sure....
+                    DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+                    if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+                        path.Create();
+
                     var userInfo = getUserInfo(_username);
                     if (userInfo != null)
                     {
@@ -457,7 +462,12 @@ namespace PtnWaiver.Controllers
             if (!found)
                 return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
 
-            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + '-' + waiver.RevisionNumber.ToString(), fileAttachment.FileName);
+            // attachment storage file path should already exist, but just make sure....
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+                path.Create();
+
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString(), fileAttachment.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await fileAttachment.CopyToAsync(fileStream);

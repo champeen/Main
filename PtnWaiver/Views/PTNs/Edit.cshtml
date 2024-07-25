@@ -43,7 +43,7 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="DocId" />
+            @* <input type="hidden" asp-for="DocId" /> *@
             <input type="hidden" asp-for="Status" />
             <input type="hidden" asp-for="OriginatingGroup" />
             <input type="hidden" asp-for="ProductSize" />
@@ -72,6 +72,13 @@
     </div> *@
     <div class="row">
         <div class="col-6">
+            @* THIS IS JUST TEMPORARY TO GET OLD PTN's IN MJWII *@
+            <div class="form-group my-3">
+                <label asp-for="DocId" class="control-label fw-bold mb-1"></label>
+                <input asp-for="DocId" class="form-control" />
+                <span asp-validation-for="DocId" class="text-danger fw-bold mt-1"></span>
+            </div>
+            @* END TEMPORARY *@
             <div class="form-group my-3">
                 <label asp-for="Title" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
