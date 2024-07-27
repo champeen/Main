@@ -140,7 +140,8 @@ namespace Management_of_Change.Controllers
                 .Select(m => new { UserName = m.Key, Count = m.Count() })  
                 .OrderByDescending(m => m.Count)
                 .ThenBy(m=>m.UserName)
-                .ToListAsync()).Take(10);
+                //.ToListAsync()).Take(10);
+                .ToListAsync());
 
             dashboardVM.OverdueTasks = new List<OverdueTasks>();
             foreach (var overdueTask in overdueTasks)
