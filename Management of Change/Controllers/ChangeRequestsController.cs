@@ -439,7 +439,8 @@ namespace Management_of_Change.Controllers
             else
                 changeRequestViewModel.TabChangeGradeReviewDisplayed = changeRequest.Change_Status != "Draft" && changeLevel.ChangeGradeReviewRequired == true ? "Yes" : "No";
             // PCCB Review Tab...
-            changeRequestViewModel.TabPccbReviewDisplayed = changeLevel?.PccbReviewRequired == true && (changeRequest.Change_Status != "Draft" && changeRequest.Change_Status != "ChangeGradeReview" /*&& changeRequest.Change_Status != "ImpactAssessmentReview"*/) ? "Yes" : "No";
+            changeRequestViewModel.TabPccbReviewDisplayed = changeLevel?.PccbReviewRequired == true ? "Yes" : "No";
+            changeRequestViewModel.TabPccbReviewDisabled = changeRequest.Change_Status == "Draft" || changeRequest.Change_Status == "ChangeGradeReview" || changeRequest.Change_Status == "ImpactAssessmentReview" ? "disabled" : "";
 
             changeRequestViewModel.TabActiveDetail = "";
             changeRequestViewModel.TabActiveGeneralMocQuestions = "";

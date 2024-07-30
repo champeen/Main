@@ -71,7 +71,7 @@
             @if (Model.TabPccbReviewDisplayed == "Yes")
             {
                 <li class="nav-item">
-                    <a class="nav-link @Model.TabActivePccbReview fw-bolder" id="nav-pccbReview-tab" data-bs-toggle="tab" href="#nav-pccbReview" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    <a class="nav-link @Model.TabActivePccbReview @Model.TabPccbReviewDisabled fw-bolder" id="nav-pccbReview-tab" data-bs-toggle="tab" href="#nav-pccbReview" role="tab" aria-controls="nav-contact" aria-selected="false">
                         PCCB Review
                         <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Must have at least 1 PCCB Meeting setup AND all PCCB Meetings closed to move on to Final Approvals">
                         </i>

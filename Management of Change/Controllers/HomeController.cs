@@ -47,7 +47,9 @@ namespace Management_of_Change.Controllers
 
             // Get all active ChangeGradeReviews for current user...
             // fist get all active MoC's that are in 'ChangeGradeReview' status....
-            dashboardVM.ChangeGradeReviews = await _context.ChangeRequest
+
+            dashboardVM.ChangeGradeReviews = new List<ChangeRequest>();
+            List<ChangeRequest> usersActiveChangeRequests = await _context.ChangeRequest
                 .Where(m => m.DeletedDate == null)
                 //.Where(m => m.Change_Owner == username)
                 .Where(m => m.Change_Status == "ChangeGradeReview")
@@ -55,16 +57,24 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToListAsync();
 
+            //dashboardVM.ChangeGradeReviews = await _context.ChangeRequest
+            //    .Where(m => m.DeletedDate == null)
+            //    //.Where(m => m.Change_Owner == username)
+            //    .Where(m => m.Change_Status == "ChangeGradeReview")
+            //    .OrderBy(m => m.Priority)
+            //    .ThenBy(m => m.Estimated_Completion_Date)
+            //    .ToListAsync();
+
             // now remove any that do not have current user as primary or secondary ChangeGradeReviewer...
-            foreach (var rec in dashboardVM.ChangeGradeReviews)
+
+            // now only get the ones that have current user as primary or secondary ChangeGradeReviewer....
+            foreach (var rec in usersActiveChangeRequests)
             {
                 ChangeArea changeArea = await _context.ChangeArea.Where(m => m.Description == rec.Area_of_Change).FirstOrDefaultAsync();
-                if (changeArea == null)
-                    dashboardVM.ChangeGradeReviews.Remove(rec);
-                else
+                if (changeArea != null)
                 {
-                    if (changeArea.ChangeGradePrimaryApproverUsername != _username && changeArea.ChangeGradeSecondaryApproverUsername != _username)
-                        dashboardVM.ChangeGradeReviews.Remove(rec);
+                    if (changeArea.ChangeGradePrimaryApproverUsername == _username || changeArea.ChangeGradeSecondaryApproverUsername == _username)
+                        dashboardVM.ChangeGradeReviews.Add(rec);
                 }                        
             }
 
