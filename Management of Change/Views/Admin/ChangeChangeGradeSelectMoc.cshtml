@@ -6,34 +6,12 @@
 
 <h1>Change Request</h1>
 <div class="mt-5 mb-3">
-    <h4>Enter an MoC Number to Cancel</h4>
+    <h4>Enter an MoC to Change its Change </h4>
 </div>
 
 <div>
     <form asp-action="ChangeChangeGradeSelectMoc">
         @Html.AntiForgeryToken()
-        @if (Model != null && @Model.ChangeRequest != null)
-        {
-            <div>@Model.ChangeRequest?.Id</div>
-            <div>@Model.ChangeRequest.CreatedUser</div>
-        }
-
-@*         @Html.HiddenFor(m => m.ChangeRequest)
-        @Html.HiddenFor(m => m.ChangeRequest.Id) *@
-        <div class="form-group my-3">
-            <label asp-for="@Model.ChangeRequest.Id" class="control-label fw-bold mb-1"></label>
-            @* <input asp-for="@Model.ChangeRequest.Id" class="form-control form-select" readonly /> *@
-            @* @Html.DisplayFor(m=>m.ChangeRequest.Id) *@
-            @* @Html.DisplayTextFor(m=>m.ChangeRequest.Id) *@
-            @* @Html.TextBoxFor(model => model.ChangeRequest.Id, null, new {@class="form-control"}) *@
-            @Html.ValueFor(model => model.ChangeRequest.Id)
-            @* @Html.IdFor(m=>m.ChangeRequest.Id) *@
-        </div>
-        <div class="form-group my-3">
-            <label asp-for="@Model.ChangeRequest.CreatedUser" class="control-label fw-bold mb-1"></label>
-            @* <input asp-for="@Model.ChangeRequest.CreatedUser" class="form-control" /> *@
-            @Html.TextBoxFor(model => model.ChangeRequest.CreatedUser, null, new { @class = "form-control"})
-        </div>
         <div class="form-group my-3">
             <label asp-for="MocNumber" class="control-label fw-bold mb-1"></label>
             @if (ViewBag.ShowChangeGrade != null && ViewBag.ShowChangeGrade == true)
