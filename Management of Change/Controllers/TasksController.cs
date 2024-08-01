@@ -302,7 +302,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks/Details/5
-        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null, string destinationPage = null, string previousAction = null)
+        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null, string destinationPage = null, string previousAction = null, string? tab = "Details")
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -319,8 +319,26 @@ namespace Management_of_Change.Controllers
 
             TaskVM taskVM = new TaskVM();
             taskVM.Task = task;
+            taskVM.TabActiveDetail = "";
+            taskVM.TabActiveAttachments = "";
 
-            ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
+            switch (tab)
+            {
+                case null:
+                    taskVM.TabActiveDetail = "active";
+                    break;
+                case "":
+                    taskVM.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    taskVM.TabActiveDetail = "active";
+                    break;
+                case "Attachments":
+                    taskVM.TabActiveAttachments = "active";
+                    break;
+            }
+
+                    ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.CreatedUserDisplayName = getUserDisplayName(task.CreatedUser);
@@ -774,7 +792,7 @@ namespace Management_of_Change.Controllers
                 await fileAttachment.CopyToAsync(fileStream);
             }
 
-            return RedirectToAction("Details", new { id = id, previousAction = "File Uploaded" });
+            return RedirectToAction("Details", new { id = id, previousAction = "File Uploaded", tab = "Attachments" });
         }
 
         public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
@@ -786,7 +804,7 @@ namespace Management_of_Change.Controllers
         public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
         {
             System.IO.File.Delete(sourcePath);
-            return RedirectToAction("Details", new { id = id, previousAction = "File Deleted" });
+            return RedirectToAction("Details", new { id = id, previousAction = "File Deleted", tab = "Attachments" });
         }
     }
 }

@@ -17,314 +17,332 @@
 </svg>
 
 <h1>Task</h1>
-<h4 class="mt-5">Details</h4>
 <div>
-    <div class="text-nowrap">
-        @*<a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-        <a class="mx-1" asp-action="Index">Back to List</a>*@
-        @if (ViewBag.IsAdmin || ViewBag.Username == Model.Task.AssignedByUser || ViewBag.Username == Model.Task.AssignedToUser)
-        {
-            @Html.ActionLink("Edit","Edit",new {id=@Model.Task.Id, tab="Details"},new {@class="btn btn-primary"})
-        }        
-        @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
-        <span class="float-end">
-            @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Task.Id}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
-        </span>
-        
-    </div>
-    <hr />
-    <input type="hidden" asp-for="@Model.Task.Id" />
-    <input type="hidden" asp-for="@Model.Task.ChangeRequestId" />
-    <dl class="row my-3">
-        <div class="col-6">
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    MOC#
-                </div>
-                <div class="col-9">
-                    @if (Model.Task.MocNumber == null)
-                    {
-                        
-                    }
-                    else
-                    {
-                        @Html.ActionLink(Model.Task.MocNumber,"Details","ChangeRequests",new {id=Model.Task.ChangeRequestId, tab="Tasks"},new {@class=""})
-                        @*@Html.DisplayFor(model => model.MocNumber) || ID: @Html.DisplayFor(model => model.ChangeRequestId)*@
-                    }
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.Status)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.Status)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.Priority)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.Priority)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.ImplementationType)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.ImplementationType)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.Title)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.Title)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.Description)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.Description)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.AssignedByUser)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.AssignedByUserFullName)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.AssignedToUser)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.AssignedToUserFullName)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.DueDate)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.DueDate)
-                </div>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.CompletionDate)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.CompletionDate)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.CompletionNotes)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.CompletionNotes)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.OnHoldReason)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.OnHoldReason)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.CancelledReason)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.CancelledReason)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.CreatedUser)
-                </div>
-                <div class="col-9">
-                    @ViewBag.CreatedUserDisplayName
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.CreatedDate)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.CreatedDate)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.ModifiedUser)
-                </div>
-                <div class="col-9">
-                    @ViewBag.ModifiedUserDisplayName
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.ModifiedDate)
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.ModifiedDate)
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.DeletedUser)
-                </div>
-                <div class="col-9">
-                    @ViewBag.DeletedUserDisplayName
-                </div>
-            </div>
-            <div class="row my-3">
-                <div class="col-3 text-end fw-bold">
-                    @Html.DisplayNameFor(model => model.Task.DeletedDate)
-                    </dt>
-                </div>
-                <div class="col-9">
-                    @Html.DisplayFor(model => model.Task.DeletedDate)
-                </div>
-            </div>
-        </div>
-    </dl>
-</div>
-<div>
-    <hr />
-    @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>*@
-    @if (ViewBag.IsAdmin || ViewBag.Username == Model.Task.AssignedByUser || ViewBag.Username == Model.Task.AssignedToUser)
-    {
-        @Html.ActionLink("Edit", "Edit", new { id = @Model.Task.Id, tab = "Details" }, new { @class = "btn btn-primary" })
-    }    
-    @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"})
-    <span class="float-end">
-        @Html.ActionLink("Send Reminder", "TaskReminder", new { id = Model.Task.Id }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
-    </span>
-</div>
+    <nav class="my-5">
+        <ul class="nav nav-tabs" id="nav-tab2" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab2" data-bs-toggle="tab" href="#nav-detail2" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab2" data-bs-toggle="tab" href="#nav-attachments2" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments (@Model.Attachments.Count.ToString())</a>
+            </li>
+        </ul>
+    </nav>
 
-@******************************************************************************************************************@
-@*  ATTACHMENTS TAB  **********************************************************************************************@
-@******************************************************************************************************************@
-<div class="mt-5">
-    <span style="font-size: 1.7rem;  font-weight:600; line-height:1.2;">Attachments</span>
-    @*     @if (ViewBag.IsAdmin)
-    {
-    <span>@Html.ActionLink("Add New", "Create", "PccbInvitees", new { pccbId = @Model?.PCCB.Id, tab = "Details" }, new { @class = "btn btn-success align-middle ms-2 mb-2" })</span>
-    } *@
-    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary ms-2 mb-2" })
-    @if (ViewBag.PreviousAction != null)
-    {
-        <div class="alert alert-success alert-dismissible d-flex align-items-center mt-3" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
-            <span>
-                <strong>@ViewBag.PreviousAction</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </span>
-        </div>
+    <div class="tab-content" id="nav-tabContent2">
+        @******************************************************************************************************************@
+        @*  DETAIL TAB ****************************************************************************************************@
+        @******************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail2" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="text-nowrap">
+                @*<a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
+                <a class="mx-1" asp-action="Index">Back to List</a>*@
+                @if (ViewBag.IsAdmin || ViewBag.Username == Model.Task.AssignedByUser || ViewBag.Username == Model.Task.AssignedToUser)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model.Task.Id, tab = "Details" }, new { @class = "btn btn-primary" })
+                }
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                <span class="float-end">
+                    @Html.ActionLink("Send Reminder", "TaskReminder", new { id = Model.Task.Id }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
+                </span>
 
-@*         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
-            <strong>MoC Responses have been Saved</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div> *@
-    }
-</div>
-<div class="ms-5">
-    <div class="text-nowrap mt-3">
-        @using (Html.BeginForm("SaveFile", "Tasks", new { id = Model.Task.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-        {
-            <div class="control-label fw-bold mb-2">
-                <strong>Upload Attachment to Task:</strong>
             </div>
-            <div class="form-group mb-3">
-                <div class="row">
-                    <div class="col-10">
-                        <input type="file" name="fileAttachment" class="form-control" />
-                        <div class="form-group text-danger fw-bold">
-                            @*<input asp-for="FileAttachmentError" class="form-control" />*@
-                            <span asp-validation-for="Attachments" class="text-danger fw-bold"></span>
-                            @Html.DisplayFor(m => m.FileAttachmentError, new { @class = "fw-bold" })
+            <hr />
+            <input type="hidden" asp-for="@Model.Task.Id" />
+            <input type="hidden" asp-for="@Model.Task.ChangeRequestId" />
+            <dl class="row my-3">
+                <div class="col-6">
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            MOC#
+                        </div>
+                        <div class="col-9">
+                            @if (Model.Task.MocNumber == null)
+                            {
+
+                            }
+                            else
+                            {
+                                @Html.ActionLink(Model.Task.MocNumber, "Details", "ChangeRequests", new { id = Model.Task.ChangeRequestId, tab = "Tasks" }, new { @class = "" })
+                                @*@Html.DisplayFor(model => model.MocNumber) || ID: @Html.DisplayFor(model => model.ChangeRequestId)*@
+                            }
                         </div>
                     </div>
-                    <div class="col-2">
-                        @if (ViewBag.IsAdmin)
-                        {
-                            <input type="submit" value="Upload" class="form-control btn btn-success">
-                        }
-                        else
-                        {
-                            <input type="submit" value="Upload" class="form-control btn btn-success disabled">
-                        }
-
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.Status)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.Status)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.Priority)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.Priority)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.ImplementationType)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.ImplementationType)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.Title)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.Title)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.Description)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.Description)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.AssignedByUser)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.AssignedByUserFullName)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.AssignedToUser)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.AssignedToUserFullName)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.DueDate)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.DueDate)
+                        </div>
                     </div>
                 </div>
+                <div class="col-6">
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.CompletionDate)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.CompletionDate)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.CompletionNotes)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.CompletionNotes)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.OnHoldReason)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.OnHoldReason)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.CancelledReason)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.CancelledReason)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.CreatedUser)
+                        </div>
+                        <div class="col-9">
+                            @ViewBag.CreatedUserDisplayName
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.CreatedDate)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.CreatedDate)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.ModifiedUser)
+                        </div>
+                        <div class="col-9">
+                            @ViewBag.ModifiedUserDisplayName
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.ModifiedDate)
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.ModifiedDate)
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.DeletedUser)
+                        </div>
+                        <div class="col-9">
+                            @ViewBag.DeletedUserDisplayName
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3 text-end fw-bold">
+                            @Html.DisplayNameFor(model => model.Task.DeletedDate)
+                            </dt>
+                        </div>
+                        <div class="col-9">
+                            @Html.DisplayFor(model => model.Task.DeletedDate)
+                        </div>
+                    </div>
+                </div>
+            </dl>
+            <div>
+                <hr />
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+                <a asp-action="Index">Back to List</a>*@
+                @if (ViewBag.IsAdmin || ViewBag.Username == Model.Task.AssignedByUser || ViewBag.Username == Model.Task.AssignedToUser)
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model.Task.Id, tab = "Details" }, new { @class = "btn btn-primary" })
+                }
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                <span class="float-end">
+                    @Html.ActionLink("Send Reminder", "TaskReminder", new { id = Model.Task.Id }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
+                </span>
             </div>
-        }
-    </div>
-    <table class="table table-bordered table-striped mt-5">
-        <thead class="table-primary">
-            <tr>
-                <th>
-                    File Name
-                </th>
-                <th>
-                    Date Added
-                </th>
-                <th>
-                    Size
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Attachments)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Size)
-                    </td>
-                    <td>
-                        @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
-                        @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
-                        @Html.ActionLink("Download File", "DownloadFile", "Tasks", new { id = @Model.Task.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
-                        @if (ViewBag.IsAdmin)
+        </div>
+        @******************************************************************************************************************@
+        @*  ATTACHMENTS TAB  **********************************************************************************************@
+        @******************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveAttachments" id="nav-attachments2" role="tabpanel" aria-labelledby="nav-attachments-tab">
+            <div class="mt-5">
+                <span style="font-size: 1.7rem;  font-weight:600; line-height:1.2;">Attachments</span>
+                @*     @if (ViewBag.IsAdmin)
+                {
+                <span>@Html.ActionLink("Add New", "Create", "PccbInvitees", new { pccbId = @Model?.PCCB.Id, tab = "Details" }, new { @class = "btn btn-success align-middle ms-2 mb-2" })</span>
+                } *@
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary ms-2 mb-2" })
+                @if (ViewBag.PreviousAction != null)
+                {
+                    <div class="alert alert-success alert-dismissible d-flex align-items-center mt-3" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                        <span>
+                            <strong>@ViewBag.PreviousAction</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </span>
+                    </div>
+
+                    @*         <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                <strong>MoC Responses have been Saved</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div> *@
+                }
+            </div>
+            <div class="ms-5">
+                <div class="text-nowrap mt-3">
+                    @using (Html.BeginForm("SaveFile", "Tasks", new { id = Model.Task.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="control-label fw-bold mb-2">
+                            <strong>Upload Attachment to Task:</strong>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-10">
+                                    <input type="file" name="fileAttachment" class="form-control" />
+                                    <div class="form-group text-danger fw-bold">
+                                        @*<input asp-for="FileAttachmentError" class="form-control" />*@
+                                        <span asp-validation-for="Attachments" class="text-danger fw-bold"></span>
+                                        @Html.DisplayFor(m => m.FileAttachmentError, new { @class = "fw-bold" })
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    @if (ViewBag.IsAdmin)
+                                    {
+                                        <input type="submit" value="Upload" class="form-control btn btn-success">
+                                    }
+                                    else
+                                    {
+                                        <input type="submit" value="Upload" class="form-control btn btn-success disabled">
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <table class="table table-bordered table-striped mt-5">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>
+                                File Name
+                            </th>
+                            <th>
+                                Date Added
+                            </th>
+                            <th>
+                                Size
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Attachments)
                         {
-                            @Html.ActionLink("Delete", "DeleteFile", "Tasks", new { id = @Model.Task.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-danger", title = "Delete Attachment" })
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CreatedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Size)
+                                </td>
+                                <td>
+                                    @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                                    @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                                    @Html.ActionLink("Download File", "DownloadFile", "Tasks", new { id = @Model.Task.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
+                                    @if (ViewBag.IsAdmin)
+                                    {
+                                        @Html.ActionLink("Delete", "DeleteFile", "Tasks", new { id = @Model.Task.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-danger", title = "Delete Attachment" })
+                                    }
+                                    @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                </td>
+                            </tr>
                         }
-                        @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
-                    </td>
-                </tr>
-            }
-        </tbody>
-        @if (Model.Attachments == null || Model.Attachments.Count() == 0)
-        {
-            <tr>
-                <td class="text-nowrap">No data found</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        }
-    </table>
+                    </tbody>
+                    @if (Model.Attachments == null || Model.Attachments.Count() == 0)
+                    {
+                        <tr>
+                            <td class="text-nowrap">No data found</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

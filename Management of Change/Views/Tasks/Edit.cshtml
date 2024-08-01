@@ -15,7 +15,7 @@
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
                 <span class="mx-1">
-                    @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+                    @Html.ActionLink("Cancel", "Details", new { id = Model.Id }, new { @class = "btn btn-secondary" })
                 </span>
                 <span class="float-end">
                     @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
@@ -158,7 +158,7 @@
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
                 <span class="mx-1">
-                    @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+                    @Html.ActionLink("Cancel", "Details", new { id = Model.Id }, new { @class = "btn btn-secondary" })
                 </span>
                 <span class="float-end">
                     @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})

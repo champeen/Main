@@ -47,7 +47,6 @@ namespace Management_of_Change.Controllers
 
             // Get all active ChangeGradeReviews for current user...
             // fist get all active MoC's that are in 'ChangeGradeReview' status....
-
             dashboardVM.ChangeGradeReviews = new List<ChangeRequest>();
             List<ChangeRequest> usersActiveChangeRequests = await _context.ChangeRequest
                 .Where(m => m.DeletedDate == null)
@@ -56,16 +55,6 @@ namespace Management_of_Change.Controllers
                 .OrderBy(m => m.Priority)
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToListAsync();
-
-            //dashboardVM.ChangeGradeReviews = await _context.ChangeRequest
-            //    .Where(m => m.DeletedDate == null)
-            //    //.Where(m => m.Change_Owner == username)
-            //    .Where(m => m.Change_Status == "ChangeGradeReview")
-            //    .OrderBy(m => m.Priority)
-            //    .ThenBy(m => m.Estimated_Completion_Date)
-            //    .ToListAsync();
-
-            // now remove any that do not have current user as primary or secondary ChangeGradeReviewer...
 
             // now only get the ones that have current user as primary or secondary ChangeGradeReviewer....
             foreach (var rec in usersActiveChangeRequests)
@@ -136,7 +125,7 @@ namespace Management_of_Change.Controllers
 
             // Get all the Open/In Progress Tasks associated with the user...
             dashboardVM.OpenTasks = await _context.Task
-                .Where(m => m.Status == "Open" || m.Status == "In-Progress")
+                .Where(m => m.Status == "Open" || m.Status == "In-Progress" || m.Status == "On Hold")
                 .Where(m => m.AssignedToUser == username)
                 .OrderBy(m => m.Priority)
                 .ThenBy(m => m.DueDate)

@@ -1037,6 +1037,94 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = id, tab = "Attachments" });
         }
 
+        public async Task<IActionResult> ApproveChangeGrade(int id, string tab, string errorMessage = null)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            changeRequest.Change_Status = "ImpactAssessmentReview";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
+            changeRequest.ChangeGradeApprovalUser = _username;
+            changeRequest.ChangeGradeApprovalUserFullName = _userDisplayName;
+            changeRequest.ChangeGradeApprovalDate = DateTime.Now;
+            changeRequest.ChangeGradeRejectedUser = null;
+            changeRequest.ChangeGradeRejectedUserFullName = null;
+            changeRequest.ChangeGradeRejectedDate = null;
+            changeRequest.ChangeGradeRejectedReason = null;
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            // Email MoC Owner that their Change Request Grade was not accepted....
+            string subject = @"Management of Change (MoC) - Change Grade Accepted.";
+            string body = @"A Change Request has had its Change Grade approved. It is being moved onto Impact Assessment review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
+
+            return RedirectToAction("CloseDraft", new { changeRequestId = id, tab = "ImpactAssessments", errorMessage = errorMessage });
+        }
+
+        public async Task<IActionResult> RejectChangeGrade([Bind("Id, ChangeRequest, ChangeGradeRejectedReason")] ChangeRequestViewModel changeRequestViewModel)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (changeRequestViewModel.ChangeRequest.Id == null || changeRequestViewModel.ChangeRequest.Id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(changeRequestViewModel.ChangeRequest.Id);
+            if (changeRequest == null)
+                return NotFound();
+
+            if (changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason == null)
+                return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "ChangeGradeReview", changeGradeReviewError = "Reject Reason Required" });
+
+            changeRequest.Change_Status = "Draft";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            changeRequest.ChangeGradeRejectedUser = _username;
+            changeRequest.ChangeGradeRejectedUserFullName = _userDisplayName;
+            changeRequest.ChangeGradeRejectedDate = DateTime.Now;
+            changeRequest.ChangeGradeRejectedReason = changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            // Email MoC Owner that their Change Request Grade was not accepted....
+            string subject = @"Management of Change (MoC) - Change Grade Rejected.";
+            string body = @"A Change Request has had its Change Grade rejected. As it stands, this MoC will NOT go to PCCB review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
+
+            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "Details" });
+        }
+
         public async Task<IActionResult> CheckForChangeGradeReview(int id, string tab, string errorMessage = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -1082,95 +1170,7 @@ namespace Management_of_Change.Controllers
             }
             else
                 // Change Grade Review is not needed. Go To Normal Process...
-                return RedirectToAction("SubmitForReview", new { id = id, tab = tab, errorMessage = errorMessage });
-        }
-
-        public async Task<IActionResult> ApproveChangeGrade(int id, string tab, string errorMessage = null)
-        {
-            ErrorViewModel errorViewModel = CheckAuthorization();
-            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
-                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
-
-            if (id == null || id == 0)
-                return NotFound();
-
-            // Get the Change Request
-            var changeRequest = await _context.ChangeRequest.FindAsync(id);
-            if (changeRequest == null)
-                return NotFound();
-
-            changeRequest.Change_Status = "ImpactAssessmentReview";
-            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
-            changeRequest.ChangeGradeApprovalUser = _username;
-            changeRequest.ChangeGradeApprovalUserFullName = _userDisplayName;
-            changeRequest.ChangeGradeApprovalDate = DateTime.Now;
-            changeRequest.ChangeGradeRejectedUser = null;
-            changeRequest.ChangeGradeRejectedUserFullName = null;
-            changeRequest.ChangeGradeRejectedDate = null;
-            changeRequest.ChangeGradeRejectedReason = null;
-            changeRequest.ModifiedDate = DateTime.Now;
-            changeRequest.ModifiedUser = _username;
-            _context.Update(changeRequest);
-            await _context.SaveChangesAsync();
-
-            // Email MoC Owner that their Change Request Grade was not accepted....
-            string subject = @"Management of Change (MoC) - Change Grade Accepted.";
-            string body = @"A Change Request has had its Change Grade approved. It is being moved onto Impact Assessment review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-
-            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
-            {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
-                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
-            }
-
-            return RedirectToAction("SubmitForReview", new { id = id, tab = "ImpactAssessments", errorMessage = errorMessage });
-        }
-
-        public async Task<IActionResult> RejectChangeGrade([Bind("Id, ChangeRequest, ChangeGradeRejectedReason")] ChangeRequestViewModel changeRequestViewModel)
-        {
-            ErrorViewModel errorViewModel = CheckAuthorization();
-            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
-                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
-
-            if (changeRequestViewModel.ChangeRequest.Id == null || changeRequestViewModel.ChangeRequest.Id == 0)
-                return NotFound();
-
-            // Get the Change Request
-            var changeRequest = await _context.ChangeRequest.FindAsync(changeRequestViewModel.ChangeRequest.Id);
-            if (changeRequest == null)
-                return NotFound();
-
-            if (changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason == null)
-                return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "ChangeGradeReview", changeGradeReviewError = "Reject Reason Required" });
-
-            changeRequest.Change_Status = "Draft";
-            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
-            changeRequest.ModifiedDate = DateTime.Now;
-            changeRequest.ModifiedUser = _username;
-            changeRequest.ChangeGradeRejectedUser = _username;
-            changeRequest.ChangeGradeRejectedUserFullName = _userDisplayName;
-            changeRequest.ChangeGradeRejectedDate = DateTime.Now;
-            changeRequest.ChangeGradeRejectedReason = changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason;
-            _context.Update(changeRequest);
-            await _context.SaveChangesAsync();
-
-            // Email MoC Owner that their Change Request Grade was not accepted....
-            string subject = @"Management of Change (MoC) - Change Grade Rejected.";
-            string body = @"A Change Request has had its Change Grade rejected. As it stands, this MoC will NOT go to PCCB review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-
-            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
-            {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
-                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
-            }
-
-            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "Details" });
+                return RedirectToAction("CloseDraft", new { changeRequestId = id, tab = tab, errorMessage = errorMessage });
         }
 
         // This closes out 'GeneralMocQuestions' and moves to 'ImpactAssessments' stage
@@ -1327,7 +1327,8 @@ namespace Management_of_Change.Controllers
             }
 
             // Close-out Draft and go to Impact Assessment Review...
-            return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            //return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            return RedirectToAction("CheckForChangeGradeReview", new { id = vm.ChangeRequestId, tab = vm.Tab });
         }
 
         [HttpPost]
@@ -1403,7 +1404,8 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction("SubmitForReview", new { id = vm.ChangeRequestId, tab = vm.Tab, errorMessage = vm.ErrorMessage });
 
             // Close-out Draft and go to Impact Assessment Review...
-            return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            //return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            return RedirectToAction("CheckForChangeGradeReview", new { id = vm.ChangeRequestId, tab = vm.Tab });
         }
 
         public async Task<IActionResult> CloseDraft(int changeRequestId, string tab)
