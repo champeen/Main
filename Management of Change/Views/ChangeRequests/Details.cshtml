@@ -740,7 +740,7 @@
                     <span>
                         @if (ViewBag.IsAdmin && ViewBag.ShowCloseoutButton && Model.ChangeRequest.Change_Status == "PccbReview")
                         {
-                            @Html.ActionLink("Close PCCB Review(s), advanced to Final Approvals", "ClosePccbReview", "ChangeRequests", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-warning fw-bold mb-1", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                            @Html.ActionLink("Close PCCB Review(s), Advance to Final Approvals", "ClosePccbReview", "ChangeRequests", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-warning fw-bold mb-1", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                         }
                     </span>
                 </div>
@@ -813,7 +813,7 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Status)
                                     </td>
-                                    <td>
+                                    <td class="text-nowrap">
                                         @if (ViewBag.IsAdmin)
                                         {        
                                             if (Model.ChangeRequest.Change_Status != "Closed")
@@ -853,7 +853,7 @@
                 <div class="col-12 text-end">
                     @if (ViewBag.IsAdmin && ViewBag.ShowCloseoutButton && Model.ChangeRequest.Change_Status == "PccbReview")
                     {
-                        @Html.ActionLink("Close PCCB Review(s), advanced to Final Approvals", "ClosePccbReview", "ChangeRequests", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-warning fw-bold mt-3", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                        @Html.ActionLink("Close PCCB Review(s), Advance to Final Approvals", "ClosePccbReview", "ChangeRequests", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-warning fw-bold mt-3", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                     }
                 </div>
             </div>

@@ -59,13 +59,13 @@
             </div> *@
             <div class="form-group my-3">
                 <label asp-for="PCCB.InviteeList" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @* <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i> *@
                 @Html.DropDownListFor(model => model.PCCB.InviteeList, new SelectList(ViewBag.EmailLists, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbCreateInvitees" })
                 <span asp-validation-for="PCCB.InviteeList" class="text-danger fw-bold mt-1"></span>
             </div>
             <div class="form-group my-3">
                 <label asp-for="PCCB.NotificationList" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @* <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i> *@
                 @Html.DropDownListFor(model => model.PCCB.NotificationList, new SelectList(ViewBag.EmailLists, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbCreateNotifications" })
                 <span asp-validation-for="PCCB.NotificationList" class="text-danger fw-bold mt-1"></span>
             </div>

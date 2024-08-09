@@ -410,7 +410,6 @@
                                             {
                                                 <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
                                             }
-
                                             @Html.DisplayFor(modelItem => item.Title_Change_Description)
                                         </td>
                                         @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
@@ -428,7 +427,7 @@
                                     </tr>
                                 }
                             </tbody>
-                            @if (Model.ChangeGradeReviews.Count() == 0)
+                            @if (Model.IncompletePccbReviews.Count() == 0)
                             {
                                 <tr>
                                     <td class="text-nowrap">No data found</td>
@@ -490,8 +489,4 @@
             </div>
         </div>
     </div>
-
-
-
-
 </div>

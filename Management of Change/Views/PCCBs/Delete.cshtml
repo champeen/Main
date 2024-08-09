@@ -99,6 +99,6 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> 
-        <a asp-action="Index" class="ms-1 btn btn-secondary">Cancel</a>
+        <a asp-action="Details" asp-controller="ChangeRequests" asp-route-id="@Model.ChangeRequestId" asp-route-tab="PccbReview" asp-route-sourceScreen="Dashboard" class="ms-1 btn btn-secondary">Cancel</a>
     </form>
 </div>
