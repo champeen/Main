@@ -101,7 +101,7 @@ namespace Management_of_Change.Provider
                     //else
                     //    smtpClient.Send(mailMessage);
 
-                    //smtpClient.Send(mailMessage);
+                    smtpClient.Send(mailMessage);
                 }
             }
             //return true;
