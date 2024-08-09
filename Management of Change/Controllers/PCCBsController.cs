@@ -257,7 +257,7 @@ namespace Management_of_Change.Controllers
                                 {
                                     // Email person in Notification List informing them of the PCCB meeting that was just closed....
                                     string subject = @"Management of Change (MoC) - PCCB Meeting Completed (notification).";
-                                    string body = @"A Change Request has had a PCCB Meeting Completed. Please follow link below and review the meeting content. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "/PCCBs/Details/" + pccbRec.Id.ToString() + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                                    string body = @"A Change Request has had a PCCB Meeting Completed. Please follow link below and review the meeting content. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "PCCBs/Details/" + pccbRec.Id.ToString() + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
                                     if (changeRequest != null && email != null)
                                     {
