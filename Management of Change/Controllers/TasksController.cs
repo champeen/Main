@@ -336,9 +336,12 @@ namespace Management_of_Change.Controllers
                 case "Attachments":
                     taskVM.TabActiveAttachments = "active";
                     break;
+                default:
+                    taskVM.TabActiveDetail = "active";
+                    break;
             }
 
-                    ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
+            ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.CreatedUserDisplayName = getUserDisplayName(task.CreatedUser);
