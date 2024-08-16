@@ -15,7 +15,7 @@ namespace Management_of_Change.Models
         public string? Step { get; set; }
         public string? Agenda { get; set; }
         public string? Decisions { get; set; }
-        [Display(Name = "Action Items")]
+        [Display(Name = "Conditions of Approval")]
         public string? ActionItems { get; set; }         
         public string? Notes { get; set; }
         public string Status { get; set; }

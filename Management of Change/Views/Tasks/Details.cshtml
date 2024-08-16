@@ -39,11 +39,18 @@
                 <a class="mx-1" asp-action="Index">Back to List</a>*@
                 @if (ViewBag.IsAdmin || ViewBag.Username == Model.Task.AssignedByUser || ViewBag.Username == Model.Task.AssignedToUser)
                 {
-                    @Html.ActionLink("Edit", "Edit", new { id = @Model.Task.Id, tab = "Details" }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model.Task.Id, tab = "Details", destinationPage = ViewBag.DestinationPage }, new { @class = "btn btn-primary me-1" })
                 }
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.DestinationPage == "ChangeRequest")
+                {
+                    @Html.ActionLink("Back to List", "Details", "ChangeRequests" , new { id = Model.Task.ChangeRequestId, tab = "Tasks" }, new { @class = "btn btn-secondary me-1" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary me-1" })
+                }                
                 <span class="float-end">
-                    @Html.ActionLink("Send Reminder", "TaskReminder", new { id = Model.Task.Id }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
+                    @Html.ActionLink("Send Reminder", "TaskReminder", new { id = Model.Task.Id, destinationPage = ViewBag.DestinationPage }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
                 </span>
 
             </div>
@@ -56,7 +63,7 @@
                         <div class="col-3 text-end fw-bold">
                             MOC#
                         </div>
-                        <div class="col-9">
+                        <div class="col-2">
                             @if (Model.Task.MocNumber == null)
                             {
 
@@ -66,6 +73,9 @@
                                 @Html.ActionLink(Model.Task.MocNumber, "Details", "ChangeRequests", new { id = Model.Task.ChangeRequestId, tab = "Tasks" }, new { @class = "" })
                                 @*@Html.DisplayFor(model => model.MocNumber) || ID: @Html.DisplayFor(model => model.ChangeRequestId)*@
                             }
+                        </div>
+                        <div class="col-7">
+                            @ViewBag.MocTitle
                         </div>
                     </div>
                     <div class="row my-3">
@@ -223,11 +233,18 @@
                 <a asp-action="Index">Back to List</a>*@
                 @if (ViewBag.IsAdmin || ViewBag.Username == Model.Task.AssignedByUser || ViewBag.Username == Model.Task.AssignedToUser)
                 {
-                    @Html.ActionLink("Edit", "Edit", new { id = @Model.Task.Id, tab = "Details" }, new { @class = "btn btn-primary" })
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model.Task.Id, tab = "Details", destinationPage = ViewBag.DestinationPage }, new { @class = "btn btn-primary me-1" })
                 }
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.DestinationPage == "ChangeRequest")
+                {
+                    @Html.ActionLink("Back to List", "Details", "ChangeRequests", new { id = Model.Task.ChangeRequestId, tab = "Tasks" }, new { @class = "btn btn-secondary me-1" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary me-1" })
+                }
                 <span class="float-end">
-                    @Html.ActionLink("Send Reminder", "TaskReminder", new { id = Model.Task.Id }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
+                    @Html.ActionLink("Send Reminder", "TaskReminder", new { id = Model.Task.Id, destinationPage = ViewBag.DestinationPage }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
                 </span>
             </div>
         </div>

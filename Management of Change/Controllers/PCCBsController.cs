@@ -116,7 +116,7 @@ namespace Management_of_Change.Controllers
             pccb.ChangeRequestId = id;
             pccb.CreatedUser = _username;
             pccb.CreatedDate = DateTime.Now;
-            pccb.Status = "Open";
+            pccb.Status = "Meeting Scheduled";
 
             PccbVM pccbVM = new PccbVM();
             pccbVM.PCCB = pccb;
@@ -245,7 +245,7 @@ namespace Management_of_Change.Controllers
                 string oldStatus = await _context.PCCB.Where(m=>m.Id == pccbRec.Id).Select(m=>m.Status).FirstOrDefaultAsync();
                 if (oldStatus != null && changeRequest != null)
                 {
-                    if (oldStatus != pccbRec.Status && pccbRec.Status == "Closed")
+                    if (oldStatus != pccbRec.Status && pccbRec.Status == "Meeting Closed")
                     {
                         if (pccbRec.NotificationList != null)
                         {

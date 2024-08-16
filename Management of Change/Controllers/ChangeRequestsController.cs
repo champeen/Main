@@ -385,7 +385,7 @@ namespace Management_of_Change.Controllers
             }
 
             ViewBag.ShowCloseoutButton = false;
-            if (changeRequest.PccbMeetings.Count() > 0 && changeRequest.PccbMeetings.Where(m => m.Status != "Closed").Count() == 0)
+            if (changeRequest.PccbMeetings.Count() > 0 && changeRequest.PccbMeetings.Where(m => m.Status != "Meeting Closed").Count() == 0)
                 ViewBag.ShowCloseoutButton = true;
 
             // Get all the tasks associated with this ChangeRequest...

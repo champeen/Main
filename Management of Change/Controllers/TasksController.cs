@@ -381,6 +381,7 @@ namespace Management_of_Change.Controllers
                 //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
             }
             taskVM.Attachments = attachments.OrderBy(m => m.Name).ToList();
+            ViewBag.MocTitle = await _context.ChangeRequest.Where(m=>m.Id == task.ChangeRequestId).Select(m=>m.Title_Change_Description).FirstOrDefaultAsync();
 
             return View(taskVM);
         }
@@ -536,7 +537,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string? destinationPage = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -552,6 +553,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.DestinationPage = destinationPage;
 
             // Create Dropdown List of Change Requests...
             var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
@@ -574,7 +576,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,Priority,AssignedToUser,AssignedToUserFullName,AssignedToUserEmail,AssignedByUser,AssignedByUserFullName,AssignedByUserEmail,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,CancelledReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,Priority,AssignedToUser,AssignedToUserFullName,AssignedToUserEmail,AssignedByUser,AssignedByUserFullName,AssignedByUserEmail,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,CancelledReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task, string? destinationPage = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -647,7 +649,8 @@ namespace Management_of_Change.Controllers
                         //_context.Add(emailHistory);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = id, destinationPage = destinationPage });
             }
 
             ViewBag.IsAdmin = _isAdmin;
@@ -715,7 +718,7 @@ namespace Management_of_Change.Controllers
             return (_context.Task?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> TaskReminder(int id)
+        public async Task<IActionResult> TaskReminder(int id, string? destinationPage = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -755,7 +758,7 @@ namespace Management_of_Change.Controllers
                 //_context.Add(emailHistory);
             }
             //await _context.SaveChangesAsync();
-            return RedirectToAction("Details", new { id = id });
+            return RedirectToAction("Details", new { id = id, destinationPage = destinationPage });
         }
 
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)

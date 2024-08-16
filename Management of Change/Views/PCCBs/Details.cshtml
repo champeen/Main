@@ -61,11 +61,16 @@
                 <span asp-validation-for="PCCB.Title" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-1">
+                <label asp-for="PCCB.Notes" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.Notes, new { @class = "form-control", @rows = 16, @readonly = true })
+                @*<input asp-for="Title_Change_Description" class="form-control" />*@
+                <span asp-validation-for="PCCB.Notes" class="text-danger fw-bold"></span>
+            </div>
+@*             <div class="form-group my-1">
                 <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
                 @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 16, @readonly = true })
-                @*<input asp-for="Title_Change_Description" class="form-control" />*@
                 <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
-            </div>
+            </div> *@
         </div>
         <div class="col-6">
             <div class="form-group my-1">
@@ -108,16 +113,6 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="form-group my-1">
-                <label asp-for="PCCB.Notes" class="control-label fw-bold mb-1"></label>
-                @Html.TextAreaFor(model => model.PCCB.Notes, new { @class = "form-control", @rows = 3, @readonly = true })
-                @*<input asp-for="Title_Change_Description" class="form-control" />*@
-                <span asp-validation-for="PCCB.Notes" class="text-danger fw-bold"></span>
-            </div>
-        </div>
-    </div>
 </div>
 
 @* <div class="mt-4">
@@ -127,6 +122,67 @@
     }
     @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary me-1" })
 </div> *@
+
+@******************************************************************************************************************@
+@*  ATTACHMENTS TAB  **********************************************************************************************@
+@******************************************************************************************************************@
+<div class="mt-5">
+    <span style="font-size: 1.7rem;  font-weight:600; line-height:1.2;">Attachments</span>
+    @*     @if (ViewBag.IsAdmin)
+    {
+    <span>@Html.ActionLink("Add New", "Create", "PccbInvitees", new { pccbId = @Model?.PCCB.Id, tab = "Details" }, new { @class = "btn btn-success align-middle ms-2 mb-2" })</span>
+    } *@
+    @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-2 mb-2" })
+</div>
+<div class="ms-3">
+    <table class="table table-bordered table-striped mt-2">
+        <thead class="table-primary">
+            <tr>
+                <th>
+                    File Name
+                </th>
+                <th>
+                    Date Added
+                </th>
+                <th>
+                    Size
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Attachments)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Size)
+                    </td>
+                    <td>
+                        @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                        @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                        @Html.ActionLink("Download File", "DownloadFile", "PCCBs", new { id = @Model.PCCB.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
+                        @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+        @if (Model.Attachments == null || Model.Attachments.Count() == 0)
+        {
+            <tr>
+                <td class="text-nowrap">No data found</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+    </table>
+</div>
 
 @***********************************************************************************************************************************************@
 @** INVITEES                                                                                                                                  **@
@@ -190,67 +246,6 @@
             }
         </tbody>
         @if (Model.PCCB.Invitees == null || Model.PCCB.Invitees.Count() == 0)
-        {
-            <tr>
-                <td class="text-nowrap">No data found</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        }
-    </table>
-</div>
-
-@******************************************************************************************************************@
-@*  ATTACHMENTS TAB  **********************************************************************************************@
-@******************************************************************************************************************@
-<div class="mt-5">
-    <span style="font-size: 1.7rem;  font-weight:600; line-height:1.2;">Attachments</span>
-    @*     @if (ViewBag.IsAdmin)
-    {
-    <span>@Html.ActionLink("Add New", "Create", "PccbInvitees", new { pccbId = @Model?.PCCB.Id, tab = "Details" }, new { @class = "btn btn-success align-middle ms-2 mb-2" })</span>
-    } *@
-    @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-2 mb-2" })
-</div>
-<div class="ms-3">
-    <table class="table table-bordered table-striped mt-5">
-        <thead class="table-primary">
-            <tr>
-                <th>
-                    File Name
-                </th>
-                <th>
-                    Date Added
-                </th>
-                <th>
-                    Size
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Attachments)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Size)
-                    </td>
-                    <td>
-                        @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
-                        @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
-                        @Html.ActionLink("Download File", "DownloadFile", "PCCBs", new { id = @Model.PCCB.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
-                        @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
-                    </td>
-                </tr>
-            }
-        </tbody>
-        @if (Model.Attachments == null || Model.Attachments.Count() == 0)
         {
             <tr>
                 <td class="text-nowrap">No data found</td>

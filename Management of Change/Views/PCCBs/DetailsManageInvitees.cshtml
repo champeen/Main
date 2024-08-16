@@ -175,11 +175,15 @@
                 <span asp-validation-for="PCCB.Title" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-1">
+                <label asp-for="PCCB.Notes" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.Notes, new { @class = "form-control", @rows = 16, @readonly = true })
+                <span asp-validation-for="PCCB.Notes" class="text-danger fw-bold"></span>
+            </div>
+@*             <div class="form-group my-1">
                 <label asp-for="PCCB.Agenda" class="control-label fw-bold mb-1"></label>
                 @Html.TextAreaFor(model => model.PCCB.Agenda, new { @class = "form-control", @rows = 15, @readonly = true })
-                @*<input asp-for="Title_Change_Description" class="form-control" />*@
                 <span asp-validation-for="PCCB.Agenda" class="text-danger fw-bold"></span>
-            </div>
+            </div> *@
         </div>
         <div class="col-6">
             <div class="form-group my-1">
@@ -218,16 +222,6 @@
                 @Html.TextAreaFor(model => model.PCCB.ActionItems, new { @class = "form-control", @rows = 3, @readonly = true })
                 @*<input asp-for="Title_Change_Description" class="form-control" />*@
                 <span asp-validation-for="PCCB.ActionItems" class="text-danger fw-bold"></span>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="form-group my-1">
-                <label asp-for="PCCB.Notes" class="control-label fw-bold mb-1"></label>
-                @Html.TextAreaFor(model => model.PCCB.Notes, new { @class = "form-control", @rows = 3, @readonly = true })
-                @*<input asp-for="Title_Change_Description" class="form-control" />*@
-                <span asp-validation-for="PCCB.Notes" class="text-danger fw-bold"></span>
             </div>
         </div>
     </div>

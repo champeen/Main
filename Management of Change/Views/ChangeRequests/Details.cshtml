@@ -766,7 +766,7 @@
                                     Decisions
                                 </th>
                                 <th>
-                                    Action Items
+                                    Conditions of Approval
                                 </th>
                                 <th>
                                     Invitees
@@ -1130,7 +1130,7 @@
                         <tr>
                             <td>
                                 @*@Html.DisplayFor(modelItem => item.Id)*@
-                                @Html.ActionLink("Task#" + item.Id.ToString(), "Details", "Tasks", new { id = @item.Id, tab = "Tasks" }, new { @class = "" })
+                                @Html.ActionLink("Task#" + item.Id.ToString(), "Details", "Tasks", new {id = @item.Id, destinationPage = "ChangeRequest", tab = "Tasks"}, new { @class = "" })
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ImplementationType)
