@@ -70,11 +70,11 @@
                     <div class="col-2">
                         @if (ViewBag.IsAdmin)
                         {
-                            <input type="submit" value="Upload" class="form-control btn btn-success">
+                            <input type="submit" value="Upload" class="form-control btn btn-success" onclick="return DisplayProgressMessage(this, 'Processing...');" />
                         }
                         else
                         {
-                            <input type="submit" value="Upload" class="form-control btn btn-success disabled">
+                            <input type="submit" value="Upload" class="form-control btn btn-success disabled" />
                         }
 
                     </div>
@@ -108,7 +108,8 @@
                         @Html.DisplayFor(modelItem => item.CreatedDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Size)
+                        @item.Size.ToString("#,##0") bytes
+                        @* @Html.DisplayFor(modelItem => item.Size) *@
                     </td>
                     <td>
                         @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@

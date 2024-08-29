@@ -989,6 +989,8 @@ namespace Management_of_Change.Controllers
             return (_context.ChangeRequest?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
         {
             if (id == null || _context.ChangeRequest == null)

@@ -761,6 +761,8 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = id, destinationPage = destinationPage });
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit,RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
         {
             if (id == null || _context.Task == null)

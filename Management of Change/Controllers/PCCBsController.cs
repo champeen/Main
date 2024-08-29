@@ -443,6 +443,8 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", "PCCBs", new { id = pccbInvitee.PccbId, destinationPage = "ManageInvitees" });
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
         {
             if (id == null || _context.PCCB == null)
@@ -469,7 +471,7 @@ namespace Management_of_Change.Controllers
 
             if (!found)
                 return RedirectToAction("Details", new { id = id,
-                    destinationPage = "ManageInvitees", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type." });
+                    destinationPage = "ManageAttachments", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type." });
 
             string filePath = Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, pccbRec.Id.ToString(), fileAttachment.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))

@@ -266,7 +266,8 @@
                         @Html.DisplayFor(modelItem => item.CreatedDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Size)
+                        @item.Size.ToString("#,##0") bytes
+                        @* @Html.DisplayFor(modelItem => item.Size) *@
                     </td>
                     <td>
                         @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
