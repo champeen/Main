@@ -289,8 +289,8 @@
                                     <input type="file" name="fileAttachment" class="form-control" />
                                     <div class="form-group text-danger fw-bold">
                                         @*<input asp-for="FileAttachmentError" class="form-control" />*@
-                                        <span asp-validation-for="Attachments" class="text-danger fw-bold"></span>
-                                        @Html.DisplayFor(m => m.FileAttachmentError, new { @class = "fw-bold" })
+                                        <span asp-validation-for="Attachments" class="text-danger fw-bold mt-1"></span>
+                                        @Html.DisplayFor(m => m.FileAttachmentError, new { @class = "fw-bold mt-1" })
                                     </div>
                                 </div>
                                 <div class="col-2">

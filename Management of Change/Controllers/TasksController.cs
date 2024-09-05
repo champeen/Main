@@ -349,6 +349,7 @@ namespace Management_of_Change.Controllers
             ViewBag.DeletedUserDisplayName = getUserDisplayName(task.DeletedUser);
             ViewBag.PreviousAction = previousAction;
             ViewBag.FileAttachmentError = fileAttachmentError;
+            taskVM.FileAttachmentError = fileAttachmentError;
             ViewBag.DestinationPage = destinationPage;
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -769,7 +770,7 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             if (fileAttachment == null || fileAttachment.Length == 0)
-                return RedirectToAction("Details", "Tasks", new { id = id, fileAttachmentError = "No File Has Been Selected For Upload" });
+                return RedirectToAction("Details", "Tasks", new { id = id, fileAttachmentError = "No File Has Been Selected For Upload", tab = "Attachments" });
 
             // get PCCB (meeting) record...
             var taskRec = await _context.Task.FindAsync(id);
@@ -791,6 +792,7 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction("Details", new
                 {
                     id = id,
+                    tab = "Attachments",
                     fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type."
                 });
 
