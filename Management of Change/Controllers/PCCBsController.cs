@@ -106,7 +106,7 @@ namespace Management_of_Change.Controllers
             else if (destinationPage == "ManageAttachments")
                 return View("DetailsManageAttachments", pccbVM);
             else
-                return View(pccbVM);
+                return View("Details", pccbVM);
         }
 
         // GET: PCCBs/Create

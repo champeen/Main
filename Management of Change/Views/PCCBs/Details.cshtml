@@ -134,7 +134,7 @@
     } *@
     @Html.ActionLink("Back", "Details", "ChangeRequests", new { id = @Model?.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-2 mb-2" })
 </div>
-<div class="ms-3">
+<div class="ms-5">
     <table class="table table-bordered table-striped mt-2">
         <thead class="table-primary">
             <tr>
@@ -161,7 +161,8 @@
                         @Html.DisplayFor(modelItem => item.CreatedDate)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Size.ToString("#,##0"))
+                        @* @Html.DisplayFor(modelItem => item.Size.ToString("#,##0")) *@
+                        @item.Size.ToString("#,##0") bytes
                     </td>
                     <td>
                         @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
