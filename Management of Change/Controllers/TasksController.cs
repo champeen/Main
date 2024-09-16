@@ -602,6 +602,15 @@ namespace Management_of_Change.Controllers
             if (task.ChangeRequestId != null && task.ImplementationType == null)
                 ModelState.AddModelError("ImplementationType", "If task is part of a Change Request, Implementation Type is required.");
 
+            if (task.Status == "Complete" && task.CompletionDate == null)
+                ModelState.AddModelError("CompletionDate", "If Task Status is 'Completed, Completion Date is required.");
+
+            if (task.Status != "Complete" && task.CompletionDate != null)
+            {
+                ModelState.AddModelError("CompletionDate", "Completion Date is entered, but Status is not 'Complete'. (Either Change Status to 'Complete' or clear 'Completion Date')");
+                ModelState.AddModelError("Status", "Completion Date is entered, but Status is not 'Complete'. (Either Change Status to 'Complete' or clear 'Completion Date')");
+            }
+
             if (ModelState.IsValid)
             {
                 var originalTaskStatus = await _context.Task.Where(m => m.Id == task.Id).Select(m => m.Status).FirstOrDefaultAsync();
