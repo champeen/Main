@@ -355,7 +355,7 @@ namespace PtnWaiver.Controllers
             var userInfo = getUserInfo(_username);
             var firstInitial = userInfo.givenname == null || userInfo.givenname == "" ? "" : userInfo.givenname.Substring(0, 1);
             var lastInitial = userInfo.surname == null || userInfo.surname == "" ? "" : userInfo.surname.Substring(0, 1);
-            var middleInitial = userInfo.initials == null || userInfo.initials == "" ? "" : userInfo.initials.Substring(0, 1);
+            var middleInitial = userInfo.initials == null || userInfo.initials == "" ? "_" : userInfo.initials.Substring(0, 1);  // Per Ian Manning, if user does not have middle name, use a special character.  He is looking to get the PTN naming convention the same length
             return (firstInitial + middleInitial + lastInitial);
         }
 
