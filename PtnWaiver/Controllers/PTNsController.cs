@@ -612,6 +612,8 @@ namespace PtnWaiver.Controllers
             return (_contextPtnWaiver.PTN?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
         {
             if (id == null || _contextPtnWaiver.PTN == null)
