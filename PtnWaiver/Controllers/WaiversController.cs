@@ -157,6 +157,106 @@ namespace PtnWaiver.Controllers
             return View(waiverVM);
         }
 
+        public async Task<IActionResult> MesLookup(string docId, string tab = "Waiver", string tabWaiver = "Details", string fileAttachmentError = null, string rejectedReason = null)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (docId == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            Waiver waiver = await _contextPtnWaiver.Waiver
+                .Where(m => m.WaiverNumber == docId)
+                .OrderByDescending(m => m.RevisionNumber)
+                .FirstOrDefaultAsync();
+
+            PTN ptn = await _contextPtnWaiver.PTN
+                .FirstOrDefaultAsync(m => m.Id == waiver.PTNId);
+
+            if (waiver == null || ptn == null)
+                return NotFound();
+
+            var groupApproversReviews = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == waiver.Id && m.SourceTable == "Waiver").OrderBy(m => m.Group).ToListAsync();
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+            ViewBag.RejectedReason = rejectedReason;
+
+            WaiverViewModel waiverVM = new WaiverViewModel();
+            waiverVM.FileAttachmentError = fileAttachmentError;
+            waiverVM.Waiver = waiver;
+            waiverVM.Ptn = ptn;
+            waiverVM.GroupApproversReview = groupApproversReviews;
+
+            waiverVM.TabActiveDetail = "";
+            waiverVM.TabActiveAttachmentsWaiver = "";
+            waiverVM.TabActiveWaiverApproval = "";
+            waiverVM.TabActiveWaiverAdminApproval = "";
+            switch (tabWaiver)
+            {
+                case null:
+                    waiverVM.TabActiveDetail = "active";
+                    break;
+                case "":
+                    waiverVM.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    waiverVM.TabActiveDetail = "active";
+                    break;
+                case "AttachmentsWaiver":
+                    waiverVM.TabActiveAttachmentsWaiver = "active";
+                    break;
+                case "WaiverApproval":
+                    waiverVM.TabActiveWaiverApproval = "active";
+                    break;
+                case "WaiverAdminApproval":
+                    waiverVM.TabActiveWaiverAdminApproval = "active";
+                    break;
+            }
+
+            // GET ALL ATTACHMENTS FOR Waiver ///////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            waiverVM.AttachmentsWaiver = attachments.OrderBy(m => m.Name).ToList();
+
+            // Render Tabs Disabled/Enabled
+            // Submit for Admin Approval Tab...
+            waiverVM.Tab3Disabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
+            // Admin Approve Waiver Tab...
+            waiverVM.Tab4Disabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+
+            if (waiverVM.Waiver.Status != "Draft")
+                ViewBag.Disable = "disabled";
+
+            //return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
+            return View("Details", waiverVM);
+        }
+
         // GET: Waivers/Create
         public async Task<IActionResult> Create(int ptnId, string tab = "Details")
         {

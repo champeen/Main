@@ -168,6 +168,111 @@ namespace PtnWaiver.Controllers
             return View(ptnVM);
         }
 
+        // GET: PTNs/Details/5
+        public async Task<IActionResult> MesLookup(string docId, string? tab = "Details", string sourceString = "Dashboard", string fileAttachmentError = null, string rejectedReason = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (docId == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            var pTN = await _contextPtnWaiver.PTN
+                .FirstOrDefaultAsync(m => m.DocId == docId);
+            if (pTN == null)
+                return NotFound();
+
+            var groupApproversReviews = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == pTN.Id && m.SourceTable == "PTN").OrderBy(m => m.Group).ToListAsync();
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+            ViewBag.RejectedReason = rejectedReason;
+            ViewBag.SourceString = sourceString;
+
+            PtnViewModel ptnVM = new PtnViewModel();
+            ptnVM.FileAttachmentError = fileAttachmentError;
+            ptnVM.PTN = pTN;
+            ptnVM.GroupApproversReview = groupApproversReviews;
+
+            ptnVM.TabActiveDetail = "";
+            ptnVM.TabActiveAttachmentsPtn = "";
+            ptnVM.TabActivePtnApproval = "";
+            ptnVM.TabActivePtnAdminApproval = "";
+            ptnVM.TabActiveWaivers = "";
+            ptnVM.TabActiveAttachmentsWaiver = "";
+            switch (tab)
+            {
+                case null:
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "":
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "AttachmentsPtn":
+                    ptnVM.TabActiveAttachmentsPtn = "active";
+                    break;
+                case "PtnApproval":
+                    ptnVM.TabActivePtnApproval = "active";
+                    break;
+                case "PtnAdminApproval":
+                    ptnVM.TabActivePtnAdminApproval = "active";
+                    break;
+                case "Waivers":
+                    ptnVM.TabActiveWaivers = "active";
+                    break;
+            }
+
+            // GET ALL ATTACHMENTS FOR PTN ///////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId)))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            ptnVM.AttachmentsPtn = attachments.OrderBy(m => m.Name).ToList();
+
+            // Get all Waivers under this PTN....
+            ptnVM.PTN.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == pTN.Id && m.DeletedDate == null).ToListAsync();
+
+            // RENDER TABS DISABLED/ENABLED....
+            // Submit for Admin Approval Tab...
+            ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
+            // Admin Approve Ptn Tab...
+            ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            // Waivers Tab...
+            ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+
+            if (ptnVM.PTN.Status != "Draft")
+                ViewBag.Disable = "disabled";
+
+            return View("Details",ptnVM);
+        }
+
         // GET: PTNs/Create
         public IActionResult Create()
         {
