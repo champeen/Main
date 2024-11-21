@@ -162,8 +162,9 @@ namespace PtnWaiver.Controllers
             // Waivers Tab...
             ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
 
-            if (ptnVM.PTN.Status != "Draft")
-                ViewBag.Disable = "disabled";
+            // Per Ian Manning, do not allow anyone to change an attachment after Draft (because the PTN has been approved in the documents state it is in) but allow to upload new documents.
+            //if (ptnVM.PTN.Status != "Draft")
+            //    ViewBag.DisableAttachmentUpload = "disabled";
 
             return View(ptnVM);
         }
@@ -270,7 +271,7 @@ namespace PtnWaiver.Controllers
             if (ptnVM.PTN.Status != "Draft")
                 ViewBag.Disable = "disabled";
 
-            return View("Details",ptnVM);
+            return View("Details", ptnVM);
         }
 
         // GET: PTNs/Create
@@ -746,12 +747,21 @@ namespace PtnWaiver.Controllers
                 path.Create();
 
             string filePath = Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId, fileAttachment.FileName);
-            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await fileAttachment.CopyToAsync(fileStream);
-            }
 
-            return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn" });
+            // if file exists but not in draft mode, do NOT let user replace it.....
+            if (ptn.Status != "Draft" && System.IO.File.Exists(filePath))
+            {
+                // return message to user saying they cannot overwrite a document after PTN has been approved.  You can only upload new documents.
+                return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn", fileAttachmentError = "Cannot Overwrite Existing Attachment.  Past Draft Mode. Must Create New Attachment." });
+            }
+            else
+            {
+                using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await fileAttachment.CopyToAsync(fileStream);
+                }
+            }
+            return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn"});
         }
 
         public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
@@ -759,6 +769,7 @@ namespace PtnWaiver.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
             return File(fileBytes, "application/x-msdownload", fileName);
         }
+
         public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
         {
             System.IO.File.Delete(sourcePath);

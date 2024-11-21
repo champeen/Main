@@ -150,8 +150,9 @@ namespace PtnWaiver.Controllers
             // Admin Approve Waiver Tab...
             waiverVM.Tab4Disabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
 
-            if (waiverVM.Waiver.Status != "Draft")
-                ViewBag.Disable = "disabled";
+            // Per Ian Manning, do not allow anyone to change an attachment after Draft (because the PTN has been approved in the documents state it is in) but allow to upload new documents.
+            //if (waiverVM.Waiver.Status != "Draft")
+            //    ViewBag.DisableAttachmentUpload = "disabled";
 
             //return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
             return View(waiverVM);
@@ -570,11 +571,19 @@ namespace PtnWaiver.Controllers
                 path.Create();
 
             string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString(), fileAttachment.FileName);
-            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await fileAttachment.CopyToAsync(fileStream);
-            }
 
+            if (waiver.Status != "Draft" && System.IO.File.Exists(filePath))
+            {
+                // return message to user saying they cannot overwrite a document after Waiver has been approved.  You can only upload new documents.
+                return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver", fileAttachmentError = "Cannot Overwrite Existing Attachment. Past Draft Mode. Must Create New Attachment." });
+            }
+            else
+            {
+                using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await fileAttachment.CopyToAsync(fileStream);
+                }
+            }
             return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
         }
 

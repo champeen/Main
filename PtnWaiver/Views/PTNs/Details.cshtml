@@ -384,14 +384,14 @@
                     <div class="form-group mb-3">
                         <div class="row">
                             <div class="col-9">
-                                <input type="file" name="fileAttachment" class="form-control" @ViewBag.Disable />
+                                <input type="file" name="fileAttachment" class="form-control" @ViewBag.DisableAttachmentUpload />
                                 <div class="form-group text-danger fw-bold">
                                     @*<input asp-for="FileAttachmentError" class="form-control" />*@
                                     @Html.DisplayFor(m => m.FileAttachmentError)
                                 </div>
                             </div>
                             <div class="col-xl-3 block">
-                                <input type="submit" value="Upload Completed PTN (PCCB) Template" class="form-control btn btn-success" @ViewBag.Disable>
+                                <input type="submit" value="Upload Completed PTN (PCCB) Template" class="form-control btn btn-success" @ViewBag.DisableAttachmentUpload>
                             </div>
                         </div>
                     </div>
