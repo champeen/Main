@@ -10,12 +10,14 @@ namespace Management_of_Change.Controllers
     public class AdminController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly ILogger<AdminController> _logger;
 
-        public AdminController(Management_of_ChangeContext context, ILogger<AdminController> logger) : base(context)
+        public AdminController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
-            _logger = logger;
+            //_logger = logger;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         public IActionResult Index()

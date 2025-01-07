@@ -15,10 +15,12 @@ namespace Management_of_Change.Controllers
     public class PCCBsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public PCCBsController(Management_of_ChangeContext context) : base(context)
+        public PCCBsController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: PCCBs

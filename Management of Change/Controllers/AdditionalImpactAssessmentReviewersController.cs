@@ -15,10 +15,12 @@ namespace Management_of_Change.Controllers
     public class AdditionalImpactAssessmentReviewersController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public AdditionalImpactAssessmentReviewersController(Management_of_ChangeContext context) : base(context)
+        public AdditionalImpactAssessmentReviewersController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: AdditionalImpactAssessmentReviewers

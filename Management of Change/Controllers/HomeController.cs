@@ -15,11 +15,13 @@ namespace Management_of_Change.Controllers
     public class HomeController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(Management_of_ChangeContext context, ILogger<HomeController> logger) : base(context)
+        public HomeController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver, ILogger<HomeController> logger) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
             _logger = logger;
         }
 

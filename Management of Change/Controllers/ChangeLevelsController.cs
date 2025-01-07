@@ -16,10 +16,12 @@ namespace Management_of_Change.Controllers
     public class ChangeLevelsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public ChangeLevelsController(Management_of_ChangeContext context) : base(context)
+        public ChangeLevelsController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: ChangeLevels

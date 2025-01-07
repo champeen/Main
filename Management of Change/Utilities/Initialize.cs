@@ -34,6 +34,7 @@ namespace Management_of_Change.Utilities
         // Setup Global Static Variables based on environment....
         public static string WebsiteUrl { get; set; }
         public static string ConnectionString { get; set; }
+        public static string ConnectionStringPtnWaiver { get; set; }
         public static string AttachmentDirectory { get; set; }
         public static string TaskDirectory { get; set; }
 
@@ -86,8 +87,9 @@ namespace Management_of_Change.Utilities
             emailFrom = GetRegistryKey(registryPath, "EmailFrom");
             EmailProviderSmtp = new EmailProvider(emailHost, emailUser, emailPassword, emailPort, emailFrom);
 
-            // Get Connection String
+            // Get Connection Strings
             ConnectionString = GetRegistryKey(registryPath, "ConnectionString");
+            ConnectionStringPtnWaiver = GetRegistryKey(registryPath, "ConnectionStringPtnWaiver");
             //ConnectionString = builder.Configuration.GetConnectionString("PostgreSQLprd");
 
             // Get Attachment Directorys

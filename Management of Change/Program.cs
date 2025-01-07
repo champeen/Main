@@ -28,9 +28,11 @@ try
     // USE POSTGRESQL //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
     builder.Services.AddDbContext<Management_of_ChangeContext>(options => options.UseNpgsql(Initialization.ConnectionString));
+    builder.Services.AddDbContext<PtnWaiverContext>(options => options
+.UseNpgsql(Initialization.ConnectionStringPtnWaiver));
     //builder.Services.AddDbContext<Management_of_ChangeContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQLprd")));
     // builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
-    builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();
     builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
     var app = builder.Build();

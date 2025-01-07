@@ -10,6 +10,7 @@ namespace Management_of_Change.Utilities
     public class BaseController : Controller
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
         private string? userName { get; set; }
         private string? userDisplayName { get; set; }
@@ -112,14 +113,16 @@ namespace Management_of_Change.Utilities
         //{
 
         //}
-        public BaseController(Management_of_ChangeContext context, WebApplicationBuilder builder)
+        public BaseController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver, WebApplicationBuilder builder)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
-        public BaseController(Management_of_ChangeContext context)
+        public BaseController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         public BaseController(ILogger<AdminController> logger)
@@ -234,14 +237,23 @@ namespace Management_of_Change.Utilities
 
         public List<SelectListItem> getPtnNumbers()
         {
-            var ptnList = _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToList();
+            var ptnList1 = _contextPtnWaiver.PTN.Where(m=>m.Status == "Approved" || m.Status == "Closed").OrderBy(m=>m.DocId).ToList();
             List<SelectListItem> ptns = new List<SelectListItem>();
-            foreach (var request in ptnList)
+            foreach (var request in ptnList1)
             {
-                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+                SelectListItem item = new SelectListItem { Value = request.DocId, Text = request.DocId + " : " + request.Title };
                 ptns.Add(item);
             }
             return ptns;
+
+            //var ptnList = _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToList();
+            //List<SelectListItem> ptns = new List<SelectListItem>();
+            //foreach (var request in ptnList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+            //    ptns.Add(item);
+            //}
+            //return ptns;
         }
 
         public List<SelectListItem> getPccbSteps()

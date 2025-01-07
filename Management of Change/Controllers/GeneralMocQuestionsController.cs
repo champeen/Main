@@ -16,10 +16,12 @@ namespace Management_of_Change.Controllers
     public class GeneralMocQuestionsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public GeneralMocQuestionsController(Management_of_ChangeContext context) : base(context)
+        public GeneralMocQuestionsController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: GeneralMocQuestions
