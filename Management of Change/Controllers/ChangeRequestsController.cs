@@ -315,7 +315,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null, string changeGradeReviewError = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null, string changeGradeReviewError = null, string sourceScreen = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -333,6 +333,7 @@ namespace Management_of_Change.Controllers
             ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
             changeRequestViewModel.FileAttachmentError = fileAttachmentError;
             ViewBag.ChangeGradeReviewError = changeGradeReviewError;
+            ViewBag.SourceScreen = sourceScreen;
 
             // Get all the General MOC Responses associated with this request...
             changeRequest.GeneralMocResponses = await _context.GeneralMocResponses

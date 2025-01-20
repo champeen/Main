@@ -125,7 +125,15 @@
                                 @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
                                 @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
                             }
-                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                            @if (ViewBag.SourceScreen == "Dashboard")
+                            {
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                            }
+                            
                         </div>
                     </div>
                     @* <div class="col-6 text-end"> *@
@@ -411,7 +419,14 @@
                                 @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
                                 @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
                             }
-                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                            @if (ViewBag.SourceScreen == "Dashboard")
+                            {
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                            }
                         </div>
                     </div>
                     <div class="col-lg-7">
@@ -465,7 +480,14 @@
                                     <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
                                     @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
                                 }
-                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary text-start mt-1" })
+                                @if (ViewBag.SourceScreen == "Dashboard")
+                                {
+                                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                                }
                             </div>
                         </div>
                         <div class="col-lg-7">
@@ -554,7 +576,14 @@
                                     <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
                                     @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
                                 }
-                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary text-start mt-1" })
+                                @if (ViewBag.SourceScreen == "Dashboard")
+                                {
+                                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                                }
                             </div>
                         </div>
                         <div class="col-lg-7">
@@ -638,7 +667,14 @@
             <div class="text-nowrap mt-5">
                 @*<h4 class="mt-5">Change Evaluations - Impact Assessments</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceScreen == "Dashboard")
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                }
             </div>
             <table class="table table-bordered table-striped mt-3">
                 <thead class="table-primary">
@@ -717,7 +753,14 @@
                     }
                 </tbody>
             </table>
-            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+            @if (ViewBag.SourceScreen == "Dashboard")
+            {
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+            }
+            else
+            {
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+            }
         </div>
 
         @******************************************************************************************************************@
@@ -864,7 +907,14 @@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveFinalApprovals" id="nav-final-approvals" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
             <div class="text-nowrap mt-5">
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceScreen == "Dashboard")
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                }
             </div>
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mt-3 ">
@@ -951,7 +1001,14 @@
                     </tbody>
                 </table>
             </div>
-            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+            @if (ViewBag.SourceScreen == "Dashboard")
+            {
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+            }
+            else
+            {
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+            }
         </div>
         @******************************************************************************************************************@
         @*  IMPLEMENTATION TAB  *******************************************************************************************@
@@ -979,7 +1036,14 @@
                         </div>
                     }
                 }
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                @if (ViewBag.SourceScreen == "Dashboard")
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                }
             </div>
         </div>
         @******************************************************************************************************************@
@@ -999,7 +1063,7 @@
                 {
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Closeout"))
                     {
-                        @Html.ActionLink("Close-Out/Complete", "CloseoutComplete", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3" })
+                        @Html.ActionLink("Close-Out/Complete", "CloseoutComplete", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success me-2 mt-3" })
                     }
                     @if (Model.ChangeRequest.Change_Status == "Closed")
                     {
@@ -1008,7 +1072,14 @@
                         </div>
                     }
                 }
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                @if (ViewBag.SourceScreen == "Dashboard")
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                }
             </div>
         </div>
         @******************************************************************************************************************@
@@ -1018,7 +1089,14 @@
             <div class="text-nowrap mt-5">
                 @*<h4 class="mt-5">Attachments</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceScreen == "Dashboard")
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                }
 
                 @using (Html.BeginForm("SaveFile", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
                 {
@@ -1084,7 +1162,14 @@
                     }
                 </tbody>
             </table>
-            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+            @if (ViewBag.SourceScreen == "Dashboard")
+            {
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+            }
+            else
+            {
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+            }
         </div>
         @******************************************************************************************************************@
         @*  TASKS TAB  ****************************************************************************************************@
@@ -1094,7 +1179,14 @@
                 @*<h4 class="mt-5">Tasks</h4>*@
                 @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
                 @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success" })
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                @if (ViewBag.SourceScreen == "Dashboard")
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                }
             </div>
             <table class="table table-bordered table-striped mt-5">
                 <thead class="align-top table-primary">
@@ -1159,7 +1251,14 @@
                 </tbody>
             </table>
             @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success mt-3" })
-            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+            @if (ViewBag.SourceScreen == "Dashboard")
+            {
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+            }
+            else
+            {
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+            }
         </div>
 
     </div>
