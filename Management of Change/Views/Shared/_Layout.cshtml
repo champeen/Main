@@ -11,6 +11,11 @@
     @*    <link rel="stylesheet" href="~/Management_of_Change.styles.css" asp-append-version="true" />*@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@*     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-5-theme/1.3.0/select2-bootstrap-5-theme.min.css" integrity="sha512-z/90a5SWiu4MWVelb5+ny7sAayYUfMmdXKEAbpj27PfdkamNdyI3hcjxPxkOPbrXoKIm7r9V2mElt5f1OtVhqA==" crossorigin="anonymous" referrerpolicy="no-referrer" /> *@
+    <
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+
     <script>
         function DisplayProgressMessage(ctl, msg) {
             $("body").addClass("submit-progress-bg");
@@ -20,7 +25,7 @@
         };
 
         $(document).ready(function () {
-            
+
             // $("#btnAPICall").click(function () {
             //     console.info("blah1");
             //     $(".overlay,.popup").fadeIn();
@@ -47,7 +52,7 @@
             //             console.info("blah5");
             //             setTimeout(function () { LoadingBar()}, 10000);
             //         }
-            //     });               
+            //     });
             // };
 
             $("#changeRequestSearch").on("keyup", function () {
@@ -170,21 +175,21 @@
         }
 
         .overlay1 {
-            position:absolute;
-            display:none;
-            background-color:rgba(128,128,128,.5);
-            top:0;
-            left:0;
-            right:0;
+            position: absolute;
+            display: none;
+            background-color: rgba(128,128,128,.5);
+            top: 0;
+            left: 0;
+            right: 0;
         }
 
         .popup1 {
-            position:fixed;
-            z-index:99;
-            vertical-align:central;
-            display:none;
-            margin-left:30%;
-            margin-bottom:30%;
+            position: fixed;
+            z-index: 99;
+            vertical-align: central;
+            display: none;
+            margin-left: 30%;
+            margin-bottom: 30%;
         }
 
     </style>
@@ -228,9 +233,11 @@
                                 </i>
                                 MoC Process Flow
                             </a>
-                        </li>
+                        </li>         
                         <li class="nav-item me-3">
-                            <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/:p:/r/sites/Vault/_layouts/15/Doc.aspx?sourcedoc=%7BA98077B1-FE32-4996-AA57-CD7D9D8C8F3B%7D&file=MOC%20Training.pptx&action=edit&mobileredirect=true" target="_blank">
+                            <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=%20%22MOC%20Training%2Epptx%22" target="_blank">
+@*                             <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/:p:/r/sites/Vault/_layouts/15/Doc.aspx?sourcedoc=%7B8820FD35-C671-4B6D-A173-0574B46B6215%7D&file=MOC%20Training.pptx&action=edit&mobileredirect=true" target="_blank"> *@
+@*                             <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/:p:/r/sites/Vault/_layouts/15/Doc.aspx?sourcedoc=%7BA98077B1-FE32-4996-AA57-CD7D9D8C8F3B%7D&file=MOC%20Training.pptx&action=edit&mobileredirect=true" target="_blank"> *@
                                 <i class="bi bi-book" data-bs-toggle="tooltip" data-bs-html="true">
                                 </i>
                                 Training
@@ -260,7 +267,7 @@
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3" style="margin-top: 100px;">
-            <div class="row">
+            <div class="row mx-5">
                 <div class="col-12">
                     @RenderBody()
                 </div>

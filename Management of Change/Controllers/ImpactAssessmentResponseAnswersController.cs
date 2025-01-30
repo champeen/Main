@@ -16,10 +16,12 @@ namespace Management_of_Change.Controllers
     public class ImpactAssessmentResponseAnswersController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public ImpactAssessmentResponseAnswersController(Management_of_ChangeContext context) : base(context)
+        public ImpactAssessmentResponseAnswersController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: ImpactAssessmentResponseAnswers
@@ -220,8 +222,8 @@ namespace Management_of_Change.Controllers
 
                     if (existingTask == null)
                     {
-                        var assignedToUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == impactAssessmentResponseAnswer.ActionOwner);
-                        var assignedByUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == _username);
+                        var assignedToUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == impactAssessmentResponseAnswer.ActionOwner.ToLower());
+                        var assignedByUser = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == _username.ToLower());
                         Models.Task task = new Models.Task
                         {
                             ChangeRequestId = impactAssessmentResponse.ChangeRequestId,
@@ -230,11 +232,11 @@ namespace Management_of_Change.Controllers
                             Status = "Open",
                             Priority = changeRequest.Priority,
                             AssignedToUser = impactAssessmentResponseAnswer.ActionOwner,
-                            AssignedToUserFullName = assignedToUser.displayname,
-                            AssignedToUserEmail = assignedToUser.mail,
+                            AssignedToUserFullName = assignedToUser?.displayname,
+                            AssignedToUserEmail = assignedToUser?.mail,
                             AssignedByUser = _username,
-                            AssignedByUserFullName = assignedByUser.displayname,
-                            AssignedByUserEmail = assignedByUser.mail,
+                            AssignedByUserFullName = assignedByUser?.displayname,
+                            AssignedByUserEmail = assignedByUser?.mail,
                             Title = impactAssessmentResponseAnswer.Title,
                             Description = impactAssessmentResponseAnswer.DetailsOfActionNeeded,
                             DueDate = impactAssessmentResponseAnswer.DateDue,
@@ -248,11 +250,11 @@ namespace Management_of_Change.Controllers
                         string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
                         string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>MoC Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
-                        var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+                        var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
                         if (toPerson != null)
                         {
-                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                            AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, impactAssessmentResponse.ChangeRequestId, impactAssessmentResponseAnswer.ImpactAssessmentResponseId, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                            Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
+                            AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, impactAssessmentResponse.ChangeRequestId, impactAssessmentResponseAnswer.ImpactAssessmentResponseId, null, task.Id, "Task", task.Status, DateTime.Now, _username);
                         }
                     }                     
                 }
@@ -296,26 +298,8 @@ namespace Management_of_Change.Controllers
                         throw;
                 }
                 return RedirectToAction("Details", "ImpactAssessmentResponses", new { Id = impactAssessmentResponseAnswer.ImpactAssessmentResponseId });
-            }
-            
-            //// Create Dropdown List of Users...
-            //var userList = await _context.__mst_employee
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-            //    .Where(m => m.accountenabled == true)
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-            //    .OrderBy(m => m.displayname)
-            //    .ThenBy(m => m.onpremisessamaccountname)
-            //    .ToListAsync();
-            //List<SelectListItem> users = new List<SelectListItem>();
-            //foreach (var user in userList)
-            //{
-            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-            //    if (user.onpremisessamaccountname == impactAssessmentResponseAnswer.ActionOwner)
-            //        item.Selected = true;
-            //    users.Add(item);
-            //}
-            //ViewBag.Users = users;
+            }            
+
             ViewBag.Users = getUserList(impactAssessmentResponseAnswer.ActionOwner);
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
 

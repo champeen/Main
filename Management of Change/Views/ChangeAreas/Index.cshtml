@@ -9,7 +9,7 @@
 <div class="row mt-5 mb-3">
     <div class="col-12">
         <a asp-action="Create" class="btn btn-success">Create New</a>
-        <span class="mx-2"><a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Previous</a></span>
+        <span class="mx-1"><a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Previous</a></span>
     </div>
 </div>
 <table class="table table-bordered table-striped">
@@ -17,6 +17,24 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeGradePrimaryApproverFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeGradePrimaryApproverTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeGradePrimaryApproverEmail)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeGradeSecondaryApproverFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeGradeSecondaryApproverTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ChangeGradeSecondaryApproverEmail)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Order)
@@ -32,6 +50,24 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.ChangeGradePrimaryApproverFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeGradePrimaryApproverTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeGradePrimaryApproverEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeGradeSecondaryApproverFullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeGradeSecondaryApproverTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChangeGradeSecondaryApproverEmail)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Order)
                 </td>
                 <td class="text-nowrap">
@@ -42,6 +78,20 @@
             </tr>
         }
     </tbody>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
 </table>
 
 @* 

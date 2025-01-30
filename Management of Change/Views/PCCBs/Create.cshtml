@@ -1,0 +1,112 @@
+﻿@model Management_of_Change.ViewModels.PccbVM
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>PCCB Review</h1>
+
+<h4 class="mt-5">Create</h4>
+<hr />
+<form asp-action="Create">
+    <input type="hidden" asp-for="PCCB.ChangeRequestId" />
+    <input type="hidden" asp-for="PCCB.CreatedUser" />
+    <input type="hidden" asp-for="PCCB.CreatedDate" />
+    <input type="hidden" asp-for="PCCB.Status" />
+    @* <input type="hidden" asp-for="Invitees2" id="thiss" /> *@
+    @Html.AntiForgeryToken()
+    <div class="form-group my-3">
+        <input type="submit" value="Create" class="btn btn-success" />
+        @Html.ActionLink("Cancel", "Details", "ChangeRequests", new { id = Model.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1" })
+        @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group my-3">
+                <label asp-for="PCCB.Title" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.TextAreaFor(model => model.PCCB.Title, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="PCCB.Title" class="text-danger fw-bold mt-1"></span>
+            </div>
+            @*             <div class="form-group my-3">
+            <label asp-for="MeetingDate" class="control-label fw-bold mb-1"></label>
+            <input asp-for="MeetingDate" class="form-control" style="width:25%" onclick="this.showPicker()" />
+            <span asp-validation-for="MeetingDate" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+            <label asp-for="MeetingTime" class="control-label fw-bold mb-1"></label>
+            <input asp-for="MeetingTime" class="form-control" style="width:25%" onclick="this.showPicker()" />
+            <span asp-validation-for="MeetingTime" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="PCCB.MeetingDateTime" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <input asp-for="PCCB.MeetingDateTime" class="form-control" style="width:25%" onclick="this.showPicker()" />
+                <span asp-validation-for="PCCB.MeetingDateTime" class="text-danger fw-bold mt-1"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PCCB.Step" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="PCCB.Step" class="form-control" style="width:25%" onclick="this.showPicker()" /> *@
+                @Html.DropDownListFor(model => model.PCCB.Step, new SelectList(ViewBag.Steps, "Value", "Text"), "-- select --", new { @class = "form-control form-select"})
+                <span asp-validation-for="PCCB.Step" class="text-danger fw-bold mt-1"></span>
+            </div>
+            @*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*@
+@*             <div class="form-group my-3">
+                <label asp-for="PCCB.Invitees" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                 @Html.DropDownListFor(model => model.Invitees, new MultiSelectList(ViewBag.Employees, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple=true, @id = "PccbCreateInvitees"})
+                <span asp-validation-for="Invitees" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="PCCB.InviteeList" class="control-label fw-bold mb-1"></label>
+                @* <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i> *@
+                @Html.DropDownListFor(model => model.PCCB.InviteeList, new SelectList(ViewBag.EmailLists, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbCreateInvitees" })
+                <span asp-validation-for="PCCB.InviteeList" class="text-danger fw-bold mt-1"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PCCB.NotificationList" class="control-label fw-bold mb-1"></label>
+                @* <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i> *@
+                @Html.DropDownListFor(model => model.PCCB.NotificationList, new SelectList(ViewBag.EmailLists, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbCreateNotifications" })
+                <span asp-validation-for="PCCB.NotificationList" class="text-danger fw-bold mt-1"></span>
+            </div>
+            @*/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*@
+            <div class="form-group my-3">
+                <label asp-for="PCCB.Notes" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.Notes, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="PCCB.Notes" class="text-danger fw-bold mt-1"></span>
+            </div>
+@*             <div class="form-group my-3">
+                <label asp-for="PCCB.Decisions" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.Decisions, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="PCCB.Decisions" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="PCCB.ActionItems" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.PCCB.ActionItems, new { @class = "form-control", @rows = 2 })
+                <span asp-validation-for="PCCB.ActionItems" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group mt-5">
+                <input type="submit" value="Create" class="btn btn-success" id="submitButtonPccbCreate" />
+                @Html.ActionLink("Cancel", "Details", "ChangeRequests", new { id = Model.PCCB.ChangeRequestId, tab = "PccbReview" }, new { @class = "btn btn-secondary ms-1" })
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function () {
+        $('#PccbCreateInvitees').select2({
+            placeholder: "Select Invitee(s)"
+        });
+
+        $('#PccbCreateNotifications').select2({
+            placeholder: "Select Employee(s) to Notify"
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

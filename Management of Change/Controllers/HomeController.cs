@@ -5,17 +5,23 @@ using System.Diagnostics;
 using Management_of_Change.ViewModels;
 using Management_of_Change.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using Humanizer;
+using Azure.Identity;
+using System.Collections.Immutable;
 
 namespace Management_of_Change.Controllers
 {
     public class HomeController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(Management_of_ChangeContext context, ILogger<HomeController> logger) : base(context)
+        public HomeController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver, ILogger<HomeController> logger) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
             _logger = logger;
         }
 
@@ -40,6 +46,28 @@ namespace Management_of_Change.Controllers
                 .OrderBy(m => m.Priority)
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToListAsync();
+
+            // Get all active ChangeGradeReviews for current user...
+            // fist get all active MoC's that are in 'ChangeGradeReview' status....
+            dashboardVM.ChangeGradeReviews = new List<ChangeRequest>();
+            List<ChangeRequest> usersActiveChangeRequests = await _context.ChangeRequest
+                .Where(m => m.DeletedDate == null)
+                //.Where(m => m.Change_Owner == username)
+                .Where(m => m.Change_Status == "ChangeGradeReview")
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.Estimated_Completion_Date)
+                .ToListAsync();
+
+            // now only get the ones that have current user as primary or secondary ChangeGradeReviewer....
+            foreach (var rec in usersActiveChangeRequests)
+            {
+                ChangeArea changeArea = await _context.ChangeArea.Where(m => m.Description == rec.Area_of_Change).FirstOrDefaultAsync();
+                if (changeArea != null)
+                {
+                    if (changeArea.ChangeGradePrimaryApproverUsername == _username || changeArea.ChangeGradeSecondaryApproverUsername == _username)
+                        dashboardVM.ChangeGradeReviews.Add(rec);
+                }                        
+            }
 
             // Get all incomplete Impact Assessments assigned to user...
             List<ChangeRequest> changeRequestsIA = await _context.ChangeRequest
@@ -67,6 +95,17 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToList();
 
+            // Get all MOCs with incomplete PCCB reviews....
+            //List<PCCB> openPccbs = await _context.PCCB.Where(m => m.Status == "Open").ToListAsync();
+
+            //var IncompletePccbMocs = _context.PCCB
+            //    .Where(m => m.Status == "Open")
+            //    .GroupBy(m => m.ChangeRequestId)
+            //    .Select(m => m.Key).ToList();
+            //dashboardVM.IncompletePccbReviews = _context.ChangeRequest.Where(m => IncompletePccbMocs.Contains(m.Id)).ToList();
+
+            dashboardVM.IncompletePccbReviews = await _context.ChangeRequest.Where(m => m.Change_Status == "PccbReview" && (m.CreatedUser == username || _isAdmin)).ToListAsync();
+
             // Get all incomplete Final Approvals assigned to user...
             List<ChangeRequest> changeRequestsFA = await _context.ChangeRequest
                 .Where(m => m.DeletedDate == null)
@@ -88,11 +127,35 @@ namespace Management_of_Change.Controllers
 
             // Get all the Open/In Progress Tasks associated with the user...
             dashboardVM.OpenTasks = await _context.Task
-                .Where(m => m.Status == "Open" || m.Status == "In-Progress")
+                .Where(m => m.Status == "Open" || m.Status == "In-Progress" || m.Status == "On Hold")
                 .Where(m => m.AssignedToUser == username)
                 .OrderBy(m => m.Priority)
                 .ThenBy(m => m.DueDate)
                 .ToListAsync();
+
+            // Get Count of Overdue Tasks grouped by User
+            //dashboardVM.OverdueTasks = await _context.Task
+            var overdueTasks = (await _context.Task
+                .Where(m=>m.DueDate.Value.Date < DateTime.Now.Date && m.CompletionDate == null)
+                .GroupBy(m => m.AssignedToUserFullName)
+                .Select(m => new { UserName = m.Key, Count = m.Count() })  
+                .OrderByDescending(m => m.Count)
+                .ThenBy(m=>m.UserName)
+                //.ToListAsync()).Take(10);
+                .ToListAsync());
+
+            dashboardVM.OverdueTasks = new List<OverdueTasks>();
+            foreach (var overdueTask in overdueTasks)
+            {
+                OverdueTasks rec = new OverdueTasks
+                {
+                    UserName = overdueTask.UserName,
+                    Count = overdueTask.Count
+                };
+                dashboardVM.OverdueTasks.Add(rec);
+            }
+
+            ViewBag.Employees = getUserList();
 
             return View(dashboardVM);
         }

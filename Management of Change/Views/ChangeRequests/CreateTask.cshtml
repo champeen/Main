@@ -15,7 +15,7 @@
                 <span class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" />
                 </span>
-                <span class="mx-2">
+                <span class="mx-1">
                     @Html.ActionLink("Cancel","Index","ChangeRequests",new {},new {@class="btn btn-secondary"})
                 </span>
             </div>
@@ -126,7 +126,7 @@
             <div class="text-nowrap">
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
-                    <span class="mx-2">
+                    <span class="mx-1">
                         @Html.ActionLink("Cancel","Detail",new {Id=Model.ChangeRequestId, Tab="Tasks"},new {@class="btn btn-secondary"})
                     </span>
 

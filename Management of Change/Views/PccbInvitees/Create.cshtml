@@ -1,0 +1,72 @@
+﻿@model Management_of_Change.Models.PccbInvitees
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>PCCB Invitee</h1>
+
+<h4 class="mt-5">Create</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <input type="hidden" asp-for="MocId" />
+            <input type="hidden" asp-for="PccbId" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            @* @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" }) *@
+            
+@*             <div class="form-group my-3">
+                <label asp-for="Username" class="control-label fw-bold mb-1"></label>
+                @Html.DropDownListFor(model => model.Username, new SelectList(ViewBag.Employees, "Value", "Text"), "-- select --", new { @class = "form-control form-select" })
+                <span asp-validation-for="Username" class="text-danger fw-bold mt-2"></span>
+            </div> *@
+
+            <div class="form-group my-3">
+                <label asp-for="Username" class="control-label fw-bold mb-1"></label>
+                @* <select id="PccbCreateInvitees" asp-for="Invitees" asp-items="@ViewBag.Employees" multiple class="form-control form-select"> </select> *@
+                @* <select required id="PccbCreateInvitees" name="Invitees" multiple="multiple" asp-items="@ViewBag.Employees"></select>  *@
+                @Html.DropDownListFor(model => model.Username, new MultiSelectList(ViewBag.Employees, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @id = "PccbInviteeCreate" })
+                <span asp-validation-for="Username" class="text-danger fw-bold"></span>
+            </div>
+
+            <div class="form-group my-3">
+                <label asp-for="Status" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="Status" class="form-control" /> *@
+                @Html.DropDownListFor(model => model.Status,
+                    new List<SelectListItem>{
+                    new SelectListItem {Value="Invited", Text="Invited"},
+                    new SelectListItem {Value="Attended", Text="Attended"},
+                    new SelectListItem {Value="Declined", Text="Declined"},
+                    new SelectListItem {Value="No Show", Text="No Show"}},
+                         // "-- select --",
+                         new { @class = "form-control form-select", @style = "max-width:50%" })
+                <span asp-validation-for="Status" class="text-danger fw-bold mt-2"></span>
+            </div>
+            @*             <div class="form-group">
+            <label asp-for="Comments" class="control-label"></label>
+            <input asp-for="Comments" class="form-control" />
+            <span asp-validation-for="Comments" class="text-danger"></span>
+            </div> *@
+            <div class="form-group mt-4">
+                <input type="submit" value="Create" class="btn btn-success" />
+                <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@Model.PccbId" class="btn btn-secondary ms-1">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#PccbInviteeCreate').select2({
+            placeholder: "Select Invitee(s)"
+        });
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

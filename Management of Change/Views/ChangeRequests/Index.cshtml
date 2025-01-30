@@ -10,12 +10,12 @@
 <form asp-controller="ChangeRequests" asp-action="Index">
     <input hidden value=@ViewBag.PrevSort id="PrevSortId" />
     <input hidden value=@ViewBag.PrevStatusFilter id="PrevStatusFilterId" />
-    <div class="row mt-3">
+    <div class="row mt-5">
         <div class="col-6 text-start">
             @*<a asp-action="Create">Create New</a>*@
             @*            @Html.ActionLink("Create New","Create")*@
             <span class="flex-nowrap">
-                @Html.ActionLink("Create New","Create",new {source="ChangeRequestIndex"},new {@class="btn btn-primary"})
+                @Html.ActionLink("Create New","Create",new {source="ChangeRequestIndex"},new {@class="btn btn-success"})
             </span>
         </div>
         <div class="col-3 text-center">
@@ -39,7 +39,7 @@
         </div>*@
     </div>
 </form>
-<table class="table table-bordered table-striped mt-5 ">
+<table class="table table-bordered table-striped mt-3 ">
     <thead class="align-top align-text-top table-primary">
         <tr>
             <th class="text-nowrap">
@@ -266,7 +266,7 @@
                     {
                         @if (item.DeletedDate == null && item.Change_Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS
                         {
-                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-2", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Cancelled'"})
+                            @Html.ActionLink("Delete","Delete",new {id=@item.Id},new {@class="btn btn-danger ms-1", title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Cancelled'"})
                             @*<i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Hard Delete only if in 'Draft' status. Otherwise you must change status to 'Cancelled'"></i>*@
                         }
                     }
@@ -274,131 +274,20 @@
             </tr>
         }
     </tbody>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
 </table>
-
-@*<div class="fw-bolder">
-    BELOW IS TEST INFORMATION ONLY ** MJWII **
-</div>
-<div class="row">
-    <div class="col-6">
-        <div class="fw-bold text-danger">FROM SERVER</div>
-        <div>
-            Environment.UserDomainName = @ViewBag.UserName2;
-        </div>
-        <div>
-            Environment.UserName = @ViewBag.UserName3;
-        </div>
-        <div>
-            Name = @ViewBag.UserName6;
-        </div>
-        <div>
-            Owner = @ViewBag.UserName7;
-        </div>
-        <div>
-            User = @ViewBag.UserName8;
-        </div>
-        <div>
-            AccessToken = @ViewBag.UserName9;
-        </div>
-        <div>
-            Actor = @ViewBag.UserName10;
-        </div>
-        <div>
-            AuthenticationType = @ViewBag.UserName11;
-        </div>
-        <div>
-            ImpersonationLevel = @ViewBag.UserName16;
-        </div>
-        <div>
-            IsAnonymous = @ViewBag.UserName17;
-        </div>
-        <div>
-            IsAuthenticated = @ViewBag.UserName18;
-        </div>
-        <div>
-            IsGuest = @ViewBag.UserName19;
-        </div>
-        <div>
-            IsSystem = @ViewBag.UserName20;
-        </div>
-        <div>
-            User.FindFirstValue(ClaimTypes.NameIdentifier) = @ViewBag.UserName26;
-        </div>
-        <div>
-            User.FindFirstValue(ClaimTypes.Name) = @ViewBag.UserName27;
-        </div>
-        <div>
-            User.Identity.Name = @ViewBag.UserName28;
-        </div>
-        <div>
-            Request.HttpContext.User.Identity.Name = @ViewBag.UserName29;
-        </div>
-        <div>
-            Environment.GetEnvironmentVariable("USERNAME") = @ViewBag.UserName30;
-        </div>
-        <div>
-            windowsPrincipal.Identity.Name = @ViewBag.UserName31;
-        </div>
-        <div>
-            New Iternary Operator = @ViewBag.UserName32;
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="fw-bold text-danger">WHAT I GET LOCALLY</div>
-        <div>Environment.UserDomainName = AUBCORP;</div>
-        <div>
-            Environment.UserName = MJWilson;
-        </div>
-        <div>
-            Name = AUBCORP\MJWilson;
-        </div>
-        <div>
-            Owner = S-1-5-32-544;
-        </div>
-        <div>
-            User = S-1-5-21-2825809737-1480607278-3817146174-3309;
-        </div>
-        <div>
-            AccessToken = Microsoft.Win32.SafeHandles.SafeAccessTokenHandle;
-        </div>
-        <div>
-            Actor = ;
-        </div>
-        <div>
-            AuthenticationType = Kerberos;
-        </div>
-        <div>
-            ImpersonationLevel = None;
-        </div>
-        <div>
-            IsAnonymous = False;
-        </div>
-        <div>
-            IsAuthenticated = True;
-        </div>
-        <div>
-            IsGuest = False;
-        </div>
-        <div>
-            IsSystem = False;
-        </div>
-        <div>
-            User.FindFirstValue(ClaimTypes.NameIdentifier) = ;
-        </div>
-        <div>
-            User.FindFirstValue(ClaimTypes.Name) = ;
-        </div>
-        <div>
-            User.Identity.Name = ;
-        </div>
-        <div>
-            Request.HttpContext.User.Identity.Name = ;
-        </div>
-        <div>
-            Environment.GetEnvironmentVariable("USERNAME") = MJWilson;
-        </div>
-        <div>
-            windowsPrincipal.Identity.Name; = AUBCORP\MJWilson;
-        </div>
-    </div>*@
-

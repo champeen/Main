@@ -1,4 +1,5 @@
 ﻿using Management_of_Change.Data;
+using Management_of_Change.Migrations;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
 using Management_of_Change.ViewModels;
@@ -7,7 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Identity.Client;
+using System.Globalization;
 using System.Threading.Tasks;
 //using Management_of_Change.Migrations;
 
@@ -16,13 +19,15 @@ namespace Management_of_Change.Controllers
     public class ChangeRequestsController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
         //private readonly string AttachmentDirectory = @"C:\Applications\ManagementOfChange";
         //private readonly string AttachmentDirectory = @"\\aub1vdev-app01\ManagementOfChange\";
         //private readonly string AttachmentDirectory = @"\\BAY1VPRD-MOC01\ManagementOfChange\";
 
-        public ChangeRequestsController(Management_of_ChangeContext context) : base(context)
+        public ChangeRequestsController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: ChangeRequests
@@ -65,14 +70,14 @@ namespace Management_of_Change.Controllers
             {
                 case null:
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
                     break;
                 case "All":
                     ViewBag.PrevStatusFilter = "All";
                     break;
                 case "AllCurrent":
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
                     break;
                 default:
                     requests = requests.Where(m => m.Change_Status == statusFilter).ToList();
@@ -307,20 +312,10 @@ namespace Management_of_Change.Controllers
             ViewBag.Username = _username;
 
             return View(requests);
-            //await requests
-            //.OrderBy(m => m.Priority)
-            //.ThenBy(m => m.Estimated_Completion_Date)
-            //.ToListAsync());
         }
 
-        //[HttpPost]
-        //public IActionResult Sort(string statusFilter, string sort = null, string prevSort = null)
-        //{
-        //    return RedirectToAction("Index", new { statusFilter = statusFilter, sort = sort, prevSort = prevSort});
-        //}
-
         // GET: ChangeRequests/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null, string changeGradeReviewError = null, string sourceScreen = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -337,6 +332,8 @@ namespace Management_of_Change.Controllers
 
             ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
             changeRequestViewModel.FileAttachmentError = fileAttachmentError;
+            ViewBag.ChangeGradeReviewError = changeGradeReviewError;
+            ViewBag.SourceScreen = sourceScreen;
 
             // Get all the General MOC Responses associated with this request...
             changeRequest.GeneralMocResponses = await _context.GeneralMocResponses
@@ -372,6 +369,28 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.ChangeType)
                 .ToListAsync();
 
+            // Get all the PCCB reviews for this change requests...
+            changeRequest.PccbMeetings = await _context.PCCB
+                .Where(m => m.ChangeRequestId == changeRequest.Id)
+                .OrderBy(m => m.MeetingDateTime)
+                .ToListAsync();
+
+            //Get all PCCB Meeting Invitees...
+            if (changeRequest.PccbMeetings.Any())
+            {
+                foreach (var record in changeRequest.PccbMeetings)
+                {
+                    record.Invitees = await _context.PccbInvitees
+                        .Where(m => m.PccbId == record.Id)
+                        .OrderBy(m => m.FullName)
+                        .ToListAsync();
+                }
+            }
+
+            ViewBag.ShowCloseoutButton = false;
+            if (changeRequest.PccbMeetings.Count() > 0 && changeRequest.PccbMeetings.Where(m => m.Status != "Meeting Closed").Count() == 0)
+                ViewBag.ShowCloseoutButton = true;
+
             // Get all the tasks associated with this ChangeRequest...
             List<Models.Task> tasks = await _context.Task
                 .Where(m => m.ChangeRequestId == id)
@@ -396,7 +415,7 @@ namespace Management_of_Change.Controllers
             {
                 foreach (var username in changeRequest.Additional_Notification)
                 {
-                    string fullName = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).Select(m => m.displayname).FirstOrDefaultAsync();
+                    string fullName = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == username.ToLower()).Select(m => m.displayname).FirstOrDefaultAsync();
                     if (!String.IsNullOrWhiteSpace(fullName))
                         employeesToNotify.Add(fullName);
                 }
@@ -407,24 +426,35 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.Tasks = tasks;
             // disable tab 3 (ImpactAssessments) if General MOC Responses have not been completed...
             int countGMR = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
-            changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" ? "disabled" : "";
+            changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" ? "disabled" : "";
             // disable tab4 (Final Review) if any Impact Assessment Responses have not been completed...
             int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview") ? "disabled" : "";
+            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "PccbReview") ? "disabled" : "";
             // disable tab5 (Implementation) if any Final Approvals have not been completed...
             int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
+            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
             // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
             changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
+            // if change request is not in "Draft" status, and ChangeLevel is one that is required to review, then show the extra 'Change Level Review' stage....
+            var changeLevel = await _context.ChangeLevel.Where(m => m.Level == changeRequest.Change_Level).FirstOrDefaultAsync();
+            if (changeLevel == null)
+                changeRequestViewModel.TabChangeGradeReviewDisplayed = "No";
+            else
+                changeRequestViewModel.TabChangeGradeReviewDisplayed = changeRequest.Change_Status != "Draft" && changeLevel.ChangeGradeReviewRequired == true ? "Yes" : "No";
+            // PCCB Review Tab...
+            changeRequestViewModel.TabPccbReviewDisplayed = changeLevel?.PccbReviewRequired == true ? "Yes" : "No";
+            changeRequestViewModel.TabPccbReviewDisabled = changeRequest.Change_Status == "Draft" || changeRequest.Change_Status == "ChangeGradeReview" || changeRequest.Change_Status == "ImpactAssessmentReview" ? "disabled" : "";
 
             changeRequestViewModel.TabActiveDetail = "";
             changeRequestViewModel.TabActiveGeneralMocQuestions = "";
             changeRequestViewModel.TabActiveImpactAssessments = "";
+            changeRequestViewModel.TabActivePccbReview = "";
             changeRequestViewModel.TabActiveFinalApprovals = "";
             changeRequestViewModel.TabActiveImplementation = "";
             changeRequestViewModel.TabActiveCloseoutComplete = "";
             changeRequestViewModel.TabActiveAttachments = "";
             changeRequestViewModel.TabActiveTasks = "";
+            changeRequestViewModel.TabActiveChangeGradeReview = "";
 
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
 
@@ -442,8 +472,14 @@ namespace Management_of_Change.Controllers
                 case "GeneralMocQuestions":
                     changeRequestViewModel.TabActiveGeneralMocQuestions = "active";
                     break;
+                case "ChangeGradeReview":
+                    changeRequestViewModel.TabActiveChangeGradeReview = "active";
+                    break;
                 case "ImpactAssessments":
                     changeRequestViewModel.TabActiveImpactAssessments = "active";
+                    break;
+                case "PccbReview":
+                    changeRequestViewModel.TabActivePccbReview = "active";
                     break;
                 case "FinalApprovals":
                     changeRequestViewModel.TabActiveFinalApprovals = "active";
@@ -479,10 +515,10 @@ namespace Management_of_Change.Controllers
             FileInfo[] Files = path.GetFiles();
 
             // Display the file names
-            List<ViewModels.Attachment> attachments = new List<ViewModels.Attachment>();
+            List<ViewModels.Attachment> attachments = new List<Attachment>();
             foreach (FileInfo i in Files)
             {
-                ViewModels.Attachment attachment = new ViewModels.Attachment
+                Attachment attachment = new Attachment
                 {
                     Directory = i.DirectoryName,
                     Name = i.Name,
@@ -509,9 +545,13 @@ namespace Management_of_Change.Controllers
             ViewBag.Username = _username;
             ViewBag.QuestionsSaved = questionsSaved;
 
-            changeRequestViewModel.employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
+            ViewBag.UserCanReviewChangeGrade = false;
+            // if change request is awaiting 'change grade review', get reviewer username...
+            if (changeRequest.Change_Status == "ChangeGradeReview" && changeLevel != null && changeLevel.ChangeGradeReviewRequired == true)
+                ViewBag.UserCanReviewChangeGrade = _context.ChangeArea.Where(m => m.ChangeGradePrimaryApproverUsername == _username || m.ChangeGradeSecondaryApproverUsername == _username).Any();
 
-            //return View("Details" + (string.IsNullOrEmpty(rec) ? "" : "#" + rec), changeRequestViewModel);
+            changeRequestViewModel.employee = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == changeRequest.Change_Owner.ToLower()).FirstOrDefaultAsync();
+
             return View(changeRequestViewModel);
         }
 
@@ -523,13 +563,13 @@ namespace Management_of_Change.Controllers
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            var changeOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var changeOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == _username.ToLower()).FirstOrDefaultAsync();
 
             ChangeRequest changeRequest = new ChangeRequest
             {
                 Change_Owner = _username,
-                Change_Owner_FullName = changeOwner.displayname,
-                Change_Owner_Email = changeOwner.mail,
+                Change_Owner_FullName = changeOwner?.displayname,
+                Change_Owner_Email = changeOwner?.mail,
                 CreatedUser = _username,
                 CreatedDate = DateTime.Now
             };
@@ -549,22 +589,6 @@ namespace Management_of_Change.Controllers
             ViewBag.Source = source;
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
-
-            // test mjwii
-            //SelectListGroup group1 = new SelectListGroup() { Name = "GroupOne" };
-            //SelectListGroup group2 = new SelectListGroup() { Name = "GroupTwo" };
-            //List<SelectListItem> testSelectList = new List<SelectListItem>()
-            //{
-            //    new SelectListItem("One","1",false,false),
-            //    new SelectListItem() { Value = "2", Text = "Two", Group = group1 },
-            //    new SelectListItem() { Value = "3", Text = "Three", Group = group1 },
-            //    new SelectListItem() { Value = "4", Text = "Four", Group = group2 },
-            //    new SelectListItem() { Value = "5", Text = "Five", Group = group2 },
-            //    new SelectListItem() { Value = "6", Text = "Six" },
-            //    new SelectListItem() { Value = "7", Text = "Seven", Group = group1 }
-            //};
-            //ViewBag.Test = testSelectList;
-            // end test mjwii
 
             return View(changeRequest);
         }
@@ -667,12 +691,12 @@ namespace Management_of_Change.Controllers
             if (changeRequest == null)
                 return View("Index");
 
-            var changeOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var changeOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == _username.ToLower()).FirstOrDefaultAsync();
 
             changeRequest.Change_Status = "Draft";
             changeRequest.Change_Owner = _username;
-            changeRequest.Change_Owner_FullName = changeOwner.displayname;
-            changeRequest.Change_Owner_Email = changeOwner.mail;
+            changeRequest.Change_Owner_FullName = changeOwner?.displayname;
+            changeRequest.Change_Owner_Email = changeOwner?.mail;
             changeRequest.Estimated_Completion_Date = null;
             changeRequest.CreatedUser = _username;
             changeRequest.CreatedDate = DateTime.Now;
@@ -841,9 +865,9 @@ namespace Management_of_Change.Controllers
             //if ((changeRequest.Change_Level == "Level 1 - Major" || changeRequest.Change_Level == "Level 2 - Major" || changeRequest.Change_Level == "Level 3 - Minor") && (String.IsNullOrWhiteSpace(changeRequest.CMT_Number)))
             //    ModelState.AddModelError("CMT_Number", "All Level 1-3 Changes Require a CMT");
 
-            var changeOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
-            changeRequest.Change_Owner_FullName = changeOwner.displayname;
-            changeRequest.Change_Owner_Email = changeOwner.mail;
+            var changeOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == changeRequest.Change_Owner.ToLower()).FirstOrDefaultAsync();
+            changeRequest.Change_Owner_FullName = changeOwner?.displayname;
+            changeRequest.Change_Owner_Email = changeOwner?.mail;
 
             if (ModelState.IsValid)
             {
@@ -968,6 +992,8 @@ namespace Management_of_Change.Controllers
             return (_context.ChangeRequest?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
         {
             if (id == null || _context.ChangeRequest == null)
@@ -1014,6 +1040,142 @@ namespace Management_of_Change.Controllers
         {
             System.IO.File.Delete(sourcePath);
             return RedirectToAction("Details", new { id = id, tab = "Attachments" });
+        }
+
+        public async Task<IActionResult> ApproveChangeGrade(int id, string tab, string errorMessage = null)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            changeRequest.Change_Status = "ImpactAssessmentReview";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
+            changeRequest.ChangeGradeApprovalUser = _username;
+            changeRequest.ChangeGradeApprovalUserFullName = _userDisplayName;
+            changeRequest.ChangeGradeApprovalDate = DateTime.Now;
+            changeRequest.ChangeGradeRejectedUser = null;
+            changeRequest.ChangeGradeRejectedUserFullName = null;
+            changeRequest.ChangeGradeRejectedDate = null;
+            changeRequest.ChangeGradeRejectedReason = null;
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            // Email MoC Owner that their Change Request Grade was not accepted....
+            string subject = @"Management of Change (MoC) - Change Grade Accepted.";
+            string body = @"A Change Request has had its Change Grade approved. It is being moved onto Impact Assessment review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
+
+            return RedirectToAction("CloseDraft", new { changeRequestId = id, tab = "ImpactAssessments", errorMessage = errorMessage });
+        }
+
+        public async Task<IActionResult> RejectChangeGrade([Bind("Id, ChangeRequest, ChangeGradeRejectedReason")] ChangeRequestViewModel changeRequestViewModel)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (changeRequestViewModel.ChangeRequest.Id == null || changeRequestViewModel.ChangeRequest.Id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(changeRequestViewModel.ChangeRequest.Id);
+            if (changeRequest == null)
+                return NotFound();
+
+            if (changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason == null)
+                return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "ChangeGradeReview", changeGradeReviewError = "Reject Reason Required" });
+
+            changeRequest.Change_Status = "Draft";
+            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
+            changeRequest.ModifiedDate = DateTime.Now;
+            changeRequest.ModifiedUser = _username;
+            changeRequest.ChangeGradeRejectedUser = _username;
+            changeRequest.ChangeGradeRejectedUserFullName = _userDisplayName;
+            changeRequest.ChangeGradeRejectedDate = DateTime.Now;
+            changeRequest.ChangeGradeRejectedReason = changeRequestViewModel.ChangeRequest.ChangeGradeRejectedReason;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            // Email MoC Owner that their Change Request Grade was not accepted....
+            string subject = @"Management of Change (MoC) - Change Grade Rejected.";
+            string body = @"A Change Request has had its Change Grade rejected. As it stands, this MoC will NOT go to PCCB review.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+            if (changeRequest != null && changeRequest.Change_Owner_Email != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, changeRequest.Change_Owner_Email, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_FullName, changeRequest.Change_Owner_Email, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
+
+            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "Details" });
+        }
+
+        public async Task<IActionResult> CheckForChangeGradeReview(int id, string tab, string errorMessage = null)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            // Get change level and see if this Change Request needs a Change Grade review....
+            var changeLevel = await _context.ChangeLevel.Where(m => m.Level == changeRequest.Change_Level).FirstOrDefaultAsync();
+            if (changeLevel != null && changeLevel.ChangeGradeReviewRequired == true)
+            {
+                // CHANGE GRADE REVIEW NEEDED.  NEED TO SET STATUS TO 'SUBMITTED FOR CHANGE GRADE REVIEW', AND THEN GO BACK TO
+                changeRequest.Change_Status = "ChangeGradeReview";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(cs => cs.Status == changeRequest.Change_Status).Select(cs => cs.Description).FirstOrDefaultAsync();
+                changeRequest.ModifiedDate = DateTime.Now;
+                changeRequest.ModifiedUser = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
+
+                // Send Email Out notifying person(s) responsible to review the Change Grade...
+                string subject = @"Management of Change (MoC) - Change Grade Review.";
+                string body = @"A Management of Change task has been created that needs to have its Change Grade reviewed. As it stands, this MoC will NOT go to PCCB review. Please look over the MoC and either accept the change grade as is, which will bypass PCCB review, or reject the change grade, which will notify the MoC writer via email that the change grade was rejected, changing the MoC status back to 'Draft'.  Please follow link below and review the change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                var changeArea = await _context.ChangeArea.Where(m => m.Description == changeRequest.Area_of_Change).FirstOrDefaultAsync();
+
+                if (changeArea != null && changeArea.ChangeGradePrimaryApproverEmail != null)
+                {
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, changeArea.ChangeGradePrimaryApproverEmail, changeArea.ChangeGradeSecondaryApproverEmail, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, changeArea.ChangeGradePrimaryApproverFullName, changeArea.ChangeGradePrimaryApproverUsername, changeArea.ChangeGradePrimaryApproverEmail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
+
+                return RedirectToAction("Details", new { id = id, tab = "ChangeGradeReview" });
+            }
+            else
+                // Change Grade Review is not needed. Go To Normal Process...
+                return RedirectToAction("CloseDraft", new { changeRequestId = id, tab = tab, errorMessage = errorMessage });
         }
 
         // This closes out 'GeneralMocQuestions' and moves to 'ImpactAssessments' stage
@@ -1170,7 +1332,8 @@ namespace Management_of_Change.Controllers
             }
 
             // Close-out Draft and go to Impact Assessment Review...
-            return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            //return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            return RedirectToAction("CheckForChangeGradeReview", new { id = vm.ChangeRequestId, tab = vm.Tab });
         }
 
         [HttpPost]
@@ -1246,7 +1409,8 @@ namespace Management_of_Change.Controllers
                 return RedirectToAction("SubmitForReview", new { id = vm.ChangeRequestId, tab = vm.Tab, errorMessage = vm.ErrorMessage });
 
             // Close-out Draft and go to Impact Assessment Review...
-            return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            //return RedirectToAction("CloseDraft", new { changeRequestId = vm.ChangeRequestId, tab = vm.Tab });
+            return RedirectToAction("CheckForChangeGradeReview", new { id = vm.ChangeRequestId, tab = vm.Tab });
         }
 
         public async Task<IActionResult> CloseDraft(int changeRequestId, string tab)
@@ -1467,25 +1631,61 @@ namespace Management_of_Change.Controllers
                 if (changeRequest == null)
                     return NotFound();
 
-                changeRequest.Change_Status = "FinalApprovals";
-                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "FinalApprovals").Select(m => m.Description).FirstOrDefaultAsync();
-                changeRequest.ModifiedDate = DateTime.Now;
-                changeRequest.ModifiedUser = _username;
-                _context.Update(changeRequest);
-                await _context.SaveChangesAsync();
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /// See if change request needs to go to PCCB Review OR Final Review Next............
+                ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                ChangeLevel changeGrade = await _context.ChangeLevel.Where(m => m.Level == changeRequest.Change_Level).FirstOrDefaultAsync();
+                if (changeGrade == null) return NotFound();
 
-                changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
-                    .Where(m => m.ChangeRequestId == changeRequest.Id)
-                    .ToListAsync();
-
-                // Email All Users Implementation Final Approval links...
-                foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
+                if (changeGrade.PccbReviewRequired == true)
                 {
-                    string subject = @"Management of Change (MoC) - Final Approval Needed";
-                    string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                    changeRequest.Change_Status = "PccbReview";
+                    changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "PccbReview").Select(m => m.Description).FirstOrDefaultAsync();
+                    changeRequest.ModifiedDate = DateTime.Now;
+                    changeRequest.ModifiedUser = _username;
+                    _context.Update(changeRequest);
+                    await _context.SaveChangesAsync();
 
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
-                    AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, null, record.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                    // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
+                    var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                    foreach (var record in adminApproverList)
+                    {
+                        var adminToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                        string subject = @"Management of Change (MoC) - Submitted for PCCB Review";
+                        string body = @"Change Request has been submitted for PCCB Review. Please follow link below and setup/manage the PCCB Review for the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                        // Send Email...
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, adminToNotify?.mail, null, null, changeRequest.Priority);
+
+                        // Log that Email was Sent...
+                        AddEmailHistory(changeRequest.Priority, subject, body, adminToNotify?.displayname, record.Username, adminToNotify?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                    }
+
+                    return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "PccbReview", rec = rec });
+                }
+                else   // THE BELOW PART WILL BE NEEDED AFTER APPROVAL OF PCCB REVIEW !!!!!!!!
+                {
+                    changeRequest.Change_Status = "FinalApprovals";
+                    changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "FinalApprovals").Select(m => m.Description).FirstOrDefaultAsync();
+                    changeRequest.ModifiedDate = DateTime.Now;
+                    changeRequest.ModifiedUser = _username;
+                    _context.Update(changeRequest);
+                    await _context.SaveChangesAsync();
+
+                    changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
+                         .Where(m => m.ChangeRequestId == changeRequest.Id)
+                         .ToListAsync();
+
+                    // Email All Users Implementation Final Approval links...
+                    foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
+                    {
+                        string subject = @"Management of Change (MoC) - Final Approval Needed";
+                        string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
+                        AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, null, record.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                    }
+                    return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "FinalApprovals", rec = rec });
                 }
             }
             return RedirectToAction("Details", new { id = impactAssessmentResponse.ChangeRequestId, tab = "ImpactAssessments", rec = rec });
@@ -1509,11 +1709,11 @@ namespace Management_of_Change.Controllers
             // Send Email Out notifying the person who is assigned the task
             string subject = @"Management of Change (MoC) - Impact Assessment Response Reminder.";
             string body = @"REMINDER! A Management of Change Impact Assessment has been assigned to you.  Please follow link below and review your impact assessment. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == impactAssessmentResponse.Username).FirstOrDefaultAsync();
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == impactAssessmentResponse.Username.ToLower()).FirstOrDefaultAsync();
             if (toPerson != null)
             {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, changeRequest.Priority);
-                var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, impactAssessmentResponse.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, changeRequest.Priority);
+                var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, changeRequest.Id, impactAssessmentResponse.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = tab });
         }
@@ -1536,13 +1736,53 @@ namespace Management_of_Change.Controllers
             // Send Email Out notifying the person who is assigned the task
             string subject = @"Management of Change (MoC) - Final Approval Reminder.";
             string body = @"REMINDER! A Management of Change Final Approval has been assigned to you.  Please follow link below and review your final approval. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == implementationFinalApprovalResponse.Username).FirstOrDefaultAsync();
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == implementationFinalApprovalResponse.Username.ToLower()).FirstOrDefaultAsync();
             if (toPerson != null)
             {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, changeRequest.Priority);
-                var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, changeRequest.Priority);
+                var emailHistory = AddEmailHistory(changeRequest.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = tab });
+        }
+
+        public async Task<IActionResult> ClosePccbReview(int id)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // There are no incomplete final approvals.  Advance to next stage.
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == id);
+            if (changeRequest != null)
+            {
+                changeRequest.Change_Status = "FinalApprovals";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "FinalApprovals").Select(m => m.Description).FirstOrDefaultAsync();
+                changeRequest.ModifiedDate = DateTime.Now;
+                changeRequest.ModifiedUser = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
+            }
+
+            changeRequest.ImplementationFinalApprovalResponses = await _context.ImplementationFinalApprovalResponse
+                .Where(m => m.ChangeRequestId == changeRequest.Id)
+                .ToListAsync();
+
+            // Email All Users Implementation Final Approval links...
+            foreach (var record in changeRequest.ImplementationFinalApprovalResponses)
+            {
+                string subject = @"Management of Change (MoC) - Final Approval Needed";
+                string body = @"Your Final Approval/Review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, null, record.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+            }
+            return RedirectToAction("Details", new { id = id, tab = "FinalApprovals" });
         }
 
         // This closes out 'FinalApprovals' and moves to 'Implementation' phase
@@ -1593,15 +1833,15 @@ namespace Management_of_Change.Controllers
                     var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
                     foreach (var record in adminApproverList)
                     {
-                        var adminToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
+                        var adminToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
                         string subject = @"Management of Change (MoC) - Submitted for Implementation";
                         string body = @"Change Request has been submitted for implementation. All pre-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
                         // Send Email...
-                        Initialization.EmailProviderSmtp.SendMessage(subject, body, adminToNotify.mail, null, null, changeRequest.Priority);
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, adminToNotify?.mail, null, null, changeRequest.Priority);
 
                         // Log that Email was Sent...
-                        AddEmailHistory(changeRequest.Priority, subject, body, adminToNotify.displayname, record.Username, adminToNotify.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                        AddEmailHistory(changeRequest.Priority, subject, body, adminToNotify?.displayname, record.Username, adminToNotify?.mail, changeRequest.Id, null, implementationFinalApprovalResponse.Id, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
                     }
                 }
             }
@@ -1642,12 +1882,12 @@ namespace Management_of_Change.Controllers
             string body;
             foreach (var record in adminApproverList)
             {
-                admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == record.Username).FirstOrDefaultAsync();
+                admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
                 subject = @"Management of Change (MoC) - Submitted for Closeout";
                 body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, admin.mail, null, null, changeRequest.Priority);
-                AddEmailHistory(changeRequest.Priority, subject, body, admin.displayname, record.Username, admin.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, admin?.mail, null, null, changeRequest.Priority);
+                AddEmailHistory(changeRequest.Priority, subject, body, admin?.displayname, record.Username, admin?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
 
             // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
@@ -1655,19 +1895,20 @@ namespace Management_of_Change.Controllers
             {
                 foreach (var username in changeRequest.Additional_Notification)
                 {
-                    var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == username).FirstOrDefaultAsync();
+                    var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == username.ToLower()).FirstOrDefaultAsync();
                     subject = @"Management of Change (MoC) - Submitted for Implementation";
                     body = @"Change Request has been submitted for implementation. This is for notification purposes only. This may affect your job process, so please read through change request. Follow link below and review the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
                     // Send Email...
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify.mail, null, null, changeRequest.Priority);
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify?.mail, null, null, changeRequest.Priority);
 
                     // Log that Email was Sent...
-                    AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify.displayname, username, employeeToNotify.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                    AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify?.displayname, username, employeeToNotify?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
                 }
             }
 
             // Create a task for the ChangeRequest Owner to notify Administrator when ChangeRequest has been fully implemented
+            var mocOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == changeRequest.Change_Owner.ToLower()).FirstOrDefaultAsync();
             Models.Task task = new Models.Task
             {
                 ChangeRequestId = changeRequest.Id,
@@ -1675,8 +1916,11 @@ namespace Management_of_Change.Controllers
                 ImplementationType = @"Post",
                 Status = @"Open",
                 Priority = changeRequest.Priority,
-                AssignedByUser = changeRequest.Change_Owner,
+                AssignedByUser = changeRequest.Change_Owner,                
+                AssignedByUserEmail = mocOwner?.mail,
+                AssignedByUserFullName = mocOwner?.displayname,
                 AssignedToUser = changeRequest.Change_Owner,
+                AssignedToUserFullName = changeRequest.Change_Owner_FullName,
                 Title = @"Implementation Completion Notification",
                 Description = @"Notify MoC admin when this MoC is completely implemented.",
                 DueDate = DateTime.Now.AddMonths(1),
@@ -1690,11 +1934,11 @@ namespace Management_of_Change.Controllers
             subject = @"Management of Change (MoC) - Task Assigned.";
             body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Task Description: </strong>" + task.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
-            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
             if (toPerson != null)
             {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, task.CreatedUser);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
+                AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, task.CreatedUser);
             }
 
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "Implementation" });
@@ -1728,12 +1972,12 @@ namespace Management_of_Change.Controllers
             await _context.SaveChangesAsync();
 
             // Email the ChangeRequst Owner that the change request has been closed
-            var owner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == changeRequest.Change_Owner).FirstOrDefaultAsync();
+            var owner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == changeRequest.Change_Owner.ToLower()).FirstOrDefaultAsync();
             string subject = @"Management of Change (MoC) - Change Request Completed/Closed";
             string body = @"Change Request has been Closed-Out/Completed.<br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
 
-            Initialization.EmailProviderSmtp.SendMessage(subject, body, owner.mail, null, null, changeRequest.Priority);
-            AddEmailHistory(changeRequest.Priority, subject, body, owner.displayname, changeRequest.Change_Owner, owner.mail, changeRequest.Id, null, null, null, "Task", changeRequest.Change_Status, DateTime.Now, _username);
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, owner?.mail, null, null, changeRequest.Priority);
+            AddEmailHistory(changeRequest.Priority, subject, body, owner?.displayname, changeRequest.Change_Owner, owner?.mail, changeRequest.Id, null, null, null, "Task", changeRequest.Change_Status, DateTime.Now, _username);
 
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "CloseoutComplete" });
         }
@@ -1806,14 +2050,14 @@ namespace Management_of_Change.Controllers
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
 
                 // get assigned-to person info....
-                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
-                task.AssignedToUserFullName = toPerson.displayname;
-                task.AssignedToUserEmail = toPerson.mail;
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedToUserFullName = toPerson?.displayname;
+                task.AssignedToUserEmail = toPerson?.mail;
 
                 // get assigned-by person info....
-                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedByUser).FirstOrDefaultAsync();
-                task.AssignedByUserFullName = fromPerson.displayname;
-                task.AssignedByUserEmail = fromPerson.mail;
+                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedByUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedByUserFullName = fromPerson?.displayname;
+                task.AssignedByUserEmail = fromPerson?.mail;
 
                 _context.Add(task);
                 await _context.SaveChangesAsync();
@@ -1825,7 +2069,7 @@ namespace Management_of_Change.Controllers
                 if (toPerson != null)
                 {
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                    AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
                 }
                 return RedirectToAction("Details", "ChangeRequests", new { Id = task.ChangeRequestId, Tab = "Tasks" });
             }

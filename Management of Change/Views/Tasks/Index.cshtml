@@ -9,10 +9,10 @@
 <form asp-controller="Tasks" asp-action="Index">
     <input hidden value=@ViewBag.PrevSort id="TaskPrevSortId" />
     <input hidden value=@ViewBag.PrevStatusFilter id="TaskPrevStatusFilterId" />
-    <div class="row mt-3">
+    <div class="row mt-5">
         <div class="col-6 text-start">
             @*<a asp-action="Create">Create New</a>*@
-            @Html.ActionLink("Create New","Create",new {source="Task"},new {@class="btn btn-primary"})
+            @Html.ActionLink("Create New","Create",new {source="Task"},new {@class="btn btn-success"})
         </div>
         <div class="col-3 text-center">
             <input class="form-control" id="taskSearch" type="text" placeholder="Search..">
@@ -38,7 +38,7 @@
     </div>
 </form>
 
-<table class="table table-bordered table-striped mt-5">
+<table class="table table-bordered table-striped mt-3">
     <thead class="align-top align-text-top table-primary">
         <tr>
             <th>
@@ -229,6 +229,21 @@
             </tr>
         }
     </tbody>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td>No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
 </table>
 
 @*<script>

@@ -1,0 +1,51 @@
+﻿@model Management_of_Change.Models.EmailLists
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Email List</h1>
+
+<h4 action="mt-5">Create</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <div class="form-group my-3">
+                <label asp-for="ListName" class="control-label fw-bold mb-1"></label>
+                <input asp-for="ListName" class="form-control" />
+                <span asp-validation-for="ListName" class="text-danger fw-bold mt-1"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Emails" class="control-label fw-bold mb-1"></label>
+                @Html.DropDownListFor(model => model.Emails, new MultiSelectList(ViewBag.Employees, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "EmailListCreate" })
+                @* <input asp-for="Emails" class="form-control" /> *@
+                <span asp-validation-for="Emails" class="text-danger fw-bold mt-1"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Order" class="form-control" />
+                <span asp-validation-for="Order" class="text-danger fw-bold mt-1"></span>
+            </div>
+            <div class="form-group my-4">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                <a class="mx-1 btn btn-secondary" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#EmailListCreate').select2({
+            placeholder: "Select Employee(s)"
+        });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

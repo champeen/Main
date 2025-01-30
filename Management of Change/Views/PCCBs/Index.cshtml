@@ -1,0 +1,84 @@
+﻿@model IEnumerable<Management_of_Change.Models.PCCB>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MeetingDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Step)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Agenda)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Decisions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ActionItems)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MeetingDateTime)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Step)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Agenda)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Decisions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActionItems)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td class="text-nowrap">No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
+</table>

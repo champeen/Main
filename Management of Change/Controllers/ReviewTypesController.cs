@@ -15,10 +15,12 @@ namespace Management_of_Change.Controllers
     public class ReviewTypesController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public ReviewTypesController(Management_of_ChangeContext context) : base(context)
+        public ReviewTypesController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: ReviewTypes
@@ -100,23 +102,6 @@ namespace Management_of_Change.Controllers
 
             // Create Dropdown List of ChangeAreas...
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
-
-            //// Create Dropdown List of Users...
-            //var userList = await _context.__mst_employee
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-            //    .Where(m => m.accountenabled == true)
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-            //    .OrderBy(m => m.displayname)
-            //    .ThenBy(m => m.onpremisessamaccountname)
-            //    .ToListAsync();
-            //List<SelectListItem> users = new List<SelectListItem>();
-            //foreach (var user in userList)
-            //{
-            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-            //    users.Add(item);
-            //}
-            //ViewBag.Users = users;
             ViewBag.Users = getUserList();
 
             return View(reviewType);
@@ -144,7 +129,7 @@ namespace Management_of_Change.Controllers
                 ModelState.AddModelError("Type", "Review Type already exists.");
 
             // make sure all selected employee data is found, valid and correct
-            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == reviewType.Username);
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == reviewType.Username.ToLower());
             if (employee != null)
             {
                 reviewType.Reviewer = employee.displayname;
@@ -245,7 +230,7 @@ namespace Management_of_Change.Controllers
                 ModelState.AddModelError("Type", "Review Type already exists.");
 
             // make sure all selected employee data is found, valid and correct
-            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == reviewType.Username);
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == reviewType.Username.ToLower());
             if (employee != null)
             {
                 reviewType.Reviewer = employee.displayname;
@@ -282,26 +267,6 @@ namespace Management_of_Change.Controllers
 
             // Create Dropdown List of ChangeAreas...
             ViewBag.ChangeAreas = await _context.ChangeArea.OrderBy(m => m.Order).Select(m => m.Description).ToListAsync();
-
-            //// Create Dropdown List of Users...
-            //var userList = await _context.__mst_employee
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-            //    .Where(m => m.accountenabled == true)
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-            //    .OrderBy(m => m.displayname)
-            //    .ThenBy(m => m.onpremisessamaccountname)
-            //    .ToListAsync();
-            //List<SelectListItem> users = new List<SelectListItem>();
-            //foreach (var user in userList)
-            //{
-            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-            //    if (user.onpremisessamaccountname == reviewType.Username)
-            //        item.Selected = true;
-            //    users.Add(item);
-            //}
-            //ViewBag.Users = users;
-
             ViewBag.Users = getUserList(reviewType.Username);
 
             return View(reviewType);

@@ -167,6 +167,16 @@
             </tr>
         }
     </tbody>
+    @if (Model.AdditionalImpactAssessmentReviewers.Count() == 0)
+    {
+        <tr>
+            <td>No data found</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    }
 </table>
 @Html.ActionLink("Add More","Create", new {changeRequestId=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-success"})
 @Html.ActionLink("Back to MoC","Details","ChangeRequests", new {id=Model.ChangeRequestId,tab=Model.Tab}, new {@class="btn btn-secondary"})

@@ -15,10 +15,12 @@ namespace Management_of_Change.Controllers
     public class FinalReviewTypesController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public FinalReviewTypesController(Management_of_ChangeContext context) : base(context)
+        public FinalReviewTypesController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: FinalReviewTypes
@@ -88,23 +90,6 @@ namespace Management_of_Change.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            //// Create Dropdown List of Users...
-            //var userList = await _context.__mst_employee
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-            //    .Where(m => m.accountenabled == true)
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-            //    .OrderBy(m => m.displayname)
-            //    .ThenBy(m => m.onpremisessamaccountname)
-            //    .ToListAsync();
-            //List<SelectListItem> users = new List<SelectListItem>();
-            //foreach (var user in userList)
-            //{
-            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-            //    users.Add(item);
-            //}
-            //ViewBag.Users = users;
-
             ViewBag.Users = getUserList();
 
             return View(finalReviewType);
@@ -132,11 +117,11 @@ namespace Management_of_Change.Controllers
                 ModelState.AddModelError("Type", "Final Review Type already exists.");
 
             // make sure all selected employee data is found, valid and correct
-            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == finalReviewType.Username);
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == finalReviewType.Username.ToLower());
             if (employee != null)
             {
-                finalReviewType.Reviewer = employee.displayname;
-                finalReviewType.Email = employee.mail;
+                finalReviewType.Reviewer = employee?.displayname;
+                finalReviewType.Email = employee?.mail;
             }
             else
                 ModelState.AddModelError("Username", "Employee record not found for Username: " + finalReviewType.Username);
@@ -154,23 +139,6 @@ namespace Management_of_Change.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            //// Create Dropdown List of Users...
-            //var userList = await _context.__mst_employee
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
-            //    .Where(m => m.accountenabled == true)
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.mail))
-            //    .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
-            //    .OrderBy(m => m.displayname)
-            //    .ThenBy(m => m.onpremisessamaccountname)
-            //    .ToListAsync();
-            //List<SelectListItem> users = new List<SelectListItem>();
-            //foreach (var user in userList)
-            //{
-            //    SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-            //    users.Add(item);
-            //}
-            //ViewBag.Users = users;
 
             ViewBag.Users = getUserList();
 
@@ -225,11 +193,11 @@ namespace Management_of_Change.Controllers
                 ModelState.AddModelError("Type", "Final Review Type already exists.");
 
             // make sure all selected employee data is found, valid and correct
-            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == finalReviewType.Username);
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == finalReviewType.Username.ToLower());
             if (employee != null)
             {
-                finalReviewType.Reviewer = employee.displayname;
-                finalReviewType.Email = employee.mail;
+                finalReviewType.Reviewer = employee?.displayname;
+                finalReviewType.Email = employee?.mail;
             }
             else
                 ModelState.AddModelError("Username", "Employee record not found for Username: " + finalReviewType.Username);
