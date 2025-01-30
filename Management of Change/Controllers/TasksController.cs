@@ -596,7 +596,10 @@ namespace Management_of_Change.Controllers
                 ModelState.AddModelError("CompletionDate", "If Task Status is 'Complete', Completion Date is required.");
 
             if (task.Status == "Complete" && String.IsNullOrWhiteSpace(task.CompletionNotes))
-                ModelState.AddModelError("CompletionNotes", "If Task Status is 'Complete', Completion Notes is required.");
+                ModelState.AddModelError("CompletionNotes", "If Task Status is 'Complete', Completion Notes are required.");
+
+            if (task.Status != "Complete" && task.CompletionDate != null)
+                ModelState.AddModelError("CompletionDate", "Completion Date is entered, but Task Status is not set as 'Complete'.");
 
             if (task.Status == "Cancelled" && String.IsNullOrWhiteSpace(task.CancelledReason))
                 ModelState.AddModelError("CancelledReason", "If Task Status is 'Cancelled', Reason is required.");
