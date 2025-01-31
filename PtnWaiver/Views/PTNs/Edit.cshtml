@@ -43,10 +43,10 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="DocId" />
+            @* <input type="hidden" asp-for="DocId" /> *@
             <input type="hidden" asp-for="Status" />
             <input type="hidden" asp-for="OriginatingGroup" />
-            <input type="hidden" asp-for="BouleSize" />
+            <input type="hidden" asp-for="ProductSize" />
             <input type="hidden" asp-for="OriginatorInitials" />
             <input type="hidden" asp-for="OriginatorYear" />
             <input type="hidden" asp-for="SerialNumber" />
@@ -64,74 +64,46 @@
             <input type="hidden" asp-for="DeletedDate" />
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-
-        </div>
+    @*     <div class="row">
+    <div class="col-12">
+    <select class="js-example-basic-multiple" name="@Model.SubjectType" multiple="multiple" style="width:50%">
+    </select>
     </div>
+    </div> *@
     <div class="row">
         <div class="col-6">
+            @* THIS IS JUST TEMPORARY TO GET OLD PTN's IN MJWII *@
+            <div class="form-group my-3">
+                <label asp-for="DocId" class="control-label fw-bold mb-1"></label>
+                <input asp-for="DocId" class="form-control" />
+                <span asp-validation-for="DocId" class="text-danger fw-bold mt-1"></span>
+            </div>
+            @* END TEMPORARY *@
             <div class="form-group my-3">
                 <label asp-for="Title" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @if (Model.Status == "Draft")
                 {
-                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3 })
+                    @Html.TextAreaFor(model => model.Title, new { @class = "form-control", @rows = 3 })
                 }
                 else
                 {
-                    @Html.TextAreaFor(model => model.Title, new {@class = "form-control", @rows = 3, disabled="disabled" })
+                    @Html.TextAreaFor(model => model.Title, new { @class = "form-control", @rows = 3, disabled = "disabled" })
                     <input type="hidden" asp-for="Title" />
 
                 }
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <span asp-validation-for="Title" class="text-danger fw-bold"></span>
             </div>
 @*             <div class="form-group my-3">
-                <label asp-for="OriginatingGroup" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @if (Model.Status == "Draft")
-                {
-                    @Html.DropDownListFor(model => model.OriginatingGroup, new SelectList(ViewBag.OriginatingGroups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
-                }
-                else
-                {
-                    @Html.DropDownListFor(model => model.OriginatingGroup, new SelectList(ViewBag.OriginatingGroups, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;", disabled="disabled"})
-                    <input type="hidden" asp-for="OriginatingGroup" />
-                }
-                <span asp-validation-for="OriginatingGroup" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="BouleSize" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @if (Model.Status == "Draft")
-                {
-                    @Html.DropDownListFor(model => model.BouleSize, new SelectList(ViewBag.BouleSizes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;"})
-                }
-                else
-                {
-                    @Html.DropDownListFor(model => model.BouleSize, new SelectList(ViewBag.BouleSizes, "Value", "Text"), "-- select --", new { @class="form-control form-select",@style="max-width:25%;", disabled="disabled"})
-                    <input type="hidden" asp-for="BouleSize" />
-                }
-                <span asp-validation-for="BouleSize" class="text-danger"></span>
-            </div> *@
-            <div class="form-group my-3">
-                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @if (Model.Status == "Draft")
-                {
-                    @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select"})
-                }
-                else
-                {
-                    @Html.DropDownListFor(model => model.GroupApprover, new SelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class="form-control form-select", disabled="disabled"})
-                    <input type="hidden" asp-for="GroupApprover" />
-                }
-                <span asp-validation-for="GroupApprover" class="text-danger"></span>
-            </div>
-            <div class="form-group my-3">
                 <label asp-for="PtrNumber" class="control-label fw-bold mb-1"></label>
                 <input asp-for="PtrNumber" class="form-control" />
-                <span asp-validation-for="PtrNumber" class="text-danger"></span>
+                <span asp-validation-for="PtrNumber" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
+                @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
+                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", @rows = 3 })
+                <span asp-validation-for="Comments" class="text-danger fw-bold"></span>
             </div>
         </div>
         <div class="col-6">
@@ -142,27 +114,60 @@
                 </i>
                 @if (Model.Status == "Draft")
                 {
-                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=10 })
+                    @*                     @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text", Model.SubjectType), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select User(s)", size = 10 }) *@
+                    <select asp-for=SubjectType id="PtnsEditSubjectTypes" multiple="multiple" style="width:100%;">
+                        @foreach (SelectListItem item in ViewBag.SubjectTypes)
+                        {
+                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                        }
+                    </select>
+                    @*                     @Html.DropDownListFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditSubjectTypes" }) *@
                 }
                 else
                 {
-                    @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=10, disabled="disabled" })
-                    @for(int i = 0; i < Model.SubjectType.Count; i++) {
+                    @*                     @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text", Model.SubjectType), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select User(s)", size = 10, disabled = "disabled" }) *@
+                    <select asp-for=SubjectType id="PtnsEditSubjectTypes2" multiple="multiple" style="width:100%;" disabled>
+                        @foreach (SelectListItem item in ViewBag.SubjectTypes)
+                        {
+                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                        }
+                    </select>
+                    @*                     @Html.DropDownListFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text", Model.SubjectType), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditSubjectTypes2", disabled = "disabled" }) *@
+                    @for (int i = 0; i < Model.SubjectType.Count; i++)
+                    {
                         @Html.HiddenFor(Model => Model.SubjectType[i])
                     }
-                    //<input type="hidden" asp-for="SubjectType" />                    
                 }
-                <span asp-validation-for="SubjectType" class="text-danger"></span>
+                <span asp-validation-for="SubjectType" class="text-danger fw-bold"></span>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
             <div class="form-group my-3">
-                <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
-                @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
-                @Html.TextAreaFor(model => model.Comments, new {@class = "form-control", @rows = 3 })
-                <span asp-validation-for="Comments" class="text-danger"></span>
+                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @if (Model.Status == "Draft")
+                {
+                    @*                     @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10 }) *@
+                    <select asp-for=GroupApprover id="PtnsEditGroupApprovers" multiple="multiple" style="width:100%;">
+                        @foreach (SelectListItem item in ViewBag.Groups)
+                        {
+                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                        }
+                    </select>
+                    @*                     @Html.DropDownListFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditGroupApprovers" }) *@
+
+                }
+                else
+                {
+                    @*                     @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10, disabled = "disabled" }) *@
+                    <select asp-for=GroupApprover id="PtnsEditGroupApprovers2" multiple="multiple" style="width:100%;" disabled>
+                        @foreach (SelectListItem item in ViewBag.Groups)
+                        {
+                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                        }
+                    </select>
+                    @*                     @Html.DropDownListFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditGroupApprovers2", disabled = "disabled" })
+                <input type="hidden" asp-for="GroupApprover" /> *@
+                }
+                <span asp-validation-for="GroupApprover" class="text-danger fw-bold"></span>
             </div>
         </div>
     </div>
@@ -171,6 +176,105 @@
         <a class="mx-1 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+
+        $('#PtnsEditSubjectTypes').select2({
+            placeholder: "Select Subject Type(s)"
+        });
+        $('#PtnsEditSubjectTypes2').select2({
+            placeholder: "Select Subject Type(s)"
+        });
+        $('#PtnsEditGroupApprovers').select2({
+            placeholder: "Select Group/Approver(s)"
+        });
+        $('#PtnsEditGroupApprovers2').select2({
+            placeholder: "Select Group/Approver(s)"
+        });
+
+        //     var data = [
+        //         {
+        //             id: '1',
+        //             text: 'Alabama'
+        //         },
+        //         {
+        //             id: '2',
+        //             text: 'Michigan'
+        //         },
+        //         {
+        //             id: '3',
+        //             text: 'Ohio'
+        //         }
+        //     ]
+
+        // Adding Another item to dropdown list....
+        // var options = new Option('Michigan', '5', false,true);
+        // $('.js-example-basic-multiple').append(options).trigger('change');
+
+        //     $('.js-example-basic-multiple').select2(
+        //         {
+        //             placeholder: 'search...',
+        //             data: data
+        //         }
+        //     );
+        // });
+
+        // $('#PtnsEditSubjectTypes').select2({
+        //     var data = [
+        //         {
+        //             id: '0',
+        //             text: 'enhancement'
+        //         },
+        //         {
+        //             id: '1',
+        //             text: 'bug'
+        //         },
+        //         {
+        //             id: '2',
+        //             text: 'duplicate'
+        //         },
+        //         {
+        //             id: '3',
+        //             text: 'invalid'
+        //         },
+        //         {
+        //             id:'4',
+        //             text: 'wontfix'
+        //         }
+        //     ];
+
+
+        // data = data,
+        // placeholder: "Select SOMETHING"
+        // });
+
+        // $('#PtnsEditGroupApprovers').select2({
+        //     multiple: true,
+        //     data: @Model.GroupApprover,
+        //     placeholder: "Select Group/Approver(s)"
+        // });
+
+        // $('#PtnsEditSubjectTypes2').select2({
+        //     placeholder: "Select Subject Type(s)"
+        // });
+
+        // $('#PtnsEditGroupApprovers2').select2({
+        //     multiple: true,
+        //     data: @Model.GroupApprover,
+        //     placeholder: "Select Group/Approver(s)"
+    });
+
+</script>
+
+@* <script>
+    $(document).ready(function () {
+        $('#PtnsEditSubjectTypes').select2({
+            // data: @ViewBag.Test,
+            placeholder: "Select Subject Type(s)"
+        });
+    });
+</script> *@
 
 @section Scripts {
     @{

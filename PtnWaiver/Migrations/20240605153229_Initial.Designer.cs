@@ -13,8 +13,8 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    [Migration("20240327140016_addOriginatingGroupsTable")]
-    partial class addOriginatingGroupsTable
+    [Migration("20240605153229_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -328,7 +328,7 @@ namespace PtnWaiver.Migrations
                     b.ToTable("GroupApprovers");
                 });
 
-            modelBuilder.Entity("PtnWaiver.Models.OriginatingGroup", b =>
+            modelBuilder.Entity("PtnWaiver.Models.GroupApproversReview", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -336,8 +336,109 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool?>("BouleSizeRequired")
-                        .HasColumnType("boolean");
+                    b.Property<string>("AdminUsername")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DeletedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Group")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModifiedUserEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModifiedUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PrimaryApproverUsername")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ReviewDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ReviewedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SecondaryApproverUsername")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SourceId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SourceTable")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GroupApproversReview");
+                });
+
+            modelBuilder.Entity("PtnWaiver.Models.OriginatingGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -385,6 +486,9 @@ namespace PtnWaiver.Migrations
 
                     b.Property<string>("Order")
                         .HasColumnType("text");
+
+                    b.Property<bool>("ProductSizeRequired")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -448,9 +552,9 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("DocId")
                         .HasColumnType("text");
 
-                    b.Property<string>("GroupApprover")
+                    b.Property<List<string>>("GroupApprover")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text[]");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("timestamp without time zone");
@@ -464,22 +568,20 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("ModifiedUserFullName")
                         .HasColumnType("text");
 
+                    b.Property<string>("OriginatingGroup")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OriginatorInitials")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OriginatorYear")
+                        .HasColumnType("text");
+
                     b.Property<string>("PdfLocation")
                         .HasColumnType("text");
 
-                    b.Property<string>("PrimaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverUsername")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PtnPin")
+                    b.Property<string>("ProductSize")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -495,16 +597,7 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("RejectedReason")
                         .HasColumnType("text");
 
-                    b.Property<string>("SecondaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverUsername")
+                    b.Property<string>("SerialNumber")
                         .HasColumnType("text");
 
                     b.Property<string>("Status")
@@ -653,7 +746,7 @@ namespace PtnWaiver.Migrations
                     b.ToTable("ProductProcess");
                 });
 
-            modelBuilder.Entity("PtnWaiver.Models.PtnPin", b =>
+            modelBuilder.Entity("PtnWaiver.Models.ProductSize", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -710,7 +803,7 @@ namespace PtnWaiver.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PtnPin");
+                    b.ToTable("ProductSize");
                 });
 
             modelBuilder.Entity("PtnWaiver.Models.PtnStatus", b =>
@@ -897,6 +990,10 @@ namespace PtnWaiver.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<List<string>>("GroupApprover")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
                     b.Property<bool?>("IsMostCurrentWaiver")
                         .HasColumnType("boolean");
 
@@ -916,24 +1013,11 @@ namespace PtnWaiver.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PorProject")
+                        .HasColumnType("text");
+
+                    b.Property<List<string>>("ProductProcess")
                         .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PrimaryApproverUsername")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ProductProcess")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text[]");
 
                     b.Property<string>("PtnDocId")
                         .HasColumnType("text");
@@ -949,18 +1033,6 @@ namespace PtnWaiver.Migrations
 
                     b.Property<int>("RevisionNumber")
                         .HasColumnType("integer");
-
-                    b.Property<string>("SecondaryApproverEmail")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverFullName")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverTitle")
-                        .HasColumnType("text");
-
-                    b.Property<string>("SecondaryApproverUsername")
-                        .HasColumnType("text");
 
                     b.Property<string>("Status")
                         .IsRequired()

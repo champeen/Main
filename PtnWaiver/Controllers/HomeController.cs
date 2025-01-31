@@ -13,7 +13,7 @@ namespace PtnWaiver.Controllers
         private readonly MocContext _contextMoc;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc, ILogger<HomeController> logger) : base(contextPtnWaiver,contextMoc)
+        public HomeController(PtnWaiverContext contextPtnWaiver, MocContext contextMoc, ILogger<HomeController> logger) : base(contextPtnWaiver, contextMoc)
         {
             _logger = logger;
             _contextMoc = contextMoc;
@@ -29,10 +29,31 @@ namespace PtnWaiver.Controllers
 
             DashboardViewModel dashboardVM = new DashboardViewModel();
 
+            // GET USERS IN-PROGRESS PTNs
             dashboardVM.YourInProgressPtns = await _contextPtnWaiver.PTN.Where(m => m.CreatedUser == username && m.DeletedDate == null && (m.Status == "Draft" || m.Status == "Pending Approval" || m.Status == "Approved")).ToListAsync();
-            dashboardVM.PtnsAwaitingYourApproval = await _contextPtnWaiver.PTN.Where(m => m.Status == "Pending Approval" && m.DeletedDate == null && (m.PrimaryApproverUsername == username || m.SecondaryApproverUsername == username)).ToListAsync();
+
+            // GET USERS PTNs AWAITING REVIEW
+            dashboardVM.PtnsAwaitingYourApproval = new List<PTN>();
+            var openPtnReviews = await _contextPtnWaiver.PTN.Where(m => m.Status == "Pending Approval").ToListAsync();
+            foreach (var ptn in openPtnReviews)
+            {
+                var yourGroupApproversReview = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == ptn.Id && m.SourceTable == "PTN" && m.Status == null && (m.PrimaryApproverUsername == username || m.SecondaryApproverUsername == username)).ToListAsync();
+                if (yourGroupApproversReview.Count > 0)
+                    dashboardVM.PtnsAwaitingYourApproval.Add(ptn);
+            }
+
+            // GET USERS IN-PROGRESS WAIVERS
             dashboardVM.YourInProgressWaivers = await _contextPtnWaiver.Waiver.Where(m => m.CreatedUser == username && m.DeletedDate == null && (m.Status == "Draft" || m.Status == "Pending Approval" || m.Status == "Approved")).ToListAsync();
-            dashboardVM.WaiversAwaitingYourApproval = await _contextPtnWaiver.Waiver.Where(m => m.Status == "Pending Approval" && m.DeletedDate == null && (m.PrimaryApproverUsername == username || m.SecondaryApproverUsername == username)).ToListAsync();
+
+            // GET USERS WAIVERS AWAITING REVIEW
+            dashboardVM.WaiversAwaitingYourApproval = new List<Waiver>();
+            var openWaiverReviews = await _contextPtnWaiver.Waiver.Where(m => m.Status == "Pending Approval").ToListAsync();
+            foreach (var waiver in openWaiverReviews)
+            {
+                var yourGroupApproversReview = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == waiver.Id && m.SourceTable == "Waiver" && m.Status == null && (m.PrimaryApproverUsername == username || m.SecondaryApproverUsername == username)).ToListAsync();
+                if (yourGroupApproversReview.Count > 0)
+                    dashboardVM.WaiversAwaitingYourApproval.Add(waiver);
+            }
 
             return View(dashboardVM);
         }

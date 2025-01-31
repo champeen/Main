@@ -10,10 +10,13 @@ namespace PtnWaiver.Models
         [Display(Name = "Display Name")]
         public string? displayname { get; set; }
         [StringLength(150)]
-        [Display(Name = "Given Name")]
+        [Display(Name = "First Name")]
         public string? givenname { get; set; }
         [StringLength(150)]
-        [Display(Name = "Surname")]
+        [Display(Name = "Middle Initial")]
+        public string? initials { get; set; }
+        [StringLength(150)]
+        [Display(Name = "Last Name")]
         public string? surname { get; set; }
         [StringLength(150)]
         [Display(Name = "Job Title")]

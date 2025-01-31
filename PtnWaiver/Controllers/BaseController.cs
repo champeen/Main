@@ -224,23 +224,23 @@ namespace PtnWaiver.Controllers
             List<SelectListItem> originatingGroups = new List<SelectListItem>();
             foreach (var rec in originatingGroupList)
             {
-                if (rec.BouleSizeRequired)
-                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description + " (Boule Size is Required)" });
+                if (rec.ProductSizeRequired)
+                    originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description /*+ " (Product Size is Required)"*/ });
                 else
                     originatingGroups.Add(new SelectListItem { Value = rec.Code, Text = rec.Description });
             }
             return originatingGroups;
         }
-        public List<SelectListItem> getBouleSizes()
+        public List<SelectListItem> getProductSizes()
         {
-            var bouleSizeList = _contextPtnWaiver.BouleSize.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
-            List<SelectListItem> bouleSizes = new List<SelectListItem>();
-            foreach (var rec in bouleSizeList)
+            var productSizeList = _contextPtnWaiver.ProductSize.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> productSizes = new List<SelectListItem>();
+            foreach (var rec in productSizeList)
             {
                 SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
-                bouleSizes.Add(item);
+                productSizes.Add(item);
             }
-            return bouleSizes;
+            return productSizes;
         }
 
         public List<SelectListItem> getSubjectTypes()
@@ -261,7 +261,17 @@ namespace PtnWaiver.Controllers
             List<SelectListItem> groups = new List<SelectListItem>();
             foreach (var rec in groupList)
             {
-                SelectListItem item = new SelectListItem { Value = rec.Group, Text = rec.Group + " - (" + rec.PrimaryApproverFullName + "/" + rec.SecondaryApproverFullName + ")" };
+                SelectListItem item = new SelectListItem();
+                if (rec.SecondaryApproverFullName != null)
+                {
+                    item.Value = rec.Group;
+                    item.Text = rec.Group + " - (" + rec.PrimaryApproverFullName + "/" + rec.SecondaryApproverFullName + ")";
+                }
+                else
+                {
+                    item.Value = rec.Group;
+                    item.Text = rec.Group + " - (" + rec.PrimaryApproverFullName + ")";
+                }
                 groups.Add(item);
             }
             return groups;
@@ -345,7 +355,8 @@ namespace PtnWaiver.Controllers
             var userInfo = getUserInfo(_username);
             var firstInitial = userInfo.givenname == null || userInfo.givenname == "" ? "" : userInfo.givenname.Substring(0, 1);
             var lastInitial = userInfo.surname == null || userInfo.surname == "" ? "" : userInfo.surname.Substring(0, 1);
-            return (firstInitial + lastInitial);
+            var middleInitial = userInfo.initials == null || userInfo.initials == "" ? "_" : userInfo.initials.Substring(0, 1);  // Per Ian Manning, if user does not have middle name, use a special character.  He is looking to get the PTN naming convention the same length
+            return (firstInitial + middleInitial + lastInitial);
         }
 
         public string getSerialNumberBasedOnYear(string year)

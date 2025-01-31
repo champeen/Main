@@ -46,9 +46,16 @@ try
     app.UseStaticFiles();
     app.UseRouting();
     app.UseAuthorization();
+    //app.MapControllerRoute(
+    //    name: "PTN",
+    //    pattern: "PTN/{*MesLookup}", defaults: new { controller = "PTN", action = "MesLookup" });
+
+    app.MapControllerRoute(
+        name: "ptn",
+        pattern: "{controller=PTN}/{action=MesLookup}/{docId?}");
     app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");    
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
     app.Run();
 }

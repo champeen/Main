@@ -8,7 +8,8 @@ namespace PtnWaiver.Models
         public int Id { get; set; }
         public string Code { get; set; }
         public string? Description { get; set; }
-        public bool BouleSizeRequired { get; set; }
+        [Display(Name = "Product Size Required")]
+        public bool ProductSizeRequired { get; set; }
         public string? Order { get; set; }
     }
 }

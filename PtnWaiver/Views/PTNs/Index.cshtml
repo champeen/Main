@@ -40,12 +40,6 @@
             <th class="text-nowrap">
                 @Html.DisplayNameFor(model => model.DocId)
             </th>
-            @*             <th>
-            @Html.DisplayNameFor(model => model.OriginatingGroup)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.BouleSize)
-            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
@@ -55,9 +49,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.GroupApprover)
             </th>
-            <th>
+@*             <th>
                 @Html.DisplayNameFor(model => model.PtrNumber)
-            </th>
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
@@ -73,16 +67,31 @@
     <tbody id="ptnIndexTable">
         @foreach (var item in Model)
         {
+            var color = "";
+            if (item.Status == "Draft")
+            {
+                color = "text-warning fw-bold";
+            }
+            else if (item.Status == "Pending Approval")
+            {
+                color = "text-primary fw-bold";
+            }
+            else if (item.Status == "Approved")
+            {
+                color = "text-success fw-bold";
+            }
+            else if (item.Status == "Closed")
+            {
+                color = "text-success fw-bold";
+            }
+            else if (item.Status == "Rejected")
+            {
+                color = "text-danger fw-bold";
+            }
             <tr>
                 <td class="text-nowrap">
                     @Html.DisplayFor(modelItem => item.DocId)
                 </td>
-                @*                 <td>
-            @Html.DisplayFor(modelItem => item.OriginatingGroup)
-            </td>
-            <td>
-            @Html.DisplayFor(modelItem => item.BouleSize)
-            </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
@@ -103,12 +112,24 @@
                     @* @Html.DisplayFor(modelItem => item.SubjectType) *@
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.GroupApprover)
+                    @if (item.GroupApprover != null)
+                    {
+                        var counter = 0;
+                        @foreach (var groupApprover in item.GroupApprover)
+                        {
+                            counter = counter + 1;
+                            <span>@groupApprover</span>
+                            if (counter < item.GroupApprover.Count)
+                            {
+                                <span>,&nbsp;</span>
+                            }
+                        }
+                    }
                 </td>
-                <td>
+@*                 <td>
                     @Html.DisplayFor(modelItem => item.PtrNumber)
-                </td>
-                <td>
+                </td> *@
+                <td class="@color">
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
@@ -119,7 +140,7 @@
                 </td>
                 <td class="text-nowrap">
                     @* @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"}) *@
-                    @Html.ActionLink("Details", "Details", new { id = @item.Id, tab = "Details" }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Details", "Details", new { id = @item.Id, tab = "Details", sourceString = "Index" }, new { @class = "btn btn-secondary" })
                     @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
                     {
                         @if (item.DeletedDate == null && item.Status == "Draft")   // COMMENT OUT THIS LINE IN ORDER TO DELETE CHANGE REQUESTS

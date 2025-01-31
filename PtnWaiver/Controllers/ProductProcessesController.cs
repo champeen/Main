@@ -33,7 +33,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             return _contextPtnWaiver.ProductProcess != null ? 
-                          View(await _contextPtnWaiver.ProductProcess.ToListAsync()) :
+                          View(await _contextPtnWaiver.ProductProcess.OrderBy(m=>m.Order).ThenBy(m=>m.Description).ToListAsync()) :
                           Problem("Entity set 'PtnWaiverContext.ProductProcess'  is null.");
         }
 

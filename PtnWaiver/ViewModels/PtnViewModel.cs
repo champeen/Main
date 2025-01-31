@@ -1,3 +1,4 @@
+using PtnWaiver.Controllers;
 using PtnWaiver.Models;
 
 namespace PtnWaiver.ViewModels
@@ -5,6 +6,7 @@ namespace PtnWaiver.ViewModels
     public class PtnViewModel
     {
         public PTN PTN { get; set; }
+        public List<GroupApproversReview> GroupApproversReview { get; set; }
         public List<Attachment>? AttachmentsPtn { get; set; }
 
         public string? TabActiveDetail { get; set; }

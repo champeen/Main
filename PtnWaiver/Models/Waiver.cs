@@ -12,11 +12,13 @@ namespace PtnWaiver.Models
         [Display(Name = "Revision Number")]
         public int RevisionNumber { get; set; }
         [Display(Name = "POR or Project")]
-        public string PorProject { get; set; }
+        public string? PorProject { get; set; }
         public string Description { get; set; }
-        [Display(Name = "Product/Process")]
-        public string ProductProcess { get; set; }
         public string Status { get; set; }
+        [Display(Name = "Product/Process")]
+        public List<string> ProductProcess { get; set; }
+        [Display(Name = "Group/Approver(s)")]
+        public List<string> GroupApprover { get; set; }
         [Display(Name = "Date Closed")]
         [DataType(DataType.Date)]
         public DateTime? DateClosed { get; set; }
@@ -24,22 +26,6 @@ namespace PtnWaiver.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime? CorrectiveActionDueDate { get; set; }
-        [Display(Name = "Primary Approver Username")]
-        public string? PrimaryApproverUsername { get; set; }
-        [Display(Name = "Primary Approver")]
-        public string? PrimaryApproverFullName { get; set; }
-        [Display(Name = "Primary Approver Email")]
-        public string? PrimaryApproverEmail { get; set; }
-        [Display(Name = "Primary Approver Title")]
-        public string? PrimaryApproverTitle { get; set; }
-        [Display(Name = "Secondary Approver Username")]
-        public string? SecondaryApproverUsername { get; set; }
-        [Display(Name = "Secondary Approver")]
-        public string? SecondaryApproverFullName { get; set; }
-        [Display(Name = "Secondary Approver Email")]
-        public string? SecondaryApproverEmail { get; set; }
-        [Display(Name = "Secondary Approver Title")]
-        public string? SecondaryApproverTitle { get; set; }
 
         [Display(Name = "Rejected Before Submission To Admin")]
         public bool? RejectedBeforeSubmission { get; set; }

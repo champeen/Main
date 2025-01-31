@@ -4,6 +4,8 @@ using PtnWaiver.Data;
 using PtnWaiver.Models;
 using PtnWaiver.Utilities;
 using PtnWaiver.ViewModels;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace PtnWaiver.Controllers
 {
@@ -62,7 +64,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: PTNs/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string rejectedReason = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string sourceString = "Dashboard", string fileAttachmentError = null, string rejectedReason = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -77,13 +79,17 @@ namespace PtnWaiver.Controllers
             if (pTN == null)
                 return NotFound();
 
+            var groupApproversReviews = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == pTN.Id && m.SourceTable == "PTN").OrderBy(m => m.Group).ToListAsync();
+
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.RejectedReason = rejectedReason;
+            ViewBag.SourceString = sourceString;
 
             PtnViewModel ptnVM = new PtnViewModel();
             ptnVM.FileAttachmentError = fileAttachmentError;
             ptnVM.PTN = pTN;
+            ptnVM.GroupApproversReview = groupApproversReviews;
 
             ptnVM.TabActiveDetail = "";
             ptnVM.TabActiveAttachmentsPtn = "";
@@ -156,10 +162,116 @@ namespace PtnWaiver.Controllers
             // Waivers Tab...
             ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
 
+            // Per Ian Manning, do not allow anyone to change an attachment after Draft (because the PTN has been approved in the documents state it is in) but allow to upload new documents.
+            //if (ptnVM.PTN.Status != "Draft")
+            //    ViewBag.DisableAttachmentUpload = "disabled";
+
+            return View(ptnVM);
+        }
+
+        // GET: PTNs/Details/5
+        public async Task<IActionResult> MesLookup(string docId, string? tab = "Details", string sourceString = "Dashboard", string fileAttachmentError = null, string rejectedReason = null)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (docId == null || _contextPtnWaiver.PTN == null)
+                return NotFound();
+
+            var pTN = await _contextPtnWaiver.PTN
+                .FirstOrDefaultAsync(m => m.DocId == docId);
+            if (pTN == null)
+                return NotFound();
+
+            var groupApproversReviews = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == pTN.Id && m.SourceTable == "PTN").OrderBy(m => m.Group).ToListAsync();
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+            ViewBag.RejectedReason = rejectedReason;
+            ViewBag.SourceString = sourceString;
+
+            PtnViewModel ptnVM = new PtnViewModel();
+            ptnVM.FileAttachmentError = fileAttachmentError;
+            ptnVM.PTN = pTN;
+            ptnVM.GroupApproversReview = groupApproversReviews;
+
+            ptnVM.TabActiveDetail = "";
+            ptnVM.TabActiveAttachmentsPtn = "";
+            ptnVM.TabActivePtnApproval = "";
+            ptnVM.TabActivePtnAdminApproval = "";
+            ptnVM.TabActiveWaivers = "";
+            ptnVM.TabActiveAttachmentsWaiver = "";
+            switch (tab)
+            {
+                case null:
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "":
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    ptnVM.TabActiveDetail = "active";
+                    break;
+                case "AttachmentsPtn":
+                    ptnVM.TabActiveAttachmentsPtn = "active";
+                    break;
+                case "PtnApproval":
+                    ptnVM.TabActivePtnApproval = "active";
+                    break;
+                case "PtnAdminApproval":
+                    ptnVM.TabActivePtnAdminApproval = "active";
+                    break;
+                case "Waivers":
+                    ptnVM.TabActiveWaivers = "active";
+                    break;
+            }
+
+            // GET ALL ATTACHMENTS FOR PTN ///////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId)))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            ptnVM.AttachmentsPtn = attachments.OrderBy(m => m.Name).ToList();
+
+            // Get all Waivers under this PTN....
+            ptnVM.PTN.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == pTN.Id && m.DeletedDate == null).ToListAsync();
+
+            // RENDER TABS DISABLED/ENABLED....
+            // Submit for Admin Approval Tab...
+            ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
+            // Admin Approve Ptn Tab...
+            ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            // Waivers Tab...
+            ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+
             if (ptnVM.PTN.Status != "Draft")
                 ViewBag.Disable = "disabled";
 
-            return View(ptnVM);
+            return View("Details", ptnVM);
         }
 
         // GET: PTNs/Create
@@ -182,10 +294,9 @@ namespace PtnWaiver.Controllers
 
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
-            ViewBag.BouleSizes = getBouleSizes();
+            ViewBag.ProductSizes = getProductSizes();
             ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.Groups = getGroupApprovers();
-
 
             PTN ptn = new PTN()
             {
@@ -204,7 +315,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DocId,OriginatingGroup,BouleSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
+        public async Task<IActionResult> Create([Bind("Id,DocId,OriginatingGroup,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -214,45 +325,11 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            // Get Primary/Secondary approver based on Group Selected....
-            var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == ptn.GroupApprover);
-            if (group != null)
-            {
-                // Primary Approver
-                if (group.PrimaryApproverUsername != null)
-                {
-                    var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
-                    if (primaryApprover != null)
-                    {
-                        ptn.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
-                        ptn.PrimaryApproverEmail = primaryApprover.mail;
-                        ptn.PrimaryApproverFullName = primaryApprover.displayname;
-                        ptn.PrimaryApproverTitle = primaryApprover.jobtitle;
-                    }
-                }
-                else
-                    ModelState.AddModelError("GroupApprover", "ERROR: Primary Approver setup for this GroupApprover is null. Contact Admin.");
-                // Secondary Approver
-                if (group.SecondaryApproverUsername != null)
-                {
-                    var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
-                    if (secondaryApprover != null)
-                    {
-                        ptn.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
-                        ptn.SecondaryApproverEmail = secondaryApprover.mail;
-                        ptn.SecondaryApproverFullName = secondaryApprover.displayname;
-                        ptn.SecondaryApproverTitle = secondaryApprover.jobtitle;
-                    }
-                }
-            }
-            else
-                ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
+            //bool productSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.ProductSizeRequired).FirstOrDefaultAsync();
+            //bool productSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.ProductSizeRequired).FirstOrDefaultAsync();
 
-            bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
-            bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
-
-            if (bouleSizeRequired == true && ptn.BouleSize == null)
-                ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
+            //if (productSizeRequired == true && ptn.ProductSize == null)
+            //    ModelState.AddModelError("ProductSize", "ERROR: Product Size Required for the Originating Group that was selected.");
 
             if (ModelState.IsValid)
             {
@@ -260,10 +337,10 @@ namespace PtnWaiver.Controllers
                 ptn.OriginatorInitials = getOriginatorInitials();
                 ptn.OriginatorYear = DateTime.Now.Year.ToString();
                 ptn.SerialNumber = getSerialNumberBasedOnYear(ptn.OriginatorYear);
-                if (bouleSizeRequired == true)
-                    ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
-                else
-                    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                //if (productSizeRequired == true)
+                ptn.DocId = ptn.ProductSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                //else
+                //    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
 
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
@@ -271,13 +348,38 @@ namespace PtnWaiver.Controllers
 
                 _contextPtnWaiver.Add(ptn);
                 await _contextPtnWaiver.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
-            ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            ViewBag.ProductSizes = getProductSizes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = ptn.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = ptn.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
+
             return View(ptn);
         }
 
@@ -299,10 +401,34 @@ namespace PtnWaiver.Controllers
 
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
-            ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            ViewBag.ProductSizes = getProductSizes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.ClonedId = id;
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = ptn.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = ptn.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
 
             ptn.Status = "Draft";
             ptn.ApprovedByDate = null;
@@ -331,7 +457,7 @@ namespace PtnWaiver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CloneCreate([Bind("Id,DocId,OriginatingGroup,BouleSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn, int clonedId, string? source = null)
+        public async Task<IActionResult> CloneCreate([Bind("Id,DocId,OriginatingGroup,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn, int clonedId, string? source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -341,45 +467,11 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
 
-            // Get Primary/Secondary approver based on Group Selected....
-            var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == ptn.GroupApprover);
-            if (group != null)
-            {
-                // Primary Approver
-                if (group.PrimaryApproverUsername != null)
-                {
-                    var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
-                    if (primaryApprover != null)
-                    {
-                        ptn.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
-                        ptn.PrimaryApproverEmail = primaryApprover.mail;
-                        ptn.PrimaryApproverFullName = primaryApprover.displayname;
-                        ptn.PrimaryApproverTitle = primaryApprover.jobtitle;
-                    }
-                }
-                else
-                    ModelState.AddModelError("GroupApprover", "ERROR: Primary Approver setup for this GroupApprover is null. Contact Admin.");
-                // Secondary Approver
-                if (group.SecondaryApproverUsername != null)
-                {
-                    var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
-                    if (secondaryApprover != null)
-                    {
-                        ptn.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
-                        ptn.SecondaryApproverEmail = secondaryApprover.mail;
-                        ptn.SecondaryApproverFullName = secondaryApprover.displayname;
-                        ptn.SecondaryApproverTitle = secondaryApprover.jobtitle;
-                    }
-                }
-            }
-            else
-                ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
+            //bool productSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.ProductSizeRequired).FirstOrDefaultAsync();
+            //bool productSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.ProductSizeRequired).FirstOrDefaultAsync();
 
-            bool bouleSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
-            bool bouleSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.BouleSizeRequired).FirstOrDefaultAsync();
-
-            if (bouleSizeRequired == true && ptn.BouleSize == null)
-                ModelState.AddModelError("BouleSize", "ERROR: Boule Size Required for the Originating Group that was selected.");
+            //if (productSizeRequired == true && ptn.ProductSize == null)
+            //    ModelState.AddModelError("ProductSize", "ERROR: Product Size Required for the Originating Group that was selected.");
 
             if (ModelState.IsValid)
             {
@@ -387,10 +479,10 @@ namespace PtnWaiver.Controllers
                 ptn.OriginatorInitials = getOriginatorInitials();
                 ptn.OriginatorYear = DateTime.Now.Year.ToString();
                 ptn.SerialNumber = getSerialNumberBasedOnYear(ptn.OriginatorYear);
-                if (bouleSizeRequired == true)
-                    ptn.DocId = ptn.BouleSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
-                else
-                    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                //if (productSizeRequired == true)
+                ptn.DocId = ptn.ProductSize + "-" + ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
+                //else
+                //    ptn.DocId = ptn.OriginatingGroup + "-" + ptn.OriginatorInitials + "-" + ptn.OriginatorYear + "-" + ptn.SerialNumber;
 
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
@@ -403,10 +495,34 @@ namespace PtnWaiver.Controllers
 
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
-            ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            ViewBag.ProductSizes = getProductSizes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
             ViewBag.ClonedId = clonedId;
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = ptn.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = ptn.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
 
             return View("Clone", ptn);
         }
@@ -431,9 +547,33 @@ namespace PtnWaiver.Controllers
 
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
-            ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            ViewBag.ProductSizes = getProductSizes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = pTN.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = pTN.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
 
             return View(pTN);
         }
@@ -443,7 +583,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,OriginatingGroup,,BouleSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PdfLocation,Status,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,OriginatingGroup,,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PdfLocation,Status,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -456,42 +596,13 @@ namespace PtnWaiver.Controllers
             if (id != pTN.Id)
                 return NotFound();
 
-            // Get Primary/Secondary approver based on Group Selected....
-            var group = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Group == pTN.GroupApprover);
-            if (group != null)
-            {
-                // Primary Approver
-                if (group.PrimaryApproverUsername != null)
-                {
-                    var primaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.PrimaryApproverUsername);
-                    if (primaryApprover != null)
-                    {
-                        pTN.PrimaryApproverUsername = primaryApprover.onpremisessamaccountname;
-                        pTN.PrimaryApproverEmail = primaryApprover.mail;
-                        pTN.PrimaryApproverFullName = primaryApprover.displayname;
-                        pTN.PrimaryApproverTitle = primaryApprover.jobtitle;
-                    }
-                }
-                else
-                    ModelState.AddModelError("GroupApprover", "ERROR: Primary Approver setup for this GroupApprover is null. Contact Admin.");
-                // Secondary Approver
-                if (group.SecondaryApproverUsername != null)
-                {
-                    var secondaryApprover = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == group.SecondaryApproverUsername);
-                    if (secondaryApprover != null)
-                    {
-                        pTN.SecondaryApproverUsername = secondaryApprover.onpremisessamaccountname;
-                        pTN.SecondaryApproverEmail = secondaryApprover.mail;
-                        pTN.SecondaryApproverFullName = secondaryApprover.displayname;
-                        pTN.SecondaryApproverTitle = secondaryApprover.jobtitle;
-                    }
-                }
-            }
-            else
-                ModelState.AddModelError("GroupApprover", "ERROR: GroupApprover not found. Contact Admin.");
-
             if (ModelState.IsValid)
             {
+                // attachment storage file path should already exist, but just make sure....
+                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, pTN.DocId)))
+                    path.Create();
+
                 var userInfo = getUserInfo(_username);
                 if (userInfo != null)
                 {
@@ -516,9 +627,34 @@ namespace PtnWaiver.Controllers
             }
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
-            ViewBag.BouleSizes = getBouleSizes();
-            ViewBag.Groups = getGroupApprovers();
-            ViewBag.SubjectTypes = getSubjectTypes();
+            ViewBag.ProductSizes = getProductSizes();
+            //ViewBag.Groups = getGroupApprovers();
+            //ViewBag.SubjectTypes = getSubjectTypes();
+
+            var groups = getGroupApprovers();
+            foreach (SelectListItem group in groups)
+            {
+                bool found = pTN.GroupApprover.Contains(group.Value);
+                if (found == true)
+                {
+                    group.Selected = true;
+                    group.Disabled = true;
+                }
+            }
+            ViewBag.Groups = groups;
+
+            var subjectTypes = getSubjectTypes();
+            foreach (SelectListItem subjectType in subjectTypes)
+            {
+                bool found = pTN.SubjectType.Contains(subjectType.Value);
+                if (found == true)
+                {
+                    subjectType.Selected = true;
+                    subjectType.Disabled = true;
+                }
+            }
+            ViewBag.SubjectTypes = subjectTypes;
+
             return View(pTN);
         }
 
@@ -582,6 +718,8 @@ namespace PtnWaiver.Controllers
             return (_contextPtnWaiver.PTN?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
         public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
         {
             if (id == null || _contextPtnWaiver.PTN == null)
@@ -603,13 +741,27 @@ namespace PtnWaiver.Controllers
             if (!found)
                 return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
 
-            string filePath = Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId, fileAttachment.FileName);
-            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                await fileAttachment.CopyToAsync(fileStream);
-            }
+            // attachment storage file path should already exist, but just make sure....
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId)))
+                path.Create();
 
-            return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn" });
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryPTN, ptn.DocId, fileAttachment.FileName);
+
+            // if file exists but not in draft mode, do NOT let user replace it.....
+            if (ptn.Status != "Draft" && System.IO.File.Exists(filePath))
+            {
+                // return message to user saying they cannot overwrite a document after PTN has been approved.  You can only upload new documents.
+                return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn", fileAttachmentError = "Cannot Overwrite Existing Attachment.  Past Draft Mode. Must Create New Attachment." });
+            }
+            else
+            {
+                using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await fileAttachment.CopyToAsync(fileStream);
+                }
+            }
+            return RedirectToAction("Details", new { id = id, tab = "AttachmentsPtn"});
         }
 
         public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
@@ -617,6 +769,7 @@ namespace PtnWaiver.Controllers
             byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
             return File(fileBytes, "application/x-msdownload", fileName);
         }
+
         public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
         {
             System.IO.File.Delete(sourcePath);
@@ -648,16 +801,73 @@ namespace PtnWaiver.Controllers
             _contextPtnWaiver.PTN.Update(ptn);
             await _contextPtnWaiver.SaveChangesAsync();
 
-            // email Primary and Secondary Approvers to review and Approve/Reject...
+            // Setup email Primary and Secondary Approvers to review and Approve/Reject (for below)...
             string subject = @"Process Test Notification (PTN) - PTN Review Needed";
             string body = @"Your Review is needed. Please follow link below and review/respond to the following PTN request. <br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
-            //__mst_employee person = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == admin.Username).FirstOrDefaultAsync();
 
-            Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.PrimaryApproverEmail, ptn.SecondaryApproverEmail, null, null);
-            AddEmailHistory(null, subject, body, ptn.PrimaryApproverFullName, ptn.PrimaryApproverUsername, ptn.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
-            if (ptn.SecondaryApproverEmail != null)
-                AddEmailHistory(null, subject, body, ptn.SecondaryApproverFullName, ptn.SecondaryApproverUsername, ptn.SecondaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+            // create the GroupApproverReviews 
+            foreach (var approver in ptn.GroupApprover)
+            {
+                GroupApproversReview groupApproversReview = new GroupApproversReview();
+                var record = await _contextPtnWaiver.GroupApprovers.Where(m => m.Group == approver).FirstOrDefaultAsync();
+                if (record != null)
+                {
+                    groupApproversReview.SourceId = ptn.Id;
+                    groupApproversReview.SourceTable = "PTN";
+                    groupApproversReview.Group = record.Group;
+                    groupApproversReview.PrimaryApproverUsername = record.PrimaryApproverUsername;
+                    groupApproversReview.PrimaryApproverFullName = record.PrimaryApproverFullName;
+                    groupApproversReview.PrimaryApproverEmail = record.PrimaryApproverEmail;
+                    groupApproversReview.PrimaryApproverTitle = record.PrimaryApproverTitle;
+                    groupApproversReview.SecondaryApproverUsername = record.SecondaryApproverUsername;
+                    groupApproversReview.SecondaryApproverFullName = record.SecondaryApproverFullName;
+                    groupApproversReview.SecondaryApproverEmail = record.SecondaryApproverEmail;
+                    groupApproversReview.SecondaryApproverTitle = record.SecondaryApproverTitle;
+                    groupApproversReview.CreatedDate = DateTime.Now;
+                    groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
+                    groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
+                    groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
 
+                    _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
+
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
+                    AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                    if (groupApproversReview.PrimaryApproverEmail != null)
+                        AddEmailHistory(null, subject, body, groupApproversReview.SecondaryApproverFullName, groupApproversReview.SecondaryApproverUsername, groupApproversReview.SecondaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                }
+            }
+
+            // add PTN creators manager to the GroupApproverReviews....  MJWII
+            if (userInfo != null && userInfo.manager != null)
+            {
+                var manager = await _contextMoc.__mst_employee.Where(m => m.displayname == userInfo.manager).FirstOrDefaultAsync();
+
+                // if manager already happens to be setup to approve above, do not add them again as an approver (do not duplicate)....
+                bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
+
+                if (manager != null && managerAlreadyReviewer == false) // if manager found AND not already setup as Reviewer, add them...
+                {
+                    GroupApproversReview groupApproversReview = new GroupApproversReview();
+                    groupApproversReview.SourceId = ptn.Id;
+                    groupApproversReview.SourceTable = "PTN";
+                    groupApproversReview.Group = "Manager";
+                    groupApproversReview.PrimaryApproverUsername = manager.onpremisessamaccountname;
+                    groupApproversReview.PrimaryApproverFullName = manager.displayname;
+                    groupApproversReview.PrimaryApproverEmail = manager.mail;
+                    groupApproversReview.PrimaryApproverTitle = manager.jobtitle;
+                    groupApproversReview.CreatedDate = DateTime.Now;
+                    groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
+                    groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
+                    groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
+
+                    _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
+
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
+                    AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                }
+            }
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }
 
@@ -820,6 +1030,137 @@ namespace PtnWaiver.Controllers
             AddEmailHistory(null, subject, body, ptn.CreatedUserFullName, ptn.CreatedUser, ptn.CreatedUserEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
 
             return RedirectToAction("Index", new { });
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> GroupApprove(int ptnId, int groupApproverId, string status /*, [Bind("Id,RejectedReason")] PTN pTN*/)
+        {
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (groupApproverId == null)
+                return NotFound();
+
+            var groupApprove = await _contextPtnWaiver.GroupApproversReview.FirstOrDefaultAsync(m => m.Id == groupApproverId);
+            if (groupApprove == null)
+                return NotFound();
+
+            groupApprove.Status = status;
+
+            var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApprove.SourceId);
+            if (ptn == null)
+                return NotFound();
+
+            //if (pTN.RejectedReason == null)
+            //    return RedirectToAction("Details", new { id = pTN.Id, tab = "PtnApproval", rejectedReason = "If PTN is Rejected, Rejected Reason is Required" });
+
+            var groupApproverReviewVM = new GroupApproverReviewVM();
+            groupApproverReviewVM.PTN = ptn;
+            groupApproverReviewVM.GroupApproversReview = groupApprove;
+
+            return View("GroupApproveComment", groupApproverReviewVM);
+
+            //return RedirectToAction("Details", new { id = ptnId, tab = "GroupApprove" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> GroupApprove([Bind("Id,SourceId,SourceTable,Group,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,ReviewedBy,ReviewDate,Comment,Order,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate", Prefix = "GroupApproversReview")] GroupApproversReview groupApproversReview)
+        {
+            {
+                ViewBag.IsAdmin = _isAdmin;
+                ViewBag.Username = _username;
+
+                if (groupApproversReview.Id == null)
+                    return NotFound();
+
+                if (groupApproversReview.Comment == null && groupApproversReview.Status == "Rejected")
+                    ModelState.AddModelError("groupApproversReview.Comment", "ERROR: If Rejecting, Comment is Required");
+
+                if (ModelState.IsValid)
+                {
+                    var userInfo = getUserInfo(_username);
+                    if (userInfo != null)
+                    {
+                        groupApproversReview.ReviewedBy = userInfo.displayname;
+                        groupApproversReview.ReviewDate = DateTime.Now;
+                        groupApproversReview.Comment = groupApproversReview.Comment;
+                        groupApproversReview.ModifiedUser = userInfo.onpremisessamaccountname;
+                        groupApproversReview.ModifiedUserFullName = userInfo.displayname;
+                        groupApproversReview.ModifiedUserEmail = userInfo.mail;
+                        groupApproversReview.ModifiedDate = DateTime.Now;
+                    }
+
+                    _contextPtnWaiver.Update(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
+
+                    // if rejected, we need to reject the PTN and send email to PTN owner that it has been rejected and why....
+                    if (groupApproversReview.Status == "Rejected")
+                    {
+                        var ptnRec = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApproversReview.SourceId);
+                        if (ptnRec == null)
+                            return RedirectToAction("Index");
+
+                        ptnRec.Status = "Rejected";
+                        ptnRec.RejectedReason = groupApproversReview.Comment;
+                        ptnRec.RejectedByApprover = true;
+                        ptnRec.ModifiedDate = DateTime.Now;
+                        ptnRec.ModifiedUser = _username;
+                        ptnRec.ModifiedUserFullName = userInfo.displayname;
+                        ptnRec.ModifiedUserEmail = userInfo.mail;
+
+                        _contextPtnWaiver.Update(ptnRec);
+                        await _contextPtnWaiver.SaveChangesAsync();
+
+                        // email PTN creator that the PTN was Approved....
+                        string subject = @"Process Test Notification (PTN) - PTN Rejected";
+                        string body = @"Your PTN has been <span style=""color:red"">Rejected</span> by " + userInfo.displayname + ". <br/><br/><strong>DocId: </strong>" + ptnRec.DocId + @"<br/><strong>PTN Title: </strong>" + ptnRec.Title + "<br/><strong>Rejected Reason: " + groupApproversReview.Comment + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, ptnRec.CreatedUserEmail, null, null, null);
+                        AddEmailHistory(null, subject, body, ptnRec.CreatedUserFullName, ptnRec.CreatedUser, ptnRec.CreatedUserEmail, ptnRec.Id, null, null, "PTN", ptnRec.Status, DateTime.Now, _username);
+                    }
+
+                    // See if all Reviews have been approved. If they have been, automatically Approve PTN ....
+                    int count = _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == groupApproversReview.SourceId && m.SourceTable == "PTN" && m.Status != "Approved").Count();
+                    if (count == 0)
+                    {
+                        var ptnRec = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApproversReview.SourceId);
+                        if (ptnRec == null)
+                            return RedirectToAction("Index");
+
+                        ptnRec.ModifiedUser = "System";
+                        ptnRec.ModifiedUserFullName = "System";
+                        ptnRec.ModifiedUserEmail = "System";
+                        ptnRec.ModifiedDate = DateTime.Now;
+                        ptnRec.ApprovedByUser = "System";
+                        ptnRec.ApprovedByUserFullName = "System";
+                        ptnRec.ApprovedByDate = DateTime.Now;
+                        ptnRec.Status = "Approved";
+
+                        _contextPtnWaiver.Update(ptnRec);
+                        await _contextPtnWaiver.SaveChangesAsync();
+
+                        // email PTN creator that the PTN was Approved....
+                        //var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+                        string subject = @"Process Test Notification (PTN) - PTN Approved";
+                        string body = @"Your PTN has been <span style=""color:green"">Approved</span>. <br/><br/><strong>DocId: </strong>" + ptnRec.DocId + @"<br/><strong>PTN Title: </strong>" + ptnRec.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, ptnRec.CreatedUserEmail, null, null, null);
+                        AddEmailHistory(null, subject, body, ptnRec.CreatedUserFullName, ptnRec.CreatedUser, ptnRec.CreatedUserEmail, ptnRec.Id, null, null, "PTN", ptnRec.Status, DateTime.Now, _username);
+                    }
+                    return RedirectToAction("Details", new { id = groupApproversReview.SourceId, tab = "PtnAdminApproval" });
+                }
+
+                var groupApproverReviewVM = new GroupApproverReviewVM();
+
+                var ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == groupApproversReview.SourceId);
+                if (ptn == null)
+                    return NotFound();
+
+                groupApproverReviewVM.PTN = ptn;
+                groupApproverReviewVM.GroupApproversReview = groupApproversReview;
+
+                return View("GroupApproveComment", groupApproverReviewVM);
+            }
         }
     }
 }

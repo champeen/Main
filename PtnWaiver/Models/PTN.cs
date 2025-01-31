@@ -10,8 +10,8 @@ namespace PtnWaiver.Models
         public string? DocId { get; set; }
         [Display(Name = "Originating Group")]
         public string OriginatingGroup { get; set; }
-        [Display(Name = "Boule Size")]        
-        public string? BouleSize { get; set; }
+        [Display(Name = "Product Size")]        
+        public string ProductSize { get; set; }
         public string? OriginatorInitials { get; set; }
         public string? OriginatorYear { get; set; }
         public string? SerialNumber { get; set; }
@@ -19,8 +19,8 @@ namespace PtnWaiver.Models
         [Display(Name = "Subject Type(s)")]
         public List<string> SubjectType { get; set; }
         public string Title { get; set; }
-        [Display(Name = "Group/Approver")]
-        public string GroupApprover { get; set; }
+        [Display(Name = "Group/Approver(s)")]
+        public List<string> GroupApprover { get; set; }
         [Display(Name = "PTR Number (Completed)")]
         public string? PtrNumber { get; set; }
         [Display(Name = "Link to original PDF copy")]
@@ -28,22 +28,6 @@ namespace PtnWaiver.Models
         public string Status { get; set; }
         [Display(Name = "Comments")]
         public string? Comments { get; set; }
-        [Display(Name = "Primary Approver Username")]
-        public string? PrimaryApproverUsername { get; set; }
-        [Display(Name = "Primary Approver")]
-        public string? PrimaryApproverFullName { get; set; }
-        [Display(Name = "Primary Approver Email")]
-        public string? PrimaryApproverEmail { get; set; }
-        [Display(Name = "Primary Approver Title")]
-        public string? PrimaryApproverTitle { get; set; }
-        [Display(Name = "Secondary Approver Username")]
-        public string? SecondaryApproverUsername { get; set; }
-        [Display(Name = "Secondary Approver")]
-        public string? SecondaryApproverFullName { get; set; }
-        [Display(Name = "Secondary Approver Email")]
-        public string? SecondaryApproverEmail { get; set; }
-        [Display(Name = "Secondary Approver Title")]
-        public string? SecondaryApproverTitle { get; set; }
         [Display(Name = "Rejected Before Submission To Admin")]
         public bool? RejectedBeforeSubmission { get; set; }
         [Display(Name = "Rejected By Admin")]

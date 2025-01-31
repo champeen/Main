@@ -36,9 +36,9 @@
             <span class="fw-bold">
                 @Html.DisplayFor(model => model.Waiver.WaiverNumber)
             </span>
-            revision: 
+            revision:
             <span class="fw-bold">
-                @Html.DisplayFor(model => model.Waiver.RevisionNumber) 
+                @Html.DisplayFor(model => model.Waiver.RevisionNumber)
             </span>
         </h4>
         <h4>
@@ -87,197 +87,238 @@
                 <div class="col-12 text-start">
                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") @* && (Model.Ptn.Status == "Approved") *@)
                     {
-                        @Html.ActionLink("Edit","Edit",new {id=@Model?.Waiver?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
+                        @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
                         @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
                     }
-                    @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary"})
+                    @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" })
                 </div>
             </div>
             <hr />
             <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.RevisionNumber)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.RevisionNumber)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.PorProject)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.PorProject)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.ProductProcess)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
+                <div class="col-6">
+                    <div class="row">
+                        <dt class="col-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.Description)
+                        </dt>
+                        <dd class="col-9 my-1">
+                            @Html.DisplayFor(model => model.Waiver.Description)
+                        </dd>
+                    </div>
+                    <div class="row">
+                        <dt class="col-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.RevisionNumber)
+                        </dt>
+                        <dd class="col-9 my-1">
+                            @Html.DisplayFor(model => model.Waiver.RevisionNumber)
+                        </dd>
+                    </div>
+                    @*                     <div class="row">
+
+                    </div> *@
+                    @*                     <div class="row">
+                    <dt class="col-3 my-1 text-end">
                     @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
-                    @* @Html.DisplayNameFor(model => model.Waiver.DateClosed) *@
-                </dt>
-                <dd class="col-sm-4 my-1">
+                    </dt>
+                    <dd class="col-9 my-1">
                     @Html.DisplayFor(model => model.Waiver.CorrectiveActionDueDate)
-                    @* @Html.DisplayFor(model => model.Waiver.DateClosed) *@
-                </dd>
+                    </dd>
+                    </div> *@
+                    <div class="row">
+                        <dt class="col-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.RejectedReason)
+                        </dt>
+                        <dd class="col-9 my-1">
+                            @Html.DisplayFor(model => model.Waiver.RejectedReason)
+                        </dd>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <dt class="col-sm-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
+                        </dt>
+                        <dd class="col-sm-9 my-1">
+                            @if (Model.Waiver.ProductProcess != null)
+                            {
+                                var counter = 0;
+                                @foreach (var productProcess in Model.Waiver.ProductProcess)
+                                {
+                                    counter = counter + 1;
+                                    <span>@productProcess</span>
+                                    if (counter < Model.Waiver.ProductProcess.Count)
+                                    {
+                                        <span>,&nbsp;</span>
+                                    }
+                                }
+                            }
+                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
+                        </dd>
+                    </div>
+                    <div class="row">
+                        <dt class="col-sm-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.GroupApprover)
+                        </dt>
+                        <dd class="col-sm-9 my-1">
+                            @if (Model.Waiver.GroupApprover != null)
+                            {
+                                var counter = 0;
+                                @foreach (var groupApprover in Model.Waiver.GroupApprover)
+                                {
+                                    counter = counter + 1;
+                                    <span>@groupApprover</span>
+                                    if (counter < Model.Waiver.GroupApprover.Count)
+                                    {
+                                        <span>,&nbsp;</span>
+                                    }
+                                }
+                            }
+                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
+                        </dd>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                <dt class="col-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.Description)
-                </dt>
-                <dd class="col-10 my-1">
-                    @Html.DisplayFor(model => model.Waiver.Description)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.RejectedReason)
-                </dt>
-                <dd class="col-sm-10 my-1">
-                    @Html.DisplayFor(model => model.Waiver.RejectedReason)
-                </dd>
-            </div>
-            <hr / class="mt-3">
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.PrimaryApproverFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.PrimaryApproverFullName)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.SecondaryApproverFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.SecondaryApproverFullName)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.PrimaryApproverTitle)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.PrimaryApproverTitle)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.SecondaryApproverTitle)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.SecondaryApproverTitle)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.PrimaryApproverEmail)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.PrimaryApproverEmail)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.SecondaryApproverEmail)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.SecondaryApproverEmail)
-                </dd>
-            </div>
-            <hr / class="mt-3">
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.CreatedUser)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.CreatedUser)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.CreatedUserFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.CreatedUserFullName)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.CreatedUserEmail)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.Waiver.CreatedUserEmail)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.CreatedDate)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.Waiver.CreatedDate)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.ModifiedUser)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.ModifiedUser)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.ModifiedUserFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.ModifiedUserFullName)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.ModifiedUserEmail)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.Waiver.ModifiedUserEmail)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.ModifiedDate)
-                </dt>
-                <dd class="col-sm-4 mt-1 mb-3">
-                    @Html.DisplayFor(model => model.Waiver.ModifiedDate)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.DeletedUser)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.DeletedUser)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.DeletedUserFullName)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.DeletedUserFullName)
-                </dd>
-            </div>
-            <div class="row">
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.DeletedUserEmail)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.DeletedUserEmail)
-                </dd>
-                <dt class="col-sm-2 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.DeletedDate)
-                </dt>
-                <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.Waiver.DeletedDate)
-                </dd>
+            <div class="accordion" id="accordionWaiverDetails">
+                <div class="accordion-item ">
+                    <h2 class="accordion-header" id="headingWaiverDetails">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWaiverDetails" aria-expanded="false" aria-controls="collapseWaiverDetails">
+                            <strong>User/Timestamp Info</strong>
+                        </button>
+                    </h2>
+                    <div id="collapseWaiverDetails" class="accordion-collapse collapse" aria-labelledby="headingWaiverDetails" data-bs-parent="#accordionWaiverDetails">
+                        <div class="accordion-body">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="row mt-1">
+                                        <div class="col-12 text-center">
+                                            <h4>Created</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Username
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.CreatedUser)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Full Name
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.CreatedUserFullName)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Email
+                                        </dt>
+                                        <dd class="col-lg-9 mt-1 mb-3">
+                                            @Html.DisplayFor(model => model.Waiver.CreatedUserEmail)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Date
+                                        </dt>
+                                        <dd class="col-lg-9 mt-1 mb-3">
+                                            @Html.DisplayFor(model => model.Waiver.CreatedDate)
+                                        </dd>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row mt-1">
+                                        <div class="col-12 text-center">
+                                            <h4>Modified</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Username
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.ModifiedUser)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Full Name
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.ModifiedUserFullName)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Email
+                                        </dt>
+                                        <dd class="col-lg-9 mt-1 mb-3">
+                                            @Html.DisplayFor(model => model.Waiver.ModifiedUserEmail)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Date
+                                        </dt>
+                                        <dd class="col-lg-9 mt-1 mb-3">
+                                            @Html.DisplayFor(model => model.Waiver.ModifiedDate)
+                                        </dd>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="row mt-1">
+                                        <div class="col-12 text-center">
+                                            <h4>Deleted</h4>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Username
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.DeletedUser)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Full Name
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.DeletedUserFullName)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Email
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.DeletedUserEmail)
+                                        </dd>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <dt class="col-lg-3 my-1 text-lg-end">
+                                            Date
+                                        </dt>
+                                        <dd class="col-lg-9 my-1">
+                                            @Html.DisplayFor(model => model.Waiver.DeletedDate)
+                                        </dd>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <hr />
         <div class="row mt-5">
             <div class="col-5 text-start">
                 @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") && (Model.Ptn.Status == "Approved"))
                 {
-                    @Html.ActionLink("Edit","Edit",new {id=@Model?.Waiver?.Id, tab="Details"},new {@class="btn btn-primary me-1"})
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
                     @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
                 }
-                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary"})
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" })
             </div>
         </div>
     </div>
@@ -321,15 +362,15 @@
                     </div>
                     <div class="form-group mb-3">
                         <div class="row">
-                            <div class="col-10">
-                                <input type="file" name="fileAttachment" class="form-control" @ViewBag.Disable />
+                            <div class="col-9">
+                                <input type="file" name="fileAttachment" class="form-control" @ViewBag.DisableAttachmentUpload />
                                 <div class="form-group text-danger fw-bold">
                                     @*<input asp-for="FileAttachmentError" class="form-control" />*@
                                     @Html.DisplayFor(m => m.FileAttachmentError)
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <input type="submit" value="Upload Completed Waiver Template" class="form-control btn btn-success" @ViewBag.Disable>
+                            <div class="col-xl-3">
+                                <input type="submit" value="Upload Completed Waiver Template" class="form-control btn btn-success" @ViewBag.DisableAttachmentUpload>
                             </div>
                         </div>
                     </div>
@@ -360,15 +401,20 @@
                                     @Html.DisplayFor(modelItem => item.CreatedDate)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Size)
+                                    @* @Html.DisplayFor(modelItem => item.Size) *@
+                                    @{
+                                        var size = item.Size / 1000 < 1 ? item.Size.ToString() + " bytes" : (item.Size / 1000).ToString("N0") + " KB";
+                                    }
+                                    @* @Html.DisplayFor(modelItem => item.Size.ToString("#,##0")) KB *@
+                                    @size
                                 </td>
                                 <td>
                                     @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
                                     @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
-                                    @Html.ActionLink("Download File","DownloadFile","Waivers",new {id=@Model.Waiver.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-secondary", title="Download to Download Folder"})
+                                    @Html.ActionLink("Download File", "DownloadFile", "Waivers", new { id = @Model.Waiver.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
                                     @if (Model.Waiver.Status == "Draft" && (ViewBag.IsAdmin || ViewBag.Username == Model.Waiver.CreatedUser))
                                     {
-                                        @Html.ActionLink("Delete","DeleteFile","Waivers",new {id=@Model.Waiver.Id, fileName=item.Name, sourcePath=item.FullPath},new {@class="btn btn-danger", title="Delete Attachment"})
+                                        @Html.ActionLink("Delete", "DeleteFile", "Waivers", new { id = @Model.Waiver.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-danger", title = "Delete Attachment" })
                                     }
                                     @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
                                 </td>
@@ -385,7 +431,7 @@
                         </tr>
                     }
                 </table>
-                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" })
             </div>
         </div>
     </div>
@@ -400,7 +446,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h5>
-                            Once submitted for administrator approval, you cannot modify the Waiver or the Template.  Make sure everything is complete before submitting for administrator approval.  If you no longer want to submit this PTN for review, reject.
+                            Once submitted for approval, you can only edit the comment field.  Make sure everything is complete before submitting for approval.
                         </h5>
                     </div>
                 </div>
@@ -411,20 +457,20 @@
                     <input type="hidden" asp-for="@Model.Ptn.Id" />
                     <div class="row mt-5">
                         <div class="col-12">
-                            @Html.ActionLink("Submit for Approval","SubmitWaiverForApproval","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
-                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
-                            @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
+                            @Html.ActionLink("Submit for Approval", "SubmitWaiverForApproval", "Waivers", new { id = Model.Waiver.Id }, new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary ms-1" })
+                            @* <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" /> *@
                         </div>
-                        <div class="row mt-3 mb-1">
-                            <div class="col-12">
-                                <label asp-for="Waiver.RejectedReason" class="control-label fw-bold mb-1"></label>
-                                @Html.TextAreaFor(model => model.Waiver.RejectedReason, new {@class = "form-control", @rows = 3 })
-                                @if (@ViewBag.RejectedReason != null)
-                                {
-                                    <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
-                                }
-                            </div>
-                        </div>
+                        @*                         <div class="row mt-3 mb-1">
+                <div class="col-12">
+                <label asp-for="Waiver.RejectedReason" class="control-label fw-bold mb-1"></label>
+                @Html.TextAreaFor(model => model.Waiver.RejectedReason, new {@class = "form-control", @rows = 3 })
+                @if (@ViewBag.RejectedReason != null)
+                {
+                <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
+                }
+                </div>
+                </div> *@
                     </div>
                 </form>
             }
@@ -433,7 +479,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h5>
-                            Waiver Creater or PTN administrator must submit this Waiver for administrator approval in order to move on to next phase.
+                            Waiver Creater or PTN administrator must submit this Waiver for approval in order to move on to next phase.
                         </h5>
                     </div>
                 </div>
@@ -461,7 +507,7 @@
                 {
                     <div class="row">
                         <div class="col-12">
-                            Waiver has been <span class="text-success fw-bold">submitted for administrator approval</span> by <span class="fw-bold">@Model.Waiver.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForApprovalDate</span>.
+                            Waiver has been <span class="text-success fw-bold">submitted for approval</span> by <span class="fw-bold">@Model.Waiver.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForApprovalDate</span>.
                         </div>
                     </div>
                 }
@@ -469,87 +515,116 @@
         }
         <div class="row mt-5">
             <div class="col-12 text-start">
-                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
             </div>
         </div>
     </div>
     @******************************************************************************************************************@
-    @*  WAIVER ADMIN APPROVAL *****************************************************************************************@
+    @*  WAIVER REVIEW APPROVAL ****************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveWaiverAdminApproval" id="nav-waiverAdminApproval" role="tabpanel" aria-labelledby="nav-waiverAdminApproval-tab">
-        @if (@Model.Waiver.Status == "Pending Approval")
-        {
-            @if (ViewBag.IsAdmin)
-            {
-                <div class="row">
-                    <div class="col-12">
-                        <h5>
-                            Look over the Waiver and attached template. Rejecting the Waiver stops the process.
-                        </h5>
-                    </div>
-                </div>
-                <form asp-action="RejectWaiverApprover" asp-route-id="@Model.Waiver.Id" asp-route-rejectedReason="@Model.Waiver.RejectedReason">
-                    <input type="hidden" asp-for="@Model.Waiver.Id" />
-                    <div class="row mt-5">
-                        <div class="col-12">
-                            @Html.ActionLink("Approve Waiver","ApproveWaiver","Waivers", new {id=Model.Waiver.Id}, new {@class="btn btn-success", onclick="return DisplayProgressMessage(this, 'Saving...');"})
-                            <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
-                            @* @Html.ActionLink("Reject PTN","RejectPtn","PTNs", new {id=Model.PTN.Id}, new {@class="btn btn-danger ms-1"}) *@
-                        </div>
-                        <div class="row mt-3 mb-1">
-                            <div class="col-12">
-                                <label asp-for="Waiver.RejectedReason" class="control-label fw-bold mb-1"></label>
-                                @Html.TextAreaFor(model => model.Waiver.RejectedReason, new {@class = "form-control", @rows = 3 })
-                                @if (@ViewBag.RejectedReason != null)
-                                {
-                                    <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            }
-            else
-            {
-                <div class="row">
-                    <div class="col-12">
-                        <h5>
-                            PTN administrator must approve this Waiver in order to move on to next phase.
-                        </h5>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            @if (Model.Waiver.ApprovedByUser != null)
-            {
-                @if (Model.Waiver.RejectedByApprover != null && Model.Waiver.RejectedByApprover == true)
-                {
-                    <div class="row">
-                        <div class="col-12">
-                            Waiver has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.Waiver.ApprovedByUserFullName</span> on <span class="fw-bold">@Model.Waiver.ApprovedByDate</span>.
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <span class="fw-bold">Reason for Rejection: </span>@Model.Waiver.RejectedReason
-                        </div>
-                    </div>
-                }
-                else
-                {
-                    <div class="row">
-                        <div class="col-12">
-                            Waiver has been <span class="text-success fw-bold">Approved</span> by <span class="fw-bold">@Model.Waiver.ApprovedByUserFullName</span> on <span class="fw-bold">@Model.Waiver.ApprovedByDate</span>.
-                        </div>
-                    </div>
-                }
-            }
-        }
-        <div class="row mt-5">
+        <div class="row my-3">
             <div class="col-12 text-start">
-                @Html.ActionLink("Back to PTN","Details","PTNs", new {id=Model.Waiver.PTNId,tab="Waivers"}, new {@class="btn btn-secondary mt-3"})
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" })
+            </div>
+        </div>
+        <table class="table table-bordered table-striped">
+            <thead class="align-top align-text-top table-primary">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupApproversReview[0].Group)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupApproversReview[0].PrimaryApproverFullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupApproversReview[0].SecondaryApproverFullName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupApproversReview[0].Status)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupApproversReview[0].ReviewedBy)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupApproversReview[0].ReviewDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GroupApproversReview[0].Comment)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <form asp-controller="Waivers" asp-action="Index">
+            <tbody id="groupApproverReviewIndexTable">
+                    @foreach (var item in Model.GroupApproversReview)
+                    {
+                        var color = "";
+                        if (item.Status == "Rejected")
+                        {
+                            color = "text-danger fw-bold";
+                        }
+                        else if (item.Status == "Approved")
+                        {
+                            color = "text-success fw-bold";
+                        }
+                    <tr>
+                        <input type="hidden" asp-for="@item.Id" />
+                        <td>
+                                @Html.DisplayFor(modelItem => item.Group)
+                        </td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.PrimaryApproverFullName)
+                        </td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.SecondaryApproverFullName)
+                        </td>
+                        <td class="@color">
+                                @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.ReviewedBy)
+                        </td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.ReviewDate)
+                        </td>
+                        <td>
+                                @Html.DisplayFor(modelItem => item.Comment)
+                        </td>
+                        <td class="text-nowrap">
+                                @if (Model.Waiver.Status == "Pending Approval" && (ViewBag.IsAdmin == true || ViewBag.Username == item.PrimaryApproverUsername || ViewBag.Username == item.SecondaryApproverUsername))
+                                {
+                                    @if (item.Status == null || item.Status == "")
+                                    {
+                                        @* <input type="submit" value="Save" class="btn btn-primary" /> *@
+                                        @Html.ActionLink("Approve", "GroupApprove", new { waiverId = Model.Waiver.Id, groupApproverId = @item.Id, status = "Approved" }, new { @class = "btn btn-success" })
+                                    }
+                                    @if (item.Status == null || item.Status == "")
+                                    {
+                                        @Html.ActionLink("Reject", "GroupApprove", new { waiverId = Model.Waiver.Id, groupApproverId = @item.Id, status = "Rejected" }, new { @class = "btn btn-danger ms-1" })
+                                    }
+                                }
+                        </td>
+                    </tr>
+                    }
+            </tbody>
+            </form>
+            @if (Model.GroupApproversReview.Count() == 0)
+            {
+                <tr>
+                    <td>No data found</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
+        </table>
+        <div class="row mt-3">
+            <div class="col-12 text-start">
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" })
             </div>
         </div>
     </div>

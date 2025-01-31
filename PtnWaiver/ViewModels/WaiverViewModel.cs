@@ -6,6 +6,7 @@ namespace PtnWaiver.ViewModels
     {
         public Waiver Waiver { get; set; }
         public PTN Ptn { get; set; }
+        public List<GroupApproversReview> GroupApproversReview { get; set; }
         public List<Attachment>? AttachmentsWaiver { get; set; }
 
         public string? TabActiveDetail { get; set; }

@@ -48,9 +48,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.RevisionNumber)
             </th>
-            <th>
+@*             <th>
                 @Html.DisplayNameFor(model => model.PorProject)
-            </th>
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
@@ -63,15 +63,36 @@
             <th>
                 @Html.DisplayNameFor(model => model.DateClosed)
             </th>
-            <th>
+@*             <th>
                 @Html.DisplayNameFor(model => model.CorrectiveActionDueDate)
-            </th>
+            </th> *@
             @* <th></th> *@
         </tr>
     </thead>
     <tbody id="waiverIndexTable">
         @foreach (var item in Model)
         {
+            var color = "";
+            if (item.Status == "Draft")
+            {
+                color = "text-warning fw-bold";
+            }
+            else if (item.Status == "Pending Approval")
+            {
+                color = "text-primary fw-bold";
+            }
+            else if (item.Status == "Approved")
+            {
+                color = "text-success fw-bold";
+            }
+            else if (item.Status == "Closed")
+            {
+                color = "text-success fw-bold";
+            }
+            else if (item.Status == "Rejected")
+            {
+                color = "text-danger fw-bold";
+            }
             <tr>
                 @*                 <td>
             @Html.DisplayFor(modelItem => item.PTN.DocId)
@@ -86,24 +107,24 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.RevisionNumber)
                 </td>
-                <td>
+@*                 <td>
                     @Html.DisplayFor(modelItem => item.PorProject)
-                </td>
+                </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ProductProcess)
                 </td>
-                <td>
+                <td class="@color">
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DateClosed)
                 </td>
-                <td>
+@*                 <td>
                     @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
-                </td>
+                </td> *@
 @*                 <td class="text-nowrap">
                     @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary ms-1"})
@@ -128,8 +149,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
-            <td></td>
+@*             <td></td> *@
             @* <td></td> *@
         </tr>
     }
