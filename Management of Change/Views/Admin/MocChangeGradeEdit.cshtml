@@ -1,0 +1,169 @@
+﻿@model Management_of_Change.Models.ChangeRequest
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Change Request</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger me-2" />
+        @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+    </form>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MOC_Number)
+        </dt>
+       <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MOC_Number)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Change_Owner)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Change_Owner)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Location_Site)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Location_Site)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title_Change_Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title_Change_Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Scope_of_the_Change)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Scope_of_the_Change)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Justification_of_the_Change)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Justification_of_the_Change)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Change_Level)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Change_Level)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Area_of_Change)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Area_of_Change)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Change_Status_Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Change_Status_Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Request_Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Request_Date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Proudct_Line)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Proudct_Line)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Change_Type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Change_Type)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Estimated_Completion_Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Estimated_Completion_Date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Raw_Material_Component_Numbers_Impacted)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Raw_Material_Component_Numbers_Impacted)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PTN_Number)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PTN_Number)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Waiver_Number)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Waiver_Number)
+        </dd>
+@*         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CMT_Number)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CMT_Number)
+        </dd> *@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Expiration_Date_Temporary)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Expiration_Date_Temporary)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedUser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedUser)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedUser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedUser)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModifiedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ModifiedDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DeletedUser)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeletedUser)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.DeletedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeletedDate)
+        </dd>
+    </dl>    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-danger me-2" />
+        @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+    </form>
+</div>

@@ -1,0 +1,26 @@
+﻿For My Use * MJWII *
+
+HOW TO SAVE/RESTORE POSTGRES DATABASE
+
+** SAVE ************************************************************************
+- Remote Into Production Postgresql Server
+- Open Cmd Prompt.  Change Directory to POSTGRESQL bin folder....
+cd C:\Program Files\PostgreSQL\15\bin
+
+- This command saves DB to a text file....
+pg_dump -U postgres -d css_moc > C:\Users\MJWilson\SqlBackup\DB_Backup.sql
+
+
+** RESTORE **********************************************************************
+
+- Remote Into Production Postgresql Server
+- Open Cmd Prompt.  Change Directory to POSTGRESQL bin folder....
+cd C:\Program Files\PostgreSQL\15\bin
+
+- This command restores DB from text file to target database...
+psql -U postgres -d css_moc_backup -1 -f C:\Users\MJWilson\SqlBackup\DB_Backup.sql
+
+
+
+** NOTE **
+after running an above command, it will prompt you for the postgresql password.  Alreadh have it copied.  At the prompt, simply ctrl-v (paste it in)

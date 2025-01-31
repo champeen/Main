@@ -1,0 +1,38 @@
+﻿@model Management_of_Change.Models.PccbStep
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>PCCB Meeting Steps</h1>
+
+<h4 class="mt-5">Create</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <div class="form-group my-3">
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="font-size: 1rem; color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label mb-1 fw-bold"></label>
+                <input asp-for="Order" class="form-control" />
+                <span asp-validation-for="Order" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-4">
+                <input type="submit" value="Create" class="btn btn-primary me-1" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

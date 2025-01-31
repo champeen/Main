@@ -54,10 +54,24 @@ namespace Management_of_Change.Models
         [Display(Name = "Estimated Completion Date")]
         [DataType(DataType.Date)]
         public DateTime? Estimated_Completion_Date { get; set; }
+        public String? ChangeGradeApprovalUser { get; set; }
+        [Display(Name = "Change Grade Approval Username")]
+        public String? ChangeGradeApprovalUserFullName { get; set; }
+        [Display(Name = "Change Grade Approval Date")]
+        [DataType(DataType.Date)]
+        public DateTime? ChangeGradeApprovalDate { get; set; }
+        public String? ChangeGradeRejectedUser { get; set; }
+        [Display(Name = "Change Grade Rejected Username")]
+        public String? ChangeGradeRejectedUserFullName { get; set; }
+        [Display(Name = "Change Grade Rejected Date")]
+        [DataType(DataType.Date)]
+        public DateTime? ChangeGradeRejectedDate { get; set; }
+        [Display(Name = "Change Grade Rejected Reason")]
+        public String? ChangeGradeRejectedReason { get; set; }
         [Display(Name = "Implementation Approval Date")]
         [DataType(DataType.Date)]
         public DateTime? Implementation_Approval_Date { get; set; }
-        [Display(Name = "Implementation Username")]
+        [Display(Name = "Implementation Approval Username")]
         public string? Implementation_Username { get; set; }
         [Display(Name = "Closeout Date")]
         [DataType(DataType.Date)]
@@ -78,5 +92,6 @@ namespace Management_of_Change.Models
         public List<GeneralMocResponses>? GeneralMocResponses { get; set; }
         public List<ImpactAssessmentResponse>? ImpactAssessmentResponses { get; set; }
         public List<ImplementationFinalApprovalResponse>? ImplementationFinalApprovalResponses { get; set; }
+        public List<PCCB>? PccbMeetings { get; set; }
     }
 }

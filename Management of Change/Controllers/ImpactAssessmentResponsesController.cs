@@ -15,10 +15,12 @@ namespace Management_of_Change.Controllers
     public class ImpactAssessmentResponsesController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public ImpactAssessmentResponsesController(Management_of_ChangeContext context) : base(context)
+        public ImpactAssessmentResponsesController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: ImpactAssessmentResponses
@@ -164,11 +166,11 @@ namespace Management_of_Change.Controllers
                 return NotFound();
 
             // make sure all selected employee data is found, valid and correct
-            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == impactAssessmentResponse.Username);
+            __mst_employee employee = await _context.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname.ToLower() == impactAssessmentResponse.Username.ToLower());
             if (employee != null)
             {
-                impactAssessmentResponse.Reviewer = employee.displayname;
-                impactAssessmentResponse.ReviewerEmail = employee.mail;
+                impactAssessmentResponse.Reviewer = employee?.displayname;
+                impactAssessmentResponse.ReviewerEmail = employee?.mail;
             }
             else
                 ModelState.AddModelError("Username", "Employee record not found for Username: " + impactAssessmentResponse.Username);

@@ -10,6 +10,7 @@ namespace Management_of_Change.Utilities
     public class BaseController : Controller
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
         private string? userName { get; set; }
         private string? userDisplayName { get; set; }
@@ -112,14 +113,16 @@ namespace Management_of_Change.Utilities
         //{
 
         //}
-        public BaseController(Management_of_ChangeContext context, WebApplicationBuilder builder)
+        public BaseController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver, WebApplicationBuilder builder)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
-        public BaseController(Management_of_ChangeContext context)
+        public BaseController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         public BaseController(ILogger<AdminController> logger)
@@ -165,6 +168,47 @@ namespace Management_of_Change.Utilities
             return users;
         }
 
+        public List<SelectListItem> getUserEmailList(List<string> emailLists = null)
+        {
+            // Create Dropdown List of Users...
+            var userList = _context.__mst_employee
+                .Where(m => !String.IsNullOrWhiteSpace(m.onpremisessamaccountname))
+                .Where(m => m.accountenabled == true)
+                .Where(m => !String.IsNullOrWhiteSpace(m.mail))
+                .Where(m => !String.IsNullOrWhiteSpace(m.manager) || !String.IsNullOrWhiteSpace(m.jobtitle))
+                .OrderBy(m => m.displayname)
+                .ThenBy(m => m.onpremisessamaccountname)
+                .ToList();
+            List<SelectListItem> users = new List<SelectListItem>();
+            foreach (var user in userList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.mail, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
+                if (emailLists != null)
+                    if (emailLists.Contains(user.mail))
+                        item.Selected = true;
+                users.Add(item);
+            }
+            return users;
+        }
+
+        public List<SelectListItem> getEmailList(List<string> emailLists = null)
+        {
+            // Create Dropdown List of Users...
+            var emailList = _context.EmailLists.OrderBy(m => m.Order).ThenBy(m => m.ListName).ToList();
+            List<SelectListItem> list = new List<SelectListItem>();
+            foreach (var user in emailList)
+            {
+                SelectListItem item = new SelectListItem { Value = user.ListName, Text = user.ListName};
+                if (emailLists != null)
+                    if (emailLists.Contains(user.ListName))
+                        item.Selected = true;
+                //if (user.onpremisessamaccountname == username)
+                //    item.Selected = true;
+                list.Add(item);
+            }
+            return list;
+        }
+
         public List<SelectListItem> getChangeTypes()
         {
             var changeTypeList = _context.ChangeType.OrderBy(m => m.Order).ThenBy(m => m.Type).ToList();
@@ -193,14 +237,35 @@ namespace Management_of_Change.Utilities
 
         public List<SelectListItem> getPtnNumbers()
         {
-            var ptnList = _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToList();
+            var ptnList1 = _contextPtnWaiver.PTN.Where(m=>m.Status == "Approved" || m.Status == "Closed").OrderBy(m=>m.DocId).ToList();
             List<SelectListItem> ptns = new List<SelectListItem>();
-            foreach (var request in ptnList)
+            foreach (var request in ptnList1)
             {
-                SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+                SelectListItem item = new SelectListItem { Value = request.DocId, Text = request.DocId + " : " + request.Title };
                 ptns.Add(item);
             }
             return ptns;
+
+            //var ptnList = _context.PTN.Where(m => m.DeletedDate == null && m.Enabled == true).OrderBy(m => m.Order).ThenBy(m => m.Name).ToList();
+            //List<SelectListItem> ptns = new List<SelectListItem>();
+            //foreach (var request in ptnList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = request.Name, Text = request.Name + " : " + request.Description };
+            //    ptns.Add(item);
+            //}
+            //return ptns;
+        }
+
+        public List<SelectListItem> getPccbSteps()
+        {
+            var pccbStepList = _context.PccbStep.Where(m => m.DeletedDate == null).OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> pccbSteps = new List<SelectListItem>();
+            foreach (var request in pccbStepList)
+            {
+                SelectListItem item = new SelectListItem { Value = request.Description, Text = request.Description };
+                pccbSteps.Add(item);
+            }
+            return pccbSteps;
         }
 
         public EmailHistory AddEmailHistory(string? priority, string? subject, string? body, string? sentToDisplayName, string? sentToUsername, string? sentToEmail, int? changeRequestId, int? impactAssessmentResponseId, int? implementationFinalApprovalResponseId, int? taskId, string? type, string? status, DateTime createdDate, string? username)

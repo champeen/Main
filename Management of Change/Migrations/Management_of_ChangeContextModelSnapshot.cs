@@ -145,6 +145,30 @@ namespace Management_of_Change.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ChangeGradePrimaryApproverEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradePrimaryApproverFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradePrimaryApproverTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradePrimaryApproverUsername")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradeSecondaryApproverEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradeSecondaryApproverFullName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradeSecondaryApproverTitle")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradeSecondaryApproverUsername")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -184,6 +208,9 @@ namespace Management_of_Change.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("ChangeGradeReviewRequired")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -213,6 +240,9 @@ namespace Management_of_Change.Migrations
                     b.Property<string>("Order")
                         .HasColumnType("text");
 
+                    b.Property<bool>("PccbReviewRequired")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("ChangeLevel");
@@ -240,6 +270,27 @@ namespace Management_of_Change.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Cancel_Username")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ChangeGradeApprovalDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ChangeGradeApprovalUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradeApprovalUserFullName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ChangeGradeRejectedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ChangeGradeRejectedReason")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradeRejectedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ChangeGradeRejectedUserFullName")
                         .HasColumnType("text");
 
                     b.Property<string>("Change_Level")
@@ -502,6 +553,49 @@ namespace Management_of_Change.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("EmailHistory");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.EmailLists", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<List<string>>("Emails")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("ListName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmailLists");
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.FinalReviewType", b =>
@@ -965,6 +1059,75 @@ namespace Management_of_Change.Migrations
                     b.ToTable("ImplementationFinalApprovalResponse");
                 });
 
+            modelBuilder.Entity("Management_of_Change.Models.PCCB", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionItems")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Agenda")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ChangeRequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Decisions")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InviteeList")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("MeetingDateTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("NotificationList")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Step")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangeRequestId");
+
+                    b.ToTable("PCCB");
+                });
+
             modelBuilder.Entity("Management_of_Change.Models.PTN", b =>
                 {
                     b.Property<int>("Id")
@@ -1011,6 +1174,107 @@ namespace Management_of_Change.Migrations
                         {
                             t.ExcludeFromMigrations();
                         });
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.PccbInvitees", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Attended")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("MocId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<int>("PccbId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PccbId");
+
+                    b.ToTable("PccbInvitees");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.PccbStep", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("CreatedUser")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DeletedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ModifiedUser")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Order")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PccbStep");
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.ProductLine", b =>
@@ -1367,6 +1631,24 @@ namespace Management_of_Change.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Management_of_Change.Models.PCCB", b =>
+                {
+                    b.HasOne("Management_of_Change.Models.ChangeRequest", null)
+                        .WithMany("PccbMeetings")
+                        .HasForeignKey("ChangeRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.PccbInvitees", b =>
+                {
+                    b.HasOne("Management_of_Change.Models.PCCB", null)
+                        .WithMany("Invitees")
+                        .HasForeignKey("PccbId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Management_of_Change.Models.Task", b =>
                 {
                     b.HasOne("Management_of_Change.Models.ImpactAssessmentResponseAnswer", null)
@@ -1381,6 +1663,8 @@ namespace Management_of_Change.Migrations
                     b.Navigation("ImpactAssessmentResponses");
 
                     b.Navigation("ImplementationFinalApprovalResponses");
+
+                    b.Navigation("PccbMeetings");
                 });
 
             modelBuilder.Entity("Management_of_Change.Models.ImpactAssessmentResponse", b =>
@@ -1391,6 +1675,11 @@ namespace Management_of_Change.Migrations
             modelBuilder.Entity("Management_of_Change.Models.ImpactAssessmentResponseAnswer", b =>
                 {
                     b.Navigation("Task");
+                });
+
+            modelBuilder.Entity("Management_of_Change.Models.PCCB", b =>
+                {
+                    b.Navigation("Invitees");
                 });
 #pragma warning restore 612, 618
         }

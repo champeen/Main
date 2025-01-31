@@ -6,15 +6,16 @@
 
 <h1>Task</h1>
 <h4 class="mt-5">Edit</h4>
+<hr />
 <form asp-action="Edit">
     <div class="row">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="submit" value="Save" class="btn btn-primary" asp-route-destinationPage ="@ViewBag.DestinationPage" />
                 </span>
-                <span class="mx-2">
-                    @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+                <span class="mx-1">
+                    @Html.ActionLink("Cancel", "Details", new { id = Model.Id, destinationPage = ViewBag.DestinationPage }, new { @class = "btn btn-secondary" })
                 </span>
                 <span class="float-end">
                     @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
@@ -28,7 +29,6 @@
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
         </div>
     </div>
-    <hr />
     <div class="row">
         <div class="col-md-12">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -48,14 +48,14 @@
             <input type="hidden" asp-for="DeletedDate" />
             <input type="hidden" asp-for="DeletedUser" />
             <div class="form-group my-3">
-                <label asp-for="ChangeRequestId" class="control-label fw-bold"></label>
+                <label asp-for="ChangeRequestId" class="control-label fw-bold mb-1"></label>
                 @*<label asp-for="MocNumber" class="control-label fw-bold"></label>*@
                 @*<input asp-for="MocNumber" class="form-control" />*@
                 @Html.DropDownListFor(model => model.ChangeRequestId, new SelectList(ViewBag.ChangeRequests,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:50%"})
                 <span asp-validation-for="ChangeRequestId" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="ImplementationType" class="control-label fw-bold"></label>
+                <label asp-for="ImplementationType" class="control-label fw-bold mb-1"></label>
                 @Html.DropDownListFor(model => model.ImplementationType,
                 new List<SelectListItem>{
                 new SelectListItem {Value="Pre", Text="Pre"},
@@ -65,8 +65,8 @@
                 <span asp-validation-for="ImplementationType" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Status" class="control-label fw-bold"></label>
-                @*<input asp-for="Status" class="form-control" />*@
+                <label asp-for="Status" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @Html.DropDownListFor(model => model.Status,
                 new List<SelectListItem>{
                 new SelectListItem {Value="Open", Text="Open"},
@@ -79,7 +79,8 @@
                 <span asp-validation-for="Status" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Priority" class="control-label fw-bold"></label>
+                <label asp-for="Priority" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @*<input asp-for="Status" class="form-control" />*@
                 @Html.DropDownListFor(model => model.Priority,
                 new List<SelectListItem>{
@@ -88,9 +89,15 @@
                 new { @class="form-control form-select", @style="max-width:15%"})
                 <span asp-validation-for="Priority" class="text-danger fw-bold"></span>
             </div>
-            <div class="form-group my-3">
-                <label asp-for="AssignedToUser" class="control-label fw-bold"></label>
+@*             <div class="form-group my-3">
+                <label asp-for="AssignedToUser" class="control-label fw-bold mb-1"></label>
                 @Html.DropDownListFor(model => model.AssignedToUser, new SelectList(ViewBag.Users,"Value","Text"), new { @class="form-control form-select", @style="max-width:25%;"})
+                <span asp-validation-for="AssignedToUser" class="text-danger fw-bold"></span>
+            </div> *@
+            <div class="form-group my-3">
+                <label asp-for="AssignedToUser" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                @Html.DropDownListFor(model => model.AssignedToUser, new SelectList(ViewBag.Users, "Value", "Text"), new { @class = "form-control form-select", @id = "TaskEditAssignedToUser" })
                 <span asp-validation-for="AssignedToUser" class="text-danger fw-bold"></span>
             </div>
 @*            <div class="form-group my-3">
@@ -99,39 +106,41 @@
                 <span asp-validation-for="AssignedByUser" class="text-danger"></span>
             </div>*@
             <div class="form-group my-3">
-                <label asp-for="Title" class="control-label fw-bold"></label>
+                <label asp-for="Title" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 <input asp-for="Title" class="form-control" style="max-width:50%;"/>
                 <span asp-validation-for="Title" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="Description" class="control-label fw-bold"></label>
+                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
                 @*<input asp-for="Description" class="form-control" />*@
                 @Html.TextAreaFor(model => model.Description, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="Description" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="DueDate" class="control-label fw-bold"></label>
+                <label asp-for="DueDate" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 <input asp-for="DueDate" class="form-control" style="max-width:20%" onclick="this.showPicker()" />
                 <span asp-validation-for="DueDate" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="CompletionDate" class="control-label fw-bold"></label>
+                <label asp-for="CompletionDate" class="control-label fw-bold mb-1"></label>
                 <input asp-for="CompletionDate" class="form-control" style="max-width:20%" onclick="this.showPicker()" />
                 <span asp-validation-for="CompletionDate" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="CompletionNotes" class="control-label fw-bold"></label>
+                <label asp-for="CompletionNotes" class="control-label fw-bold mb-1"></label>
                 @*<input asp-for="CompletionNotes" class="form-control" />*@
                 @Html.TextAreaFor(model => model.CompletionNotes, new {@class = "form-control", @rows = 3 })
                 <span asp-validation-for="CompletionNotes" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="OnHoldReason" class="control-label fw-bold"></label>
+                <label asp-for="OnHoldReason" class="control-label fw-bold mb-1"></label>
                 <input asp-for="OnHoldReason" class="form-control" />
                 <span asp-validation-for="OnHoldReason" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
-                <label asp-for="CancelledReason" class="control-label fw-bold"></label>
+                <label asp-for="CancelledReason" class="control-label fw-bold mb-1"></label>
                 <input asp-for="CancelledReason" class="form-control" />
                 <span asp-validation-for="CancelledReason" class="text-danger fw-bold"></span>
             </div>
@@ -142,15 +151,14 @@
             </div>*@
         </div>
     </div>
-    <hr />
-    <div class="row my-4">
+     <div class="row my-4">
         <div class="col-12">
             <div class="text-nowrap">
                 <span class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input type="submit" value="Save" class="btn btn-primary" asp-route-destinationPage="@ViewBag.DestinationPage" />
                 </span>
-                <span class="mx-2">
-                    @Html.ActionLink("Cancel","Index", new {}, new {@class="btn btn-secondary"})
+                <span class="mx-1">
+                    @Html.ActionLink("Cancel", "Details", new { id = Model.Id, destinationPage = ViewBag.DestinationPage }, new { @class = "btn btn-secondary" })
                 </span>
                 <span class="float-end">
                     @Html.ActionLink("Send Reminder","TaskReminder", new {id = Model.Id}, new {@class="btn btn-info", onclick="return DisplayProgressMessage(this, 'Sending...');"})
@@ -159,6 +167,14 @@
         </div>
     </div>
 </form>
+
+<script>
+    $(document).ready(function () {
+        $('#TaskEditAssignedToUser').select2({
+            placeholder: "Select Employee..."
+        });
+    });
+</script>
 
 @section Scripts {
     @{

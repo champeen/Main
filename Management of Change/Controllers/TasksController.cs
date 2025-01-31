@@ -12,10 +12,12 @@ namespace Management_of_Change.Controllers
     public class TasksController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public TasksController(Management_of_ChangeContext context) : base(context)
+        public TasksController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: Tasks
@@ -299,14 +301,10 @@ namespace Management_of_Change.Controllers
             ViewBag.Username = _username;
 
             return View("Index", taskList);
-
-            //return _context.Task != null ?
-            //            View(await _context.Task.OrderBy(m => m.DueDate).ThenBy(m => m.CreatedDate).ToListAsync()) :
-            //            Problem("Entity set 'Management_of_ChangeContext.Task'  is null.");
         }
 
         // GET: Tasks/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null, string destinationPage = null, string previousAction = null, string? tab = "Details")
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -321,14 +319,74 @@ namespace Management_of_Change.Controllers
             if (task == null)
                 return NotFound();
 
+            TaskVM taskVM = new TaskVM();
+            taskVM.Task = task;
+            taskVM.TabActiveDetail = "";
+            taskVM.TabActiveAttachments = "";
+
+            switch (tab)
+            {
+                case null:
+                    taskVM.TabActiveDetail = "active";
+                    break;
+                case "":
+                    taskVM.TabActiveDetail = "active";
+                    break;
+                case "Details":
+                    taskVM.TabActiveDetail = "active";
+                    break;
+                case "Attachments":
+                    taskVM.TabActiveAttachments = "active";
+                    break;
+                default:
+                    taskVM.TabActiveDetail = "active";
+                    break;
+            }
+
             ViewBag.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(s => s.MOC_Number).FirstOrDefaultAsync();
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.CreatedUserDisplayName = getUserDisplayName(task.CreatedUser);
             ViewBag.ModifiedUserDisplayName = getUserDisplayName(task.ModifiedUser);
             ViewBag.DeletedUserDisplayName = getUserDisplayName(task.DeletedUser);
+            ViewBag.PreviousAction = previousAction;
+            ViewBag.FileAttachmentError = fileAttachmentError;
+            taskVM.FileAttachmentError = fileAttachmentError;
+            ViewBag.DestinationPage = destinationPage;
 
-            return View(task);
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // TASK ATTACHMENTS                                                                                   \\BAY1VPRD-MOC01\Tasks\{task Id}
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.TaskDirectory, task.Id.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.TaskDirectory, task.Id.ToString())))
+                path.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] Files = path.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachments = new List<ViewModels.Attachment>();
+            foreach (FileInfo i in Files)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachments.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            taskVM.Attachments = attachments.OrderBy(m => m.Name).ToList();
+            ViewBag.MocTitle = await _context.ChangeRequest.Where(m=>m.Id == task.ChangeRequestId).Select(m=>m.Title_Change_Description).FirstOrDefaultAsync();
+
+            return View(taskVM);
         }
 
         // GET: Tasks/Create
@@ -420,14 +478,14 @@ namespace Management_of_Change.Controllers
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
 
                 // get assigned-to person info....
-                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
-                task.AssignedToUserFullName = toPerson.displayname;
-                task.AssignedToUserEmail = toPerson.mail;
+                var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedToUserFullName = toPerson?.displayname;
+                task.AssignedToUserEmail = toPerson?.mail;
 
                 // get assigned-by person info....
-                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedByUser).FirstOrDefaultAsync();
-                task.AssignedByUserFullName = fromPerson.displayname;
-                task.AssignedByUserEmail = fromPerson.mail;
+                var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedByUser.ToLower()).FirstOrDefaultAsync();
+                task.AssignedByUserFullName = fromPerson?.displayname;
+                task.AssignedByUserEmail = fromPerson?.mail;
 
                 _context.Add(task);
                 await _context.SaveChangesAsync();
@@ -438,8 +496,8 @@ namespace Management_of_Change.Controllers
 
                 if (toPerson != null)
                 {
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                    AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
+                    AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                     //EmailHistory emailHistory = new EmailHistory
                     //{
@@ -482,7 +540,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: Tasks/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string? destinationPage = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -498,6 +556,7 @@ namespace Management_of_Change.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.DestinationPage = destinationPage;
 
             // Create Dropdown List of Change Requests...
             var requestList = await _context.ChangeRequest.Where(m => m.DeletedDate == null).OrderBy(m => m.MOC_Number).ThenBy(m => m.CreatedDate).ToListAsync();
@@ -520,7 +579,7 @@ namespace Management_of_Change.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,Priority,AssignedToUser,AssignedToUserFullName,AssignedToUserEmail,AssignedByUser,AssignedByUserFullName,AssignedByUserEmail,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,CancelledReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ChangeRequestId,MocNumber,ImplementationType,Status,Priority,AssignedToUser,AssignedToUserFullName,AssignedToUserEmail,AssignedByUser,AssignedByUserFullName,AssignedByUserEmail,Title,Description,DueDate,CompletionDate,CompletionNotes,OnHoldReason,CancelledReason,ImpactAssessmentResponseAnswerId,CreatedUser,CreatedDate,ModifiedUser,ModifiedDate,DeletedUser,DeletedDate")] Models.Task task, string? destinationPage = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -548,18 +607,27 @@ namespace Management_of_Change.Controllers
             if (task.ChangeRequestId != null && task.ImplementationType == null)
                 ModelState.AddModelError("ImplementationType", "If task is part of a Change Request, Implementation Type is required.");
 
+            if (task.Status == "Complete" && task.CompletionDate == null)
+                ModelState.AddModelError("CompletionDate", "If Task Status is 'Completed, Completion Date is required.");
+
+            if (task.Status != "Complete" && task.CompletionDate != null)
+            {
+                ModelState.AddModelError("CompletionDate", "Completion Date is entered, but Status is not 'Complete'. (Either Change Status to 'Complete' or clear 'Completion Date')");
+                ModelState.AddModelError("Status", "Completion Date is entered, but Status is not 'Complete'. (Either Change Status to 'Complete' or clear 'Completion Date')");
+            }
+
             if (ModelState.IsValid)
             {
                 var originalTaskStatus = await _context.Task.Where(m => m.Id == task.Id).Select(m => m.Status).FirstOrDefaultAsync();
                 task.MocNumber = await _context.ChangeRequest.Where(m => m.Id == task.ChangeRequestId).Select(m => m.MOC_Number).FirstOrDefaultAsync();
                 // get assigned-to person info....
                 var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
-                task.AssignedToUserFullName = toPerson.displayname;
-                task.AssignedToUserEmail = toPerson.mail;
+                task.AssignedToUserFullName = toPerson?.displayname;
+                task.AssignedToUserEmail = toPerson?.mail;
                 // get assigned-by person info....
                 var fromPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedByUser.ToLower()).FirstOrDefaultAsync();
-                task.AssignedByUserFullName = fromPerson.displayname;
-                task.AssignedByUserEmail = fromPerson.mail;
+                task.AssignedByUserFullName = fromPerson?.displayname;
+                task.AssignedByUserEmail = fromPerson?.mail;
                 task.ModifiedUser = _username;
                 task.ModifiedDate = DateTime.Now;
                 _context.Update(task);
@@ -572,11 +640,11 @@ namespace Management_of_Change.Controllers
                     string subject = @"Management of Change (MoC) - Task has been completed.";
                     string body = @"A Management of Change task has been completed.  The task is listed under your Change Request, in the Tasks tab. <br/><br/>
                             <strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-                    var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.CreatedUser).FirstOrDefaultAsync();
+                    var ccPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.CreatedUser.ToLower()).FirstOrDefaultAsync();
                     if (toPerson != null)
                     {
-                        Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, ccPerson.mail, null, task.Priority);
-                        AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, ccPerson?.mail, null, task.Priority);
+                        AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
 
                         //EmailHistory emailHistory = new EmailHistory
                         //{
@@ -596,7 +664,8 @@ namespace Management_of_Change.Controllers
                         //_context.Add(emailHistory);
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = id, destinationPage = destinationPage });
             }
 
             ViewBag.IsAdmin = _isAdmin;
@@ -664,7 +733,7 @@ namespace Management_of_Change.Controllers
             return (_context.Task?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async Task<IActionResult> TaskReminder(int id)
+        public async Task<IActionResult> TaskReminder(int id, string? destinationPage = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -681,11 +750,11 @@ namespace Management_of_Change.Controllers
             // Send Email Out notifying the person who is assigned the task
             string subject = @"Management of Change (MoC) - Impact Assessment Response Task Reminder.";
             string body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Number: </strong>" + task.Id.ToString() + @"<br/><strong>Task Title: </strong>" + task.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == task.AssignedToUser).FirstOrDefaultAsync();
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
             if (toPerson != null)
             {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson.mail, null, null, task.Priority);
-                var emailHistory = AddEmailHistory(task.Priority, subject, body, toPerson.displayname, toPerson.onpremisessamaccountname, toPerson.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
+                var emailHistory = AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, _username);
                 //EmailHistory emailHistory = new EmailHistory
                 //{
                 //    Priority = task.Priority,
@@ -704,7 +773,62 @@ namespace Management_of_Change.Controllers
                 //_context.Add(emailHistory);
             }
             //await _context.SaveChangesAsync();
-            return RedirectToAction("Details", new { id = id });
+            return RedirectToAction("Details", new { id = id, destinationPage = destinationPage });
+        }
+
+        [HttpPost]
+        [DisableRequestSizeLimit,RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
+        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _context.Task == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", "Tasks", new { id = id, fileAttachmentError = "No File Has Been Selected For Upload", tab = "Attachments" });
+
+            // get PCCB (meeting) record...
+            var taskRec = await _context.Task.FindAsync(id);
+            if (taskRec == null)
+                return RedirectToAction("Index", "Task");
+
+            //// get ChangeRequest
+            //var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == taskRec.ChangeRequestId);
+            //if (changeRequest == null)
+            //    return RedirectToAction("Index", "Home");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _context.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new
+                {
+                    id = id,
+                    tab = "Attachments",
+                    fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type."
+                });
+
+            string filePath = Path.Combine(Initialization.TaskDirectory, taskRec.Id.ToString(), fileAttachment.FileName);
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction("Details", new { id = id, previousAction = "File Uploaded", tab = "Attachments" });
+        }
+
+        public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
+            return File(fileBytes, "application/x-msdownload", fileName);
+        }
+
+        public async Task<IActionResult> DeleteFile(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, previousAction = "File Deleted", tab = "Attachments" });
         }
     }
 }

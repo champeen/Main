@@ -15,10 +15,12 @@ namespace Management_of_Change.Controllers
     public class AdditionalImpactAssessmentReviewersController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
 
-        public AdditionalImpactAssessmentReviewersController(Management_of_ChangeContext context) : base(context)
+        public AdditionalImpactAssessmentReviewersController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
         }
 
         // GET: AdditionalImpactAssessmentReviewers
@@ -202,7 +204,7 @@ namespace Management_of_Change.Controllers
             }
 
             // Get Reviewers Name and Email.....
-            __mst_employee reviewer = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == additionalImpactAssessmentReviewers.Reviewer).FirstOrDefaultAsync();
+            __mst_employee reviewer = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == additionalImpactAssessmentReviewers.Reviewer.ToLower()).FirstOrDefaultAsync();
             if (reviewer == null)
                 ModelState.AddModelError("Reviewer", "Reviewer not found.");
             else
@@ -282,7 +284,7 @@ namespace Management_of_Change.Controllers
             }
 
             // Get Reviewers Name and Email.....
-            __mst_employee reviewer = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == additionalImpactAssessmentReviewers.Reviewer).FirstOrDefaultAsync();
+            __mst_employee reviewer = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == additionalImpactAssessmentReviewers.Reviewer.ToLower()).FirstOrDefaultAsync();
             if (reviewer == null)
                 ModelState.AddModelError("Reviewer", "Reviewer not found.");
             else
@@ -381,10 +383,10 @@ namespace Management_of_Change.Controllers
             AdditionalImpactAssessmentReviewers additionalImpactAssessmentReviewers = new AdditionalImpactAssessmentReviewers();
 
             // Get Reviewers Name and Email.....
-            __mst_employee reviewerRec = await _context.__mst_employee.Where(m => m.onpremisessamaccountname == reviewer).FirstOrDefaultAsync();
+            __mst_employee reviewerRec = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == reviewer.ToLower()).FirstOrDefaultAsync();
             additionalImpactAssessmentReviewers.Reviewer = reviewer;
-            additionalImpactAssessmentReviewers.ReviewerEmail = reviewerRec.mail;
-            additionalImpactAssessmentReviewers.ReviewerName = reviewerRec.displayname;
+            additionalImpactAssessmentReviewers.ReviewerEmail = reviewerRec?.mail;
+            additionalImpactAssessmentReviewers.ReviewerName = reviewerRec?.displayname;
             additionalImpactAssessmentReviewers.ChangeRequestId = changeRequestId;
             additionalImpactAssessmentReviewers.ReviewType = reviewType;
             additionalImpactAssessmentReviewers.CreatedUser = _username;

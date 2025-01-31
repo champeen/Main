@@ -34,7 +34,9 @@ namespace Management_of_Change.Utilities
         // Setup Global Static Variables based on environment....
         public static string WebsiteUrl { get; set; }
         public static string ConnectionString { get; set; }
+        public static string ConnectionStringPtnWaiver { get; set; }
         public static string AttachmentDirectory { get; set; }
+        public static string TaskDirectory { get; set; }
 
         private static string registryPath = @"Software\\SKSiltron\\MoC";
         public static string EmailError { get; set; }
@@ -57,17 +59,20 @@ namespace Management_of_Change.Utilities
             if (environment == "Production")
             {
                 registryPath = Path.Combine(registryPath, "Prd");
-                WebsiteUrl = @"http://bay1vprd-moc01/";
+                //WebsiteUrl = @"http://bay1vprd-moc01/";
             }
             else if (environment == "Development")
             {
                 registryPath = Path.Combine(registryPath, "Dev");
-                WebsiteUrl = @"http://appdevbaub01/";
+                //WebsiteUrl = @"http://aub1vdev-app01/";
             }
             else
             {
                 throw new NullReferenceException("ERROR: registryPath: " + registryPath + " Key: Environment: " + environment + " is not equal to 'Development' or 'Production'");
             }
+
+            // get website url...
+            WebsiteUrl = GetRegistryKey(registryPath, "WebsiteUrl");
 
             // get error email box....
             EmailError = GetRegistryKey(registryPath, "EmailError");
@@ -82,12 +87,14 @@ namespace Management_of_Change.Utilities
             emailFrom = GetRegistryKey(registryPath, "EmailFrom");
             EmailProviderSmtp = new EmailProvider(emailHost, emailUser, emailPassword, emailPort, emailFrom);
 
-            // Get Connection String
+            // Get Connection Strings
             ConnectionString = GetRegistryKey(registryPath, "ConnectionString");
+            ConnectionStringPtnWaiver = GetRegistryKey(registryPath, "ConnectionStringPtnWaiver");
             //ConnectionString = builder.Configuration.GetConnectionString("PostgreSQLprd");
 
-            // Get Attachment Directory
+            // Get Attachment Directorys
             AttachmentDirectory = GetRegistryKey(registryPath, "AttachmentDirectory");
+            TaskDirectory = GetRegistryKey(registryPath, "TaskDirectory");
 
             // Teams Provider for Error Channel
             teamsErrorUrl = GetRegistryKey(registryPath, "TeamsErrorUrl");

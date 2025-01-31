@@ -23,6 +23,18 @@
         <dd class = "col-sm-10">
             @Html.Raw(Model.Description)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChangeGradeReviewRequired)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.ChangeGradeReviewRequired)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PccbReviewRequired)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.PccbReviewRequired)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Order)
         </dt>
@@ -69,5 +81,5 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-    <a asp-action="Index" class="btn btn-secondary mx-2">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary mx-1">Back to List</a>
 </div>

@@ -10,11 +10,13 @@ namespace Management_of_Change.Controllers
     public class HelpController : BaseController
     {
         private readonly Management_of_ChangeContext _context;
+        private readonly PtnWaiverContext _contextPtnWaiver;
         private readonly ILogger<AdminController> _logger;
 
-        public HelpController(Management_of_ChangeContext context, ILogger<AdminController> logger) : base(context)
+        public HelpController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver, ILogger<AdminController> logger) : base(context, contextPtnWaiver)
         {
             _context = context;
+            _contextPtnWaiver = contextPtnWaiver;
             _logger = logger;
         }
 

@@ -129,7 +129,7 @@
                 <span class="form-group">
                     <input type="submit" value="Save" class="btn btn-primary" asp-route-tab="@ViewBag.Tab" />
                 </span>
-                <span class="mx-2">
+                <span class="mx-1">
                     @*<a asp-controller="ChangeRequests" asp-action="Details" asp-route-id="@Model?.ChangeRequestId">Cancel</a>*@
                     @Html.ActionLink("Cancel","Details","ChangeRequests",new {id=@Model?.ChangeRequestId, tab="ImpactAssessments"},new {@class="btn btn-secondary"})
                 </span>                
