@@ -43,7 +43,7 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
             <input type="hidden" asp-for="Id" />
-            @* <input type="hidden" asp-for="DocId" /> *@
+            <input type="hidden" asp-for="DocId" />
             <input type="hidden" asp-for="Status" />
             <input type="hidden" asp-for="OriginatingGroup" />
             <input type="hidden" asp-for="ProductSize" />
@@ -75,7 +75,7 @@
             @* THIS IS JUST TEMPORARY TO GET OLD PTN's IN MJWII *@
             <div class="form-group my-3">
                 <label asp-for="DocId" class="control-label fw-bold mb-1"></label>
-                <input asp-for="DocId" class="form-control" />
+                <input asp-for="DocId" class="form-control" disabled/>
                 <span asp-validation-for="DocId" class="text-danger fw-bold mt-1"></span>
             </div>
             @* END TEMPORARY *@
@@ -93,6 +93,19 @@
 
                 }
                 <span asp-validation-for="Title" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold mb-1 my-1">
+                    @if (Model.Status == "Draft")
+                    {
+                        <input class="form-check-input" asp-for="isWaferingDepartment" /> @Html.DisplayNameFor(model => model.isWaferingDepartment)
+                    }
+                    else
+                    {
+                        <input class="form-check-input" asp-for="isWaferingDepartment" disabled/> @Html.DisplayNameFor(model => model.isWaferingDepartment)
+                    }
+
+                </label>
             </div>
 @*             <div class="form-group my-3">
                 <label asp-for="PtrNumber" class="control-label fw-bold mb-1"></label>
@@ -114,25 +127,21 @@
                 </i>
                 @if (Model.Status == "Draft")
                 {
-                    @*                     @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text", Model.SubjectType), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select User(s)", size = 10 }) *@
                     <select asp-for=SubjectType id="PtnsEditSubjectTypes" multiple="multiple" style="width:100%;">
                         @foreach (SelectListItem item in ViewBag.SubjectTypes)
                         {
                             <option value=@item.Value selected="@item.Selected">@item.Text </option>
                         }
                     </select>
-                    @*                     @Html.DropDownListFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditSubjectTypes" }) *@
                 }
                 else
                 {
-                    @*                     @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text", Model.SubjectType), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select User(s)", size = 10, disabled = "disabled" }) *@
                     <select asp-for=SubjectType id="PtnsEditSubjectTypes2" multiple="multiple" style="width:100%;" disabled>
                         @foreach (SelectListItem item in ViewBag.SubjectTypes)
                         {
                             <option value=@item.Value selected="@item.Selected">@item.Text </option>
                         }
                     </select>
-                    @*                     @Html.DropDownListFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text", Model.SubjectType), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditSubjectTypes2", disabled = "disabled" }) *@
                     @for (int i = 0; i < Model.SubjectType.Count; i++)
                     {
                         @Html.HiddenFor(Model => Model.SubjectType[i])
@@ -145,27 +154,25 @@
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @if (Model.Status == "Draft")
                 {
-                    @*                     @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10 }) *@
                     <select asp-for=GroupApprover id="PtnsEditGroupApprovers" multiple="multiple" style="width:100%;">
                         @foreach (SelectListItem item in ViewBag.Groups)
                         {
                             <option value=@item.Value selected="@item.Selected">@item.Text </option>
                         }
                     </select>
-                    @*                     @Html.DropDownListFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditGroupApprovers" }) *@
-
                 }
                 else
                 {
-                    @*                     @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 10, disabled = "disabled" }) *@
                     <select asp-for=GroupApprover id="PtnsEditGroupApprovers2" multiple="multiple" style="width:100%;" disabled>
                         @foreach (SelectListItem item in ViewBag.Groups)
                         {
                             <option value=@item.Value selected="@item.Selected">@item.Text </option>
                         }
                     </select>
-                    @*                     @Html.DropDownListFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsEditGroupApprovers2", disabled = "disabled" })
-                <input type="hidden" asp-for="GroupApprover" /> *@
+                    @for (int i = 0; i < Model.GroupApprover.Count; i++)
+                    {
+                        @Html.HiddenFor(Model => Model.GroupApprover[i])
+                    }
                 }
                 <span asp-validation-for="GroupApprover" class="text-danger fw-bold"></span>
             </div>

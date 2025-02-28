@@ -361,10 +361,10 @@ namespace PtnWaiver.Controllers
 
         public string getSerialNumberBasedOnYear(string year)
         {
-            var lastSerialNumberForYear = _contextPtnWaiver.PTN.Where(m => m.OriginatorYear == year).Max(m => m.SerialNumber);
+            var lastSerialNumberForYear = _contextPtnWaiver.PTN.Where(m => m.OriginatorYear == year).Max(m => Convert.ToInt32(m.SerialNumber)).ToString();
             Int32.TryParse(lastSerialNumberForYear, out int serialNumber);   // returns zero if null value, which is ok
             serialNumber += 1;
-            return serialNumber.ToString("000");
+            return serialNumber.ToString("###000");
         }
 
         public string getWaiverSerialNumber(string ptnDocId)
@@ -372,7 +372,7 @@ namespace PtnWaiver.Controllers
             string waiverNumber = "";
             for (int i = 1; i < 10000; i++)
             {
-                waiverNumber = ptnDocId + "-W" + i.ToString("00");
+                waiverNumber = ptnDocId + "-W" + i.ToString("###00");
                 var waiver = _contextPtnWaiver.Waiver.Where(m => m.WaiverNumber == waiverNumber).FirstOrDefault();
                 if (waiver == null)
                     break;

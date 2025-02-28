@@ -43,6 +43,8 @@ namespace PtnWaiver.Models
         public string? CompletedBylUser { get; set; }
         public string? CompletedBylUserFullName { get; set; }
         public DateTime? CompletedByDate { get; set; }
+        [Display(Name = "Check If PTN is Wafering Department Specific")]
+        public bool isWaferingDepartment { get; set; }
 
 
         public virtual List<Waiver>? Waivers { get; set; }

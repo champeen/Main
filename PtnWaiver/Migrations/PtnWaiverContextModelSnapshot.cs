@@ -618,6 +618,9 @@ namespace PtnWaiver.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("isWaferingDepartment")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.ToTable("PTN");
@@ -934,6 +937,9 @@ namespace PtnWaiver.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<List<string>>("AdditionalEmailNotificationsOfMaterialDetails")
+                        .HasColumnType("text[]");
+
                     b.Property<DateTime?>("ApprovedByDate")
                         .HasColumnType("timestamp without time zone");
 
@@ -993,6 +999,9 @@ namespace PtnWaiver.Migrations
 
                     b.Property<bool?>("IsMostCurrentWaiver")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("MaterialDetailNotes")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("timestamp without time zone");

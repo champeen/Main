@@ -56,7 +56,7 @@
         </h4>
     </div>
 </div>
-<nav class="my-5">
+<nav class="mt-5">
     <ul class="nav nav-tabs" id="nav-tab" role="tablist">
         <li class="nav-item">
             <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
@@ -66,14 +66,20 @@
             <a class="nav-link @Model.TabActiveAttachmentsWaiver fw-bolder" id="nav-attachmentsWaiver-tab" data-bs-toggle="tab" href="#nav-attachmentsWaiver" role="tab" aria-controls="nav-profile" aria-selected="false">Upload Waiver Template (@Model.AttachmentsWaiver.Count.ToString())</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @Model.TabActiveWaiverApproval @Model.Tab3Disabled fw-bolder" id="nav-waiverApproval-tab" data-bs-toggle="tab" href="#nav-waiverApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit Waiver for Approval</a>
+            <a class="nav-link @Model.TabActiveWaiverApproval @Model.TabSubmitWaiverForApprovalDisabled fw-bolder" id="nav-waiverApproval-tab" data-bs-toggle="tab" href="#nav-waiverApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Submit Waiver for Approval</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link @Model.TabActiveWaiverAdminApproval @Model.Tab4Disabled fw-bolder" id="nav-waiverAdminApproval-tab" data-bs-toggle="tab" href="#nav-waiverAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Approve Waiver</a>
+            <a class="nav-link @Model.TabActiveWaiverAdminApproval @Model.TabApproveWaiverDisabled fw-bolder" id="nav-waiverAdminApproval-tab" data-bs-toggle="tab" href="#nav-waiverAdminApproval" role="tab" aria-controls="nav-profile" aria-selected="false">Approve Waiver</a>
+        </li>
+        <li class="nav-item text-nowrap">
+            <a class="nav-link @Model.TabActiveWaiverMaterialDetails @Model.TabWaiverMaterialDetailsDisabled fw-bolder" id="nav-waiverMaterialDetails-tab" data-bs-toggle="tab" href="#nav-waiverMaterialDetails" role="tab" aria-controls="nav-profile" aria-selected="false">
+                Material Details
+                <i class="bi bi-info-circle" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="This tab is active for wafering department only.  You must check the wafering department box at the PTN level.">
+                </i>
+            </a>
         </li>
     </ul>
 </nav>
-
 <div class="tab-content" id="nav-tabContent">
     @******************************************************************************************************************@
     @*  DETAIL TAB ****************************************************************************************************@
@@ -90,7 +96,7 @@
                         @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
                         @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
                     }
-                    @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" })
+                    @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" }) *@
                 </div>
             </div>
             <hr />
@@ -318,7 +324,7 @@
                     @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
                     @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
                 }
-                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" })
+                @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" }) *@
             </div>
         </div>
     </div>
@@ -333,7 +339,7 @@
             @* @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary"}) *@
             <div class="row mb-4">
                 <div class="col-12">
-                    <div class="text-nowrap fs-5">
+                    <div class="text-nowrap fs-6">
                         <span class="fw-bold">STEP 1:</span> Download Waiver Template
                         @* @Html.ActionLink("Download Waiver Template","Detail", new {}, new {@class="btn btn-success mt-3 ms-2", @style="display:inline !important;"}) *@
                         <a href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=%22Waiver%20Form%22%20%2Edocx" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get Waiver Template</a>
@@ -342,14 +348,14 @@
             </div>
             <div class="row mt-4">
                 <div class="col-12">
-                    <div class="text-nowrap fs-5">
+                    <div class="text-nowrap fs-6">
                         <span class="fw-bold">STEP 2:</span> Complete Waiver Template
                     </div>
                 </div>
             </div>
             <div class="row mt-4">
                 <div class="col-12">
-                    <div class="text-nowrap fs-5">
+                    <div class="text-nowrap fs-6">
                         <span class="fw-bold">STEP 3:</span> Upload Completed Waiver Template
                     </div>
                 </div>
@@ -431,10 +437,11 @@
                         </tr>
                     }
                 </table>
-                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" })
+                @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" }) *@
             </div>
         </div>
     </div>
+
     @******************************************************************************************************************@
     @*  SUBMIT FOR ADMIN APPROVAL TAB *********************************************************************************@
     @******************************************************************************************************************@
@@ -443,7 +450,7 @@
         {
             @if (ViewBag.IsAdmin || (ViewBag.Username == Model.Waiver.CreatedUser || ViewBag.Username == Model.Ptn.CreatedUser))
             {
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col-12">
                         <h5>
                             Once submitted for approval, you can only edit the comment field.  Make sure everything is complete before submitting for approval.
@@ -458,7 +465,7 @@
                     <div class="row mt-5">
                         <div class="col-12">
                             @Html.ActionLink("Submit for Approval", "SubmitWaiverForApproval", "Waivers", new { id = Model.Waiver.Id }, new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
-                            @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary ms-1" })
+                            @*                             @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary ms-1" }) *@
                             @* <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" /> *@
                         </div>
                         @*                         <div class="row mt-3 mb-1">
@@ -476,7 +483,7 @@
             }
             else
             {
-                <div class="row">
+                <div class="row mt-4">
                     <div class="col-12">
                         <h5>
                             Waiver Creater or PTN administrator must submit this Waiver for approval in order to move on to next phase.
@@ -492,7 +499,7 @@
 
                 @if (Model.Waiver.RejectedBeforeSubmission == true)
                 {
-                    <div class="row">
+                    <div class="row mt-4">
                         <div class="col-12">
                             Waiver has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.Waiver.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForApprovalDate</span>.
                         </div>
@@ -505,7 +512,7 @@
                 }
                 else
                 {
-                    <div class="row">
+                    <div class="row mt-4">
                         <div class="col-12">
                             Waiver has been <span class="text-success fw-bold">submitted for approval</span> by <span class="fw-bold">@Model.Waiver.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForApprovalDate</span>.
                         </div>
@@ -518,13 +525,14 @@
             </div>
         </div>
     </div>
+
     @******************************************************************************************************************@
     @*  WAIVER REVIEW APPROVAL ****************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveWaiverAdminApproval" id="nav-waiverAdminApproval" role="tabpanel" aria-labelledby="nav-waiverAdminApproval-tab">
         <div class="row my-3">
             <div class="col-12 text-start">
-                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" })
+                @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" }) *@
             </div>
         </div>
         <table class="table table-bordered table-striped">
@@ -624,8 +632,191 @@
         </table>
         <div class="row mt-3">
             <div class="col-12 text-start">
-                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" })
+                @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" }) *@
+            </div>
+        </div>
+    </div>
+
+    @******************************************************************************************************************@
+    @*  WAIVER MATERIAL DETAILS  **************************************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActiveWaiverMaterialDetails" id="nav-waiverMaterialDetails" role="tabpanel" aria-labelledby="nav-waiverMaterialDetails-tab">
+        <div @* class="text-nowrap" *@>
+            <div class="row">
+                <div class="col-12">
+                    @if (ViewBag.SaveMessageMaterialDetail != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                            <strong>@ViewBag.SaveMessageMaterialDetail</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="text-nowrap fs-6">
+                                <span class="fw-bold">STEP 1:</span> Upload any Supporting Material Details
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mx-3">
+                        @using (Html.BeginForm("SaveFileMaterialDetails", "Waivers", new { id = Model.Waiver.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                        {
+                            <div class="control-label fw-bold mt-3 mb-2">
+                                <strong>Upload Document(s):</strong>
+                            </div>
+                            <div class="form-group mb-2">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <input type="file" name="fileAttachment" class="form-control" />
+                                        <div class="form-group text-danger fw-bold">
+                                            @Html.DisplayFor(m => m.FileAttachmentError)
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 text-wrap">
+                                        <input type="submit" value="Upload" class="form-control btn btn-success text-wrap">
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <table class="table table-bordered table-striped mt-3">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>
+                                        File Name
+                                    </th>
+                                    <th>
+                                        Date Added
+                                    </th>
+                                    <th>
+                                        Size
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.AttachmentsWaiverMaterialDetail)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.CreatedDate)
+                                        </td>
+                                        <td>
+                                            @* @Html.DisplayFor(modelItem => item.Size) *@
+                                            @{
+                                                var size = item.Size / 1000 < 1 ? item.Size.ToString() + " bytes" : (item.Size / 1000).ToString("N0") + " KB";
+                                            }
+                                            @* @Html.DisplayFor(modelItem => item.Size.ToString("#,##0")) KB *@
+                                            @size
+                                        </td>
+                                        <td>
+                                            @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
+                                            @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
+                                            @Html.ActionLink("Download File", "DownloadFile", "Waivers", new { id = @Model.Waiver.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
+                                            @if (ViewBag.Username == Model.Waiver.CreatedUser || ViewBag.IsAdmin == true)
+                                            {
+                                                @Html.ActionLink("Delete", "DeleteFileWaiverMaterialDetails", "Waivers", new { id = @Model.Waiver.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-danger", title = "Delete Attachment" })
+                                            }
+                                            @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            @if (Model.AttachmentsWaiverMaterialDetail.Count() == 0)
+                            {
+                                <tr>
+                                    <td>No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="text-nowrap fs-6">
+                                <span class="fw-bold">STEP 2:</span> Additional Notes
+                            </div>
+                            <div class="my-2 mx-3">
+                                <form asp-action="SaveWaiverMaterialNotes">
+                                    @* <input type="hidden" asp-for="@Model.Waiver.Id" /> *@
+                                    <input type="hidden" asp-for="@Model.Waiver.Id" />
+                                    <input type="hidden" asp-for="@Model.Ptn.Id" />
+                                    <div class="form-group">
+                                        <label asp-for="Waiver.MaterialDetailNotes" class="control-label fw-bold mb-1"></label>
+                                        @* <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i> *@
+                                        @Html.TextAreaFor(model => model.Waiver.MaterialDetailNotes, new { id = "editorMaterialDetailNotes", @class = "form-control", @rows = 3 })
+@*                                         <div>
+                                            <textarea id="editorMaterialDetailNotes" name="editor">@Model.Waiver.MaterialDetailNotes</textarea>
+                                        </div> *@
+                                 @* WORKS!!       @Html.TextAreaFor(model => model.Waiver.MaterialDetailNotes, new { @id = "editorMaterialDetailNotes" })  *@                    
+                                        @* <span asp-validation-for="Waiver.MaterialDetailNotes" class="text-danger fw-bold mt-1"></span> *@
+                                    </div>
+                                    <div class="mt-2">
+                                        <input type="submit" value="Save Notes" class="btn btn-success">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="text-nowrap fs-6">
+                                <span class="fw-bold">STEP 3:</span> Notify Users
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2 mx-1">
+                        <form asp-action="SaveAdditionalEmailNotification">
+                            <input type="hidden" asp-for="@Model.Waiver.Id" />
+                            <input type="hidden" asp-for="@Model.Ptn.Id" />
+                            <div class="col-12">
+                                <div class="form-group my-2">
+                                    <label asp-for="Waiver.AdditionalEmailNotificationsOfMaterialDetails" class="control-label fw-bold mb-1"></label>
+                                    <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Upon clicking 'Send Reminder Now' button, notifications will automatically email out to distribution list DispoTeam@sksiltron.com, plus any users additionally selected in this field.">
+                                    </i>
+@*                                     <div>
+                                        @Html.DropDownListFor(model => model.Waiver.AdditionalEmailNotificationsOfMaterialDetails, new MultiSelectList(ViewBag.Employees, "Value", "Text"), new { @class = "form-control form-select", @style = "width:100%;", multiple = true, @id = "WaiversDetailsAdditionalEmailNotificationsOfMaterialDetails" })
+                                    </div> *@
+                                    <select asp-for="@Model.Waiver.AdditionalEmailNotificationsOfMaterialDetails" id="WaiversDetailsAdditionalEmailNotificationsOfMaterialDetails" multiple="multiple" style="width:100%;">
+                                        @foreach (SelectListItem item in ViewBag.Employees)
+                                        {
+                                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Waiver.AdditionalEmailNotificationsOfMaterialDetails" class="text-danger fw-bold mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <input type="submit" value="Save Additional Emails" class="btn btn-success">
+                                <span class="float-lg-end">
+                                    @Html.ActionLink("Send Notification Email to Above and DispoTeam@sksiltron.com", "MaterialDetailsNotification", "Waivers", new { id = Model.Waiver.Id }, new { @class = "btn btn-warning", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="text-nowrap fs-6">
+            @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" })
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#WaiversDetailsAdditionalEmailNotificationsOfMaterialDetails').select2({
+            placeholder: "Select Employee(s)",
+            allowClear: true
+        });
+    });
+</script>
