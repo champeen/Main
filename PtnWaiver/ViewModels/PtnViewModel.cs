@@ -15,11 +15,9 @@ namespace PtnWaiver.ViewModels
         public string? TabActivePtnAdminApproval { get; set; }
         public string? TabActiveWaivers { get; set; }
         public string? TabActiveAttachmentsWaiver { get; set; }
-
-        public string? Tab3Disabled { get; set; }
-        public string? Tab4Disabled { get; set; }
-        public string? Tab5Disabled { get; set; }
-        public string? Tab6Disabled { get; set; }
+        public string? TabSubmitPtnForApprovalDisabled { get; set; }
+        public string? TabApprovePtnDisabled { get; set; }
+        public string? TabActiveWaiversDisabled { get; set; }
 
         public string? FileAttachmentError { get; set; }
         

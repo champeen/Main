@@ -156,11 +156,11 @@ namespace PtnWaiver.Controllers
 
             // RENDER TABS DISABLED/ENABLED....
             // Submit for Admin Approval Tab...
-            ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
+            ptnVM.TabSubmitPtnForApprovalDisabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
             // Admin Approve Ptn Tab...
-            ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            ptnVM.TabApprovePtnDisabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
             // Waivers Tab...
-            ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            ptnVM.TabActiveWaiversDisabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
 
             // Per Ian Manning, do not allow anyone to change an attachment after Draft (because the PTN has been approved in the documents state it is in) but allow to upload new documents.
             //if (ptnVM.PTN.Status != "Draft")
@@ -262,11 +262,11 @@ namespace PtnWaiver.Controllers
 
             // RENDER TABS DISABLED/ENABLED....
             // Submit for Admin Approval Tab...
-            ptnVM.Tab3Disabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
+            ptnVM.TabSubmitPtnForApprovalDisabled = ptnVM.AttachmentsPtn.Count == 0 ? "disabled" : "";
             // Admin Approve Ptn Tab...
-            ptnVM.Tab4Disabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            ptnVM.TabApprovePtnDisabled = ptnVM.PTN.Status == "Pending Approval" || ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
             // Waivers Tab...
-            ptnVM.Tab5Disabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
+            ptnVM.TabActiveWaiversDisabled = ptnVM.PTN.Status == "Approved" || ptnVM.PTN.Status == "Closed" || ptnVM.PTN.Status == "Rejected" ? "" : "disabled";
 
             if (ptnVM.PTN.Status != "Draft")
                 ViewBag.Disable = "disabled";
@@ -315,7 +315,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DocId,OriginatingGroup,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
+        public async Task<IActionResult> Create([Bind("Id,DocId,OriginatingGroup,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,isWaferingDepartment,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -324,9 +324,6 @@ namespace PtnWaiver.Controllers
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
-
-            //bool productSizeRequired = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == ptn.OriginatingGroup).Select(m => m.ProductSizeRequired).FirstOrDefaultAsync();
-            //bool productSizeRequired2 = await _contextPtnWaiver.OriginatingGroup.Where(m => m.Code == "xxx").Select(m => m.ProductSizeRequired).FirstOrDefaultAsync();
 
             //if (productSizeRequired == true && ptn.ProductSize == null)
             //    ModelState.AddModelError("ProductSize", "ERROR: Product Size Required for the Originating Group that was selected.");
@@ -457,7 +454,7 @@ namespace PtnWaiver.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CloneCreate([Bind("Id,DocId,OriginatingGroup,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn, int clonedId, string? source = null)
+        public async Task<IActionResult> CloneCreate([Bind("Id,DocId,OriginatingGroup,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PtrNumber,PdfLocation,Status,isWaferingDepartment,Comments,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] PTN ptn, int clonedId, string? source = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -583,7 +580,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,OriginatingGroup,,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PdfLocation,Status,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,OriginatingGroup,,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PdfLocation,Status,isWaferingDepartment,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -843,30 +840,34 @@ namespace PtnWaiver.Controllers
             {
                 var manager = await _contextMoc.__mst_employee.Where(m => m.displayname == userInfo.manager).FirstOrDefaultAsync();
 
-                // if manager already happens to be setup to approve above, do not add them again as an approver (do not duplicate)....
-                bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
-
-                if (manager != null && managerAlreadyReviewer == false) // if manager found AND not already setup as Reviewer, add them...
+                if (manager != null)  // make sure manager is found....
                 {
-                    GroupApproversReview groupApproversReview = new GroupApproversReview();
-                    groupApproversReview.SourceId = ptn.Id;
-                    groupApproversReview.SourceTable = "PTN";
-                    groupApproversReview.Group = "Manager";
-                    groupApproversReview.PrimaryApproverUsername = manager.onpremisessamaccountname;
-                    groupApproversReview.PrimaryApproverFullName = manager.displayname;
-                    groupApproversReview.PrimaryApproverEmail = manager.mail;
-                    groupApproversReview.PrimaryApproverTitle = manager.jobtitle;
-                    groupApproversReview.CreatedDate = DateTime.Now;
-                    groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
-                    groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
-                    groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
+                    // if manager already happens to be setup to approve above, do not add them again as an approver (do not duplicate)....
+                    bool managerAlreadyReviewer = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == ptn.Id && m.SourceTable == "PTN" && (m.PrimaryApproverUsername == manager.onpremisessamaccountname || m.SecondaryApproverUsername == manager.onpremisessamaccountname)).AnyAsync();
 
-                    _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
-                    await _contextPtnWaiver.SaveChangesAsync();
+                    if (managerAlreadyReviewer == false) // if manager found AND not already setup as Reviewer, add them...
+                    {
+                        GroupApproversReview groupApproversReview = new GroupApproversReview();
+                        groupApproversReview.SourceId = ptn.Id;
+                        groupApproversReview.SourceTable = "PTN";
+                        groupApproversReview.Group = "Manager";
+                        groupApproversReview.PrimaryApproverUsername = manager.onpremisessamaccountname;
+                        groupApproversReview.PrimaryApproverFullName = manager.displayname;
+                        groupApproversReview.PrimaryApproverEmail = manager.mail;
+                        groupApproversReview.PrimaryApproverTitle = manager.jobtitle;
+                        groupApproversReview.CreatedDate = DateTime.Now;
+                        groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
+                        groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
+                        groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
 
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
-                    AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                        _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
+                        await _contextPtnWaiver.SaveChangesAsync();
+
+                        Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
+                        AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, ptn.Id, null, null, "PTN", ptn.Status, DateTime.Now, _username);
+                    }
                 }
+
             }
             return RedirectToAction("Details", new { id = id, tab = "PtnAdminApproval" });
         }

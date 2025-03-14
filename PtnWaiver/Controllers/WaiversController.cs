@@ -59,7 +59,7 @@ namespace PtnWaiver.Controllers
         }
 
         // GET: Waivers/Details/5
-        public async Task<IActionResult> Details(int? id, string tab = "Waiver", string tabWaiver = "Details", string fileAttachmentError = null, string rejectedReason = null)
+        public async Task<IActionResult> Details(int? id, string tab = "Waiver", string tabWaiver = "Details", string fileAttachmentError = null, string rejectedReason = null, string saveMessageMaterialDetail = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -82,6 +82,8 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.RejectedReason = rejectedReason;
+            ViewBag.Employees = getUserList();
+            ViewBag.SaveMessageMaterialDetail = saveMessageMaterialDetail;
 
             WaiverViewModel waiverVM = new WaiverViewModel();
             waiverVM.FileAttachmentError = fileAttachmentError;
@@ -93,6 +95,8 @@ namespace PtnWaiver.Controllers
             waiverVM.TabActiveAttachmentsWaiver = "";
             waiverVM.TabActiveWaiverApproval = "";
             waiverVM.TabActiveWaiverAdminApproval = "";
+            waiverVM.TabActiveWaiverMaterialDetails = "";
+
             switch (tabWaiver)
             {
                 case null:
@@ -113,21 +117,24 @@ namespace PtnWaiver.Controllers
                 case "WaiverAdminApproval":
                     waiverVM.TabActiveWaiverAdminApproval = "active";
                     break;
+                case "WaiverMaterialDetails":
+                    waiverVM.TabActiveWaiverMaterialDetails = "active";
+                    break;
             }
 
-            // GET ALL ATTACHMENTS FOR Waiver ///////////////////////////////////////////////////////////////////////////////////////////////
+            // GET ALL ATTACHMENTS FOR WAIVER /////////////////////////////////////////////////////////////////////////////////////
             // Get the directory
-            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+            DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
             if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
-                path.Create();
+                pathWaiver.Create();
 
             // Using GetFiles() method to get list of all
             // the files present in the Train directory
-            FileInfo[] Files = path.GetFiles();
+            FileInfo[] FilesWaiver = pathWaiver.GetFiles();
 
             // Display the file names
             List<Attachment> attachments = new List<Attachment>();
-            foreach (FileInfo i in Files)
+            foreach (FileInfo i in FilesWaiver)
             {
                 Attachment attachment = new Attachment
                 {
@@ -144,11 +151,43 @@ namespace PtnWaiver.Controllers
             }
             waiverVM.AttachmentsWaiver = attachments.OrderBy(m => m.Name).ToList();
 
+            // GET ALL ATTACHMENTS FOR Waiver Material Details /////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo pathWaiverMaterialDetails = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+                pathWaiverMaterialDetails.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] FilesWaiverMaterialDetails = pathWaiverMaterialDetails.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachmentsWaiverMaterialDetails = new List<Attachment>();
+            foreach (FileInfo i in FilesWaiverMaterialDetails)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachmentsWaiverMaterialDetails.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            waiverVM.AttachmentsWaiverMaterialDetail = attachmentsWaiverMaterialDetails.OrderBy(m => m.Name).ToList();
+
             // Render Tabs Disabled/Enabled
             // Submit for Admin Approval Tab...
-            waiverVM.Tab3Disabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
+            waiverVM.TabSubmitWaiverForApprovalDisabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
             // Admin Approve Waiver Tab...
-            waiverVM.Tab4Disabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+            waiverVM.TabApproveWaiverDisabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+            waiverVM.TabWaiverMaterialDetailsDisabled = waiverVM.Ptn.isWaferingDepartment == true ? "" : "disabled";
+            if (waiverVM.Waiver.Status == "Draft" || waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Rejected")
+                waiverVM.TabWaiverMaterialDetailsDisabled = "disabled";
 
             // Per Ian Manning, do not allow anyone to change an attachment after Draft (because the PTN has been approved in the documents state it is in) but allow to upload new documents.
             //if (waiverVM.Waiver.Status != "Draft")
@@ -247,9 +286,9 @@ namespace PtnWaiver.Controllers
 
             // Render Tabs Disabled/Enabled
             // Submit for Admin Approval Tab...
-            waiverVM.Tab3Disabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
+            waiverVM.TabSubmitWaiverForApprovalDisabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
             // Admin Approve Waiver Tab...
-            waiverVM.Tab4Disabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+            waiverVM.TabApproveWaiverDisabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
 
             if (waiverVM.Waiver.Status != "Draft")
                 ViewBag.Disable = "disabled";
@@ -483,7 +522,7 @@ namespace PtnWaiver.Controllers
                     group.Selected = true;
                     group.Disabled = true;
                 }
-                    
+
             }
             ViewBag.Groups = groups;
 
@@ -528,13 +567,30 @@ namespace PtnWaiver.Controllers
                 return Problem("Entity set 'PtnWaiverContext.Waiver'  is null.");
 
             var waiver = await _contextPtnWaiver.Waiver.FindAsync(id);
+            Waiver deletedWaiver = waiver;
 
             if (waiver != null)
                 _contextPtnWaiver.Waiver.Remove(waiver);
-
             await _contextPtnWaiver.SaveChangesAsync();
 
-            return RedirectToAction("Details", "PTNs", new { id = waiver.PTNId, tab = "Waivers" });
+            // try to find previous waiver and if found activate it...
+            var previousWaiver = await _contextPtnWaiver.Waiver.Where(m => m.WaiverNumber == deletedWaiver.WaiverNumber).OrderByDescending(m => m.RevisionNumber).FirstOrDefaultAsync();
+
+            if (previousWaiver != null)
+            {
+                var userInfo = getUserInfo(_username);
+                if (userInfo != null)
+                {
+                    previousWaiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                    previousWaiver.ModifiedUserFullName = userInfo.displayname;
+                    previousWaiver.ModifiedUserEmail = userInfo.mail;
+                    previousWaiver.ModifiedDate = DateTime.Now;
+                }
+                previousWaiver.IsMostCurrentWaiver = true;
+                _contextPtnWaiver.Update(previousWaiver);
+                await _contextPtnWaiver.SaveChangesAsync();
+            }
+            return RedirectToAction("Details", "PTNs", new { id = deletedWaiver.PTNId, tab = "Waivers" });
         }
 
         private bool WaiverExists(int id)
@@ -587,6 +643,51 @@ namespace PtnWaiver.Controllers
             return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
         }
 
+        [HttpPost]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
+        public async Task<IActionResult> SaveFileMaterialDetails(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _contextPtnWaiver.Waiver == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails", fileAttachmentError = "No File Has Been Selected For Upload" });
+
+            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return RedirectToAction("Index");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _contextPtnWaiver.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
+
+            // attachment storage file path should already exist, but just make sure....
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+                path.Create();
+
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString(), fileAttachment.FileName);
+
+            //if (waiver.Status != "Draft" && System.IO.File.Exists(filePath))
+            //{
+            //    // return message to user saying they cannot overwrite a document after Waiver has been approved.  You can only upload new documents.
+            //    return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails", fileAttachmentError = "Cannot Overwrite Existing Attachment. Past Draft Mode. Must Create New Attachment." });
+            //}
+            //else
+            //{
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+            //}
+            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails", saveMessageMaterialDetail = "File has been uploaded" });
+        }
+
         public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)
         {
             byte[] fileBytes = System.IO.File.ReadAllBytes(sourcePath);
@@ -596,6 +697,11 @@ namespace PtnWaiver.Controllers
         {
             System.IO.File.Delete(sourcePath);
             return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver" });
+        }
+        public async Task<IActionResult> DeleteFileWaiverMaterialDetails(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails" });
         }
 
         public async Task<IActionResult> SubmitWaiverForApproval(int id)
@@ -1023,6 +1129,115 @@ namespace PtnWaiver.Controllers
 
                 return View("GroupApproveComment", groupApproverReviewVM);
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveWaiverMaterialNotes([Bind("Id", Prefix = "Ptn")] PTN ptnIn, [Bind("Id,MaterialDetailNotes", Prefix = "Waiver")] Waiver waiverIn)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (waiverIn.Id == null)
+                return View("Index");
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            Waiver waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == waiverIn.Id);
+            if (waiver == null)
+                return View("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+            }
+            waiver.MaterialDetailNotes = waiverIn.MaterialDetailNotes;
+            //waiver.Status = "Closed";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverMaterialDetails", saveMessageMaterialDetail = "Notes have been Saved" });
+        }
+
+        public async Task<IActionResult> SaveAdditionalEmailNotification([Bind("Id", Prefix = "Ptn")] PTN ptnIn, [Bind("Id,AdditionalEmailNotificationsOfMaterialDetails", Prefix = "Waiver")] Waiver waiverIn)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            if (waiverIn.Id == null)
+                return View("Index");
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            Waiver waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == waiverIn.Id);
+            if (waiver == null)
+                return View("Index");
+
+            var userInfo = getUserInfo(_username);
+            if (userInfo != null)
+            {
+                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
+            }
+            waiver.AdditionalEmailNotificationsOfMaterialDetails = waiverIn.AdditionalEmailNotificationsOfMaterialDetails;
+            //waiver.Status = "Closed";
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = waiverIn.Id, tabWaiver = "WaiverMaterialDetails", saveMessageMaterialDetail = "Email Notifications have been Saved" });
+        }
+
+        public async Task<IActionResult> MaterialDetailsNotification(int id)
+        {
+            // make sure valid Username
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return View("Index"); ;
+
+            if (id == null)
+                return View("Index"); ;
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            Waiver waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            if (waiver == null)
+                return View("Index"); ;
+
+            // Build Notification Email....
+            string url = Initialization.WebsiteUrl + "/Waivers/Details?id=2&tabWaiver=WaiverMaterialDetails";
+            string subject = @"PTN/Waiver System - Material Detail Notes notification.";
+            string body = @"A waiver's Material Details have been added or changed.  Please follow link below and review the waivers Material Detail information. <br/><br/><strong>Waiver: </strong>" + waiver.WaiverNumber + @"<br/><strong>Revision: </strong>" + waiver.RevisionNumber.ToString() + @"<br/><strong>Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + url + "\" target=\"blank\" >PTN/Waiver System</a></strong><br/><br/>";
+
+            // email the disposition team....
+            Initialization.EmailProviderSmtp.SendMessage(subject, body, "DispoTeam@sksiltron.com", null, null, null);
+            var emailHistory = AddEmailHistory(null, subject, body, "Disposition Team", null, "DispoTeam@sksiltron.com", null, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+
+            // send to each additional person to be notified...
+            if (waiver.AdditionalEmailNotificationsOfMaterialDetails != null && waiver.AdditionalEmailNotificationsOfMaterialDetails.Any())
+            {
+                foreach (var person in waiver.AdditionalEmailNotificationsOfMaterialDetails)
+                {
+                    var sendToPerson = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == person.ToLower()).FirstOrDefaultAsync();
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, sendToPerson.mail, null, null, null);
+                    AddEmailHistory(null, subject, body, sendToPerson.displayname, sendToPerson.onpremisessamaccountname, sendToPerson.mail, null, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+                }
+            }
+            return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails", saveMessageMaterialDetail = "Email Notifications have been sent out" });
         }
     }
 }

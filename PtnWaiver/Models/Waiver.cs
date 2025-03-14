@@ -46,6 +46,10 @@ namespace PtnWaiver.Models
         [DataType(DataType.Date)]
         public DateTime? CompletedByDate { get; set; }
         public bool? IsMostCurrentWaiver { get; set; }
+        [Display(Name = "Material Detail Notes")]
+        public string? MaterialDetailNotes { get; set; }
+        [Display(Name = "Additional Email Notification(s) of Material Details")]
+        public List<string>? AdditionalEmailNotificationsOfMaterialDetails { get; set; }
 
         [ForeignKey("PTN")]
         public int PTNId { get; set; }

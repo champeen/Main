@@ -40,6 +40,7 @@ namespace PtnWaiver.Utilities
         public static string ConnectionStringPtnWaiver { get; set; }
         public static string AttachmentDirectoryPTN { get; set; }
         public static string AttachmentDirectoryWaiver { get; set; }
+        public static string AttachmentDirectoryWaiverMaterialDetail { get; set; }
 
         private static string registryPath = @"Software\\SKSiltron\\PTN";
         public static string EmailError { get; set; }
@@ -98,6 +99,7 @@ namespace PtnWaiver.Utilities
             // Get Attachment Directory
             AttachmentDirectoryPTN = GetRegistryKey(registryPath, "AttachmentDirectoryPTN");
             AttachmentDirectoryWaiver = GetRegistryKey(registryPath, "AttachmentDirectoryWaiver");
+            AttachmentDirectoryWaiverMaterialDetail = GetRegistryKey(registryPath, "AttachmentDirectoryWaiverMaterialDetail");
 
             // Teams Provider for Error Channel
             teamsErrorUrl = GetRegistryKey(registryPath, "TeamsErrorUrl");
