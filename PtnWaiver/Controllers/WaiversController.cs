@@ -1083,7 +1083,7 @@ namespace PtnWaiver.Controllers
                         AddEmailHistory(null, subject, body, waiverRec.CreatedUserFullName, waiverRec.CreatedUser, waiverRec.CreatedUserEmail, null, waiverRec.Id, null, "Waiver", waiverRec.Status, DateTime.Now, _username);
                     }
 
-                    // See if all Reviews have been approved. If they have been, automatically Approve PTN ....
+                    // See if all Reviews have been approved. If they have been, automatically Approve Waiver ....
                     int count = _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == groupApproversReview.SourceId && m.SourceTable == "Waiver" && m.Status != "Approved").Count();
                     if (count == 0)
                     {
@@ -1107,8 +1107,28 @@ namespace PtnWaiver.Controllers
                         //var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
                         string subject = @"Process Test Notification (PTN) - Waiver Approved";
                         string body = @"Your Waiver has been <span style=""color:green"">Approved</span>. <br/><br/><strong>Waiver#: </strong>" + waiverRec.WaiverNumber + @"<br/><strong>Waiver Title: </strong>" + waiverRec.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+
+                        // Send Email...
                         Initialization.EmailProviderSmtp.SendMessage(subject, body, waiverRec.CreatedUserEmail, null, null, null);
+
+                        // Log that Email was Sent...
                         AddEmailHistory(null, subject, body, waiverRec.CreatedUserFullName, waiverRec.CreatedUser, waiverRec.CreatedUserEmail, null, waiverRec.Id, null, "Waiver", waiverRec.Status, DateTime.Now, _username);
+
+                        // Email all admins with 'Approver' rights that this Waiver has been approved....
+                        var adminApproverList = await _contextPtnWaiver.Administrators.Where(m => m.Approver == true).ToListAsync();
+                        foreach (var record in adminApproverList)
+                        {
+                            var adminToNotify = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                            string subjectAdmin = @"Process Test Notification (PTN) - Waiver Approved";
+                            string bodyAdmin = @"Waiver has been <span style=""color:green"">Approved</span>. <br/><br/><strong>Waiver#: </strong>" + waiverRec.WaiverNumber + @"<br/><strong>Waiver Title: </strong>" + waiverRec.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "/Waivers/Details?id=" + waiverRec.Id.ToString() + "&tab=Details&sourceScreen=Dashboard" + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
+
+                            // Send Email...
+                            Initialization.EmailProviderSmtp.SendMessage(subjectAdmin, bodyAdmin, adminToNotify?.mail, null, null, null);
+
+                            // Log that Email was Sent...
+                            AddEmailHistory(null, subjectAdmin, bodyAdmin, waiverRec.CreatedUserFullName, waiverRec.CreatedUser, waiverRec.CreatedUserEmail, null, waiverRec.Id, null, "Waiver", waiverRec.Status, DateTime.Now, _username);
+                        }
+
                     }
                     return RedirectToAction("Details", new { id = groupApproversReview.SourceId, tabWaiver = "WaiverAdminApproval" });
                 }
