@@ -341,6 +341,7 @@ namespace PtnWaiver.Controllers
             {
                 PTNId = ptnId,
                 PtnDocId = ptn.DocId,
+                DateSequence = ptn.OriginatorYear + "-" + ptn.SerialNumber,
                 Status = "Draft",
                 CreatedDate = DateTime.Now,
                 CreatedUser = userInfo.onpremisessamaccountname,
@@ -356,7 +357,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,GroupApprover,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
+        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,GroupApprover,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,DateSequence,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -381,8 +382,12 @@ namespace PtnWaiver.Controllers
                 //}
                 //waiver.WaiverNumber = waiverNumber;
 
-                waiver.WaiverNumber = getWaiverSerialNumber(waiver.PtnDocId);
+                waiver.WaiverSequence = getWaiverSerialNumber(waiver.PtnDocId);
+                waiver.RevisionNumber = 0;
+                waiver.ExternalIdMes = waiver.DateSequence + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+                waiver.WaiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00"); ;
 
+                // Create Waiver Directory to store attachments in....
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
                     path.Create();
@@ -463,7 +468,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,PorProject,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,WaiverSequence,DateSequence,ExternalIdMes,PorProject,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))

@@ -50,6 +50,11 @@ namespace PtnWaiver.Models
         public string? MaterialDetailNotes { get; set; }
         [Display(Name = "Additional Email Notification(s) of Material Details")]
         public List<string>? AdditionalEmailNotificationsOfMaterialDetails { get; set; }
+        public string? WaiverSequence { get; set; }         // W01
+        public string? DateSequence { get; set; }           // 2025-001
+        public string? ExternalIdMes { get; set; }          // 2025-001-W01-R01
+        [Display(Name = "Area(s)")]
+        public List<string>? Areas { get; set; }
 
         [ForeignKey("PTN")]
         public int PTNId { get; set; }
