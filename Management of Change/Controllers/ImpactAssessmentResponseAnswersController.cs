@@ -245,6 +245,7 @@ namespace Management_of_Change.Controllers
                             CreatedDate = DateTime.Now
                         };
                         _context.Add(task);
+                        await _context.SaveChangesAsync();
 
                         // Send Email Out notifying the person who is assigned the task
                         string subject = @"Management of Change (MoC) - Impact Assessment Response Task Assigned.";
