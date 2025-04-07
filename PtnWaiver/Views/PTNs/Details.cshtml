@@ -748,6 +748,9 @@
                                 PTN Doc Id
                                 </th> *@
                                 <th>
+                                    External ID-MES
+                                </th>
+                                <th>
                                     Revision Number
                                 </th>
                                 <th>
@@ -806,6 +809,9 @@
                                 @Html.ActionLink(item.PtnDocId,"Details","PTNs",new {id=@item.PTNId, tab="Details"},new {@class="btn btn-primary text-nowrap"})
                                 </td> *@
                                     <td>
+                                        @Html.DisplayFor(modelItem => item.ExternalIdMes)
+                                    </td>
+                                    <td>
                                         @Html.DisplayFor(modelItem => item.RevisionNumber)
                                     </td>
                                     <td>
@@ -854,6 +860,7 @@
                                 <td>No data found</td>
                                 <td></td>
                                 @* <td></td> *@
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

@@ -48,6 +48,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.RevisionNumber)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExternalIdMes)
+            </th>
 @*             <th>
                 @Html.DisplayNameFor(model => model.PorProject)
             </th> *@
@@ -107,6 +110,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.RevisionNumber)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExternalIdMes)
+                </td>
 @*                 <td>
                     @Html.DisplayFor(modelItem => item.PorProject)
                 </td> *@
@@ -143,6 +149,7 @@
     {
         <tr>
             <td>No data found</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
