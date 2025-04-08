@@ -36,10 +36,10 @@
             <span class="fw-bold">
                 @Html.DisplayFor(model => model.Waiver.WaiverNumber)
             </span>
-            revision:
+            @* revision:
             <span class="fw-bold">
                 @Html.DisplayFor(model => model.Waiver.RevisionNumber)
-            </span>
+            </span> *@
         </h4>
         <h4>
             @Html.DisplayNameFor(model => model.Waiver.Status):
@@ -111,35 +111,6 @@
                         </dd>
                     </div>
                     <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.RevisionNumber)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.RevisionNumber)
-                        </dd>
-                    </div>
-                    @*                     <div class="row">
-
-                    </div> *@
-                    @*                     <div class="row">
-                    <dt class="col-3 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
-                    </dt>
-                    <dd class="col-9 my-1">
-                    @Html.DisplayFor(model => model.Waiver.CorrectiveActionDueDate)
-                    </dd>
-                    </div> *@
-                    <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.RejectedReason)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.RejectedReason)
-                        </dd>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="row">
                         <dt class="col-sm-3 my-1 text-end">
                             @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
                         </dt>
@@ -181,9 +152,55 @@
                             @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
                         </dd>
                     </div>
+                    @*                     <div class="row">
+
+                    </div> *@
+                    @*                     <div class="row">
+                    <dt class="col-3 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
+                    </dt>
+                    <dd class="col-9 my-1">
+                    @Html.DisplayFor(model => model.Waiver.CorrectiveActionDueDate)
+                    </dd>
+                    </div> *@
+                    <div class="row">
+                        <dt class="col-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.RejectedReason)
+                        </dt>
+                        <dd class="col-9 my-1">
+                            @Html.DisplayFor(model => model.Waiver.RejectedReason)
+                        </dd>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <dt class="col-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.PtnDocId)
+                        </dt>
+                        <dd class="col-9 my-1">
+                            @Html.DisplayFor(model => model.Waiver.PtnDocId)
+                        </dd>
+                    </div>
+                    <div class="row">
+                        <dt class="col-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.WaiverSequence)
+                        </dt>
+                        <dd class="col-9 my-1">
+                            @Html.DisplayFor(model => model.Waiver.WaiverSequence)
+                        </dd>
+                    </div>
+                    <div class="row">
+                        <dt class="col-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.RevisionNumber)
+                        </dt>
+                        <dd class="col-9 my-1">
+                            @Html.DisplayFor(model => model.Waiver.RevisionNumber)
+                        </dd>
+                    </div>
+
                 </div>
             </div>
-            <div class="accordion" id="accordionWaiverDetails">
+            <div class="accordion mt-3" id="accordionWaiverDetails">
                 <div class="accordion-item ">
                     <h2 class="accordion-header" id="headingWaiverDetails">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWaiverDetails" aria-expanded="false" aria-controls="collapseWaiverDetails">

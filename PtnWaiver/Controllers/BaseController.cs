@@ -370,14 +370,16 @@ namespace PtnWaiver.Controllers
         public string getWaiverSerialNumber(string ptnDocId)
         {
             string waiverNumber = "";
+            string waiverSequence = "";
             for (int i = 1; i < 10000; i++)
             {
-                waiverNumber = ptnDocId + "-W" + i.ToString("###00");
+                waiverSequence = "W" + i.ToString("###00");
+                waiverNumber = ptnDocId + "-" + waiverSequence;
                 var waiver = _contextPtnWaiver.Waiver.Where(m => m.WaiverNumber == waiverNumber).FirstOrDefault();
                 if (waiver == null)
                     break;
             }
-            return waiverNumber;
+            return waiverSequence;
             //var lastSerialNumberForYear = _contextPtnWaiver.PTN.Where(m => m.OriginatorYear == year).Max(m => m.SerialNumber);
             //Int32.TryParse(lastSerialNumberForYear, out int serialNumber);   // returns zero if null value, which is ok
             //serialNumber += 1;

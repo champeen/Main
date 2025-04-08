@@ -37,7 +37,7 @@ namespace PtnWaiver.Controllers
             // Get
             var waivers = await _contextPtnWaiver.Waiver
                 .Where(m => m.DeletedDate == null)
-                .OrderBy(m => m.CreatedDate)
+                .OrderByDescending(m => m.CreatedDate)
                 .ThenBy(m => m.WaiverNumber)
                 .ToListAsync();
 
@@ -124,8 +124,9 @@ namespace PtnWaiver.Controllers
 
             // GET ALL ATTACHMENTS FOR WAIVER /////////////////////////////////////////////////////////////////////////////////////
             // Get the directory
-            DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+            string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+            DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
                 pathWaiver.Create();
 
             // Using GetFiles() method to get list of all
@@ -153,8 +154,8 @@ namespace PtnWaiver.Controllers
 
             // GET ALL ATTACHMENTS FOR Waiver Material Details /////////////////////////////////////////////////////////////
             // Get the directory
-            DirectoryInfo pathWaiverMaterialDetails = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+            DirectoryInfo pathWaiverMaterialDetails = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiverNumber));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiverNumber)))
                 pathWaiverMaterialDetails.Create();
 
             // Using GetFiles() method to get list of all
@@ -175,8 +176,6 @@ namespace PtnWaiver.Controllers
                     Size = Convert.ToInt32(i.Length)
                 };
                 attachmentsWaiverMaterialDetails.Add(attachment);
-
-                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
             }
             waiverVM.AttachmentsWaiverMaterialDetail = attachmentsWaiverMaterialDetails.OrderBy(m => m.Name).ToList();
 
@@ -197,17 +196,18 @@ namespace PtnWaiver.Controllers
             return View(waiverVM);
         }
 
-        public async Task<IActionResult> MesLookup(string docId, string tab = "Waiver", string tabWaiver = "Details", string fileAttachmentError = null, string rejectedReason = null)
+        public async Task<IActionResult> MesLookup(string id, string tab = "Waiver", string tabWaiver = "Details", string fileAttachmentError = null, string rejectedReason = null, string saveMessageMaterialDetail = null)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
-            if (docId == null || _contextPtnWaiver.Waiver == null)
+            if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
+            // Format: https://localhost:7214/Waivers/MesLookup?id=2025-1000-W01-R02
             Waiver waiver = await _contextPtnWaiver.Waiver
-                .Where(m => m.WaiverNumber == docId)
+                .Where(m => m.ExternalIdMes == id)  //.Where(m => m.WaiverNumber == docId)
                 .OrderByDescending(m => m.RevisionNumber)
                 .FirstOrDefaultAsync();
 
@@ -222,6 +222,8 @@ namespace PtnWaiver.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.RejectedReason = rejectedReason;
+            ViewBag.Employees = getUserList();
+            ViewBag.SaveMessageMaterialDetail = saveMessageMaterialDetail;
 
             WaiverViewModel waiverVM = new WaiverViewModel();
             waiverVM.FileAttachmentError = fileAttachmentError;
@@ -233,6 +235,7 @@ namespace PtnWaiver.Controllers
             waiverVM.TabActiveAttachmentsWaiver = "";
             waiverVM.TabActiveWaiverApproval = "";
             waiverVM.TabActiveWaiverAdminApproval = "";
+            waiverVM.TabActiveWaiverMaterialDetails = "";
             switch (tabWaiver)
             {
                 case null:
@@ -253,17 +256,21 @@ namespace PtnWaiver.Controllers
                 case "WaiverAdminApproval":
                     waiverVM.TabActiveWaiverAdminApproval = "active";
                     break;
+                case "WaiverMaterialDetails":
+                    waiverVM.TabActiveWaiverMaterialDetails = "active";
+                    break;
             }
 
             // GET ALL ATTACHMENTS FOR Waiver ///////////////////////////////////////////////////////////////////////////////////////////////
             // Get the directory
-            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
-                path.Create();
+            string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+            DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
+                pathWaiver.Create();
 
             // Using GetFiles() method to get list of all
             // the files present in the Train directory
-            FileInfo[] Files = path.GetFiles();
+            FileInfo[] Files = pathWaiver.GetFiles();
 
             // Display the file names
             List<Attachment> attachments = new List<Attachment>();
@@ -279,19 +286,48 @@ namespace PtnWaiver.Controllers
                     Size = Convert.ToInt32(i.Length)
                 };
                 attachments.Add(attachment);
-
-                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
             }
             waiverVM.AttachmentsWaiver = attachments.OrderBy(m => m.Name).ToList();
+
+            // GET ALL ATTACHMENTS FOR Waiver Material Details /////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo pathWaiverMaterialDetails = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiverNumber));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiverNumber)))
+                pathWaiverMaterialDetails.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] FilesWaiverMaterialDetails = pathWaiverMaterialDetails.GetFiles();
+
+            // Display the file names
+            List<Attachment> attachmentsWaiverMaterialDetails = new List<Attachment>();
+            foreach (FileInfo i in FilesWaiverMaterialDetails)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachmentsWaiverMaterialDetails.Add(attachment);
+            }
+            waiverVM.AttachmentsWaiverMaterialDetail = attachmentsWaiverMaterialDetails.OrderBy(m => m.Name).ToList();
 
             // Render Tabs Disabled/Enabled
             // Submit for Admin Approval Tab...
             waiverVM.TabSubmitWaiverForApprovalDisabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
             // Admin Approve Waiver Tab...
             waiverVM.TabApproveWaiverDisabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
+            waiverVM.TabWaiverMaterialDetailsDisabled = waiverVM.Ptn.isWaferingDepartment == true ? "" : "disabled";
+            if (waiverVM.Waiver.Status == "Draft" || waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Rejected")
+                waiverVM.TabWaiverMaterialDetailsDisabled = "disabled";
 
-            if (waiverVM.Waiver.Status != "Draft")
-                ViewBag.Disable = "disabled";
+            // Per Ian Manning, do not allow anyone to change an attachment after Draft (because the PTN has been approved in the documents state it is in) but allow to upload new documents.
+            //if (waiverVM.Waiver.Status != "Draft")
+            //    ViewBag.Disable = "disabled";
 
             //return RedirectToAction("Details", "Waivers", new { id = waiver.PTNId, tab = "Waivers" });
             return View("Details", waiverVM);
@@ -341,6 +377,7 @@ namespace PtnWaiver.Controllers
             {
                 PTNId = ptnId,
                 PtnDocId = ptn.DocId,
+                DateSequence = ptn.OriginatorYear + "-" + ptn.SerialNumber,
                 Status = "Draft",
                 CreatedDate = DateTime.Now,
                 CreatedUser = userInfo.onpremisessamaccountname,
@@ -356,7 +393,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,GroupApprover,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
+        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,GroupApprover,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,DateSequence,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -381,11 +418,16 @@ namespace PtnWaiver.Controllers
                 //}
                 //waiver.WaiverNumber = waiverNumber;
 
-                waiver.WaiverNumber = getWaiverSerialNumber(waiver.PtnDocId);
+                waiver.WaiverSequence = getWaiverSerialNumber(waiver.PtnDocId);
+                waiver.RevisionNumber = 0;
+                waiver.ExternalIdMes = waiver.DateSequence + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+                waiver.WaiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
 
-                DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
-                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
-                    path.Create();
+                // Create Waiver Directory to store attachments in....
+                string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+                DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
+                    pathWaiver.Create();
 
                 //waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
                 _contextPtnWaiver.Add(waiver);
@@ -463,7 +505,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,PorProject,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,WaiverSequence,DateSequence,ExternalIdMes,PorProject,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -480,9 +522,10 @@ namespace PtnWaiver.Controllers
                 try
                 {
                     // attachment storage file path should already exist, but just make sure....
-                    DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
-                    if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
-                        path.Create();
+                    string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+                    DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
+                    if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
+                        pathWaiver.Create();
 
                     var userInfo = getUserInfo(_username);
                     if (userInfo != null)
@@ -622,11 +665,12 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction("Details", new { id = id, tabWaiver = "AttachmentsWaiver", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
 
             // attachment storage file path should already exist, but just make sure....
-            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+            string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
                 path.Create();
 
-            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString(), fileAttachment.FileName);
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber, fileAttachment.FileName);
 
             if (waiver.Status != "Draft" && System.IO.File.Exists(filePath))
             {
@@ -667,11 +711,12 @@ namespace PtnWaiver.Controllers
                 return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails", fileAttachmentError = "File extension type '" + extensionType + "' not allowed. Contact PTN Admin to add, or change document to allowable type." });
 
             // attachment storage file path should already exist, but just make sure....
-            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString()));
-            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString())))
+            string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+            DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiverNumber));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiverNumber)))
                 path.Create();
 
-            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString(), fileAttachment.FileName);
+            string filePath = Path.Combine(Initialization.AttachmentDirectoryWaiverMaterialDetail, waiverNumber, fileAttachment.FileName);
 
             //if (waiver.Status != "Draft" && System.IO.File.Exists(filePath))
             //{
@@ -927,6 +972,8 @@ namespace PtnWaiver.Controllers
             waiver.Id = 0;
             waiver.DateClosed = null;
             waiver.RevisionNumber += 1;
+            waiver.ExternalIdMes = waiver.DateSequence + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+            waiver.WaiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
             waiver.IsMostCurrentWaiver = true;
             waiver.RejectedBeforeSubmission = false;
             waiver.RejectedByApprover = false;

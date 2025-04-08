@@ -39,7 +39,7 @@ namespace PtnWaiver.Controllers
             // Get Ptns....
             var ptns = await _contextPtnWaiver.PTN
                 .Where(m => m.DeletedDate == null)
-                .OrderBy(m => m.CreatedDate)
+                .OrderByDescending(m => m.CreatedDate)
                 .ThenBy(m => m.DocId)
                 .ToListAsync();
 
@@ -152,7 +152,7 @@ namespace PtnWaiver.Controllers
             ptnVM.AttachmentsPtn = attachments.OrderBy(m => m.Name).ToList();
 
             // Get all Waivers under this PTN....
-            ptnVM.PTN.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == id && m.DeletedDate == null).ToListAsync();
+            ptnVM.PTN.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == id && m.DeletedDate == null).OrderBy(m=>m.WaiverNumber).ToListAsync();
 
             // RENDER TABS DISABLED/ENABLED....
             // Submit for Admin Approval Tab...
@@ -258,7 +258,7 @@ namespace PtnWaiver.Controllers
             ptnVM.AttachmentsPtn = attachments.OrderBy(m => m.Name).ToList();
 
             // Get all Waivers under this PTN....
-            ptnVM.PTN.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == pTN.Id && m.DeletedDate == null).ToListAsync();
+            ptnVM.PTN.Waivers = await _contextPtnWaiver.Waiver.Where(m => m.PTNId == pTN.Id && m.DeletedDate == null).OrderBy(m=>m.WaiverNumber).ToListAsync();
 
             // RENDER TABS DISABLED/ENABLED....
             // Submit for Admin Approval Tab...
