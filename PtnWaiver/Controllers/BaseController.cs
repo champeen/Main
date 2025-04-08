@@ -371,10 +371,11 @@ namespace PtnWaiver.Controllers
         {
             string waiverNumber = "";
             string waiverSequence = "";
+            string waiverRevision = "R00";
             for (int i = 1; i < 10000; i++)
             {
                 waiverSequence = "W" + i.ToString("###00");
-                waiverNumber = ptnDocId + "-" + waiverSequence;
+                waiverNumber = ptnDocId + "-" + waiverSequence + "-" + waiverRevision;
                 var waiver = _contextPtnWaiver.Waiver.Where(m => m.WaiverNumber == waiverNumber).FirstOrDefault();
                 if (waiver == null)
                     break;
