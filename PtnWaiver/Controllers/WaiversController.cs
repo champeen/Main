@@ -358,13 +358,14 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
+            ViewBag.Areas = getAreas();
             //ViewBag.Groups = getGroupApprovers();
             ViewBag.PtnGroupApprovers = ptn.GroupApprover;
 
             var groups = getGroupApprovers();
             foreach (SelectListItem group in groups)
             {
-                bool found = ptn.GroupApprover.Contains(group.Value);
+                bool found = ptn.GroupApprover.Contains(group.Value);  // Prefill Waivers groupApprovers with whatever PTN's groupApprovers are
                 if (found == true)
                 {
                     group.Selected = true;
@@ -393,7 +394,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,GroupApprover,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,DateSequence,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
+        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,Areas,GroupApprover,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,DateSequence,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -444,6 +445,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
+            ViewBag.Areas = getAreas();
             //ViewBag.Groups = getGroupApprovers();
             ViewBag.PtnGroupApprovers = ptn.GroupApprover;
 
@@ -475,6 +477,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
+            ViewBag.Areas = getAreas();
             //ViewBag.Groups = getGroupApprovers();
 
             if (id == null || _contextPtnWaiver.Waiver == null)
@@ -505,7 +508,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,WaiverSequence,DateSequence,ExternalIdMes,PorProject,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,WaiverSequence,DateSequence,ExternalIdMes,PorProject,Areas,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -554,6 +557,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
+            ViewBag.Areas = getAreas();
             //ViewBag.Groups = getGroupApprovers();
 
             var groups = getGroupApprovers();

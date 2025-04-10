@@ -131,6 +131,29 @@
                             @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
                         </dd>
                     </div>
+
+                    <div class="row">
+                        <dt class="col-sm-3 my-1 text-end">
+                            @Html.DisplayNameFor(model => model.Waiver.Areas)
+                        </dt>
+                        <dd class="col-sm-9 my-1">
+                            @if (Model.Waiver.Areas != null)
+                            {
+                                var counter = 0;
+                                @foreach (var areas in Model.Waiver.Areas)
+                                {
+                                    counter = counter + 1;
+                                    <span>@areas</span>
+                                    if (counter < Model.Waiver.Areas.Count)
+                                    {
+                                        <span>,&nbsp;</span>
+                                    }
+                                }
+                            }
+                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
+                        </dd>
+                    </div>
+
                     <div class="row">
                         <dt class="col-sm-3 my-1 text-end">
                             @Html.DisplayNameFor(model => model.Waiver.GroupApprover)
