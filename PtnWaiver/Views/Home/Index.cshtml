@@ -20,7 +20,7 @@
         @* @Html.ActionLink("Create New Task","Create","Tasks",new {source="Home"},new {@class="btn btn-primary"}) *@
     </div>
 </div>
-@{
+@* @{
     var columnSpace = "";
 }
 @if (ViewBag.IsAdmin)
@@ -30,6 +30,9 @@
 else
 {
     columnSpace = "col-lg-6";
+} *@
+@{
+    var columnSpace = "col-lg-3";
 }
 <div class="row">
     <div class="@columnSpace p-3">
