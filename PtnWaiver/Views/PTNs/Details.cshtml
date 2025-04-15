@@ -757,16 +757,16 @@
                                     Description
                                 </th>
                                 <th>
-                                    Product/Process
+                                    Product/Processes
                                 </th>
                                 <th>
-                                    Group/Approver
+                                    Area(s)
+                                </th>
+                                <th>
+                                    Group/Approver(s)
                                 </th>
                                 <th>
                                     Status
-                                </th>
-                                <th>
-                                    Date Closed
                                 </th>
                                 @*                                 <th>
                                 Corrective Action Due Date
@@ -818,16 +818,55 @@
                                         @Html.DisplayFor(modelItem => item.Description)
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.ProductProcess)
+                                        @* @Html.DisplayFor(modelItem => item.ProductProcess) *@
+                                        @if (item.ProductProcess != null)
+                                        {
+                                            var counter = 0;
+                                            @foreach (var productProcess in item.ProductProcess)
+                                            {
+                                                counter = counter + 1;
+                                                <span>@productProcess</span>
+                                                if (counter < item.ProductProcess.Count)
+                                                {
+                                                    <span>,@* &nbsp; *@</span>
+                                                }
+                                            }
+                                        }
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.GroupApprover)
+                                        @* @Html.DisplayFor(modelItem => item.Areas) *@
+                                        @if (item.Areas != null)
+                                        {
+                                            var counter = 0;
+                                            @foreach (var areas in item.Areas)
+                                            {
+                                                counter = counter + 1;
+                                                <span>@areas</span>
+                                                if (counter < item.Areas.Count)
+                                                {
+                                                    <span>,@* &nbsp; *@</span>
+                                                }
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @* @Html.DisplayFor(modelItem => item.GroupApprover) *@
+                                        @if (item.GroupApprover != null)
+                                        {
+                                            var counter = 0;
+                                            @foreach (var groupApprover in item.GroupApprover)
+                                            {
+                                                counter = counter + 1;
+                                                <span>@groupApprover</span>
+                                                if (counter < item.GroupApprover.Count)
+                                                {
+                                                    <span>,@* &nbsp; *@</span>
+                                                }
+                                            }
+                                        }
                                     </td>
                                     <td class="@color">
                                         @Html.DisplayFor(modelItem => item.Status)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.DateClosed)
                                     </td>
                                     @*                                     <td>
                                 @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)

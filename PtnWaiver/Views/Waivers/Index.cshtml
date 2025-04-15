@@ -51,9 +51,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.ExternalIdMes)
             </th>
-@*             <th>
-                @Html.DisplayNameFor(model => model.PorProject)
-            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
@@ -61,14 +58,14 @@
                 @Html.DisplayNameFor(model => model.ProductProcess)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.Areas)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateClosed)
+                @Html.DisplayNameFor(model => model.GroupApprover)
             </th>
-@*             <th>
-                @Html.DisplayNameFor(model => model.CorrectiveActionDueDate)
-            </th> *@
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             @* <th></th> *@
         </tr>
     </thead>
@@ -101,7 +98,8 @@
             @Html.DisplayFor(modelItem => item.PTN.DocId)
             </td> *@
                 <td>
-                    @Html.DisplayFor(modelItem => item.WaiverNumber)
+                    @* @Html.DisplayFor(modelItem => item.WaiverNumber) *@
+                    @Html.ActionLink(item.WaiverNumber, "Details", "Waivers", new { id = @item.Id }, new { @class = "btn btn-primary text-nowrap" })
                 </td>
                 <td>
                     @Html.ActionLink(item.PtnDocId,"Details","PTNs",new {id=@item.PTNId, tab="Waivers"},new {@class="btn btn-primary text-nowrap"})
@@ -113,24 +111,59 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ExternalIdMes)
                 </td>
-@*                 <td>
-                    @Html.DisplayFor(modelItem => item.PorProject)
-                </td> *@
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProductProcess)
+                    @* @Html.DisplayFor(modelItem => item.ProductProcess) *@
+                    @if (item.ProductProcess != null)
+                    {
+                        var counter = 0;
+                        @foreach (var productProcess in item.ProductProcess)
+                        {
+                            counter = counter + 1;
+                            <span>@productProcess</span>
+                            if (counter < item.ProductProcess.Count)
+                            {
+                                <span>,@* &nbsp; *@</span>
+                            }
+                        }
+                    }
+                </td>
+                <td>
+                    @* @Html.DisplayFor(modelItem => item.Areas) *@
+                    @if (item.Areas != null)
+                    {
+                        var counter = 0;
+                        @foreach (var areas in item.Areas)
+                        {
+                            counter = counter + 1;
+                            <span>@areas</span>
+                            if (counter < item.Areas.Count)
+                            {
+                                <span>,@* &nbsp; *@</span>
+                            }
+                        }
+                    }
+                </td>
+                <td>
+                    @if (item.GroupApprover != null)
+                    {
+                        var counter = 0;
+                        @foreach (var groupApprover in item.GroupApprover)
+                        {
+                            counter = counter + 1;
+                            <span>@groupApprover</span>
+                            if (counter < item.GroupApprover.Count)
+                            {
+                                <span>,@* &nbsp; *@</span>
+                            }
+                        }
+                    }
                 </td>
                 <td class="@color">
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateClosed)
-                </td>
-@*                 <td>
-                    @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
-                </td> *@
 @*                 <td class="text-nowrap">
                     @Html.ActionLink("Edit","Edit",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})
                     @Html.ActionLink("Details","Details",new {id=@item.Id, tab="Details"},new {@class="btn btn-secondary ms-1"})
@@ -149,6 +182,7 @@
     {
         <tr>
             <td>No data found</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>

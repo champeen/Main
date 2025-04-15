@@ -299,6 +299,33 @@ namespace PtnWaiver.Controllers
             return groups;
         }
 
+        public List<SelectListItem> getAreas()
+        {
+            //var areaList = _contextPtnWaiver.ProductProcess.OrderBy(m => m.Order).ThenBy(m => m.Description).ToList();
+            List<SelectListItem> areas = new List<SelectListItem>();
+            areas.Add(new SelectListItem() { Value = "Clean", Text = "Clean" });
+            //areas.Add(new SelectListItem() { Value = "Consumable Processing", Text = "Consumable Processing" });      // comment out per J.Searson
+            //areas.Add(new SelectListItem() { Value = "Consumable Store", Text = "Consumable Store" });                // comment out per J.Searson
+            areas.Add(new SelectListItem() { Value = "Epi", Text = "Epi" });
+            areas.Add(new SelectListItem() { Value = "Fab", Text = "Fab" });
+            //areas.Add(new SelectListItem() { Value = "Facility Infrastructure", Text = "Facility Infrastructure" });  // comment out per J.Searson
+            areas.Add(new SelectListItem() { Value = "Grind", Text = "Grind" });
+            areas.Add(new SelectListItem() { Value = "Growth", Text = "Growth" });
+            areas.Add(new SelectListItem() { Value = "KOH", Text = "KOH" });
+            areas.Add(new SelectListItem() { Value = "Polish", Text = "Polish" });
+            //areas.Add(new SelectListItem() { Value = "R&D Metrology", Text = "R&D Metrology" });                      // comment out per J.Searson
+            areas.Add(new SelectListItem() { Value = "Seed", Text = "Seed" });
+            areas.Add(new SelectListItem() { Value = "Slice", Text = "Slice" });
+            //areas.Add(new SelectListItem() { Value = "Warehouse", Text = "Warehouse" });                              // comment out per J.Searson
+
+            //foreach (var rec in areaList)
+            //{
+            //    SelectListItem item = new SelectListItem { Value = rec.Code, Text = rec.Description };
+            //    areas.Add(item);
+            //}
+            return areas;
+        }
+
         //public List<SelectListItem> getChangeLevels()
         //{
         //    var changeLevelList = _context.ChangeLevel.OrderBy(m => m.Order).ThenBy(m => m.Level).ToList();

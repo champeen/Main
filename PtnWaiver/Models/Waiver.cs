@@ -57,7 +57,7 @@ namespace PtnWaiver.Models
         [Display(Name = "External ID - MES")]
         public string? ExternalIdMes { get; set; }          // 2025-001-W01-R01
         [Display(Name = "Area(s)")]
-        public List<string>? Areas { get; set; }
+        public virtual List<string>? Areas { get; set; }
 
         [ForeignKey("PTN")]
         public int PTNId { get; set; }

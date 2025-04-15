@@ -39,13 +39,14 @@
             <div class="form-group my-3">
                 <label asp-for="Description" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @rows = 3 })
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @rows = 8 })
                 <span asp-validation-for="Description" class="text-danger fw-bold"></span>
             </div>
+        </div>
+        <div class="col-6">
             <div class="form-group my-3">
                 <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-@*                 @Html.DropDownListFor(model => model.ProductProcess, new SelectList(ViewBag.ProductProcess, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @style = "max-width:50%;" }) *@
                 <select asp-for=ProductProcess id="WaiverCreateProductProcess" multiple="multiple" style="width:100%;">
                     @foreach (SelectListItem item in ViewBag.ProductProcess)
                     {
@@ -55,20 +56,23 @@
                 </select>
                 <span asp-validation-for="ProductProcess" class="text-danger fw-bold"></span>
             </div>
-@*             <div class="form-group my-3">
-                <label asp-for="CorrectiveActionDueDate" class="control-label fw-bold mb-1"></label>
-                <input asp-for="CorrectiveActionDueDate" class="form-control" style="max-width:50%" onclick="this.showPicker()" />
-                <span asp-validation-for="CorrectiveActionDueDate" class="text-danger fw-bold"></span>
-            </div> *@
-        </div>
-        <div class="col-6">
+            <div class="form-group my-3">
+                <label asp-for="Areas" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <select asp-for=Areas id="WaiverCreateAreas" multiple="multiple" style="width:100%;" required>
+                    @foreach (SelectListItem item in ViewBag.Areas)
+                    {
+                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                        @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
+                    }
+                </select>
+                <span asp-validation-for="Areas" class="text-danger fw-bold"></span>
+            </div>
             <div class="form-group my-3">
                 <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
                 </i>
-@*                 @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", ViewBag.PtnGroupApprovers), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 8 }) *@
-@*                 @Html.DropDownListFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "WaiverCreateGroupApprovers" }) *@
                 <select asp-for=GroupApprover id="WaiverCreateGroupApprovers" multiple="multiple" style="width:100%;">
                     @foreach (SelectListItem item in ViewBag.Groups)
                     {
@@ -101,6 +105,9 @@
         });
         $('#WaiverCreateProductProcess').select2({
             placeholder: "Select Product/Processes"
+        });
+        $('#WaiverCreateAreas').select2({
+            placeholder: "Select Area(s)"
         });
     });
 </script>
