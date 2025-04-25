@@ -74,6 +74,15 @@
                 <span asp-validation-for="Priority" class="text-danger fw-bold"></span>
             </div>
             <div class="form-group my-3">
+                <label asp-for="Classification" class="control-label fw-bold mb-1"></label>
+                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="PROVISIONAL CHANGE: A temporary, controlled modification to a process, procedure, or material, implemented for a limited duration until specific conditions are met. (e.g. Material shortages, equipment breakdown, alternate work methods)">
+                </i>
+                @*<input asp-for="Change_Type" class="form-control" />*@
+                @Html.DropDownListFor(model => model.Classification, new SelectList(ViewBag.Classifications, "Value", "Text", "Selected"), "-- select --", new { @class = "form-control form-select" })
+                <span asp-validation-for="Classification" class="text-danger fw-bold"></span>
+            </div>
+            <div class="form-group my-3">
                 <label asp-for="Change_Type" class="control-label fw-bold mb-1"></label>
                 <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                 @*<input asp-for="Change_Type" class="form-control" readonly/>*@
