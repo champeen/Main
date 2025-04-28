@@ -55,8 +55,8 @@
             {
                 <li class="nav-item">
                     <a class="nav-link @Model.TabActiveClassificationReview fw-bolder" id="nav-classificationReview-tab" data-bs-toggle="tab" href="#nav-classificationReview" role="tab" aria-controls="nav-contact" aria-selected="false">
-                        Change Grade Review
-                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This Classification requires review">
+                        Classification Review
+                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This MoC's Classification requires review">
                         </i>
                     </a>
                 </li>
@@ -633,14 +633,14 @@
                 <div class="col-12">
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ClassificationReview"))
                     {
-                        <div class="mx-5">
-                            MoC needs Classification reviewed. As it stands, this MoC will NOT proceed further. Please look over the MoC and either approve the Classification as is, or reject the Classification, which will notify the MoC writer via email that the Classification was rejected, changing the MoC status back to 'Draft'.
+                        <div class="mx-5 text-center">
+                            MoC needs Classification reviewed. As it stands, this MoC will NOT proceed further. Please look over the MoC and either approve the Classification as is, or reject the Classification. If rejected, the MoC writer will be notified via email that the Classification was rejected, changing the MoC status back to 'Draft'.
                         </div>
                         <div class="text-center mt-2">
-                            <form asp-action="RejectClassification">
+                            <form asp-action="RejectClassification" asp-route-id="@Model.ChangeRequest.Id" asp-route-tab="Details">
                                 <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
                                 <div class="row mt-5">
-                                    <div class="col-12 text-end">
+                                    <div class="col-12">
                                         @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary m-1" })
                                         @Html.ActionLink("Approve Classification", "ApproveClassification", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "ApproveClassification", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                                         <input type="submit" value="Reject Classification" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
@@ -656,6 +656,15 @@
                                 </div>
                             </form>
                             <span></span>
+                        </div>
+                    }
+                    @if ((!ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ClassificationReview"))
+                    {
+                        <div class="text-nowrap text-center mt-2">
+                            <div class="my-5">
+                                Change Request's Classification is being Reviewed by the Administrator.
+                            </div>
+                            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
                         </div>
                     }
                     @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ClassificationReview")

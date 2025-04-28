@@ -47,6 +47,17 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToListAsync();
 
+            // Get all active Classification Reviews for current user...
+            // fist get all active MoC's that are in 'ClassificationReview' status....
+            dashboardVM.ClassificationReviews = await _context.ChangeRequest
+                .Where(m => m.DeletedDate == null && m.Change_Status == "ClassificationReview" && (m.CreatedUser == username || _isAdmin))
+                //.Where(m => m.Change_Owner == username)
+                //.Where(m => m.Change_Status == "ClassificationReview")
+                //.Where(m => m.CreatedUser == username || _isAdmin)
+                .OrderBy(m => m.Priority)
+                .ThenBy(m => m.Estimated_Completion_Date)
+                .ToListAsync();
+
             // Get all active ChangeGradeReviews for current user...
             // fist get all active MoC's that are in 'ChangeGradeReview' status....
             dashboardVM.ChangeGradeReviews = new List<ChangeRequest>();
@@ -64,7 +75,7 @@ namespace Management_of_Change.Controllers
                 ChangeArea changeArea = await _context.ChangeArea.Where(m => m.Description == rec.Area_of_Change).FirstOrDefaultAsync();
                 if (changeArea != null)
                 {
-                    if (changeArea.ChangeGradePrimaryApproverUsername == _username || changeArea.ChangeGradeSecondaryApproverUsername == _username)
+                    if (changeArea.ChangeGradePrimaryApproverUsername == _username || changeArea.ChangeGradeSecondaryApproverUsername == _username || rec.CreatedUser == _username)
                         dashboardVM.ChangeGradeReviews.Add(rec);
                 }                        
             }
@@ -136,7 +147,7 @@ namespace Management_of_Change.Controllers
             // Get Count of Overdue Tasks grouped by User
             //dashboardVM.OverdueTasks = await _context.Task
             var overdueTasks = (await _context.Task
-                .Where(m=>m.DueDate.Value.Date < DateTime.Now.Date && m.CompletionDate == null)
+                .Where(m=>m.DueDate.Value.Date < DateTime.Now.Date && m.CompletionDate == null && m.Status != "On Hold" && m.Status != "Cancelled" && m.Status != "Complete")
                 .GroupBy(m => m.AssignedToUserFullName)
                 .Select(m => new { UserName = m.Key, Count = m.Count() })  
                 .OrderByDescending(m => m.Count)

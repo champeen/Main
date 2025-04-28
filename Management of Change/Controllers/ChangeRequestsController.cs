@@ -70,14 +70,14 @@ namespace Management_of_Change.Controllers
             {
                 case null:
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
                     break;
                 case "All":
                     ViewBag.PrevStatusFilter = "All";
                     break;
                 case "AllCurrent":
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
                     break;
                 default:
                     requests = requests.Where(m => m.Change_Status == statusFilter).ToList();
@@ -424,37 +424,47 @@ namespace Management_of_Change.Controllers
 
             changeRequestViewModel.ChangeRequest = changeRequest;
             changeRequestViewModel.Tasks = tasks;
-            // disable tab 3 (ImpactAssessments) if General MOC Responses have not been completed...
-            int countGMR = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
-            changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" ? "disabled" : "";
-            // disable tab4 (Final Review) if any Impact Assessment Responses have not been completed...
-            int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "PccbReview") ? "disabled" : "";
-            // disable tab5 (Implementation) if any Final Approvals have not been completed...
-            int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
-            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
-            // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
-            changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
-            // if change request is not in "Draft" status, and ChangeLevel is one that is required to review, then show the extra 'Change Level Review' stage....
+
+            // show ClassificationReview tab or not??? ....
+            changeRequestViewModel.TabClassificationReviewDisplayed = changeRequest.Classification == "Provisional" && changeRequest.Change_Status != "Draft" ? "Yes" : "No";            
+
+            // show ChangeLevelReview tab or not??? ....
             var changeLevel = await _context.ChangeLevel.Where(m => m.Level == changeRequest.Change_Level).FirstOrDefaultAsync();
             if (changeLevel == null)
                 changeRequestViewModel.TabChangeGradeReviewDisplayed = "No";
             else
-                changeRequestViewModel.TabChangeGradeReviewDisplayed = changeRequest.Change_Status != "Draft" && changeLevel.ChangeGradeReviewRequired == true ? "Yes" : "No";
-            // PCCB Review Tab...
+                changeRequestViewModel.TabChangeGradeReviewDisplayed = changeRequest.Change_Status != "Draft" && changeRequest.Change_Status != "ClassificationReview" && changeLevel.ChangeGradeReviewRequired == true ? "Yes" : "No";
+
+            // disable tab 3 (ImpactAssessments) if General MOC Responses have not been completed...
+            int countGMR = changeRequest.GeneralMocResponses.Where(m => m.Response == null).Count();
+            changeRequestViewModel.Tab3Disabled = countGMR > 0 || changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ClassificationReview" ? "disabled" : "";
+
+            // show PCCB Review Tab? ...
             changeRequestViewModel.TabPccbReviewDisplayed = changeLevel?.PccbReviewRequired == true ? "Yes" : "No";
-            changeRequestViewModel.TabPccbReviewDisabled = changeRequest.Change_Status == "Draft" || changeRequest.Change_Status == "ChangeGradeReview" || changeRequest.Change_Status == "ImpactAssessmentReview" ? "disabled" : "";
+            changeRequestViewModel.TabPccbReviewDisabled = changeRequest.Change_Status == "Draft" || changeRequest.Change_Status == "ClassificationReview" || changeRequest.Change_Status == "ChangeGradeReview" || changeRequest.Change_Status == "ImpactAssessmentReview" ? "disabled" : "";
+
+            // disable tab4 (Final Review) if any Impact Assessment Responses have not been completed...
+            int countIAR = changeRequest.ImpactAssessmentResponses.Where(m => m.ReviewCompleted == false).Count();
+            changeRequestViewModel.Tab4Disabled = countIAR > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ClassificationReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "PccbReview") ? "disabled" : "";
+
+            // disable tab5 (Implementation) if any Final Approvals have not been completed...
+            int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
+            changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ClassificationReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
+
+            // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
+            changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
 
             changeRequestViewModel.TabActiveDetail = "";
             changeRequestViewModel.TabActiveGeneralMocQuestions = "";
+            changeRequestViewModel.TabActiveClassificationReview = "";
+            changeRequestViewModel.TabActiveChangeGradeReview = "";
             changeRequestViewModel.TabActiveImpactAssessments = "";
             changeRequestViewModel.TabActivePccbReview = "";
             changeRequestViewModel.TabActiveFinalApprovals = "";
             changeRequestViewModel.TabActiveImplementation = "";
             changeRequestViewModel.TabActiveCloseoutComplete = "";
             changeRequestViewModel.TabActiveAttachments = "";
-            changeRequestViewModel.TabActiveTasks = "";
-            changeRequestViewModel.TabActiveChangeGradeReview = "";
+            changeRequestViewModel.TabActiveTasks = "";            
 
             ViewBag.Responses = await _context.ResponseDropdownSelections.OrderBy(m => m.Order).Select(m => m.Response).ToListAsync();
 
@@ -471,6 +481,9 @@ namespace Management_of_Change.Controllers
                     break;
                 case "GeneralMocQuestions":
                     changeRequestViewModel.TabActiveGeneralMocQuestions = "active";
+                    break;
+                case "ClassificationReview":
+                    changeRequestViewModel.TabActiveClassificationReview = "active";
                     break;
                 case "ChangeGradeReview":
                     changeRequestViewModel.TabActiveChangeGradeReview = "active";

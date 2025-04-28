@@ -90,7 +90,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     <div class="col-3 p-3">
         <div class="row">
@@ -311,6 +310,74 @@
             <div class="col-12 border border-dark">
                 <div class="my-3">
                     <h5 class="text-center">
+                        Your Classification Reviews
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped mt-3 ">
+                            <thead class="align-top align-text-top table-primary">
+                                <tr>
+                                    <th class="text-nowrap">
+                                        MOC #
+                                        @*@Html.DisplayNameFor(model => model.MOC_Number)*@
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Title/Change Description
+                                    </th>
+                                    <th class="text-nowrap">
+                                        Estimated Completion Date
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ClassificationReviews)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ClassificationReview", sourceScreen = "Dashboard" }, new { @class = "" })
+                                            @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @if (item.Priority == "High")
+                                            {
+                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
+                                            }
+
+                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
+                                        </td>
+                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
+                                        {
+                                            <td class="fw-bolder text-danger">
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                            @if (Model.ClassificationReviews.Count() == 0)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">No data found</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 p-3">
+        <div class="row mt-1">
+            <div class="col-12 border border-dark">
+                <div class="my-3">
+                    <h5 class="text-center">
                         Your Change Grade Reviews
                     </h5>
                     <div class="table-responsive">
@@ -441,7 +508,6 @@
             </div>
         </div>
     </div>
-    <div class="col-3 p-3"></div>
     <div class="col-3 p-3">
         <div class="row mt-1">
             <div class="col-12 border border-dark">
