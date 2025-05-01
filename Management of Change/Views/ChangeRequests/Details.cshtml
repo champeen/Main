@@ -49,8 +49,18 @@
                 <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">General MOC Questions</a>
+                <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">Questions</a>
             </li>
+            @if (Model.TabClassificationReviewDisplayed == "Yes")
+            {
+                <li class="nav-item">
+                    <a class="nav-link @Model.TabActiveClassificationReview fw-bolder" id="nav-classificationReview-tab" data-bs-toggle="tab" href="#nav-classificationReview" role="tab" aria-controls="nav-contact" aria-selected="false">
+                        Classification Review
+                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This MoC's Classification requires review">
+                        </i>
+                    </a>
+                </li>
+            }
             @if (Model.TabChangeGradeReviewDisplayed == "Yes")
             {
                 <li class="nav-item">
@@ -87,14 +97,14 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveImplementation @Model.Tab5Disabled fw-bolder" id="nav-implementation-tab" data-bs-toggle="tab" href="#nav-implementation" role="tab" aria-controls="nav-contact" aria-selected="false">
-                    Implementation
+                    Implement
                     <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete. All 'Pre Implementation' Tasks must be completed in order to progress past this stage.">
                     </i>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab6Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
-                    Close Out/Complete
+                    Close Out
                     <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete. All tasks, including 'Post Implementation', must be completed in order to close/complete this Change Request.">
                     </i>
                 </a>
@@ -133,7 +143,6 @@
                             {
                                 @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
                             }
-                            
                         </div>
                     </div>
                     @* <div class="col-6 text-end"> *@
@@ -149,7 +158,7 @@
                                         </span>
                                     </div>
                                     <div class="col-xl-2 mt-1">
-@*                                         @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId1", onclick = "return DisplayProgressMessage(this, 'Saving...');" }) *@
+                                        @*                                         @Html.ActionLink("Submit for Review", "CheckForChangeGradeReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId1", onclick = "return DisplayProgressMessage(this, 'Saving...');" }) *@
                                         @Html.ActionLink("Submit for Review", "SubmitForReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId1", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
                                     </div>
                                 </div>
@@ -190,6 +199,12 @@
                 </dt>
                 <dd class="col-sm-4 my-1">
                     @Html.DisplayFor(model => model.ChangeRequest.Priority)
+                </dd>
+                <dt class="col-sm-2 my-1 text-end">
+                    @Html.DisplayNameFor(model => model.ChangeRequest.Classification)
+                </dt>
+                <dd class="col-sm-4 my-1">
+                    @Html.DisplayFor(model => model.ChangeRequest.Classification)
                 </dd>
                 <dt class="col-sm-2 my-1 text-end">
                     @Html.DisplayNameFor(model => model.ChangeRequest.Estimated_Completion_Date)
@@ -450,6 +465,7 @@
                 </div>
             </div>
         </div>
+
         @******************************************************************************************************************@
         @*  GENERAL MOC QUESTIONS TAB  ************************************************************************************@
         @******************************************************************************************************************@
@@ -608,6 +624,62 @@
                 </div>
             }
         </div>
+
+        @******************************************************************************************************************@
+        @*  CLASSIFICATION REVIEW TAB  ************************************************************************************@
+        @******************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveClassificationReview" id="nav-classificationReview" role="tabpanel" aria-labelledby="nav-classificationReview-tab">
+            <div class="row">
+                <div class="col-12">
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ClassificationReview"))
+                    {
+                        <div class="mx-5 text-center">
+                            MoC needs Classification reviewed. As it stands, this MoC will NOT proceed further. Please look over the MoC and either approve the Classification as is, or reject the Classification. If rejected, the MoC writer will be notified via email that the Classification was rejected, changing the MoC status back to 'Draft'.
+                        </div>
+                        <div class="text-center mt-2">
+                            <form asp-action="RejectClassification" asp-route-id="@Model.ChangeRequest.Id" asp-route-tab="Details">
+                                <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
+                                <div class="row mt-5">
+                                    <div class="col-12">
+                                        @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary m-1" })
+                                        @Html.ActionLink("Approve Classification", "ApproveClassification", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "ApproveClassification", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                                        <input type="submit" value="Reject Classification" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
+                                    </div>
+@*                                     <div class="col-sm-6 text-start">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Reason Required if Rejected *" })
+                                                <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
+                                            </div>
+                                        </div>
+                                    </div> *@
+                                </div>
+                            </form>
+                            <span></span>
+                        </div>
+                    }
+                    @if ((!ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ClassificationReview"))
+                    {
+                        <div class="text-nowrap text-center mt-2">
+                            <div class="my-5">
+                                Change Request's Classification is being Reviewed by the Administrator.
+                            </div>
+                            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                        </div>
+                    }
+                    @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ClassificationReview")
+                    {
+                        <div class="text-nowrap text-center mt-2">
+                            <div class="my-5">
+                                Classification Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ClassificationApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ClassificationApprovalDate)</span>.
+                            </div>
+                            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
         @******************************************************************************************************************@
         @*  CHANGE GRADE REVIEW TAB  **************************************************************************************@
         @******************************************************************************************************************@
@@ -626,19 +698,13 @@
                                     <div class="col-6 text-end">
                                         @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary m-1" })
                                         @Html.ActionLink("Approve Change Grade", "ApproveChangeGrade", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
-                                        @*@Html.ActionLink("Reject Change Grade","RejectChangeGrade", new {id=Model.ChangeRequest.Id}, new {@class="btn btn-danger mt-3 ms-2 me-1", id="CloseImplementation", onclick="return DisplayProgressMessage(this, 'Processing...');"}) *@
                                         <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                                     </div>
                                     <div class="col-sm-6 text-start">
                                         <div class="row">
-                                            @*                                             <div class="col-2 text-start">
-                                        <label asp-for="ChangeRequest.ChangeGradeRejectedReason" class="control-label fw-bold m-1"></label>
-                                        </div> *@
                                             <div class="col-12">
-                                                @* <input asp-for="ChangeRequest.ChangeGradeRejectedReason" class="form-control m-1" /> *@
                                                 @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Reason Required if Rejected *" })
                                                 <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
-                                                @* @Html.TextAreaFor(model => model.ChangeRequest.ChangeGradeRejectedReason, new {@class = "form-control", /* @style="display: inline-table !important", */ @rows = 1 }) *@
                                             </div>
                                         </div>
                                     </div>
@@ -647,7 +713,7 @@
                             <span></span>
                         </div>
                     }
-                    @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
+                    @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ClassificationReview" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
                     {
                         <div class="text-nowrap text-center mt-2">
                             <div class="my-5">
@@ -858,12 +924,12 @@
                                     </td>
                                     <td class="text-nowrap">
                                         @if (ViewBag.IsAdmin)
-                                        {        
+                                        {
                                             if (Model.ChangeRequest.Change_Status != "Closed")
                                             {
                                                 <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@item.Id" asp-route-destinationPage="ManageMeeting" class="btn btn-primary me-1">Manage Meeting</a>
                                                 <a asp-action="Delete" asp-controller="PCCBs" asp-route-id="@item.Id" class="btn btn-danger me-1">Delete</a>
-                                            }                                            
+                                            }
                                             <a asp-action="Details" asp-controller="PCCBs" asp-route-id="@item.Id" class="btn btn-primary me-1">View Meeting</a>
                                         }
                                         else
@@ -1223,7 +1289,7 @@
                         <tr>
                             <td>
                                 @*@Html.DisplayFor(modelItem => item.Id)*@
-                                @Html.ActionLink("Task#" + item.Id.ToString(), "Details", "Tasks", new {id = @item.Id, destinationPage = "ChangeRequest", tab = "Tasks"}, new { @class = "" })
+                                @Html.ActionLink("Task#" + item.Id.ToString(), "Details", "Tasks", new { id = @item.Id, destinationPage = "ChangeRequest", tab = "Tasks" }, new { @class = "" })
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.ImplementationType)

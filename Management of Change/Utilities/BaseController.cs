@@ -4,6 +4,8 @@ using Management_of_Change.Models;
 using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Management_of_Change.Utilities
 {
@@ -266,6 +268,16 @@ namespace Management_of_Change.Utilities
                 pccbSteps.Add(item);
             }
             return pccbSteps;
+        }
+
+        public List<SelectListItem> getClassifications()
+        {
+            var classificationList = new List<SelectListItem> {
+                new SelectListItem { Value = "Standard", Text = "Standard", Selected = true }, 
+                new SelectListItem { Value = "Provisional", Text = "Provisional", Selected = false } };
+            //classificationList.Add(new SelectListItem {Value = "Standard", Text = "Standard", Selected = true});
+            //classificationList.Add(new SelectListItem { Value = "Provisional", Text = "Provisional", Selected = false });
+            return classificationList;
         }
 
         public EmailHistory AddEmailHistory(string? priority, string? subject, string? body, string? sentToDisplayName, string? sentToUsername, string? sentToEmail, int? changeRequestId, int? impactAssessmentResponseId, int? implementationFinalApprovalResponseId, int? taskId, string? type, string? status, DateTime createdDate, string? username)

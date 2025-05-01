@@ -30,7 +30,7 @@ namespace Management_of_Change.Models
         public string Change_Level { get; set; }
         [Display(Name = "Area of Change")]
         public string Area_of_Change { get; set; }
-        [Display(Name = "Expiration Date if Temporary")]
+        [Display(Name = "Expiration Date if Provisional")]
         [DataType(DataType.Date)]
         public DateTime? Expiration_Date_Temporary { get; set; }
         [Display(Name = "Status")]
@@ -45,6 +45,13 @@ namespace Management_of_Change.Models
         public string Proudct_Line { get; set; }
         [Display(Name = "Change Type")]
         public string Change_Type { get; set; }
+        public string Classification { get; set; }
+        public String? ClassificationApprovalUser { get; set; }
+        [Display(Name = "Change Grade Approval Username")]
+        public String? ClassificationApprovalUserFullName { get; set; }
+        [Display(Name = "Change Grade Approval Date")]
+        [DataType(DataType.Date)]
+        public DateTime? ClassificationApprovalDate { get; set; }
         [Display(Name = "PTN Number")]
         public List<string>? PTN_Number { get; set; }
         [Display(Name = "Waiver Number")]
@@ -89,6 +96,15 @@ namespace Management_of_Change.Models
         public string? Raw_Material_Component_Numbers_Impacted {get; set;}
         [Display(Name = "Additional Notification(s) of Change Request")]
         public List<string>? Additional_Notification { get; set; }
+        public bool? Ramp_Up_Stage1_Complete { get; set; }
+        public bool? Ramp_Up_Stage2_Complete { get; set; }
+        public bool? Ramp_Up_Stage3_Complete { get; set; }
+        [Display(Name = "Ramp-Up Approval Date")]
+        [DataType(DataType.Date)]
+        public DateTime? Ramp_Up_Approval_Date { get; set; }
+        [Display(Name = "Ramp-Up Approval Username")]
+        public string? Ramp_Up_Username { get; set; }
+
         public List<GeneralMocResponses>? GeneralMocResponses { get; set; }
         public List<ImpactAssessmentResponse>? ImpactAssessmentResponses { get; set; }
         public List<ImplementationFinalApprovalResponse>? ImplementationFinalApprovalResponses { get; set; }
