@@ -103,6 +103,13 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link @Model.TabActiveRampUp @Model.TabRampUpDisabled fw-bolder" id="nav-rampUp-tab" data-bs-toggle="tab" href="#nav-rampUp" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Implement
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Implementation is incomplete. MoC Administrator(s) must approve Ramp-Up(s) in order to progress past this stage.">
+                    </i>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab6Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
                     Close Out
                     <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete. All tasks, including 'Post Implementation', must be completed in order to close/complete this Change Request.">
@@ -527,9 +534,7 @@
                         </div>
                     </div>
                 </div>
-                @*@Html.HiddenFor(m => m.ChangeRequest)*@
                 @Html.HiddenFor(m => m.ChangeRequest.Id)
-                @*                @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses)*@
                 @Html.HiddenFor(m => m.Tab3Disabled)
                 @Html.HiddenFor(m => m.Tab4Disabled)
                 @Html.HiddenFor(m => m.TabActiveImpactAssessments)
@@ -1112,6 +1117,47 @@
                 }
             </div>
         </div>
+
+
+        @******************************************************************************************************************@
+        @*  RAMP-UP TAB  **************************************************************************************************@
+        @******************************************************************************************************************@
+        <div class="tab-pane fade show @Model.TabActiveRampUp" id="nav-rampUp" role="tabpanel" aria-labelledby="nav-rampUp-tab">
+            <div class="text-nowrap text-center">
+                @*<h4 class="mt-5">Implementation</h4>*@
+                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+                @if (ViewBag.OpenPreImplementationTasks > 0)
+                {
+                    <div class="fw-bold text-danger my-5">
+                        Cannot close Implementation.  There are 'Open/In-Progress/On Hold' Pre-Implementation Tasks for this Change Request.
+                    </div>
+                }
+                else
+                {
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "RampUp"))
+                    {
+                        @Html.ActionLink("Close Implementation", "CloseoutImplementation", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                    }
+                    @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
+                    {
+                        <div class="fw-bold text-success my-5">
+                            Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
+                        </div>
+                    }
+                }
+                @if (ViewBag.SourceScreen == "Dashboard")
+                {
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                }
+                else
+                {
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                }
+            </div>
+        </div>
+
+
+
         @******************************************************************************************************************@
         @*  CLOSE OUT/COMPLETE TAB  ***************************************************************************************@
         @******************************************************************************************************************@

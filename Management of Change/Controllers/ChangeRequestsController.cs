@@ -1,18 +1,12 @@
 ﻿using Management_of_Change.Data;
-using Management_of_Change.Migrations;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
 using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Identity.Client;
-using System.Globalization;
-using System.Threading.Tasks;
 //using Management_of_Change.Migrations;
+// 11	"ClassificationReview"	"Submitted for Classification Review"	false	"10"	"MJWilson"	"2025-04-22 00:00:00"				
 
 namespace Management_of_Change.Controllers
 {
@@ -20,9 +14,6 @@ namespace Management_of_Change.Controllers
     {
         private readonly Management_of_ChangeContext _context;
         private readonly PtnWaiverContext _contextPtnWaiver;
-        //private readonly string AttachmentDirectory = @"C:\Applications\ManagementOfChange";
-        //private readonly string AttachmentDirectory = @"\\aub1vdev-app01\ManagementOfChange\";
-        //private readonly string AttachmentDirectory = @"\\BAY1VPRD-MOC01\ManagementOfChange\";
 
         public ChangeRequestsController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
@@ -451,6 +442,9 @@ namespace Management_of_Change.Controllers
             int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
             changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ClassificationReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
 
+            // disable Ramp-Up if Implementation Stage is not complete...
+            changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "RampUp" && changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
+
             // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
             changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
 
@@ -462,6 +456,7 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.TabActivePccbReview = "";
             changeRequestViewModel.TabActiveFinalApprovals = "";
             changeRequestViewModel.TabActiveImplementation = "";
+            changeRequestViewModel.TabActiveRampUp = "";
             changeRequestViewModel.TabActiveCloseoutComplete = "";
             changeRequestViewModel.TabActiveAttachments = "";
             changeRequestViewModel.TabActiveTasks = "";            
@@ -499,6 +494,9 @@ namespace Management_of_Change.Controllers
                     break;
                 case "Implementation":
                     changeRequestViewModel.TabActiveImplementation = "active";
+                    break;
+                case "RampUp":
+                    changeRequestViewModel.TabActiveRampUp = "active";
                     break;
                 case "CloseoutComplete":
                     changeRequestViewModel.TabActiveCloseoutComplete = "active";
