@@ -104,7 +104,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveRampUp @Model.TabRampUpDisabled fw-bolder" id="nav-rampUp-tab" data-bs-toggle="tab" href="#nav-rampUp" role="tab" aria-controls="nav-contact" aria-selected="false">
-                    Implement
+                    Ramp-Up
                     <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Implementation is incomplete. MoC Administrator(s) must approve Ramp-Up(s) in order to progress past this stage.">
                     </i>
                 </a>
@@ -481,19 +481,12 @@
             {
                 @if (ViewBag.QuestionsSaved != null)
                 {
-                    @*                     <div class="alert alert-success alert-dismissible d-flex align-items-center" role="alert">
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
-            <div class="fw-bold">
-            MoC Responses have been Saved
-            </div>
-            </div> *@
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
                         <strong>MoC Responses have been Saved</strong>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 }
-                @*<h4 class="mt-5">General MOC Questions</h4>*@
                 <div class="">
                     <div class="row mt-5">
                         <div class="col-5">
@@ -650,14 +643,14 @@
                                         @Html.ActionLink("Approve Classification", "ApproveClassification", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "ApproveClassification", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                                         <input type="submit" value="Reject Classification" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
                                     </div>
-@*                                     <div class="col-sm-6 text-start">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Reason Required if Rejected *" })
-                                                <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
-                                            </div>
-                                        </div>
-                                    </div> *@
+                                    @*                                     <div class="col-sm-6 text-start">
+                                <div class="row">
+                                <div class="col-12">
+                                @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Reason Required if Rejected *" })
+                                <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
+                                </div>
+                                </div>
+                                </div> *@
                                 </div>
                             </form>
                             <span></span>
@@ -1096,15 +1089,21 @@
                 }
                 else
                 {
-                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
-                    {
-                        @Html.ActionLink("Close Implementation", "CloseoutImplementation", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
-                    }
-                    @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
+                    @if (Model.ChangeRequest.Change_Status == "RampUp" || Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
                     {
                         <div class="fw-bold text-success my-5">
                             Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
                         </div>
+                    }
+                    else
+                    {
+                        <div class="fw-bold text-danger my-5">
+                            Awaiting Implementation Approval by an MoC Administrator
+                        </div>
+                    }
+                    @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
+                    {
+                        @Html.ActionLink("Close Implementation", "CloseoutImplementation", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3 me-2", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
                     }
                 }
                 @if (ViewBag.SourceScreen == "Dashboard")
@@ -1117,46 +1116,253 @@
                 }
             </div>
         </div>
-
 
         @******************************************************************************************************************@
         @*  RAMP-UP TAB  **************************************************************************************************@
         @******************************************************************************************************************@
         <div class="tab-pane fade show @Model.TabActiveRampUp" id="nav-rampUp" role="tabpanel" aria-labelledby="nav-rampUp-tab">
-            <div class="text-nowrap text-center">
-                @*<h4 class="mt-5">Implementation</h4>*@
-                @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
-                @if (ViewBag.OpenPreImplementationTasks > 0)
+            @using (Html.BeginForm("SaveRampUpStageCompletions", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequest.Id }))
+            {
+                @Html.HiddenFor(m => m.ChangeRequest.Id)
+                @if (ViewBag.RampUpSaved != null)
                 {
-                    <div class="fw-bold text-danger my-5">
-                        Cannot close Implementation.  There are 'Open/In-Progress/On Hold' Pre-Implementation Tasks for this Change Request.
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                        <strong>Ramp-Up Stages Have Been Saved</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 }
-                else
+                @* <form method="post" asp-action="SaveRampUpStageCompletions" asp-controller="ChangeRequests" class="mb-3"> *@
+                <h2 class="mt-5">Ramp-Up Stage Completions</h2>
+                <div class="mx-5">
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="form-group form-check">
+                                <label class="form-check-label fw-bold mb-1 my-1">
+                                    @if (ViewBag.IsAdmin)
+                                    {
+                                        <input type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage1_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage1_Complete == true ? "checked" : "") />
+                                    }
+                                    else
+                                    {
+                                        <input disabled type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage1_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage1_Complete == true ? "checked" : "") />
+                                        @Html.HiddenFor(m => m.ChangeRequest.Ramp_Up_Stage1_Complete)
+                                    }
+                                    <span>Ramp-Up Stage 1 Complete</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-12">
+                            <div class="form-group form-check">
+                                <label class="form-check-label fw-bold mb-1 my-1">
+                                    @if (ViewBag.IsAdmin)
+                                    {
+                                        <input type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage2_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage2_Complete == true ? "checked" : "") />
+                                    }
+                                    else
+                                    {
+                                        <input disabled type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage2_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage2_Complete == true ? "checked" : "") />
+                                        @Html.HiddenFor(m => m.ChangeRequest.Ramp_Up_Stage2_Complete)
+                                    }
+                                    <span>Ramp-Up Stage 2 Complete</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-12">
+                            <div class="form-group form-check">
+                                <label class="form-check-label fw-bold mb-1 my-1">
+                                    @if (ViewBag.IsAdmin)
+                                    {
+                                        <input type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage3_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage3_Complete == true ? "checked" : "") />
+                                    }
+                                    else
+                                    {
+                                        <input disabled type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage3_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage3_Complete == true ? "checked" : "") />
+                                        @Html.HiddenFor(m => m.ChangeRequest.Ramp_Up_Stage3_Complete)
+                                    }
+                                    <span>Ramp-Up Stage 3 Complete</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    @*                 <div class="row mt-2">
+                <div class="col-12">
+                <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold mb-1 my-1">
+                <input class="form-check-input" asp-for="ChangeRequest.Ramp_Up_Stage2_Complete" /> @Html.DisplayNameFor(model => model.ChangeRequest.Ramp_Up_Stage2_Complete)
+                </label>
+                </div>
+                </div>
+                </div>
+                <div class="row mt-2">
+                <div class="col-12">
+                <div class="form-group form-check my-3">
+                <label class="form-check-label fw-bold mb-1 my-1">
+                <input class="form-check-input" asp-for="@Model.ChangeRequest.Ramp_Up_Stage3_Complete" /> @Html.DisplayNameFor(model => model.ChangeRequest.Ramp_Up_Stage3_Complete)
+                </label>
+                </div>
+                </div>
+                </div> *@
+                    @if (ViewBag.IsAdmin)
+                    {
+                        <input type="submit" value="Save Ramp-Up Stage Completions" class="btn btn-success mt-2" @ViewBag.Disable>
+                    }
+                </div>
+                @* </form> *@
+            }
+
+            <h2 class="mt-5">Ramp-Up Attachments</h2>
+            @if (ViewBag.IsAdmin)
+            {
+                <div class="mx-5">
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="text-nowrap fs-6">
+                                <span class="fw-bold">STEP 1:</span> Download Ramp-Up Template
+                                <a href="https://sksiltronusa.sharepoint.com/:x:/r/sites/Vault/_layouts/15/Doc.aspx?sourcedoc=%7BB016397A-FD49-42FF-83F8-2A7004CD1BE8%7D&file=Ramp-up%20Quality%20Verification%20Form.xlsx&wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&action=default&mobileredirect=true" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get Ramp-Up Template</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="text-nowrap fs-6">
+                                <span class="fw-bold">STEP 2:</span> Complete Ramp-Up Template
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="text-nowrap fs-6">
+                                <span class="fw-bold">STEP 3:</span> Upload Completed Ramp-Up Template
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        @using (Html.BeginForm("SaveFileRampUp", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                        {
+                            <div class="control-label fw-bold mt-4 mb-2">
+                                <strong>Upload Completed Ramp-Up Template:</strong>
+                            </div>
+                            <div class="form-group mb-3">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <input type="file" name="fileAttachment" class="form-control" @ViewBag.Disable />
+                                        <div class="form-group text-danger fw-bold">
+                                            @Html.DisplayFor(m => m.FileAttachmentErrorRampUp)
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 block">
+                                        <input type="submit" value="Upload Completed Ramp-Up Template" class="form-control btn btn-success" @ViewBag.Disable>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+            <table class="table table-bordered table-striped mt-4 mx-5">
+                <thead class="table-primary">
+                    <tr>
+                        <th>
+                            File Name
+                        </th>
+                        <th>
+                            Date Added
+                        </th>
+                        <th>
+                            Size
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.AttachmentsRampUp)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CreatedDate)
+                            </td>
+                            <td>
+                                @{
+                                    var size = item.Size / 1000 < 1 ? item.Size.ToString() + " bytes" : (item.Size / 1000).ToString("N0") + " KB";
+                                }
+                                @size
+                            </td>
+                            <td>
+                                @Html.ActionLink("Download File", "DownloadFile", "ChangeRequests", new { id = @Model.ChangeRequest.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
+                                @if (ViewBag.IsAdmin)
+                                {
+                                    @Html.ActionLink("Delete", "DeleteFileRampUp", "ChangeRequests", new { id = @Model.ChangeRequest.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-danger", title = "Delete Attachment" })
+                                }
+                                @*<a asp-controller="ImplementationFinalApprovalResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a>*@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                @if (Model.AttachmentsRampUp.Count() == 0)
                 {
+                    <tr>
+                        <td>No data found</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            </table>
+            <div class="row mt-5">
+                <div class="col-12">
+                    @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                    {
+                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                    }
                     @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "RampUp"))
                     {
-                        @Html.ActionLink("Close Implementation", "CloseoutImplementation", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                        @Html.ActionLink("Close Ramp-Up", "CloseoutRampUp", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-warning ms-2"/* , id = "CloseImplementation" */, onclick = "return DisplayProgressMessage(this, 'Processing...');", title = "Clicking this will advance to the 'Closeout' stage. Remember to save your Ramp-Up Stage Completions first if you haven't!" })
                     }
-                    @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
-                    {
-                        <div class="fw-bold text-success my-5">
-                            Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
-                        </div>
-                    }
-                }
-                @if (ViewBag.SourceScreen == "Dashboard")
-                {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
-                }
-                else
-                {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
-                }
+                </div>
             </div>
+
+            @*             <div class="text-nowrap text-center">
+            @if (ViewBag.OpenPreImplementationTasks > 0)
+            {
+            <div class="fw-bold text-danger my-5">
+            Cannot close Implementation.  There are 'Open/In-Progress/On Hold' Pre-Implementation Tasks for this Change Request.
+            </div>
+            }
+            else
+            {
+            @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "RampUp"))
+            {
+            @Html.ActionLink("Close Implementation", "CloseoutImplementation", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+            }
+            @if (Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
+            {
+            <div class="fw-bold text-success my-5">
+            Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
+            </div>
+            }
+            }
+            @if (ViewBag.SourceScreen == "Dashboard")
+            {
+            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+            }
+            else
+            {
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+            }
+            </div> *@
         </div>
-
-
 
         @******************************************************************************************************************@
         @*  CLOSE OUT/COMPLETE TAB  ***************************************************************************************@
@@ -1177,6 +1383,12 @@
                     {
                         @Html.ActionLink("Close-Out/Complete", "CloseoutComplete", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success me-2 mt-3" })
                     }
+                    else if (Model.ChangeRequest.Change_Status == "Closeout")
+                    {
+                        <div class="fw-bold text-danger my-5">
+                            MoC Administrator needs to Close-Out/Complete the MoC
+                        </div>
+                    }
                     @if (Model.ChangeRequest.Change_Status == "Closed")
                     {
                         <div class="fw-bold text-success my-5">
@@ -1186,11 +1398,11 @@
                 }
                 @if (ViewBag.SourceScreen == "Dashboard")
                 {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-4" })
                 }
                 else
                 {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-4" })
                 }
             </div>
         </div>
@@ -1210,28 +1422,30 @@
                     @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
                 }
 
-                @using (Html.BeginForm("SaveFile", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-                {
-                    <div class="control-label fw-bold mt-5 mb-2">
-                        <strong>Upload File to ChangeRequest:</strong>
-                    </div>
-                    <div class="form-group mb-3">
-                        <div class="row">
-                            <div class="col-10">
-                                <input type="file" name="fileAttachment" class="form-control" />
-                                <div class="form-group text-danger fw-bold">
-                                    @*<input asp-for="FileAttachmentError" class="form-control" />*@
-                                    @Html.DisplayFor(m => m.FileAttachmentError)
+                <div class="mx-5">
+                    @using (Html.BeginForm("SaveFile", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="control-label fw-bold mt-5 mb-2">
+                            <strong>Upload File to ChangeRequest:</strong>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-10">
+                                    <input type="file" name="fileAttachment" class="form-control" />
+                                    <div class="form-group text-danger fw-bold">
+                                        @*<input asp-for="FileAttachmentError" class="form-control" />*@
+                                        @Html.DisplayFor(m => m.FileAttachmentError)
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <input type="submit" value="Upload" class="form-control btn btn-success">
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <input type="submit" value="Upload" class="form-control btn btn-success">
-                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
-            <table class="table table-bordered table-striped mt-5">
+            <table class="table table-bordered table-striped mt-5 mx-5">
                 <thead class="table-primary">
                     <tr>
                         <th>
@@ -1276,11 +1490,11 @@
             </table>
             @if (ViewBag.SourceScreen == "Dashboard")
             {
-                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-4" })
             }
             else
             {
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-4" })
             }
         </div>
         @******************************************************************************************************************@
@@ -1362,14 +1576,14 @@
                     }
                 </tbody>
             </table>
-            @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success mt-3" })
+            @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success mt-4" })
             @if (ViewBag.SourceScreen == "Dashboard")
             {
-                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-4" })
             }
             else
             {
-                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-4" })
             }
         </div>
 

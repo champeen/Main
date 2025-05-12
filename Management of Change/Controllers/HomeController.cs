@@ -136,6 +136,12 @@ namespace Management_of_Change.Controllers
                 .ThenBy(m => m.Estimated_Completion_Date)
                 .ToList();
 
+            // get all MoC's Pending Implementation Approval...
+            dashboardVM.ApprovedForImplementation = await _context.ChangeRequest.Where(m => m.Change_Status == "Implementation" && (m.CreatedUser == username || _isAdmin)).ToListAsync();
+
+            // get all 'Ramp-Up' MoC's...
+            dashboardVM.IncompleteRampUps = await _context.ChangeRequest.Where(m => m.Change_Status == "RampUp" && (m.CreatedUser == username || _isAdmin)).ToListAsync();
+
             // Get all the Open/In Progress Tasks associated with the user...
             dashboardVM.OpenTasks = await _context.Task
                 .Where(m => m.Status == "Open" || m.Status == "In-Progress" || m.Status == "On Hold")
