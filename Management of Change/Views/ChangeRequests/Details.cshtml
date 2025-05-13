@@ -102,13 +102,16 @@
                     </i>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link @Model.TabActiveRampUp @Model.TabRampUpDisabled fw-bolder" id="nav-rampUp-tab" data-bs-toggle="tab" href="#nav-rampUp" role="tab" aria-controls="nav-contact" aria-selected="false">
-                    Ramp-Up
-                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Implementation is incomplete. MoC Administrator(s) must approve Ramp-Up(s) in order to progress past this stage.">
-                    </i>
-                </a>
-            </li>
+            @if (Model.TabRampUpDisplayed == "Yes")
+            {
+                <li class="nav-item">
+                    <a class="nav-link @Model.TabActiveRampUp @Model.TabRampUpDisabled fw-bolder" id="nav-rampUp-tab" data-bs-toggle="tab" href="#nav-rampUp" role="tab" aria-controls="nav-contact" aria-selected="false">
+                        Ramp-Up
+                        <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Implementation is incomplete. MoC Administrator(s) must approve Ramp-Up(s) in order to progress past this stage.">
+                        </i>
+                    </a>
+                </li>
+            }
             <li class="nav-item">
                 <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab6Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
                     Close Out

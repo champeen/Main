@@ -23,6 +23,7 @@ namespace Management_of_Change.ViewModels
         public string? TabClassificationReviewDisplayed { get; set; }
         public string? TabChangeGradeReviewDisplayed { get; set; }
         public string? TabPccbReviewDisplayed { get; set; }
+        public string? TabRampUpDisplayed { get; set; }
         public string? TabActiveDetail { get; set; }
         public string? TabActiveGeneralMocQuestions { get; set; }
         public string? TabActiveClassificationReview {  get; set; }

@@ -5,8 +5,6 @@ using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-//using Management_of_Change.Migrations;
-// 11	"ClassificationReview"	"Submitted for Classification Review"	false	"10"	"MJWilson"	"2025-04-22 00:00:00"				
 
 namespace Management_of_Change.Controllers
 {
@@ -61,14 +59,14 @@ namespace Management_of_Change.Controllers
             {
                 case null:
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "RampUp" || m.Change_Status == "Closeout").ToList();
                     break;
                 case "All":
                     ViewBag.PrevStatusFilter = "All";
                     break;
                 case "AllCurrent":
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "RampUp" || m.Change_Status == "Closeout").ToList();
                     break;
                 default:
                     requests = requests.Where(m => m.Change_Status == statusFilter).ToList();
@@ -444,6 +442,7 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ClassificationReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
 
             // disable Ramp-Up if Implementation Stage is not complete...
+            changeRequestViewModel.TabRampUpDisplayed = changeLevel?.PccbReviewRequired == true ? "Yes" : "No";
             changeRequestViewModel.TabRampUpDisabled = changeRequest.Change_Status != "RampUp" && changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
 
             // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
@@ -2115,28 +2114,59 @@ namespace Management_of_Change.Controllers
             if (changeRequest == null)
                 return NotFound();
 
-            changeRequest.Change_Status = "RampUp";
-            changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "RampUp").Select(m => m.Description).FirstOrDefaultAsync();
-            changeRequest.ModifiedUser = _username;
-            changeRequest.ModifiedDate = DateTime.Now;
-            changeRequest.Implementation_Approval_Date = DateTime.Now;
-            changeRequest.Implementation_Username = _username;
-            _context.Update(changeRequest);
-            await _context.SaveChangesAsync();
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// See if change request needs to go to Ramp-Up Stage OR Closeout Stage Next............
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ChangeLevel changeGrade = await _context.ChangeLevel.Where(m => m.Level == changeRequest.Change_Level).FirstOrDefaultAsync();
+            if (changeGrade == null) return NotFound();
 
-            // Email all admins with 'Approver' rights that this Change Request has been submitted for Ramp-Up....
-            var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
-            __mst_employee admin = new __mst_employee();
             string subject;
             string body;
-            foreach (var record in adminApproverList)
+            if (changeGrade.PccbReviewRequired == true)
             {
-                admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                changeRequest.Change_Status = "RampUp";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == changeRequest.Change_Status).Select(m => m.Description).FirstOrDefaultAsync();
+                changeRequest.ModifiedUser = _username;
+                changeRequest.ModifiedDate = DateTime.Now;
+                changeRequest.Implementation_Approval_Date = DateTime.Now;
+                changeRequest.Implementation_Username = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
+
+                // Email all admins with 'Approver' rights that this Change Request has been submitted for Ramp-Up....
+                var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                __mst_employee admin = new __mst_employee();
                 subject = @"Management of Change (MoC) - Submitted for Ramp-Up";
                 body = @"Change Request has been submitted for Ramp-Up. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                foreach (var record in adminApproverList)
+                {
+                    admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, admin?.mail, null, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, admin?.displayname, record.Username, admin?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
+            }
+            else  // Skip Ramp-Up Stage and go directly to Closeout Stage
+            {
+                changeRequest.Change_Status = "Closeout";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == changeRequest.Change_Status).Select(m => m.Description).FirstOrDefaultAsync();
+                changeRequest.ModifiedUser = _username;
+                changeRequest.ModifiedDate = DateTime.Now;
+                changeRequest.Implementation_Approval_Date = DateTime.Now;
+                changeRequest.Implementation_Username = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
 
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, admin?.mail, null, null, changeRequest.Priority);
-                AddEmailHistory(changeRequest.Priority, subject, body, admin?.displayname, record.Username, admin?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
+                var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                __mst_employee admin = new __mst_employee();
+                subject = @"Management of Change (MoC) - Submitted for Closeout";
+                body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                foreach (var record in adminApproverList)
+                {
+                    admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, admin?.mail, null, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, admin?.displayname, record.Username, admin?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
             }
 
             // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
@@ -2190,7 +2220,10 @@ namespace Management_of_Change.Controllers
                 AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, task.CreatedUser);
             }
 
-            return RedirectToAction("Details", new { id = changeRequest.Id, tab = "RampUp" });
+            if (changeGrade.PccbReviewRequired == true)
+                return RedirectToAction("Details", new { id = changeRequest.Id, tab = "RampUp" });
+            else
+                return RedirectToAction("Details", new { id = changeRequest.Id, tab = "CloseoutComplete" });             
         }
 
         // This closes out 'Implementation' stage and moves to 'Closeout/Complete' stage
