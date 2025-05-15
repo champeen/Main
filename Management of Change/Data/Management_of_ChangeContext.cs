@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Management_of_Change.Models;
 using Microsoft.EntityFrameworkCore;
-using Management_of_Change.Models;
 
 namespace Management_of_Change.Data
 {

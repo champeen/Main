@@ -5,6 +5,7 @@ namespace Management_of_Change.ViewModels
     {
         public ChangeRequest? ChangeRequest { get; set; }
         public List<Attachment>? Attachments { get; set; }
+        public List<Attachment>? AttachmentsRampUp { get; set; }
         public List<Models.Task> Tasks { get; set; }
         public __mst_employee employee { get; set; }
         public string? ImplementationDisplayName { get; set; }
@@ -18,9 +19,11 @@ namespace Management_of_Change.ViewModels
         public string? Tab5Disabled { get; set; }
         public string? Tab6Disabled { get; set; }
         public string? TabPccbReviewDisabled { get; set; }
+        public string? TabRampUpDisabled { get; set; }
         public string? TabClassificationReviewDisplayed { get; set; }
         public string? TabChangeGradeReviewDisplayed { get; set; }
         public string? TabPccbReviewDisplayed { get; set; }
+        public string? TabRampUpDisplayed { get; set; }
         public string? TabActiveDetail { get; set; }
         public string? TabActiveGeneralMocQuestions { get; set; }
         public string? TabActiveClassificationReview {  get; set; }
@@ -29,11 +32,13 @@ namespace Management_of_Change.ViewModels
         public string? TabActiveImpactAssessments { get; set; }
         public string? TabActiveFinalApprovals { get; set; }
         public string? TabActiveImplementation { get; set; }
+        public string? TabActiveRampUp { get; set; }
         public string? TabActiveCloseoutComplete { get; set; }
         public string? TabActiveAttachments { get; set; }
         public string? TabActiveTasks { get; set; }
         public bool ButtonSubmitForReview { get; set; }
         public string? FileAttachmentError { get; set; }
+        public string? FileAttachmentErrorRampUp { get; set; }
         public string? IArecord { get; set; }
     }
 }

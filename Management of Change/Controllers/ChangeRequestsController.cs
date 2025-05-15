@@ -1,18 +1,10 @@
 ﻿using Management_of_Change.Data;
-using Management_of_Change.Migrations;
 using Management_of_Change.Models;
 using Management_of_Change.Utilities;
 using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Identity.Client;
-using System.Globalization;
-using System.Threading.Tasks;
-//using Management_of_Change.Migrations;
 
 namespace Management_of_Change.Controllers
 {
@@ -20,9 +12,6 @@ namespace Management_of_Change.Controllers
     {
         private readonly Management_of_ChangeContext _context;
         private readonly PtnWaiverContext _contextPtnWaiver;
-        //private readonly string AttachmentDirectory = @"C:\Applications\ManagementOfChange";
-        //private readonly string AttachmentDirectory = @"\\aub1vdev-app01\ManagementOfChange\";
-        //private readonly string AttachmentDirectory = @"\\BAY1VPRD-MOC01\ManagementOfChange\";
 
         public ChangeRequestsController(Management_of_ChangeContext context, PtnWaiverContext contextPtnWaiver) : base(context, contextPtnWaiver)
         {
@@ -70,14 +59,14 @@ namespace Management_of_Change.Controllers
             {
                 case null:
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "RampUp" || m.Change_Status == "Closeout").ToList();
                     break;
                 case "All":
                     ViewBag.PrevStatusFilter = "All";
                     break;
                 case "AllCurrent":
                     ViewBag.PrevStatusFilter = "AllCurrent";
-                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "Closeout").ToList();
+                    requests = requests.Where(m => m.Change_Status == "Draft" || m.Change_Status == "ClassificationReview" || m.Change_Status == "ChangeGradeReview" || m.Change_Status == "ImpactAssessmentReview" || m.Change_Status == "FinalApprovals" || m.Change_Status == "PccbReview" || m.Change_Status == "Implementation" || m.Change_Status == "RampUp" || m.Change_Status == "Closeout").ToList();
                     break;
                 default:
                     requests = requests.Where(m => m.Change_Status == statusFilter).ToList();
@@ -315,7 +304,7 @@ namespace Management_of_Change.Controllers
         }
 
         // GET: ChangeRequests/Details/5
-        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null, string changeGradeReviewError = null, string sourceScreen = null)
+        public async Task<IActionResult> Details(int? id, string? tab = "Details", string fileAttachmentError = null, string fileAttachmentErrorRampUp = null, string fileDownloadMessage = null, string recId = null, string questionsSaved = null, string rampUpSaved = null, string changeGradeReviewError = null, string sourceScreen = null)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -332,6 +321,7 @@ namespace Management_of_Change.Controllers
 
             ChangeRequestViewModel changeRequestViewModel = new ChangeRequestViewModel();
             changeRequestViewModel.FileAttachmentError = fileAttachmentError;
+            changeRequestViewModel.FileAttachmentErrorRampUp = fileAttachmentErrorRampUp;
             ViewBag.ChangeGradeReviewError = changeGradeReviewError;
             ViewBag.SourceScreen = sourceScreen;
 
@@ -426,7 +416,7 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.Tasks = tasks;
 
             // show ClassificationReview tab or not??? ....
-            changeRequestViewModel.TabClassificationReviewDisplayed = changeRequest.Classification == "Provisional" && changeRequest.Change_Status != "Draft" ? "Yes" : "No";            
+            changeRequestViewModel.TabClassificationReviewDisplayed = changeRequest.Classification == "Provisional" && changeRequest.Change_Status != "Draft" ? "Yes" : "No";          
 
             // show ChangeLevelReview tab or not??? ....
             var changeLevel = await _context.ChangeLevel.Where(m => m.Level == changeRequest.Change_Level).FirstOrDefaultAsync();
@@ -451,6 +441,10 @@ namespace Management_of_Change.Controllers
             int countFA = changeRequest.ImplementationFinalApprovalResponses.Where(m => m.ReviewCompleted == false).Count();
             changeRequestViewModel.Tab5Disabled = countFA > 0 || (changeRequestViewModel.ChangeRequest.Change_Status == "Draft" || changeRequestViewModel.ChangeRequest.Change_Status == "ClassificationReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ChangeGradeReview" || changeRequestViewModel.ChangeRequest.Change_Status == "ImpactAssessmentReview" || changeRequestViewModel.ChangeRequest.Change_Status == "FinalApprovals") ? "disabled" : "";
 
+            // disable Ramp-Up if Implementation Stage is not complete...
+            changeRequestViewModel.TabRampUpDisplayed = changeLevel?.PccbReviewRequired == true ? "Yes" : "No";
+            changeRequestViewModel.TabRampUpDisabled = changeRequest.Change_Status != "RampUp" && changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
+
             // disable tab6 (Closeout/Complete) if change request is not in status of "Closeout" or "Closed"
             changeRequestViewModel.Tab6Disabled = changeRequest.Change_Status != "Closeout" && changeRequest.Change_Status != "Closed" ? "disabled" : "";
 
@@ -462,6 +456,7 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.TabActivePccbReview = "";
             changeRequestViewModel.TabActiveFinalApprovals = "";
             changeRequestViewModel.TabActiveImplementation = "";
+            changeRequestViewModel.TabActiveRampUp = "";
             changeRequestViewModel.TabActiveCloseoutComplete = "";
             changeRequestViewModel.TabActiveAttachments = "";
             changeRequestViewModel.TabActiveTasks = "";            
@@ -500,6 +495,9 @@ namespace Management_of_Change.Controllers
                 case "Implementation":
                     changeRequestViewModel.TabActiveImplementation = "active";
                     break;
+                case "RampUp":
+                    changeRequestViewModel.TabActiveRampUp = "active";
+                    break;
                 case "CloseoutComplete":
                     changeRequestViewModel.TabActiveCloseoutComplete = "active";
                     break;
@@ -517,7 +515,7 @@ namespace Management_of_Change.Controllers
             else
                 changeRequestViewModel.ButtonSubmitForReview = false;
 
-            // Get all attachments    \\BAY1VPRD-MOC01\Management of Change\MOC-230707-1
+            // Get all MoC attachments //////////////////////////////////////////////////////////////////////////////////////////////////
             // Get the directory
             DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number));
             if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number)))
@@ -546,6 +544,35 @@ namespace Management_of_Change.Controllers
             }
             changeRequestViewModel.Attachments = attachments.OrderBy(m => m.Name).ToList();
 
+            // Get all Ramp-Up attachments //////////////////////////////////////////////////////////////////////////////////////////////////
+            // Get the directory
+            DirectoryInfo pathRampUp = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, "Ramp-Up"));
+            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, "Ramp-Up")))
+                pathRampUp.Create();
+
+            // Using GetFiles() method to get list of all
+            // the files present in the Train directory
+            FileInfo[] FilesRampUp = pathRampUp.GetFiles();
+
+            // Display the file names
+            List<ViewModels.Attachment> attachmentsRampUp = new List<Attachment>();
+            foreach (FileInfo i in FilesRampUp)
+            {
+                Attachment attachment = new Attachment
+                {
+                    Directory = i.DirectoryName,
+                    Name = i.Name,
+                    Extension = i.Extension,
+                    FullPath = i.FullName,
+                    CreatedDate = i.CreationTimeUtc.Date,
+                    Size = Convert.ToInt32(i.Length)
+                };
+                attachmentsRampUp.Add(attachment);
+
+                //var blah = i.GetAccessControl().GetOwner(typeof(System.Security.Principal.NTAccount)).ToString();
+            }
+            changeRequestViewModel.AttachmentsRampUp = attachmentsRampUp.OrderBy(m => m.Name).ToList();
+
             //changeRequestViewModel.rec = "." + rec;
             changeRequestViewModel.IArecord = recId;
             changeRequestViewModel.ImplementationDisplayName = getUserDisplayName(changeRequest.Implementation_Username);
@@ -557,6 +584,10 @@ namespace Management_of_Change.Controllers
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
             ViewBag.QuestionsSaved = questionsSaved;
+            ViewBag.RampUpSaved = rampUpSaved;
+            if (!_isAdmin)
+                ViewBag.Disable = "disabled";
+
 
             ViewBag.UserCanReviewChangeGrade = false;
             // if change request is awaiting 'change grade review', get reviewer username...
@@ -666,9 +697,15 @@ namespace Management_of_Change.Controllers
                 _context.Add(changeRequest);
                 await _context.SaveChangesAsync();
 
+                // Create Directory for general MoC documents.....
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number)))
                     path.Create();
+
+                // Create Directory for MoC Ramp-Up documents.....
+                DirectoryInfo pathRampUp = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, "Ramp-Up"));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, "Ramp-Up")))
+                    pathRampUp.Create();
 
                 if (source != null && source == "Home")
                     return RedirectToAction("Index", "Home", new { });
@@ -797,9 +834,15 @@ namespace Management_of_Change.Controllers
                 _context.Add(changeRequest);
                 await _context.SaveChangesAsync();
 
+                // create path for General MoC documents....
                 DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number));
                 if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number)))
                     path.Create();
+
+                // create path for MoC Ramp-Up documents....
+                DirectoryInfo pathRampUp = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, "Ramp-Up"));
+                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, "Ramp-Up")))
+                    pathRampUp.Create();
 
                 if (source != null && source == "Home")
                     return RedirectToAction("Index", "Home", new { });
@@ -1059,6 +1102,44 @@ namespace Management_of_Change.Controllers
         {
             System.IO.File.Delete(sourcePath);
             return RedirectToAction("Details", new { id = id, tab = "Attachments" });
+        }
+
+        [HttpPost]
+        [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
+        public async Task<IActionResult> SaveFileRampUp(int id, IFormFile? fileAttachment)
+        {
+            if (id == null || _context.ChangeRequest == null)
+                return NotFound();
+
+            if (fileAttachment == null || fileAttachment.Length == 0)
+                return RedirectToAction("Details", new { id = id, tab = "RampUp", fileAttachmentErrorRampUp = "No File Has Been Selected For Upload" });
+
+            var changeRequest = await _context.ChangeRequest.FirstOrDefaultAsync(m => m.Id == id);
+            if (changeRequest == null)
+                return RedirectToAction("Index");
+
+            // make sure the file being uploaded is an allowable file extension type....
+            var extensionType = Path.GetExtension(fileAttachment.FileName);
+            var found = _context.AllowedAttachmentExtensions
+                .Where(m => m.ExtensionName == extensionType)
+                .Any();
+
+            if (!found)
+                return RedirectToAction("Details", new { id = id, tab = "RampUp", fileAttachmentErrorRampUp = "File extension type '" + extensionType + "' not allowed. Contact MoC Admin to add, or change document to allowable type." });
+
+            string filePath = Path.Combine(Initialization.AttachmentDirectory, changeRequest.MOC_Number, "Ramp-Up", fileAttachment.FileName);
+            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await fileAttachment.CopyToAsync(fileStream);
+            }
+
+            return RedirectToAction("Details", new { id = id, tab = "RampUp" });
+        }
+
+        public async Task<IActionResult> DeleteFileRampUp(int id, string sourcePath, string fileName)
+        {
+            System.IO.File.Delete(sourcePath);
+            return RedirectToAction("Details", new { id = id, tab = "RampUp" });
         }
 
         public async Task<IActionResult> CheckForClassificationReview(int id, string tab, string errorMessage = null)
@@ -1730,13 +1811,30 @@ namespace Management_of_Change.Controllers
 
             if (changeRequest.ImpactAssessmentResponses != null)
             {
+                string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
+                string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
                 // Email All Users ImpactResponse Review/Approval links...
                 foreach (var record in changeRequest.ImpactAssessmentResponses)
                 {
-                    string subject = @"Management of Change (MoC) - Impact Assessment Response Needed";
-                    string body = @"Your Impact Assessment Response review is needed.  Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, record.ReviewerEmail, null, null, changeRequest.Priority);
                     AddEmailHistory(changeRequest.Priority, subject, body, record.Reviewer, record.Username, record.ReviewerEmail, changeRequest.Id, record.Id, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
+            }
+
+            // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
+            if (changeRequest.Additional_Notification != null && changeRequest.Additional_Notification.Count > 0)
+            {
+                string subject = @"Management of Change (MoC) - Submitted for Impact Assessment";
+                string body = @"Change Request has been submitted for Impact Assessment. This is for notification purposes only. This may affect your job process, so please read through change request. Follow link below and review the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                foreach (var username in changeRequest.Additional_Notification)
+                {
+                    var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == username.ToLower()).FirstOrDefaultAsync();
+                    // Send Email...
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify?.mail, null, null, changeRequest.Priority);
+
+                    // Log that Email was Sent...
+                    AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify?.displayname, username, employeeToNotify?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
                 }
             }
             return RedirectToAction("Details", new { id = changeRequestId, tab = "ImpactAssessments" });
@@ -1995,11 +2093,141 @@ namespace Management_of_Change.Controllers
                     }
                 }
             }
-            return RedirectToAction("Details", new { id = implementationFinalApprovalResponse.ChangeRequestId, tab = "FinalApprovals" });
+            return RedirectToAction("Details", new { id = implementationFinalApprovalResponse.ChangeRequestId, tab = "Implementation" });
+        }
+
+        // This closes out 'Implementation' stage and moves to 'Ramp-Up' stage
+        public async Task<IActionResult> CloseoutImplementation(int id)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (id == null || id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(id);
+            if (changeRequest == null)
+                return NotFound();
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// See if change request needs to go to Ramp-Up Stage OR Closeout Stage Next............
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            ChangeLevel changeGrade = await _context.ChangeLevel.Where(m => m.Level == changeRequest.Change_Level).FirstOrDefaultAsync();
+            if (changeGrade == null) return NotFound();
+
+            string subject;
+            string body;
+            if (changeGrade.PccbReviewRequired == true)
+            {
+                changeRequest.Change_Status = "RampUp";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == changeRequest.Change_Status).Select(m => m.Description).FirstOrDefaultAsync();
+                changeRequest.ModifiedUser = _username;
+                changeRequest.ModifiedDate = DateTime.Now;
+                changeRequest.Implementation_Approval_Date = DateTime.Now;
+                changeRequest.Implementation_Username = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
+
+                // Email all admins with 'Approver' rights that this Change Request has been submitted for Ramp-Up....
+                var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                __mst_employee admin = new __mst_employee();
+                subject = @"Management of Change (MoC) - Submitted for Ramp-Up";
+                body = @"Change Request has been submitted for Ramp-Up. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                foreach (var record in adminApproverList)
+                {
+                    admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, admin?.mail, null, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, admin?.displayname, record.Username, admin?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
+            }
+            else  // Skip Ramp-Up Stage and go directly to Closeout Stage
+            {
+                changeRequest.Change_Status = "Closeout";
+                changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == changeRequest.Change_Status).Select(m => m.Description).FirstOrDefaultAsync();
+                changeRequest.ModifiedUser = _username;
+                changeRequest.ModifiedDate = DateTime.Now;
+                changeRequest.Implementation_Approval_Date = DateTime.Now;
+                changeRequest.Implementation_Username = _username;
+                _context.Update(changeRequest);
+                await _context.SaveChangesAsync();
+
+                // Email all admins with 'Approver' rights that this Change Request has been submitted for Implementation....
+                var adminApproverList = await _context.Administrators.Where(m => m.Approver == true).ToListAsync();
+                __mst_employee admin = new __mst_employee();
+                subject = @"Management of Change (MoC) - Submitted for Closeout";
+                body = @"Change Request has been submitted for Closeout. All post-implementation tasks will need to be completed to move forward. Please follow link below and review/respond to the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+                foreach (var record in adminApproverList)
+                {
+                    admin = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, admin?.mail, null, null, changeRequest.Priority);
+                    AddEmailHistory(changeRequest.Priority, subject, body, admin?.displayname, record.Username, admin?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
+            }
+
+            // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
+            if (changeRequest.Additional_Notification != null && changeRequest.Additional_Notification.Count > 0)
+            {
+                foreach (var username in changeRequest.Additional_Notification)
+                {
+                    var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == username.ToLower()).FirstOrDefaultAsync();
+                    subject = @"Management of Change (MoC) - Submitted for Ramp-Up";
+                    body = @"Change Request has been submitted for Ramp-Up. This is for notification purposes only. This may affect your job process, so please read through change request. Follow link below and review the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+                    // Send Email...
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify?.mail, null, null, changeRequest.Priority);
+
+                    // Log that Email was Sent...
+                    AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify?.displayname, username, employeeToNotify?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
+                }
+            }
+
+            // Create a task for the ChangeRequest Owner to notify Administrator when ChangeRequest has been fully implemented
+            var mocOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == changeRequest.Change_Owner.ToLower()).FirstOrDefaultAsync();
+            Models.Task task = new Models.Task
+            {
+                ChangeRequestId = changeRequest.Id,
+                MocNumber = changeRequest.MOC_Number,
+                ImplementationType = @"Post",
+                Status = @"Open",
+                Priority = changeRequest.Priority,
+                AssignedByUser = changeRequest.Change_Owner,
+                AssignedByUserEmail = mocOwner?.mail,
+                AssignedByUserFullName = mocOwner?.displayname,
+                AssignedToUser = changeRequest.Change_Owner,
+                AssignedToUserFullName = changeRequest.Change_Owner_FullName,
+                Title = @"Implementation Completion Notification",
+                Description = @"Notify MoC admin when this MoC is completely implemented.",
+                DueDate = DateTime.Now.AddMonths(1),
+                CreatedUser = changeRequest.Change_Owner,
+                CreatedDate = DateTime.Now
+            };
+            _context.Add(task);
+            await _context.SaveChangesAsync();
+
+            // Send Email Out notifying the person who is assigned the task
+            subject = @"Management of Change (MoC) - Task Assigned.";
+            body = @"A Management of Change task has been assigned to you. Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Task Description: </strong>" + task.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
+
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
+            if (toPerson != null)
+            {
+                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
+                AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, task.CreatedUser);
+            }
+
+            if (changeGrade.PccbReviewRequired == true)
+                return RedirectToAction("Details", new { id = changeRequest.Id, tab = "RampUp" });
+            else
+                return RedirectToAction("Details", new { id = changeRequest.Id, tab = "CloseoutComplete" });             
         }
 
         // This closes out 'Implementation' stage and moves to 'Closeout/Complete' stage
-        public async Task<IActionResult> CloseoutImplementation(int id)
+        public async Task<IActionResult> CloseoutRampUp(int id)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
             if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
@@ -2039,58 +2267,6 @@ namespace Management_of_Change.Controllers
                 Initialization.EmailProviderSmtp.SendMessage(subject, body, admin?.mail, null, null, changeRequest.Priority);
                 AddEmailHistory(changeRequest.Priority, subject, body, admin?.displayname, record.Username, admin?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
             }
-
-            // Email all employees that MoC Writer wants notified that this has been approved for implementation so they are aware of the change....
-            if (changeRequest.Additional_Notification != null && changeRequest.Additional_Notification.Count > 0)
-            {
-                foreach (var username in changeRequest.Additional_Notification)
-                {
-                    var employeeToNotify = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == username.ToLower()).FirstOrDefaultAsync();
-                    subject = @"Management of Change (MoC) - Submitted for Implementation";
-                    body = @"Change Request has been submitted for implementation. This is for notification purposes only. This may affect your job process, so please read through change request. Follow link below and review the following Management of Change request. <br/><br/><strong>Change Request: </strong>" + changeRequest.MOC_Number + @"<br/><strong>MoC Title: </strong>" + changeRequest.Title_Change_Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-
-                    // Send Email...
-                    Initialization.EmailProviderSmtp.SendMessage(subject, body, employeeToNotify?.mail, null, null, changeRequest.Priority);
-
-                    // Log that Email was Sent...
-                    AddEmailHistory(changeRequest.Priority, subject, body, employeeToNotify?.displayname, username, employeeToNotify?.mail, changeRequest.Id, null, null, null, "ChangeRequest", changeRequest.Change_Status, DateTime.Now, _username);
-                }
-            }
-
-            // Create a task for the ChangeRequest Owner to notify Administrator when ChangeRequest has been fully implemented
-            var mocOwner = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == changeRequest.Change_Owner.ToLower()).FirstOrDefaultAsync();
-            Models.Task task = new Models.Task
-            {
-                ChangeRequestId = changeRequest.Id,
-                MocNumber = changeRequest.MOC_Number,
-                ImplementationType = @"Post",
-                Status = @"Open",
-                Priority = changeRequest.Priority,
-                AssignedByUser = changeRequest.Change_Owner,
-                AssignedByUserEmail = mocOwner?.mail,
-                AssignedByUserFullName = mocOwner?.displayname,
-                AssignedToUser = changeRequest.Change_Owner,
-                AssignedToUserFullName = changeRequest.Change_Owner_FullName,
-                Title = @"Implementation Completion Notification",
-                Description = @"Notify MoC admin when this MoC is completely implemented.",
-                DueDate = DateTime.Now.AddMonths(1),
-                CreatedUser = changeRequest.Change_Owner,
-                CreatedDate = DateTime.Now
-            };
-            _context.Add(task);
-            await _context.SaveChangesAsync();
-
-            // Send Email Out notifying the person who is assigned the task
-            subject = @"Management of Change (MoC) - Task Assigned.";
-            body = @"A Management of Change task has been assigned to you.  Please follow link below and review the task request. <br/><br/><strong>Change Request: </strong>" + task.MocNumber + @"<br/><strong>Task Title: </strong>" + task.Title + @"<br/><strong>Task Description: </strong>" + task.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >MoC System</a></strong><br/><br/>";
-
-            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == task.AssignedToUser.ToLower()).FirstOrDefaultAsync();
-            if (toPerson != null)
-            {
-                Initialization.EmailProviderSmtp.SendMessage(subject, body, toPerson?.mail, null, null, task.Priority);
-                AddEmailHistory(task.Priority, subject, body, toPerson?.displayname, toPerson?.onpremisessamaccountname, toPerson?.mail, task.ChangeRequestId, null, null, task.Id, "Task", task.Status, DateTime.Now, task.CreatedUser);
-            }
-
             return RedirectToAction("Details", new { id = changeRequest.Id, tab = "Implementation" });
         }
 
@@ -2226,6 +2402,40 @@ namespace Management_of_Change.Controllers
             ViewBag.Users = getUserList();
 
             return View(task);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveRampUpStageCompletions([Bind("ChangeRequest")] ChangeRequestViewModel changeRequestViewModel)
+        {
+            ErrorViewModel errorViewModel = CheckAuthorization();
+            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.Username = _username;
+
+            if (changeRequestViewModel.ChangeRequest.Id == null || changeRequestViewModel.ChangeRequest.Id == 0)
+                return NotFound();
+
+            // Get the Change Request
+            var changeRequest = await _context.ChangeRequest.FindAsync(changeRequestViewModel.ChangeRequest.Id);
+            if (changeRequest == null)
+                return NotFound();
+
+            //changeRequest.Change_Status = "Closed";
+            //changeRequest.Change_Status_Description = await _context.ChangeStatus.Where(m => m.Status == "Closed").Select(m => m.Description).FirstOrDefaultAsync();
+            changeRequest.Ramp_Up_Stage1_Complete = changeRequestViewModel.ChangeRequest.Ramp_Up_Stage1_Complete == true ? true : false;
+            changeRequest.Ramp_Up_Stage2_Complete = changeRequestViewModel.ChangeRequest.Ramp_Up_Stage2_Complete == true ? true : false;
+            changeRequest.Ramp_Up_Stage3_Complete = changeRequestViewModel.ChangeRequest.Ramp_Up_Stage3_Complete == true ? true : false;
+            changeRequest.ModifiedUser = _username;
+            changeRequest.ModifiedDate = DateTime.Now;
+            //changeRequest.Closeout_Date = DateTime.Now;
+            //changeRequest.Closeout_Username = _username;
+            _context.Update(changeRequest);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "RampUp", rampUpSaved = "Yes"});
         }
     }
 }
