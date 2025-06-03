@@ -1,0 +1,278 @@
+﻿@model IEnumerable<EHS.Models.seg_risk_assessments>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 class="mb-5">Similar Exposure Group (SEG) Risk</h1>
+
+<p>
+     @* <a class="btn btn-sm btn-success" asp-action="Create">Create New</a> *@
+    <a class="btn btn-success btn-sm" asp-action="Create" title="Create">
+        <img src="@Url.Content("~/css/icons/lucide/create.svg")" alt="Delete" width="24" height="24" />
+    </a>
+</p>
+
+<div class="table-wrapper">
+    <div class="table-container">
+        @* <div class="table-container table-responsive"> *@
+        <table id="segTable" class="table table-striped table-hover table-bordered nowrap datatable-hidden" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.location)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.exposure_type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.agent)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_role)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.task)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.oel)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.acute_chronic)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.route_of_entry)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.frequency_of_task)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.duration_of_task)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.monitoring_data_required)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.controls_recommended)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.exposure_levels_acceptable)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.date_conducted)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.assessment_methods_used)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_number_of_workers)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.has_agent_been_changed)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.person_performing_assessment)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.created_user)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.created_user_fullname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.created_user_email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.created_date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.modified_user)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.modified_user_fullname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.modified_user_email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.modified_date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.deleted_user)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.deleted_user_fullname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.deleted_user_email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.deleted_date)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.id" title="Edit">
+                                <img src="@Url.Content("~/css/icons/lucide/edit.svg")" alt="Edit" width="24" height="24" />
+                                @* <i data-lucide="pencil"></i> *@
+                            </a>
+                            <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.id" title="Details">
+                                <img src="@Url.Content("~/css/icons/lucide/details.svg")" alt="Info" width="24" height="24" />
+                                @* <i data-lucide="info"></i> *@
+                            </a>
+                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.id" title="Delete">
+                                <img src="@Url.Content("~/css/icons/lucide/delete.svg")" alt="Delete" width="24" height="24" />
+                                @* <i data-lucide="trash-2"></i> *@
+                            </a>
+                            @*                         <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.id">Edit</a>
+                        <a class="btn btn-sm btn-secondary" asp-action="Details" asp-route-id="@item.id">Details</a>
+                        <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.id">Delete</a> *@
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.location)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.exposure_type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.agent)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.seg_role)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.task)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.oel)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.acute_chronic)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.route_of_entry)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.frequency_of_task)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.duration_of_task)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.monitoring_data_required)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.controls_recommended)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.exposure_levels_acceptable)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.date_conducted)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.assessment_methods_used)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.seg_number_of_workers)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.has_agent_been_changed)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.person_performing_assessment)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.created_user)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.created_user_fullname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.created_user_email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.created_date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.modified_user)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.modified_user_fullname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.modified_user_email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.modified_date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.deleted_user)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.deleted_user_fullname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.deleted_user_email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.deleted_date)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#segTable').DataTable({
+                scrollX: true,
+                autoWidth: false,   // prevent DataTables from calculating extra width
+                pageLength: 10,
+                lengthChange: true,
+                responsive: false,
+                order: [],          // <-- prevent initial sort
+                // dom: 'Bfrtip',
+                dom: "<'table-controls d-flex justify-content-between align-items-center'Bf>" +
+                    "t" +
+                    "<'d-flex justify-content-between align-items-center mt-2'ip>",
+            buttons: [
+                {
+                    extend: 'copy',
+                    exportOptions: { columns: ':visible' }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: { columns: ':visible:not(:first-child)' }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: { columns: ':visible:not(:first-child)' }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: { columns: ':visible' }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: { columns: ':visible' }
+                }
+            ],
+            columnDefs: [
+                { targets: [0], orderable: false, className: 'no-sort' }
+            ]
+            });
+
+            // Remove the visibility-hiding class once initialized
+            $('#segTable').removeClass('datatable-hidden');
+        });
+    </script>
+}

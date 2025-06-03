@@ -1,0 +1,198 @@
+﻿@model EHS.Models.seg_risk_assessments
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>seg_risk_assessments</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.location)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.location)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.exposure_type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.exposure_type)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.agent)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.agent)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.seg_role)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.seg_role)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.task)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.task)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.oel)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.oel)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.acute_chronic)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.acute_chronic)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.route_of_entry)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.route_of_entry)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.frequency_of_task)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.frequency_of_task)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.duration_of_task)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.duration_of_task)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.monitoring_data_required)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.monitoring_data_required)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.controls_recommended)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.controls_recommended)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.exposure_levels_acceptable)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.exposure_levels_acceptable)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.date_conducted)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.date_conducted)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.assessment_methods_used)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.assessment_methods_used)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.seg_number_of_workers)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.seg_number_of_workers)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.has_agent_been_changed)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.has_agent_been_changed)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.person_performing_assessment)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.person_performing_assessment)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_user)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_user)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_user_fullname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_user_fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_user_email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_user_email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_user)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_user)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_user_fullname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_user_fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_user_email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_user_email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_user)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_user)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_user_fullname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_user_fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_user_email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_user_email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_date)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

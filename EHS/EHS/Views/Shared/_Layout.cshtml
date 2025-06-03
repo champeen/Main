@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - EH&S</title>
+    <link rel="icon" href="~/Butterfly.ico" sizes="16x16 32x32" type="image/x-icon" />
+
+    <!-- need to position this script here so it loads before body and other stuff to get rid of screen flicker -->
+    <script>
+        (function () {
+            // if (localStorage.getItem('darkMode') === 'true') {
+            //     document.documentElement.classList.add('dark-mode');
+            //     document.body?.classList?.add('dark-mode');
+            // }
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+
+    <!-- this script brings in icons for buttons -->  
+    @* <script src="https://unpkg.com/lucide@latest"></script> *@
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/EHS.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/datatables.min.css">
+</head>
+
+<body>
+    <header id="mainHeader">
+        <nav id="mainNavbar" class="navbar navbar-expand-sm navbar-light bg-white navbar-toggleable-sm border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <div class="me-3">
+                    <img src="~/HappyWings_PNG.png" class="img-fluid" width="48" height="48">
+                </div>
+                <a class="navbar-brand me-5" asp-area="" asp-controller="Home" asp-action="Index">EH&S</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item dropdown mx-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="ihDropdown" role="button" @* data-bs-toggle="dropdown" aria-expanded="false" *@>
+                                Industrial Hygiene
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="ihDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="seg_risk_assessments" asp-action="Index">Similar Exposure Group (SEG) Risk</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Privacy">Chemical Risk Assessment</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown mx-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="aiDropdown" role="button" @* data-bs-toggle="dropdown" aria-expanded="false" *@>
+                                Audit & Inspection
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="aiDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 1</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 2</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 3</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown mx-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="imDropdown" role="button" @* data-bs-toggle="dropdown" aria-expanded="false" *@>
+                                Incident Management
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="imDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 1</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 2</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 3</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown mx-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="cmDropdown" role="button" @* data-bs-toggle="dropdown" aria-expanded="false" *@>
+                                Compliance Management
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="cmDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 1</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 2</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index">App 3</a></li>
+                            </ul>
+                        </li>
+                        @*                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li> *@
+                        <li class="nav-item dropdown ms-auto">
+                            <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button" @* data-bs-toggle="dropdown" aria-expanded="false" *@>
+                                Settings
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="settingsDropdown">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index" id="toggleMarginLink">Toggle Margins</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Index" id="toggleThemeLink">Toggle Dark Mode</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy" target="_blank">Admin</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="bodyContainer" class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    @*     <footer id="mainFooter" class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - EHS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer> *@
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/datatables.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('bodyContainer');
+            const toggleMarginLink = document.getElementById('toggleMarginLink');
+            const toggleThemeLink = document.getElementById('toggleThemeLink');
+            const navbar = document.getElementById('mainNavbar');
+
+            function applyDarkMode(isDark) {
+                const html = document.documentElement;
+                const body = document.body;
+
+                if (isDark) {
+                    html.classList.add('dark-mode');
+                    body.classList.add('dark-mode');
+                    navbar.classList.remove('navbar-light', 'bg-white');
+                    navbar.classList.add('navbar-dark', 'bg-dark');
+                } else {
+                    html.classList.remove('dark-mode');
+                    body.classList.remove('dark-mode');
+                    navbar.classList.remove('navbar-dark', 'bg-dark');
+                    navbar.classList.add('navbar-light', 'bg-white');
+                }
+
+                document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                    const toggle = menu.parentElement.querySelector('[data-bs-toggle="dropdown"]');
+                    if (toggle) {
+                        bootstrap.Dropdown.getOrCreateInstance(toggle).hide();
+                    }
+                });
+            }
+
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            applyDarkMode(isDark);
+
+            if (localStorage.getItem('marginToggledOff') === 'true') {
+                container.classList.add('no-margin');
+            }
+
+            toggleMarginLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                container.classList.toggle('no-margin');
+                localStorage.setItem('marginToggledOff', container.classList.contains('no-margin'));
+            });
+
+            toggleThemeLink.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const dropdown = bootstrap.Dropdown.getInstance(this.closest('.dropdown'));
+                if (dropdown) {
+                    dropdown.hide();
+                }
+
+                const nowDark = !document.body.classList.contains('dark-mode');
+                applyDarkMode(nowDark);
+                localStorage.setItem('darkMode', nowDark);
+                updateThemeText();
+            });
+
+            function updateThemeText() {
+                toggleThemeLink.textContent = document.body.classList.contains('dark-mode')
+                    ? 'Toggle Light Mode'
+                    : 'Toggle Dark Mode';
+            }
+
+            updateThemeText();
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- this script lets you use the icons brought in above -->
+@*     <script>
+        lucide.createIcons();
+    </script> *@
+</body>
+</html>
