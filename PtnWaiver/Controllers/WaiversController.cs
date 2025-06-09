@@ -623,7 +623,6 @@ namespace PtnWaiver.Controllers
             // try to find previous waiver and if found activate it...
             var previousWaiver = await _contextPtnWaiver.Waiver.Where(m => m.DateSequence == deletedWaiver.DateSequence && m.WaiverSequence == deletedWaiver.WaiverSequence).OrderByDescending(m => m.RevisionNumber).FirstOrDefaultAsync();
 
-
             if (previousWaiver != null)
             {
                 var userInfo = getUserInfo(_username);
