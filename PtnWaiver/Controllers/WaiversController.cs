@@ -621,7 +621,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // try to find previous waiver and if found activate it...
-            var previousWaiver = await _contextPtnWaiver.Waiver.Where(m => m.WaiverNumber == deletedWaiver.WaiverNumber).OrderByDescending(m => m.RevisionNumber).FirstOrDefaultAsync();
+            var previousWaiver = await _contextPtnWaiver.Waiver.Where(m => m.DateSequence == deletedWaiver.DateSequence && m.WaiverSequence == deletedWaiver.WaiverSequence).OrderByDescending(m => m.RevisionNumber).FirstOrDefaultAsync();
 
             if (previousWaiver != null)
             {
