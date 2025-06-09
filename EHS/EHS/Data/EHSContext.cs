@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using EHS.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace EHS.Data
 {
@@ -16,13 +11,13 @@ namespace EHS.Data
 
         public override int SaveChanges()
         {
-            ConvertDateTimesToUtc();
+            //ConvertDateTimesToUtc();
             return base.SaveChanges();
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            ConvertDateTimesToUtc();
+            //ConvertDateTimesToUtc();
             return base.SaveChangesAsync(cancellationToken);
         }
 

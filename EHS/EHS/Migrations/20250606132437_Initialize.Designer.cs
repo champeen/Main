@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EHS.Migrations
 {
     [DbContext(typeof(EHSContext))]
-    [Migration("20250528182326_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250606132437_Initialize")]
+    partial class Initialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,7 @@ namespace EHS.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("created_date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("created_user")
                         .IsRequired()
@@ -62,11 +62,11 @@ namespace EHS.Migrations
                     b.Property<string>("created_user_fullname")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("date_conducted")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime?>("date_conducted")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("deleted_date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("deleted_user")
                         .HasColumnType("text");
@@ -102,7 +102,7 @@ namespace EHS.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("modified_date")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("modified_user")
                         .HasColumnType("text");

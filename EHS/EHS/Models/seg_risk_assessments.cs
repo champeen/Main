@@ -33,7 +33,9 @@ namespace EHS.Models
         [Display(Name = "Exposure Levels Acceptable")]
         public string exposure_levels_acceptable { get; set; }
         [Display(Name = "Date Conducted")]
-        public DateTime date_conducted { get; set; }
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        public DateTime? date_conducted { get; set; }
         [Display(Name = "Assessment Methods Used")]
         public string assessment_methods_used { get; set; }
         [Display(Name = "SEG Number of Workers")]

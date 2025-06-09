@@ -1,0 +1,59 @@
+﻿For My Use * MJWII *
+
+-- ADD MIGRATION AND UPDATE DATABASE WHEN USING MULTIPLE DATA CONTEXT.....
+add-migration initialMigrationPtn -context PtnWaiverContext
+update-database -context PtnWaiverContext
+
+Add-Migration InitialCreate
+Update-Database
+
+TO DELETE ALL AND START OVER....
+
+DROP TABLE [dbo].[ChangeType];
+DROP TABLE [dbo].[GeneralMocQuestions]
+DROP TABLE [dbo].[FinalReviewType]
+DROP TABLE [dbo].[GeneralMocResponses]
+DROP TABLE [dbo].[ImpactAssessmentMatrix]
+DROP TABLE [dbo].[ImpactAssessmentResponse]
+DROP TABLE [dbo].[ImplementationFinalApprovalMatrix]
+DROP TABLE [dbo].[ImplementationFinalApprovalResponse]
+DROP TABLE [dbo].[ProductLine]
+DROP TABLE [dbo].[ResponseDropdownSelections]
+DROP TABLE [dbo].[ReviewType]
+DROP TABLE [dbo].[SiteLocation]
+DROP TABLE [dbo].[ChangeRequest]
+
+POSTGRESQL..... (copy and paste this into a query window in the schema)
+DELETE FROM moc."AdditionalImpactAssessmentReviewers";
+DELETE FROM moc."Administrators";
+DELETE FROM moc."AllowedAttachmentExtensions";
+DELETE FROM moc."ChangeArea";
+DELETE FROM moc."ChangeLevel";
+DELETE FROM moc."ChangeRequest";
+DELETE FROM moc."ChangeStatus";
+DELETE FROM moc."ChangeType";
+DELETE FROM moc."EmailHistory";
+DELETE FROM moc."FinalReviewType";
+DELETE FROM moc."GeneralMocQuestions";
+DELETE FROM moc."ImpactAssessmentMatrix";
+DELETE FROM moc."ImpactAssessmentResponse";
+DELETE FROM moc."ImpactAssessmentResponseAnswer";
+DELETE FROM moc."ImpactAssessmentResponseQuestions";
+DELETE FROM moc."ImplementationFinalApprovalMatrix";
+DELETE FROM moc."ImplementationFinalApprovalResponse";
+DELETE FROM moc."ProductLine";
+DELETE FROM moc."ResponseDropdownSelections";
+DELETE FROM moc."ReviewType";
+DELETE FROM moc."SiteLocation";
+DELETE FROM moc."Task";
+
+
+******************************************************************************************************************************************
+DO NOT DELETE TABLES __mst_employee OR PTN OR __EFMigrationHistory (delete records from this one though) from the database !!!!!!!!!!!!
+*******************************************************************************************************************************************
+
+- delete everything from the database (except above 2 tables, and just clear out '__EFMigrationsHistory' - dont drop it)
+- Update-Database -Migration 0
+- Remove-Migration
+- Add-Migration Initialize
+- Update-Database

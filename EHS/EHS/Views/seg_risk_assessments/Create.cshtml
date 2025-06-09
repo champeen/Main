@@ -1,6 +1,157 @@
 ﻿@model EHS.Models.seg_risk_assessments
 
 @{
+    ViewData["Title"] = "Create Risk Assessment";
+}
+
+<div class="container py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Create New Risk Assessment</h2>
+
+            <form asp-action="Create" class="needs-validation" novalidate>
+                @Html.HiddenFor(m => m.created_user)
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="location" class="form-label"></label>
+                        <input asp-for="location" class="form-control" />
+                        <span asp-validation-for="location" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="exposure_type" class="form-label"></label>
+                        <input asp-for="exposure_type" class="form-control" />
+                        <span asp-validation-for="exposure_type" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="agent" class="form-label"></label>
+                        <input asp-for="agent" class="form-control" />
+                        <span asp-validation-for="agent" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="seg_role" class="form-label"></label>
+                        <input asp-for="seg_role" class="form-control" />
+                        <span asp-validation-for="seg_role" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="task" class="form-label"></label>
+                        <input asp-for="task" class="form-control" />
+                        <span asp-validation-for="task" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="oel" class="form-label"></label>
+                        <input asp-for="oel" class="form-control" />
+                        <span asp-validation-for="oel" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="acute_chronic" class="form-label"></label>
+                        <input asp-for="acute_chronic" class="form-control" />
+                        <span asp-validation-for="acute_chronic" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="route_of_entry" class="form-label"></label>
+                        <input asp-for="route_of_entry" class="form-control" />
+                        <span asp-validation-for="route_of_entry" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="frequency_of_task" class="form-label"></label>
+                        <input asp-for="frequency_of_task" class="form-control" />
+                        <span asp-validation-for="frequency_of_task" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="duration_of_task" class="form-label"></label>
+                        <input asp-for="duration_of_task" class="form-control" />
+                        <span asp-validation-for="duration_of_task" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="monitoring_data_required" class="form-label"></label>
+                        <input asp-for="monitoring_data_required" class="form-control" />
+                        <span asp-validation-for="monitoring_data_required" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label asp-for="controls_recommended" class="form-label"></label>
+                        <input asp-for="controls_recommended" class="form-control" />
+                        <span asp-validation-for="controls_recommended" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="exposure_levels_acceptable" class="form-label"></label>
+                        <input asp-for="exposure_levels_acceptable" class="form-control" />
+                        <span asp-validation-for="exposure_levels_acceptable" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="date_conducted" class="form-label"></label>
+                        <input asp-for="date_conducted" class="form-control" onclick="this.showPicker()" />
+                        <span asp-validation-for="date_conducted" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="assessment_methods_used" class="form-label"></label>
+                        <input asp-for="assessment_methods_used" class="form-control" />
+                        <span asp-validation-for="assessment_methods_used" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="seg_number_of_workers" class="form-label"></label>
+                        <input asp-for="seg_number_of_workers" class="form-control" />
+                        <span asp-validation-for="seg_number_of_workers" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label asp-for="has_agent_been_changed" class="form-label"></label>
+                        <input asp-for="has_agent_been_changed" class="form-control" />
+                        <span asp-validation-for="has_agent_been_changed" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label asp-for="person_performing_assessment" class="form-label"></label>
+                        @* <input asp-for="person_performing_assessment" class="form-control" /> *@
+                        @Html.DropDownListFor(model => model.person_performing_assessment, new SelectList(ViewBag.Employees, "Value", "Text"),"-- Select Employee --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreatePersonPerformingAssessment" })
+                        <span asp-validation-for="person_performing_assessment" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                    <button type="submit" class="btn btn-primary px-4">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('#SegCreatePersonPerformingAssessment').select2({
+                placeholder: "Select Employee",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+@* @model EHS.Models.seg_risk_assessments
+
+@{
     ViewData["Title"] = "Create";
 }
 
@@ -80,7 +231,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="date_conducted" class="control-label"></label>
-                <input asp-for="date_conducted" class="form-control" />
+                <input asp-for="date_conducted" class="form-control" onclick="this.showPicker()"/>
                 <span asp-validation-for="date_conducted" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -116,4 +267,4 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+} *@

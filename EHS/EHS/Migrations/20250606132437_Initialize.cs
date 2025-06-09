@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EHS.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initialize : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,7 @@ namespace EHS.Migrations
                     monitoring_data_required = table.Column<string>(type: "text", nullable: false),
                     controls_recommended = table.Column<string>(type: "text", nullable: false),
                     exposure_levels_acceptable = table.Column<string>(type: "text", nullable: false),
-                    date_conducted = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    date_conducted = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     assessment_methods_used = table.Column<string>(type: "text", nullable: false),
                     seg_number_of_workers = table.Column<int>(type: "integer", nullable: false),
                     has_agent_been_changed = table.Column<string>(type: "text", nullable: false),
@@ -39,15 +39,15 @@ namespace EHS.Migrations
                     created_user = table.Column<string>(type: "text", nullable: false),
                     created_user_fullname = table.Column<string>(type: "text", nullable: true),
                     created_user_email = table.Column<string>(type: "text", nullable: true),
-                    created_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     modified_user = table.Column<string>(type: "text", nullable: true),
                     modified_user_fullname = table.Column<string>(type: "text", nullable: true),
                     modified_user_email = table.Column<string>(type: "text", nullable: true),
-                    modified_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    modified_date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     deleted_user = table.Column<string>(type: "text", nullable: true),
                     deleted_user_fullname = table.Column<string>(type: "text", nullable: true),
                     deleted_user_email = table.Column<string>(type: "text", nullable: true),
-                    deleted_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    deleted_date = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
