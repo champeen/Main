@@ -181,7 +181,7 @@ namespace PtnWaiver.Controllers
                 return NotFound();
 
             var pTN = await _contextPtnWaiver.PTN
-                .FirstOrDefaultAsync(m => m.DocId == docId);
+                .FirstOrDefaultAsync(m => m.OriginatorYear + '-' + m.SerialNumber == docId);
             if (pTN == null)
                 return NotFound();
 
