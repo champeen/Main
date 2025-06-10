@@ -305,15 +305,15 @@ body:not(.dark-mode) .form-control {
     color: #fff;
 }
 
-    /* Dropdown arrow */
-    .dark-mode .select2-container--default .select2-selection--single .select2-selection__arrow {
-        color: #ccc;
-    }
+/* Dropdown arrow */
+.dark-mode .select2-container--default .select2-selection--single .select2-selection__arrow {
+    color: #ccc;
+}
 
-    /* Selected item text */
-    .dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
-        color: #fff;
-    }
+/* Selected item text */
+.dark-mode .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #fff;
+}
 
 /* Dropdown results panel */
 .dark-mode .select2-container--default .select2-dropdown  {
@@ -340,9 +340,6 @@ body:not(.dark-mode) .form-control {
     color: #fff !important;
 }
 
-
-
-
 /* Hover and highlighted option */
 .dark-mode .select2-container--default .select2-results__option--highlighted {
     background-color: #444;
@@ -360,19 +357,37 @@ body:not(.dark-mode) .form-control {
     color: #ff6b6b !important; /* soft red, easier on the eyes in dark mode */
 }
 
-
-
 .dark-mode .input-validation-error {
     border-color: #ff6b6b !important;
     background-color: #2a2a2a; /* match your form background */
     color: #ffffff;
 }
 
-    .dark-mode .input-validation-error:focus {
-        box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
-    }
+.dark-mode .input-validation-error:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 107, 107, 0.25);
+}
 
+/* Dark Mode Calandar (Datepicker) */
+html.dark-mode .ui-datepicker {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border: 1px solid #555;
+}
 
+html.dark-mode .ui-datepicker td a {
+    color: #ffffff;
+    background-color: #2a2a2a;
+}
+
+html.dark-mode .ui-datepicker td a:hover {
+    background-color: #444;
+}
+
+html.dark-mode .ui-datepicker-header {
+    background-color: #333;
+    color: #fff;
+    border-bottom: 1px solid #555;
+}
 
 /* Margin between table-controls and table */
 .table-controls {
@@ -381,17 +396,17 @@ body:not(.dark-mode) .form-control {
     gap: 0.5rem;
 }
 
-    .table-controls .dt-buttons {
-        flex-shrink: 1;
-        flex-wrap: wrap;
-        gap: 0.25rem;
-    }
+.table-controls .dt-buttons {
+    flex-shrink: 1;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
 
-    .table-controls .dt-search {
-        flex-grow: 1;
-        flex-basis: 100%;
-        margin-top: 0.25rem;
-    }
+.table-controls .dt-search {
+    flex-grow: 1;
+    flex-basis: 100%;
+    margin-top: 0.25rem;
+}
 
 @media (min-width: 576px) {
     .table-controls .dt-search {

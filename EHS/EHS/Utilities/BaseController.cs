@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using EHS.Data;
+﻿using EHS.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace EHS.Utilities
@@ -25,6 +26,35 @@ namespace EHS.Utilities
         public BaseController()
         {
 
+        }
+
+        public bool _isAdmin
+        {
+            get
+            {
+                if (isAdmin == null)
+                {
+                    var found = true; //_context.Administrators
+                    //    .Where(m => m.Username == userName)    // User Name logged in matches one in the database
+                    //    .Any();
+
+                    if (found)
+                    {
+                        isAdmin = true;
+                        return true;
+                    }
+                    else
+                    {
+                        isAdmin = false;
+                        return false;
+                    }
+                }
+                else
+                    if (isAdmin == true)
+                    return true;
+                else
+                    return false;
+            }
         }
         public string _username
         {

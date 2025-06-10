@@ -94,7 +94,8 @@
 
                     <div class="col-md-6">
                         <label asp-for="date_conducted" class="form-label"></label>
-                        <input asp-for="date_conducted" class="form-control" onclick="this.showPicker()" />
+                        @* <input asp-for="date_conducted" class="form-control" onclick="this.showPicker()" /> *@
+                        <input asp-for="date_conducted" type="text" class="form-control datepicker" placeholder="Select date..." />
                         <span asp-validation-for="date_conducted" class="text-danger"></span>
                     </div>
 

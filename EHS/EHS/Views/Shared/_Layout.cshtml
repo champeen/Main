@@ -21,17 +21,20 @@
 
     <!-- this script brings in icons for buttons -->  
     @* <script src="https://unpkg.com/lucide@latest"></script> *@
-
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EHS.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/datatables.min.css">
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>    
     <link rel="stylesheet" href="~/css/select2.min.css" />
     <script src="~/js/select2.min.js"></script>
-@*     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script> *@
-
+    <!-- Flatpickr Setup -->
+    <!-- Default Flatpickr Theme -->
+    <link id="flatpickrLightTheme" rel="stylesheet" href="~/css/flatpickr.min.css" />
+    <link id="flatpickrDarkTheme" rel="stylesheet" href="~/css/dark.css" disabled />
+    @* <link id="flatpickrLightTheme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> *@
+    @* <link id="flatpickrDarkTheme" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css" disabled> *@
+    <script src="~/js/flatpickr.js"></script>
 </head>
 
 <body>
@@ -125,10 +128,47 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/datatables.min.js"></script>
-    @* <script src="~/js/select2.min.js"></script> *@
 
+@*     <!-- Flatpickr Init Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            flatpickr("input[name='date_conducted']", {
+                altInput: true,
+                altFormat: "F j, Y",
+                dateFormat: "Y-m-d"
+            });
+        });
+    </script> *@
+
+    <script>
+        // Store references so we can destroy and re-init
+        let flatpickrInstances = [];
+
+        function initFlatpickrs() {
+            // Destroy any existing instances
+            flatpickrInstances.forEach(fp => fp.destroy());
+            flatpickrInstances = [];
+
+            document.querySelectorAll("input.datepicker").forEach(function (el) {
+                const instance = flatpickr(el, {
+                    altInput: true,
+                    altFormat: "F j, Y",
+                    dateFormat: "Y-m-d",
+                    //enableTime: true,
+                    //noCalendar: false,
+                    //mode: "range",
+                    //minDate: "today",
+                    //maxDate: "2025-12-31",
+                    //defaultDate: "today",
+                    // inline: true,            // this permanently displays the calandar selection below the field
+                    theme: document.body.classList.contains("dark-mode") ? "dark" : "light"
+                });
+                flatpickrInstances.push(instance);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initFlatpickrs(); // Initial call
             const container = document.getElementById('bodyContainer');
             const toggleMarginLink = document.getElementById('toggleMarginLink');
             const toggleThemeLink = document.getElementById('toggleThemeLink');
@@ -149,6 +189,13 @@
                     navbar.classList.remove('navbar-dark', 'bg-dark');
                     navbar.classList.add('navbar-light', 'bg-white');
                 }
+
+                // Toggle flatpickr stylesheets
+                document.getElementById("flatpickrLightTheme").disabled = isDark;
+                document.getElementById("flatpickrDarkTheme").disabled = !isDark;
+
+                // Re-init Flatpickr after toggling styles
+                initFlatpickrs();
 
                 document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
                     const toggle = menu.parentElement.querySelector('[data-bs-toggle="dropdown"]');

@@ -1,6 +1,6 @@
 ﻿//using Microsoft.EntityFrameworkCore;
 using EHS.Data;
-using EHS.Utilities;
+using EHS.Provider;
 using Microsoft.Win32;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Diagnostics;
@@ -12,8 +12,8 @@ namespace EHS.Utilities
         private readonly EHSContext _context;
 
         // Providers...
-        //public static TeamsProvider TeamsErrorProvider { get; private set; }
-        //public static EmailProvider EmailProviderSmtp { get; private set; }
+        public static TeamsProvider TeamsErrorProvider { get; private set; }
+        public static EmailProvider EmailProviderSmtp { get; private set; }
         public static HttpClient HttpClient { get; private set; }
 
         // Teams Error Hooks...
@@ -32,12 +32,11 @@ namespace EHS.Utilities
 
         // Setup Global Static Variables based on environment....
         public static string WebsiteUrl { get; set; }
-        public static string ConnectionString { get; set; }
-        public static string ConnectionStringPtnWaiver { get; set; }
-        public static string AttachmentDirectory { get; set; }
-        public static string TaskDirectory { get; set; }
+        public static string ConnectionStringEhs { get; set; }
+        public static string ConnectionStringMoc { get; set; }
+        public static string AttachmentDirectory_IH_SEG { get; set; }
 
-        private static string registryPath = @"Software\\SKSiltron\\MoC";
+        private static string registryPath = @"Software\\SKSiltron\\EHS";
         public static string EmailError { get; set; }
 
         //public Initialize(Management_of_ChangeContext context, WebApplicationBuilder builder) : base(context, builder)
@@ -56,19 +55,11 @@ namespace EHS.Utilities
             string environment = GetRegistryKey(registryPath, "Environment");
 
             if (environment == "Production")
-            {
                 registryPath = Path.Combine(registryPath, "Prd");
-                //WebsiteUrl = @"http://bay1vprd-moc01/";
-            }
             else if (environment == "Development")
-            {
                 registryPath = Path.Combine(registryPath, "Dev");
-                //WebsiteUrl = @"http://aub1vdev-app01/";
-            }
             else
-            {
                 throw new NullReferenceException("ERROR: registryPath: " + registryPath + " Key: Environment: " + environment + " is not equal to 'Development' or 'Production'");
-            }
 
             // get website url...
             WebsiteUrl = GetRegistryKey(registryPath, "WebsiteUrl");
@@ -77,29 +68,26 @@ namespace EHS.Utilities
             EmailError = GetRegistryKey(registryPath, "EmailError");
 
             // Create Email Provider
-            //emailHost = builder.Configuration.GetValue<string>("EmailProvider:emailHost");
             emailHost = GetRegistryKey(registryPath, "EmailHost");
-
             emailPort = Int32.Parse(GetRegistryKey(registryPath, "EmailPort"));
             emailUser = GetRegistryKey(registryPath, "EmailUser");
             emailPassword = GetRegistryKey(registryPath, "EmailPassword");
             emailFrom = GetRegistryKey(registryPath, "EmailFrom");
-//            EmailProviderSmtp = new EmailProvider(emailHost, emailUser, emailPassword, emailPort, emailFrom);
+            EmailProviderSmtp = new EmailProvider(emailHost, emailUser, emailPassword, emailPort, emailFrom);
 
             // Get Connection Strings
-            ConnectionString = GetRegistryKey(registryPath, "ConnectionString");
-            ConnectionStringPtnWaiver = GetRegistryKey(registryPath, "ConnectionStringPtnWaiver");
+            ConnectionStringEhs = GetRegistryKey(registryPath, "ConnectionStringEhs");
+            ConnectionStringMoc = GetRegistryKey(registryPath, "ConnectionStringMoc");
             //ConnectionString = builder.Configuration.GetConnectionString("PostgreSQLprd");
 
             // Get Attachment Directorys
-            AttachmentDirectory = GetRegistryKey(registryPath, "AttachmentDirectory");
-            TaskDirectory = GetRegistryKey(registryPath, "TaskDirectory");
+            AttachmentDirectory_IH_SEG = GetRegistryKey(registryPath, "AttachmentDirectory_IH_SEG");
 
             // Teams Provider for Error Channel
             teamsErrorUrl = GetRegistryKey(registryPath, "TeamsErrorUrl");
             //teamsErrorUrl = builder.Configuration.GetValue<string>("TeamsHooks:TeamsErrorUrlPrd");
             HttpClient = new HttpClient();
- //           TeamsErrorProvider = new TeamsProvider(teamsErrorUrl, HttpClient);
+            TeamsErrorProvider = new TeamsProvider(teamsErrorUrl, HttpClient);
         }
 
         private static string GetRegistryKey(string registryPath, string registryKey)
@@ -125,8 +113,8 @@ namespace EHS.Utilities
 
         public void GetUserInfo()
         {
-//            ViewBag.IsAdmin = _isAdmin;
- //           ViewBag.UserName = _username;
+            ViewBag.IsAdmin = _isAdmin;
+            ViewBag.UserName = _username;
         }
     }
 }
