@@ -1,0 +1,47 @@
+﻿@model EHS.Models.Dropdowns.acute_chronic
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>acute_chronic</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="created_user" />
+            <input type="hidden" asp-for="created_user_fullname" />
+            <input type="hidden" asp-for="created_user_email" />
+            <input type="hidden" asp-for="created_date" />
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="sort_order" class="control-label"></label>
+                <input asp-for="sort_order" class="form-control" />
+                <span asp-validation-for="sort_order" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="display" /> @Html.DisplayNameFor(model => model.display)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

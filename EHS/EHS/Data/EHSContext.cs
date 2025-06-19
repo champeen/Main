@@ -1,13 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using EHS.Models.Dropdowns;
+
+//namespace EHS.Models.Dropdowns;
 
 namespace EHS.Data
 {
     public class EHSContext : DbContext
     {
         public EHSContext (DbContextOptions<EHSContext> options)
-            : base(options) {}
-
-        public DbSet<EHS.Models.seg_risk_assessments> seg_risk_assessments { get; set; } = default!;
+            : base(options) {}        
 
         public override int SaveChanges()
         {
@@ -20,47 +21,23 @@ namespace EHS.Data
             //ConvertDateTimesToUtc();
             return base.SaveChangesAsync(cancellationToken);
         }
+        public DbSet<EHS.Models.seg_risk_assessment> seg_risk_assessment { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.location> location { get; set; } = default!;
 
-        private void ConvertDateTimesToUtc()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            foreach (var entry in ChangeTracker.Entries())
-            {
-                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-                {
-                    foreach (var property in entry.Properties)
-                    {
-                        if (property.Metadata.ClrType == typeof(DateTime))
-                        {
-                            var value = (DateTime)property.CurrentValue;
-                            if (value.Kind == DateTimeKind.Unspecified)
-                            {
-                                // Debug/throw here to find the property causing failure
-                                throw new InvalidOperationException(
-                                    $"Unspecified DateTime found in {entry.Entity.GetType().Name}.{property.Metadata.Name} = {value}");
-                            }
+            modelBuilder.HasDefaultSchema("ehs");
+            modelBuilder.HasAnnotation("Relational:HistoryTableSchema", "ehs");
 
-                            if (value.Kind == DateTimeKind.Local)
-                                property.CurrentValue = value.ToUniversalTime();
-                        }
-
-                        if (property.Metadata.ClrType == typeof(DateTime?))
-                        {
-                            var value = (DateTime?)property.CurrentValue;
-                            if (value.HasValue)
-                            {
-                                if (value.Value.Kind == DateTimeKind.Unspecified)
-                                {
-                                    throw new InvalidOperationException(
-                                        $"Unspecified DateTime? found in {entry.Entity.GetType().Name}.{property.Metadata.Name} = {value.Value}");
-                                }
-
-                                if (value.Value.Kind == DateTimeKind.Local)
-                                    property.CurrentValue = value.Value.ToUniversalTime();
-                            }
-                        }
-                    }
-                }
-            }
+            base.OnModelCreating(modelBuilder);
         }
+        public DbSet<EHS.Models.Dropdowns.exposure_type> exposure_type { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.agent> agent { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.seg_role> seg_role { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.task> task { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.occupational_exposure_limit> occupational_exposure_limit { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.acute_chronic> acute_chronic { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.route_of_entry> route_of_entry { get; set; } = default!;
+        public DbSet<EHS.Models.Dropdowns.frequency_of_task> frequency_of_task { get; set; } = default!;
     }
 }

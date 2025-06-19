@@ -3,6 +3,7 @@ using System;
 using EHS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EHS.Migrations
 {
     [DbContext(typeof(EHSContext))]
-    partial class EHSContextModelSnapshot : ModelSnapshot
+    [Migration("20250619132549_addRouteOfEntry")]
+    partial class addRouteOfEntry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,66 +209,6 @@ namespace EHS.Migrations
                     b.HasKey("id");
 
                     b.ToTable("exposure_type", "ehs");
-                });
-
-            modelBuilder.Entity("EHS.Models.Dropdowns.frequency_of_task", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("created_date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("created_user")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("created_user_email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("created_user_fullname")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("deleted_date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("deleted_user")
-                        .HasColumnType("text");
-
-                    b.Property<string>("deleted_user_email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("deleted_user_fullname")
-                        .HasColumnType("text");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("display")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("modified_date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("modified_user")
-                        .HasColumnType("text");
-
-                    b.Property<string>("modified_user_email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("modified_user_fullname")
-                        .HasColumnType("text");
-
-                    b.Property<string>("sort_order")
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.ToTable("frequency_of_task", "ehs");
                 });
 
             modelBuilder.Entity("EHS.Models.Dropdowns.location", b =>

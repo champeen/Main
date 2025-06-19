@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Admin Access";
+}
+
+<h1 class="mt-3 text-center">Similar Exposure Group (SEG) Risk - Field Dropdown Selection Maintenance</h1>
+<div class="mt-5 ms-5">
+    <div class="row">
+        <div class="col-6">
+            <p class="h3 text-decoration-underline my-3">Dropdowns</p>
+            <p><a class="navbar-brand" asp-controller="location" asp-action="Index">Locations</a></p>
+            <p><a class="navbar-brand" asp-controller="exposure_type" asp-action="Index">Exposure Types</a></p>
+            <p><a class="navbar-brand" asp-controller="agent" asp-action="Index">Agents</a></p>
+            <p><a class="navbar-brand" asp-controller="seg_role" asp-action="Index">SEG Roles</a></p>
+            <p><a class="navbar-brand" asp-controller="tasks" asp-action="Index">Tasks</a></p>
+            <p><a class="navbar-brand" asp-controller="occupational_exposure_limit" asp-action="Index">Occupational Exposure Limits</a></p>
+            <p><a class="navbar-brand" asp-controller="acute_chronic" asp-action="Index">Acute/Chronic</a></p>
+            <p><a class="navbar-brand" asp-controller="route_of_entry" asp-action="Index">Route of Entry</a></p>
+            <p><a class="navbar-brand" asp-controller="frequency_of_task" asp-action="Index">Frequency of Task</a></p>
+        </div>
+        <div class="col-6">
+            <p class="h3 text-decoration-underline my-3">Miscellaneous</p>
+            @* <p><a class="navbar-brand" asp-controller="Administrators" asp-action="Index">Administrators</a></p> *@
+        </div>
+    </div>
+</div>

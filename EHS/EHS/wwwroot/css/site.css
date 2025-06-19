@@ -389,6 +389,104 @@ html.dark-mode .ui-datepicker-header {
     border-bottom: 1px solid #555;
 }
 
+/* Make Sure bootstraps table buttons override dark mode */
+/* Primary */
+html.dark-mode .btn-primary {
+    background-color: #4a90e2 !important;
+    border-color: #4a90e2 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .btn-primary:hover {
+    background-color: #3a78c2 !important;
+    border-color: #3a78c2 !important;
+}
+
+/* Secondary */
+html.dark-mode .btn-secondary {
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .btn-secondary:hover {
+    background-color: #5a6268 !important;
+    border-color: #545b62 !important;
+}
+
+/* Success */
+html.dark-mode .btn-success {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .btn-success:hover {
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
+}
+
+/* Danger */
+html.dark-mode .btn-danger {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .btn-danger:hover {
+    background-color: #c82333 !important;
+    border-color: #bd2130 !important;
+}
+
+/* Warning */
+html.dark-mode .btn-warning {
+    background-color: #ffc107 !important;
+    border-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+html.dark-mode .btn-warning:hover {
+    background-color: #e0a800 !important;
+    border-color: #d39e00 !important;
+}
+
+/* Info */
+html.dark-mode .btn-info {
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .btn-info:hover {
+    background-color: #138496 !important;
+    border-color: #117a8b !important;
+}
+
+/* Light (tweak to contrast dark bg) */
+html.dark-mode .btn-light {
+    background-color: #f8f9fa !important;
+    border-color: #f8f9fa !important;
+    color: #212529 !important;
+}
+
+html.dark-mode .btn-light:hover {
+    background-color: #e2e6ea !important;
+    border-color: #dae0e5 !important;
+}
+
+/* Dark */
+html.dark-mode .btn-dark {
+    background-color: #343a40 !important;
+    border-color: #343a40 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .btn-dark:hover {
+    background-color: #23272b !important;
+    border-color: #1d2124 !important;
+}
+
+
 /* Margin between table-controls and table */
 .table-controls {
     margin-bottom: 0.5rem !important;
@@ -438,6 +536,11 @@ body {
 .table-wrapper {
     max-width: 100vw;
     overflow-x: hidden;
+}
+
+/* Hide DataTable initially to prevent flickering during load */
+.table-container.datatable-hidden {
+    visibility: hidden;
 }
 
 /*html.dark-mode span.text-danger.text-danger,

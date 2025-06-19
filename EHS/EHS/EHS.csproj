@@ -15,4 +15,8 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Models\seg_risk_assessment.cs" />
+  </ItemGroup>
+
 </Project>

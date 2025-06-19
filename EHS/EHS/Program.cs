@@ -13,7 +13,8 @@ try
 
     // setup database connections
     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-    builder.Services.AddDbContext<EHSContext>(options => options.UseNpgsql(Initialization.ConnectionStringEhs));
+    builder.Services.AddDbContext<EHSContext>(options => options.UseNpgsql(Initialization.ConnectionStringEhs, npgsqlOptions =>
+        npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "ehs")));
     builder.Services.AddDbContext<MOCContext>(options => options.UseNpgsql(Initialization.ConnectionStringMoc));
 
     // Add services to the container.

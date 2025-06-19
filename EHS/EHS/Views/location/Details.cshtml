@@ -1,0 +1,108 @@
+﻿@model EHS.Models.Dropdowns.location
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Location</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.sort_order)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.sort_order)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.display)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.display)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_user)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_user)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_user_fullname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_user_fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_user_email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_user_email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_user)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_user)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_user_fullname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_user_fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_user_email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_user_email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.modified_date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.modified_date)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_user)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_user)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_user_fullname)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_user_fullname)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_user_email)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_user_email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.deleted_date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.deleted_date)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
