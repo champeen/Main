@@ -36,6 +36,7 @@ namespace EHS.Utilities
         public static string ConnectionStringMoc { get; set; }
         public static string AttachmentDirectory_IH_SEG { get; set; }
 
+        public static string Environment { get; set; }
         private static string registryPath = @"Software\\SKSiltron\\EHS";
         public static string EmailError { get; set; }
 
@@ -52,14 +53,14 @@ namespace EHS.Utilities
 
             // Setup Environment and Path to retrieve secrets
             //var environment = builder.Environment.EnvironmentName;
-            string environment = GetRegistryKey(registryPath, "Environment");
+            Environment = GetRegistryKey(registryPath, "Environment");
 
-            if (environment == "Production")
+            if (Environment == "Production")
                 registryPath = Path.Combine(registryPath, "Prd");
-            else if (environment == "Development")
+            else if (Environment == "Development")
                 registryPath = Path.Combine(registryPath, "Dev");
             else
-                throw new NullReferenceException("ERROR: registryPath: " + registryPath + " Key: Environment: " + environment + " is not equal to 'Development' or 'Production'");
+                throw new NullReferenceException("ERROR: registryPath: " + registryPath + " Key: Environment: " + Environment + " is not equal to 'Development' or 'Production'");
 
             // get website url...
             WebsiteUrl = GetRegistryKey(registryPath, "WebsiteUrl");

@@ -26,7 +26,7 @@ namespace EHS.Controllers
         // GET: frequency_of_task
         public async Task<IActionResult> Index()
         {
-            return View(await _contextEHS.frequency_of_task.OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
+            return View(await _contextEHS.frequency_of_task.Where(m => m.deleted_date == null).OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
         }
 
         // GET: frequency_of_task/Details/5
@@ -143,8 +143,19 @@ namespace EHS.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var frequency_of_task = await _contextEHS.frequency_of_task.FindAsync(id);
-            if (frequency_of_task != null)
-                _contextEHS.frequency_of_task.Remove(frequency_of_task);
+            if (frequency_of_task == null)
+                return NotFound();
+
+            __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            if (employee == null)
+                return RedirectToAction(nameof(Index));
+
+            frequency_of_task.deleted_user = _username;
+            frequency_of_task.deleted_user_fullname = employee.displayname;
+            frequency_of_task.deleted_user_email = employee.mail;
+            frequency_of_task.deleted_date = DateTime.Now;
+            _contextEHS.Update(frequency_of_task);
+            //_contextEHS.acute_chronic.Remove(acute_chronic);
 
             await _contextEHS.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

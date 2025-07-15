@@ -22,23 +22,27 @@ namespace EHS.Models
                         {
                             location = "Bay City",
                             exposure_type = "Chemical",
-                            agent = "Sulfuric Acid",
-                            seg_role = "Fabrication Operator",
-                            task = "Twisting",
+                            agent = "Sulfuric Acid",                            
+                            role = "Fabrication Operator",
+                            task =  "Twisting",
                             oel = "Mercury: OEL ACGIH TLV TWA: 0.025 mg/m3 SKIN, OSHA PEL Ceiling 0.1 mg/m3, STEL: 0.03 mg/m3.  IDLH is 10 mg/m3",
                             acute_chronic = "Acute",
-                            route_of_entry = "Dermal-irritation",
+                            route_of_entry = new List<string> { "Dermal-irritation" },
                             frequency_of_task = "Several times a day",
-                            duration_of_task = "STEL: 15 - 30 min",
+                            duration_of_task = new TimeSpan(0,0,0,0),
                             monitoring_data_required = "Priority 2",
-                            controls_recommended = "Engineering Controls- Ventilation",
+                            controls_recommended = new List<string> { "Engineering Controls - Ventilation" },
                             exposure_levels_acceptable = "Yes",
                             date_conducted = DateTime.Now.AddDays(-45),
                             assessment_methods_used = "Employee interviews",
-                            seg_number_of_workers = 5,
-                            has_agent_been_changed = "yes-quantity used",
+                            seg_number_of_workers = "1 to 4 workers",
+                            has_agent_been_changed = "Yes - Quantity Used",
                             person_performing_assessment_username = "MJWilson",
                             person_performing_assessment_displayname = "Michael Wilson",
+                            exposure_rating = 1,
+                            exposure_rating_description = "< 10% of the OEL",
+                            health_effect_rating = 1,
+                            health_effect_rating_description = "Reversable health effects of concern",
                             created_user = "MJWilson",
                             created_date = DateTime.Now
                         },
@@ -47,22 +51,26 @@ namespace EHS.Models
                             location = "Auburn",
                             exposure_type = "Ergonomic",
                             agent = "Ergonomic",
-                            seg_role = "Fabrication Operator",
+                            role = "Fabrication Operator",
                             task = "Awkward Posture",
                             oel = "Oxalic Acid: 1 mg/m3 ACGIH TLV & OSHA PEL",
                             acute_chronic = "Acute",
-                            route_of_entry = "Ingestion",
+                            route_of_entry = new List<string> { "Ingestion" },
                             frequency_of_task = "1-2x a month",
-                            duration_of_task = "STEL: 15 - 30 min",
+                            duration_of_task = new TimeSpan(1, 1, 1, 1),
                             monitoring_data_required = "Priority 2",
-                            controls_recommended = "Change people location 2",
+                            controls_recommended = new List<string> { "Change people location 2" },
                             exposure_levels_acceptable = "No",
                             date_conducted = DateTime.Now,
                             assessment_methods_used = "Personal Monitoring",
-                            seg_number_of_workers = 1,
-                            has_agent_been_changed = "yes- concentration ",
+                            seg_number_of_workers = "21 to 50 workers",
+                            has_agent_been_changed = "Yes - Concentration ",
                             person_performing_assessment_username = "MJWilson",
                             person_performing_assessment_displayname = "Michael Wilson",
+                            exposure_rating = 2,
+                            exposure_rating_description = "Between 10% and 50% of the OEL",
+                            health_effect_rating = 2,
+                            health_effect_rating_description = "Severe, reversable health effects",
                             created_user = "MJWilson",
                             created_date = DateTime.Now
                         },
@@ -71,22 +79,26 @@ namespace EHS.Models
                             location = "Both",
                             exposure_type = "Noise",
                             agent = "Noise",
-                            seg_role = "Fabrication Operator",
+                            role = "Fabrication Operator",
                             task = "Area Noise",
                             oel = "Caustic Potash: KOH ACGIH TLV 2 mg/m3",
                             acute_chronic = "Chronic",
-                            route_of_entry = "Dermal-burn",
+                            route_of_entry = new List<string> { "Dermal-burn" },
                             frequency_of_task = "Quarterly or less frequent than that",
-                            duration_of_task = "Less than 15 min",
+                            duration_of_task = new TimeSpan(2, 2, 2, 2),
                             monitoring_data_required = "Priority 4",
-                            controls_recommended = "Change people location",
+                            controls_recommended = new List<string> { "Change people location" },
                             exposure_levels_acceptable = "No",
                             date_conducted = DateTime.Now.AddDays(-7),
                             assessment_methods_used = "FiDirect read measurementsller",
-                            seg_number_of_workers = 7,
+                            seg_number_of_workers = "51+ workers",
                             has_agent_been_changed = "No",
                             person_performing_assessment_username = "MJWilson",
                             person_performing_assessment_displayname = "Michael Wilson",
+                            exposure_rating = 3,
+                            exposure_rating_description = "Between 50% and 100% of the OEL",
+                            health_effect_rating = 4,
+                            health_effect_rating_description = "Life Threatening or disabling injury or illness",
                             created_user = "MJWilson",
                             created_date = DateTime.Now
                         }
@@ -179,7 +191,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Acetone",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -188,7 +200,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Manganese: Potassium permanganate",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -197,7 +209,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Manganese: Sodium permanganate",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -206,7 +218,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Sulfuric Acid",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -215,7 +227,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Potassium Hydroxide",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -224,7 +236,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Hydrofluoric Acid Hydroxide",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -233,7 +245,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Aluminum Oxide",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -242,7 +254,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Graphite",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -251,7 +263,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Caustic Soda",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -260,7 +272,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Nitric Acid",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -269,7 +281,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Ethanediol (Cool Concentrate)",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -278,7 +290,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Propane - 1,2 diol  (Cry-Tek 100 Antifreeze)",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -287,7 +299,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Phtahalic Anhydride (Crystal bond)",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -296,7 +308,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Propylene glycol (Dow Frost's)",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -305,7 +317,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Ethylene gas",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -314,7 +326,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Chlorodifluoromethane (HCFC-22)",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -323,7 +335,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Hydrochloric acid",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -332,7 +344,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Hydrogen Peroxide",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -341,7 +353,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Isopropyl Alcohol",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -350,7 +362,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Mercury",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -359,7 +371,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Mineral Spirits",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -368,7 +380,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Oxalic Acid",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -377,7 +389,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "MIBK",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -386,7 +398,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Caustic Potash: KOH",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -395,7 +407,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Chemical",
                             description = "Ammonia",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -404,7 +416,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Ergonomic",
                             description = "Ergonomic",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -413,7 +425,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Noise",
                             description = "Noise",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -422,7 +434,7 @@ namespace EHS.Models
                         {
                             exposure_type = "Radiation",
                             description = "Radiation",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -438,7 +450,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Growth Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -446,7 +458,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Fabrication Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -454,7 +466,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Fabrication Operator MWS",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -462,7 +474,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Grind Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -470,7 +482,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Seed Coat Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -478,7 +490,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Polish Operator GSP",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -486,7 +498,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Polish Operator GDR",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -494,7 +506,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "C&M Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -502,7 +514,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "KOH Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -510,7 +522,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Sort/Pack Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -518,7 +530,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "EPI Operator",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -526,7 +538,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "RnD Growth Tech",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -534,7 +546,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "RnD Tech Lathe",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -542,7 +554,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "RnD Boule Anneal",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -550,7 +562,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Logistics Material Transporter",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -558,7 +570,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Logistics: Receiving Clerk",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -566,7 +578,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Logistics: Shipping Clerk",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -574,7 +586,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Logistics: Inventory Specialist",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -582,7 +594,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Facilities Calibration Tech",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -590,7 +602,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Maintenance: E& I Tech/Electrician",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -598,7 +610,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Maintenance: HVAC Tech",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -606,7 +618,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Maintenance: Tech Advisor 3-2-2",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -614,7 +626,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Maintenance: Tech Advisor Days",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -622,7 +634,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Maintenance: Millwright",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -630,7 +642,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Engineer",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -638,7 +650,7 @@ namespace EHS.Models
                         new seg_role
                         {
                             description = "Administrative Staff",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -654,7 +666,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Lifting: less than 50 lbs",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -662,7 +674,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Lifting: more than 50 lbs",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -670,7 +682,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Twisting",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -678,7 +690,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Awkward posture",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -686,7 +698,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Excessive Force",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -694,7 +706,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Area Noise",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -702,7 +714,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Personal Noise",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -710,7 +722,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Direct Read Monitoring",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -718,7 +730,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Line & Equipment Opening",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -726,7 +738,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Coating",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -734,7 +746,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Chemical Addition",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -742,7 +754,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Making a batch",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -750,7 +762,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Filter Change",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -758,7 +770,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Drum Change",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -766,7 +778,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Jug Change",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -774,7 +786,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Clean Out",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -782,7 +794,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Connect/Disconnect",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -790,7 +802,7 @@ namespace EHS.Models
                         new task
                         {
                             description = "Maintenance Other",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -806,7 +818,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Oil Mist TWA/PEL: 5 mg/m3, ACGIH STEL 10 mg/m3",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -814,7 +826,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Manganese: ACGIH TLV 0.1 mg/m3 (inhalable fraction)",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -822,7 +834,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Manganese: TWA 0.02 mg/m3 (respirable fraction) ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -830,7 +842,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Potassium Hydroxide Ceiling:   NIOSH REL 2 mg/m3 ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -838,7 +850,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Sulfuric Acid: OSHA & NIOSH 1 mg/m3",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -846,7 +858,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Hydrofluoric Acid: OSHA PEL 2.5 mg/m3, TWA 3 ppm, and NIOSH TWA 3 ppm",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -854,7 +866,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Acetone: ACGIH TLV 500 ppm, STEL 750 ppm",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -862,7 +874,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Aluminum Oxide: OSHA PEL TWA 15 mg/m3 (total), TWA 5 mg/m3 (resp).  ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -870,7 +882,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Graphite: ACGIH 2 mg/m3 TWA respirable fraction, 5 mg/m3 PEL. ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -878,7 +890,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Caustic Soda: 2 mg/m3 ACGIH and OSHA",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -886,7 +898,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Nitric acid: ACGIH OEL TWA 2 ppm, STEL 4 ppm ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -894,7 +906,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Ethanediol ACGIH STEL 50 ppm (vapor) and 10 mg/m3 inhalable particulate), TLV TWA: 25 ppm vapor fraction",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -902,7 +914,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Phthalic Anhydride NIOSH REL: TLV 1 ppm, OSHA PEL 2 ppm",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -910,7 +922,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Ethylene gas: ACGIH TWA 200 ppm",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -918,7 +930,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Chlorodifluoromethane (HCFC-22): OEL TWA (ACGIH) 1000 ppm",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -926,7 +938,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = " Hydrochloric acid: ACGIH TLV-C 2 ppm, OSHA PEL-T/C 5 ppm. ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -934,7 +946,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Hydrogen peroxide ACGIH TWA 1 ppm",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -942,7 +954,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Isopropyl Alcohol: NIOSH/OSHA: TWA of 400 ppm ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -950,7 +962,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Mercury: OEL ACGIH TLV TWA: 0.025 mg/m3 SKIN, OSHA PEL Ceiling 0.1 mg/m3, STEL: 0.03 mg/m3.  IDLH is 10 mg/m3",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -958,7 +970,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Mineral Spirits: OSHA PEL TWA 500 ppm, NIOSH REL 350 ppm ",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -966,7 +978,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Oxalic Acid: 1 mg/m3 ACGIH TLV & OSHA PEL",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -974,7 +986,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "MIBK: ACGIH TLV 20 ppm, STEL 75 ppm",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -982,7 +994,7 @@ namespace EHS.Models
                         new occupational_exposure_limit
                         {
                             description = "Caustic Potash: KOH ACGIH TLV 2 mg/m3",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -998,7 +1010,7 @@ namespace EHS.Models
                         new acute_chronic
                         {
                             description = "Acute",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1006,7 +1018,7 @@ namespace EHS.Models
                         new acute_chronic
                         {
                             description = "Chronic",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1022,7 +1034,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Dermal absorbtion",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1030,7 +1042,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Dermal-irritation",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1038,7 +1050,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Ingestion",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1046,7 +1058,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Inhalation-particles",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1054,7 +1066,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Inhalation-vapor or mist",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1062,7 +1074,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Eye absorption",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1070,7 +1082,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Dermal-burn",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1078,7 +1090,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Hearing",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1086,7 +1098,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "X-Ray",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1094,7 +1106,7 @@ namespace EHS.Models
                         new route_of_entry
                         {
                             description = "Injection",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1110,7 +1122,7 @@ namespace EHS.Models
                         new frequency_of_task
                         {
                             description = "Several times a day",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1118,7 +1130,7 @@ namespace EHS.Models
                         new frequency_of_task
                         {
                             description = "Several times a week",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1126,7 +1138,7 @@ namespace EHS.Models
                         new frequency_of_task
                         {
                             description = "1-2x a month",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1134,7 +1146,7 @@ namespace EHS.Models
                         new frequency_of_task
                         {
                             description = "Quarterly or less frequent than that",
-                            sort_order = "",
+                            sort_order = null,
                             display = true,
                             created_user = "MJWilson",
                             created_date = DateTime.Now
@@ -1142,6 +1154,367 @@ namespace EHS.Models
                     );
                     context.SaveChanges();
                 }
+
+                // Look for any monitoring data required records....
+                if (!context.monitoring_data_required.Any())
+                {
+                    context.monitoring_data_required.AddRange(
+                        new monitoring_data_required
+                        {
+                            description = "Priority 1",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new monitoring_data_required
+                        {
+                            description = "Priority 2",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new monitoring_data_required
+                        {
+                            description = "Priority 3",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new monitoring_data_required
+                        {
+                            description = "Priority 4",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any controls recommended records....
+                if (!context.controls_recommended.Any())
+                {
+                    context.controls_recommended.AddRange(
+                        new controls_recommended
+                        {
+                            description = "Engineering Controls - Ventilation",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new controls_recommended
+                        {
+                            description = "Engineering Controls - Noise reduction efforts",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new controls_recommended
+                        {
+                            description = "PPE - hearing protection in specific area",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new controls_recommended
+                        {
+                            description = "PPE - change to respiratory protection",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new controls_recommended
+                        {
+                            description = "Change equipment location",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new controls_recommended
+                        {
+                            description = "Research alternate chemical.",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new controls_recommended
+                        {
+                            description = "Update of process documentation",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new controls_recommended
+                        {
+                            description = "Job Rotation",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any yes/no records....
+                if (!context.yes_no.Any())
+                {
+                    context.yes_no.AddRange(
+                        new yes_no
+                        {
+                            description = "Yes",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new yes_no
+                        {
+                            description = "No",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any assessment methods used records....
+                if (!context.assessment_methods_used.Any())
+                {
+                    context.assessment_methods_used.AddRange(
+                        new assessment_methods_used
+                        {
+                            description = "Employee interviews",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new assessment_methods_used
+                        {
+                            description = "Personal Monitoring",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new assessment_methods_used
+                        {
+                            description = "Area Monitoring",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new assessment_methods_used
+                        {
+                            description = "Direct read measurements",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new assessment_methods_used
+                        {
+                            description = "Investigate work task amoung SEG",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any number of workers records....
+                if (!context.number_of_workers.Any())
+                {
+                    context.number_of_workers.AddRange(
+                        new number_of_workers
+                        {
+                            description = "1 to 4 workers",
+                            sort_order = "10",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new number_of_workers
+                        {
+                            description = "5 to 10 workers",
+                            sort_order = "20",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new number_of_workers
+                        {
+                            description = "11 to 20 workers",
+                            sort_order = "30",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new number_of_workers
+                        {
+                            description = "21 to 50 workers",
+                            sort_order = "40",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new number_of_workers
+                        {
+                            description = "51+ workers",
+                            sort_order = "50",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'Has Agent Been Changed' records....
+                if (!context.has_agent_been_changed.Any())
+                {
+                    context.has_agent_been_changed.AddRange(
+                        new has_agent_been_changed
+                        {
+                            description = "Yes - Quantity Used",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new has_agent_been_changed
+                        {
+                            description = "Yes - How Often It Is Used",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new has_agent_been_changed
+                        {
+                            description = "Yes - Concentration ",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new has_agent_been_changed
+                        {
+                            description = "No",
+                            sort_order = null,
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'Exposure Rating' records....
+                if (!context.exposure_rating.Any())
+                {
+                    context.exposure_rating.AddRange(
+                        new exposure_rating
+                        {
+                            value = 1,
+                            description = "< 10% of the OEL",
+                            sort_order = "10",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new exposure_rating
+                        {
+                            value = 2,
+                            description = "Between 10% and 50% of the OEL",
+                            sort_order = "20",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new exposure_rating
+                        {
+                            value = 3,
+                            description = "Between 50% and 100% of the OEL",
+                            sort_order = "30",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new exposure_rating
+                        {
+                            value = 4,
+                            description = ">100% of the OEL",
+                            sort_order = "40",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'Health Effect Rating' records....
+                if (!context.health_effect_rating.Any())
+                {
+                    context.health_effect_rating.AddRange(
+                        new health_effect_rating
+                        {
+                            value = 1,
+                            description = "Reversable health effects of concern",
+                            sort_order = "10",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new health_effect_rating
+                        {
+                            value = 2,
+                            description = "Severe, reversable health effects",
+                            sort_order = "20",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new health_effect_rating
+                        {
+                            value = 3,
+                            description = "Irreversible health effects of concern",
+                            sort_order = "30",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new health_effect_rating
+                        {
+                            value = 4,
+                            description = "Life Threatening or disabling injury or illness",
+                            sort_order = "40",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
 
 
 

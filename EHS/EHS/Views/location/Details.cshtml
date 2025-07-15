@@ -1,108 +1,40 @@
 ﻿@model EHS.Models.Dropdowns.location
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Location Details";
 }
 
-<h1>Details</h1>
+<div class="container py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <h2 class="card-title text-primary mb-4">Location Details</h2>
 
-<div>
-    <h4>Location</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.sort_order)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.sort_order)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.display)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.display)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_user)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_user)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_user_fullname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_user_fullname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_user_email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_user_email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_user)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_user)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_user_fullname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_user_fullname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_user_email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_user_email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_user)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_user)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_user_fullname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_user_fullname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_user_email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_user_email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_date)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr><th>@Html.DisplayNameFor(m => m.description)</th><td>@Html.DisplayFor(m => m.description)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.sort_order)</th><td>@Html.DisplayFor(m => m.sort_order)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.display)</th><td>@Html.DisplayFor(m => m.display)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user)</th><td>@Html.DisplayFor(m => m.created_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_fullname)</th><td>@Html.DisplayFor(m => m.created_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_email)</th><td>@Html.DisplayFor(m => m.created_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_date)</th><td>@Html.DisplayFor(m => m.created_date)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user)</th><td>@Html.DisplayFor(m => m.modified_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_fullname)</th><td>@Html.DisplayFor(m => m.modified_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_email)</th><td>@Html.DisplayFor(m => m.modified_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_date)</th><td>@Html.DisplayFor(m => m.modified_date)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user)</th><td>@Html.DisplayFor(m => m.deleted_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_fullname)</th><td>@Html.DisplayFor(m => m.deleted_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_email)</th><td>@Html.DisplayFor(m => m.deleted_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_date)</th><td>@Html.DisplayFor(m => m.deleted_date)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                <a asp-action="Edit" asp-route-id="@Model?.id" class="btn btn-primary px-4">Edit</a>
+            </div>
+        </div>
+    </div>
 </div>

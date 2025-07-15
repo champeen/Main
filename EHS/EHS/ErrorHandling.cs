@@ -18,7 +18,7 @@ namespace EHS
 
                 eventLog.Source = "Application";
                 eventLog.WriteEntry(
-                    "ERROR: Management of Change Application (MoC)" + Environment.NewLine +
+                    "ERROR: Environmental Health & Safety (EH&S)" + Environment.NewLine +
                     "CLASS: " + fileName + Environment.NewLine +
                     "METHOD: " + methodName + Environment.NewLine +
                     "LINE NUMBER: " + line.ToString() + Environment.NewLine +
@@ -28,15 +28,15 @@ namespace EHS
 
             // SEND TEAMS ERROR MESSAGE
             Initialization.TeamsErrorProvider.SendMessage(
-            "ERROR: Management of Change Application (MoC) </br>" +
+            "ERROR: Environmental Health & Safety (EH&S) </br>" +
             "MESSAGE: " + ex.Message + "</br> " +
             "INNER EXCEPTION: " + ex.InnerException?.ToString());
 
 
             // SEND EMAIL ERROR MESSAGE
             Initialization.EmailProviderSmtp.SendMessage(
-                "ERROR: Management of Change Application (MoC)",
-                "ERROR: Management of Change Application (MoC) </br>" +
+                "ERROR: Environmental Health & Safety (EH&S)",
+                "ERROR: Environmental Health & Safety (EH&S) </br>" +
                     "MESSAGE: " + ex.Message + "</br> " +
                     "INNER EXCEPTION: " + ex.InnerException?.ToString() + "</br>",
                 Initialization.EmailError,

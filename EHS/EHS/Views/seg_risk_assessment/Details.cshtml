@@ -13,27 +13,27 @@
         <div class="row">
             @foreach (var prop in typeof(EHS.Models.seg_risk_assessment).GetProperties())
             {
-                var value = prop.GetValue(Model.seg_risk_assessments);
+                var value = prop.GetValue(Model.seg_risk_assessment);
                 if (value != null)
                 {
                     <div class="col-md-6 mb-3">
-                        <label class="form-label fw-semibold">@prop.Name.Replace("_", " ")</label>
+                        <label class="form-label fw-bold">@prop.Name.Replace("_", " ")</label>
                         <div class="form-control bg-light">@value</div>
                     </div>
                 }
             }
         </div>
-    </div>
-    <div class="card-footer text-end">
-        <a asp-action="Edit" asp-route-id="@Model?.seg_risk_assessments?.id" class="btn btn-primary me-2">Edit</a>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <div class="mt-4 d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model?.seg_risk_assessment?.id" class="btn btn-primary px-4">Edit</a>
+        </div>
     </div>
 </div>
 
 <h4 class="mb-3">Attachments</h4>
 <div class="card">
     <div class="card-body">
-        @using (Html.BeginForm("SaveFile", "seg_risk_assessmentsController", new { id = Model.seg_risk_assessments.id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("SaveFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
         {
             <div class="row align-items-end mb-3">
                 <div class="col-md-9">
@@ -48,7 +48,6 @@
                 </div>
             </div>
         }
-
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <thead class="table-dark">
@@ -71,10 +70,10 @@
                                 <td>@createdDateFormatted</td>
                                 <td>@size</td>
                                 <td>
-                                    @Html.ActionLink("Download", "DownloadFile", "PTNs", new { id = Model.seg_risk_assessments.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-secondary me-1" })
-                                    @if (Model.IsAdmin || Model.Username == Model.seg_risk_assessments.created_user)
+                                    @Html.ActionLink("Download", "DownloadFile", "PTNs", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-secondary me-1" })
+                                    @if (Model.IsAdmin || Model.Username == Model.seg_risk_assessment.created_user)
                                     {
-                                        @Html.ActionLink("Delete", "DeleteFile", "PTNs", new { id = Model.seg_risk_assessments.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-danger" })
+                                        @Html.ActionLink("Delete", "DeleteFile", "PTNs", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-danger" })
                                     }
                                 </td>
                             </tr>
@@ -89,9 +88,8 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="mt-3 text-end">
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        <div class="mt-4 d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
         </div>
     </div>
 </div>

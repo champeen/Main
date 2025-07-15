@@ -26,7 +26,7 @@ namespace EHS.Controllers
         // GET: seg_role
         public async Task<IActionResult> Index()
         {
-            return View(await _contextEHS.seg_role.OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
+            return View(await _contextEHS.seg_role.Where(m => m.deleted_date == null).OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
         }
 
         // GET: seg_role/Details/5
@@ -142,8 +142,19 @@ namespace EHS.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var seg_role = await _contextEHS.seg_role.FindAsync(id);
-            if (seg_role != null)
-                _contextEHS.seg_role.Remove(seg_role);
+            if (seg_role == null)
+                return NotFound();
+
+            __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            if (employee == null)
+                return RedirectToAction(nameof(Index));
+
+            seg_role.deleted_user = _username;
+            seg_role.deleted_user_fullname = employee.displayname;
+            seg_role.deleted_user_email = employee.mail;
+            seg_role.deleted_date = DateTime.Now;
+            _contextEHS.Update(seg_role);
+            //_contextEHS.acute_chronic.Remove(acute_chronic);
 
             await _contextEHS.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

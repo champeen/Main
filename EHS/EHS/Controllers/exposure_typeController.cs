@@ -26,7 +26,7 @@ namespace EHS.Controllers
         // GET: exposure_types
         public async Task<IActionResult> Index()
         {
-            return View(await _contextEHS.exposure_type.OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
+            return View(await _contextEHS.exposure_type.Where(m => m.deleted_date == null).OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
         }
 
         // GET: exposure_types/Details/5
@@ -144,8 +144,19 @@ namespace EHS.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var exposure_type = await _contextEHS.exposure_type.FindAsync(id);
-            if (exposure_type != null)
-                _contextEHS.exposure_type.Remove(exposure_type);
+            if (exposure_type == null)
+                return NotFound();
+
+            __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            if (employee == null)
+                return RedirectToAction(nameof(Index));
+
+            exposure_type.deleted_user = _username;
+            exposure_type.deleted_user_fullname = employee.displayname;
+            exposure_type.deleted_user_email = employee.mail;
+            exposure_type.deleted_date = DateTime.Now;
+            _contextEHS.Update(exposure_type);
+            //_contextEHS.acute_chronic.Remove(acute_chronic);
 
             await _contextEHS.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

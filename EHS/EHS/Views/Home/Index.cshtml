@@ -1,11 +1,138 @@
-﻿@{
+﻿@using EHS.ViewModels
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-<div>
-    <p>this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! this is a test paragraph! </p>
+@* <div class="container py-4"> *@
+<div class="py-4">
+    @* <h1 class="display-4 text-center mb-4">Welcome to the EH&amp;S Portal</h1> *@
+
+    <div class="row mb-4">
+        <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+            <div>
+                @*<a asp-action="Create">Create New</a>*@
+                @*                 @Html.ActionLink("Create New PTN", "Create", "PTNs", new { source = "Home" }, new { @class = "btn btn-success" }) *@
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center">
+                @*<h1 class="display-4">DASHBOARD</h1>*@
+                <p>EH&amp;S dashboard for user: <span class="text-danger fw-bold">@ViewBag.UserDisplayName (@ViewBag.Username)</span></p>
+                @*                 <p>EH&amp;S dashboard for user1: <span class="text-danger fw-bold">@ViewBag.Username1</span></p>
+                <p>EH&amp;S dashboard for user2: <span class="text-danger fw-bold">@ViewBag.Username2</span></p> *@
+            </div>
+        </div>
+        <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+            @* @Html.ActionLink("Create New Task","Create","Tasks",new {source="Home"},new {@class="btn btn-primary"}) *@
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <a asp-controller="seg_risk_assessment" asp-action="Index" style="text-decoration: none;">
+                <div class="card shadow-sm rounded-3 h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mt-2">
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <h5 class="card-title">SEG/QEA Risk Matrix</h5>
+                            <span class="text-danger fw-bold">High</span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <!-- Y-axis label -->
+                            <div class="flex-shrink-0 me-2 d-flex flex-column justify-content-center align-items-center">
+                                <div class="rotate-label">Health Effect Rating</div>
+                            </div>
+
+                            <!-- Matrix + X-axis -->
+                            <div class="flex-grow-1">
+                                <table class="table table-bordered text-center align-middle risk-matrix w-100">
+                                    <tbody>
+                                        @for (int l = 4; l >= 1; l--)
+                                        {
+                                            <tr>
+                                                <td class="fw-bold bg-transparent border-0 text-white-50">@l</td>
+                                                @for (int s = 1; s <= 4; s++)
+                                                {
+                                                    var cell = ((List<RiskCell>)ViewBag.RiskMatrix)
+                                                    .FirstOrDefault(c => c.Severity == s && c.Likelihood == l);
+                                                    <td class="matrix-cell @cell.Color fw-bold">
+                                                        @cell.Quantity
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+
+                                        <tr>
+                                            <td class="border-0"></td>
+                                            @for (int s = 1; s <= 4; s++)
+                                            {
+                                                <td class="fw-bold bg-transparent text-white-50">@s</td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-2">
+                            <span class="text-success fw-bold">Low</span>
+                            <!-- X-axis label -->
+                            <div class="text-center mt-1 text-muted fw-semibold">Exposure Rating</div>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Monitoring Scheduled</h5>
+                    <p class="card-text display-6 fw-bold">--</p>
+                    <p class="text-muted">Upcoming industrial hygiene events</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Updates</h5>
+                    <p class="card-text display-6 fw-bold">--</p>
+                    <p class="text-muted">Changes made in the last 7 days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Exposure Summary</h5>
+                    <div class="placeholder-glow">
+                        <div class="placeholder col-12 mb-2"></div>
+                        <div class="placeholder col-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Control Effectiveness</h5>
+                    <div class="placeholder-glow">
+                        <div class="placeholder col-12 mb-2"></div>
+                        <div class="placeholder col-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-muted text-center mt-5">
+        <small>EH&amp;S Portal © @DateTime.Now.Year – All rights reserved</small>
+    </div>
 </div>

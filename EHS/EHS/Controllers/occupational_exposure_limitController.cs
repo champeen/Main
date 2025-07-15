@@ -26,7 +26,7 @@ namespace EHS.Controllers
         // GET: occupational_exposure_limit
         public async Task<IActionResult> Index()
         {
-            return View(await _contextEHS.occupational_exposure_limit.OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
+            return View(await _contextEHS.occupational_exposure_limit.Where(m => m.deleted_date == null).OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
         }
 
         // GET: occupational_exposure_limit/Details/5
@@ -142,8 +142,19 @@ namespace EHS.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var occupational_exposure_limit = await _contextEHS.occupational_exposure_limit.FindAsync(id);
-            if (occupational_exposure_limit != null)
-                _contextEHS.occupational_exposure_limit.Remove(occupational_exposure_limit);
+            if (occupational_exposure_limit == null)
+                return NotFound();
+
+            __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            if (employee == null)
+                return RedirectToAction(nameof(Index));
+
+            occupational_exposure_limit.deleted_user = _username;
+            occupational_exposure_limit.deleted_user_fullname = employee.displayname;
+            occupational_exposure_limit.deleted_user_email = employee.mail;
+            occupational_exposure_limit.deleted_date = DateTime.Now;
+            _contextEHS.Update(occupational_exposure_limit);
+            //_contextEHS.acute_chronic.Remove(acute_chronic);
 
             await _contextEHS.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

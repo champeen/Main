@@ -26,7 +26,7 @@ namespace EHS.Controllers
         // GET: route_of_entry
         public async Task<IActionResult> Index()
         {
-            return View(await _contextEHS.route_of_entry.OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
+            return View(await _contextEHS.route_of_entry.Where(m => m.deleted_date == null).OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
         }
 
         // GET: route_of_entry/Details/5
@@ -142,8 +142,19 @@ namespace EHS.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var route_of_entry = await _contextEHS.route_of_entry.FindAsync(id);
-            if (route_of_entry != null)
-                _contextEHS.route_of_entry.Remove(route_of_entry);
+            if (route_of_entry == null)
+                return NotFound();
+
+            __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            if (employee == null)
+                return RedirectToAction(nameof(Index));
+
+            route_of_entry.deleted_user = _username;
+            route_of_entry.deleted_user_fullname = employee.displayname;
+            route_of_entry.deleted_user_email = employee.mail;
+            route_of_entry.deleted_date = DateTime.Now;
+            _contextEHS.Update(route_of_entry);
+            //_contextEHS.acute_chronic.Remove(acute_chronic);
 
             await _contextEHS.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

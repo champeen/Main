@@ -1,0 +1,275 @@
+﻿@model EHS.ViewModels.SegViewModel
+
+@{
+    ViewData["Title"] = "Attachments";
+}
+
+<h1 class="mb-5">Similar Exposure Group (SEG) Risk</h1>
+
+@* <p>
+    <a class="btn btn-success btn-sm" asp-action="Create" title="Create">
+        <img src="@Url.Content("~/css/icons/lucide/create.svg")" alt="Delete" width="24" height="24" />
+    </a>
+</p> *@
+
+<div class="table-wrapper">
+    <div class="table-container datatable-hidden">
+        @* <div class="table-container table-responsive"> *@
+        <table id="segTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    @* <th></th> *@
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.location)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.exposure_type)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.agent)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.role)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.task)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.oel)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.acute_chronic)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.route_of_entry)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.frequency_of_task)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.duration_of_task)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.monitoring_data_required)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.controls_recommended)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.exposure_levels_acceptable)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.date_conducted)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.assessment_methods_used)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.seg_number_of_workers)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.has_agent_been_changed)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.person_performing_assessment_displayname)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @*                 @foreach (var item in Model)
+                { *@
+                <tr>
+@*                     <td>
+                        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@Model.seg_risk_assessment.id" title="Edit">
+                            <img src="@Url.Content("~/css/icons/lucide/edit.svg")" alt="Edit" width="24" height="24" />
+                        </a>
+                        <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@Model.seg_risk_assessment.id" title="Details">
+                            <img src="@Url.Content("~/css/icons/lucide/details.svg")" alt="Info" width="24" height="24" />
+                        </a>
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@Model.seg_risk_assessment.id" title="Delete">
+                            <img src="@Url.Content("~/css/icons/lucide/delete.svg")" alt="Delete" width="24" height="24" />
+                        </a>
+                        <a class="btn btn-info btn-sm" asp-action="Attachments" asp-route-id="@Model.seg_risk_assessment.id" title="Attachments">
+                            <img src="@Url.Content("~/css/icons/lucide/paperclip.svg")" alt="Delete" width="24" height="24" />
+                        </a>
+                    </td> *@
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.exposure_type)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.agent)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.role)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.task)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.oel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.acute_chronic)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.route_of_entry)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.frequency_of_task)
+                    </td>
+                    @{
+                        var ts = Model.seg_risk_assessment.duration_of_task; // assuming this is a TimeSpan
+                        var formatted = $"{ts.Days}d {ts.Hours}h {ts.Minutes}m {ts.Seconds}s";
+                    }
+                    <td>
+                        <span>@formatted</span>
+                        @* @Html.DisplayFor(modelItem => item.duration_of_task) *@
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.monitoring_data_required)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.controls_recommended)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.exposure_levels_acceptable)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.date_conducted)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.assessment_methods_used)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.seg_number_of_workers)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.has_agent_been_changed)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.person_performing_assessment_displayname)
+                    </td>
+                </tr>
+                @*                 } *@
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<h4 class="my-3">Attachments</h4>
+<div class="card">
+    <div class="card-body">
+        @using (Html.BeginForm("SaveFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+        {
+            <div class="row align-items-end mb-3">
+                <div class="col-md-9">
+                    <label class="form-label fw-bold">Upload Attachment(s)</label>
+                    <input type="file" name="fileAttachment" class="form-control" @ViewBag.DisableAttachmentUpload />
+                    <div class="text-danger fw-bold">
+                        @Model.FileAttachmentError
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input type="submit" value="Upload" class="btn btn-success w-100" @ViewBag.DisableAttachmentUpload />
+                </div>
+            </div>
+        }
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>File Name</th>
+                        <th>Date Added</th>
+                        <th>Size</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.attachments.Any())
+                    {
+                        foreach (var item in Model.attachments)
+                        {
+                            string size = item.Size < 1000 ? item.Size + " bytes" : string.Format("{0:N0} KB", item.Size / 1000);
+                            string createdDateFormatted = item.CreatedDate.ToString();
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@createdDateFormatted</td>
+                                <td>@size</td>
+                                <td>
+                                    @Html.ActionLink("Download", "DownloadFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-secondary me-1" })
+                                    @if (Model.IsAdmin || Model.Username == Model.seg_risk_assessment.created_user)
+                                    {
+                                        @Html.ActionLink("Delete", "DeleteFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-danger" })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">No attachments found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4 d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+        var table = $('#segTable')
+            .on('init.dt', function () {
+                $('.table-container').removeClass('datatable-hidden');
+            })
+            .DataTable({
+                scrollX: true,
+                autoWidth: false,
+                pageLength: 10,
+                lengthChange: true,
+                responsive: false,
+                order: [],
+                searching: false,
+                dom: "<'table-controls d-flex justify-content-between align-items-center'Bf>" +
+                    "t" +
+                    "<'d-flex justify-content-between align-items-center mt-2'ip>",
+                buttons: [
+                    // {
+                    //     extend: 'copy',
+                    //     exportOptions: { columns: ':visible' }
+                    // },
+                    // {
+                    //     extend: 'csv',
+                    //     exportOptions: { columns: ':visible:not(:first-child)' }
+                    // },
+                    // {
+                    //     extend: 'excel',
+                    //     exportOptions: { columns: ':visible:not(:first-child)' }
+                    // },
+                    // {
+                    //     extend: 'pdf',
+                    //     exportOptions: { columns: ':visible' }
+                    // },
+                    // {
+                    //     extend: 'print',
+                    //     exportOptions: { columns: ':visible' }
+                    // }
+                ],
+                columnDefs: [
+                    { targets: [], orderable: false, className: 'no-sort' }
+                 ]//,
+                // fixedColumns: {
+                //      leftColumns: 1
+                // }
+            });
+        });
+    </script>
+}

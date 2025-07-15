@@ -1,4 +1,257 @@
-﻿@model EHS.Models.seg_risk_assessment
+﻿@model EHS.ViewModels.SegViewModel
+
+@{
+    ViewData["Title"] = "Create Qualitive Exposure Assessment";
+}
+
+<div class="py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Create Qualitive Exposure Assessment</h2>
+            <form asp-action="Create" class="needs-validation" novalidate>
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_user)
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_user_fullname)
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_user_email)
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_date)
+                @Html.HiddenFor(m => m.Username)
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Similar Exposure Group</legend>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.location" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.location, new SelectList(ViewBag.Locations, "Value", "Text"), "-- Select Location --", new { @class = "form-control select2-single", @id = "SegCreateLocations" })
+                            <span asp-validation-for="seg_risk_assessment.location" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.exposure_type" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.exposure_type, new SelectList(ViewBag.ExposureTypes, "Value", "Text"), "-- Select Exposure Type --", new { @class = "form-control select2-single", @id = "SegCreateExposureTypes" })
+                            <span asp-validation-for="seg_risk_assessment.exposure_type" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.agent" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.agent, new SelectList(ViewBag.Agents, "Value", "Text"), "-- Select Agent --", new { @class = "form-control select2-single", @id = "SegCreateAgents" })
+                            <span asp-validation-for="seg_risk_assessment.agent" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.role" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.role, new SelectList(ViewBag.SegRoles, "Value", "Text"), "-- Select Role --", new { @class = "form-control select2-single", @id = "SegCreateRole" })
+                            <span asp-validation-for="seg_risk_assessment.role" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Task Information</legend>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.task" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.task, new SelectList(ViewBag.Tasks, "Value", "Text"), "-- Select Task --", new { @class = "form-control select2-single", @id = "SegCreateTask" })
+                            <span asp-validation-for="seg_risk_assessment.task" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.frequency_of_task" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.frequency_of_task, new SelectList(ViewBag.FrequencyOfTask, "Value", "Text"), "-- Select FrequencyOfTask --", new { @class = "form-control select2-single", @id = "SegCreateFrequencyOfTask" })
+                            <span asp-validation-for="seg_risk_assessment.frequency_of_task" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Duration of Task (Days / Hours / Minutes / Seconds)</label>
+                            <div class="row g-2">
+                                <div class="col">
+                                    <input asp-for="DurationDays" class="form-control" placeholder="Days" />
+                                </div>
+                                <div class="col">
+                                    <input asp-for="DurationHours" class="form-control" placeholder="Hours" />
+                                </div>
+                                <div class="col">
+                                    <input asp-for="DurationMinutes" class="form-control" placeholder="Minutes" />
+                                </div>
+                                <div class="col">
+                                    <input asp-for="DurationSeconds" class="form-control" placeholder="Seconds" />
+                                </div>
+                            </div>
+                            <div>
+                                <span asp-validation-for="DurationDays" class="text-danger"></span>
+                                <span asp-validation-for="DurationHours" class="text-danger"></span>
+                                <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+                                <span asp-validation-for="DurationSeconds" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Additional Information</legend>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.oel" class="form-label fw-bold"></label>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.oel, new SelectList(ViewBag.OccupationalExposureLimits, "Value", "Text"), "-- Select OEL --", new { @class = "form-control select2-single", @id = "SegCreateOel" })
+                            <span asp-validation-for="seg_risk_assessment.oel" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.acute_chronic" class="form-label fw-bold"></label>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.acute_chronic, new SelectList(ViewBag.AcuteChronic, "Value", "Text"), "-- Select Acute/Chronic --", new { @class = "form-control select2-single", @id = "SegCreateAcuteChronic" })
+                            <span asp-validation-for="seg_risk_assessment.acute_chronic" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.route_of_entry" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.seg_risk_assessment.route_of_entry, new MultiSelectList(ViewBag.RouteOfEntry, "Value", "Text"), new { @class = "form-control select2-multiple", @id = "SegCreateRouteOfEntry", multiple = true })
+                            <span asp-validation-for="seg_risk_assessment.route_of_entry" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.monitoring_data_required" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.monitoring_data_required, new SelectList(ViewBag.MonitoringDataRequired, "Value", "Text"), "-- Select Monitoring Data Required --", new { @class = "form-control select2-single", @id = "SegCreateMonitoringDataRequired" })
+                            <span asp-validation-for="seg_risk_assessment.monitoring_data_required" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.controls_recommended" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.seg_risk_assessment.controls_recommended, new MultiSelectList(ViewBag.ControlsRecommended, "Value", "Text"), new { @class = "form-control select2-multiple", @id = "SegCreateControlRecommended", multiple = true })
+                            <span asp-validation-for="seg_risk_assessment.controls_recommended" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.exposure_levels_acceptable" class="form-label fw-bold"></label>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.exposure_levels_acceptable, new SelectList(ViewBag.YesNo, "Value", "Text"), "-- Select Yes/No --", new { @class = "form-control select2-single", @id = "SegCreateYesNo" })
+                            <span asp-validation-for="seg_risk_assessment.exposure_levels_acceptable" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.date_conducted" class="form-label fw-bold"></label>
+                            <input asp-for="seg_risk_assessment.date_conducted" type="text" class="form-control datepicker" placeholder="Select date..." />
+                            <span asp-validation-for="seg_risk_assessment.date_conducted" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.assessment_methods_used" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.assessment_methods_used, new SelectList(ViewBag.AssessmentMethodsUsed, "Value", "Text"), "-- Select Assessment Methods Used --", new { @class = "form-control select2-single", @id = "SegCreateAssessmentMethodsUsed" })
+                            <span asp-validation-for="seg_risk_assessment.assessment_methods_used" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.seg_number_of_workers" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.seg_number_of_workers, new SelectList(ViewBag.NumberOfWorkers, "Value", "Text"), "-- Select Number of Workers --", new { @class = "form-control select2-single", @id = "SegCreateNumberOfWorkers" })
+                            <span asp-validation-for="seg_risk_assessment.seg_number_of_workers" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.has_agent_been_changed" class="form-label fw-bold"></label>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.has_agent_been_changed, new SelectList(ViewBag.HasAgentBeenChanged, "Value", "Text"), "-- Select --", new { @class = "form-control select2-single", @id = "SegCreateHasAgentBeenChanged" })
+                            <span asp-validation-for="seg_risk_assessment.has_agent_been_changed" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.person_performing_assessment_username" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.person_performing_assessment_username, new SelectList(ViewBag.Employees, "Value", "Text"), "-- Select Employee --", new { @class = "form-control select2-single", @id = "SegCreatePersonPerformingAssessment" })
+                            <span asp-validation-for="seg_risk_assessment.person_performing_assessment_username" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Risk Rating</legend>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="seg_risk_assessment.exposure_rating" class="form-label fw-bold"></label>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.exposure_rating, new SelectList(ViewBag.ExposureRatings, "Value", "Text"), "-- Select Rating --", new { @class = "form-control select2-single", @id = "SegCreateExposureRating" })
+                            <span asp-validation-for="seg_risk_assessment.exposure_rating" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="seg_risk_assessment.health_effect_rating" class="form-label fw-bold"></label>
+                            @Html.DropDownListFor(m => m.seg_risk_assessment.health_effect_rating, new SelectList(ViewBag.HealthEffectRatings, "Value", "Text"), "-- Select Rating --", new { @class = "form-control select2-single", @id = "SegCreateHealthEffectRating" })
+                            <span asp-validation-for="seg_risk_assessment.health_effect_rating" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Notes</legend>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label asp-for="seg_risk_assessment.additional_notes" class="form-label fw-bold"></label>
+                            @Html.TextAreaFor(m => m.seg_risk_assessment.additional_notes, new { id = "editorSegRiskAssessmentNotes", @class = "form-control", @rows = 3 })
+                            <span asp-validation-for="seg_risk_assessment.additional_notes" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-success px-4">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            const selects = [
+                "#SegCreatePersonPerformingAssessment", "#SegCreateLocations", "#SegCreateExposureTypes",
+                "#SegCreateAgents", "#SegCreateRole", "#SegCreateTask", "#SegCreateOel",
+                "#SegCreateAcuteChronic", "#SegCreateRouteOfEntry", "#SegCreateFrequencyOfTask",
+                "#SegCreateMonitoringDataRequired", "#SegCreateControlRecommended",
+                "#SegCreateYesNo", "#SegCreateAssessmentMethodsUsed",
+                "#SegCreateNumberOfWorkers", "#SegCreateHasAgentBeenChanged",
+                "#SegCreateExposureRating", "#SegCreateHealthEffectRating"
+            ];
+
+            selects.forEach(function (id) {
+                $(id).select2({
+                    placeholder: $(id + " option:first").text(),
+                    allowClear: true,
+                    width: '100%'
+                });
+            });
+
+            $('#SegCreateExposureTypes').on('change', function () {
+                const exposureType = $(this).val();
+                $.getJSON('/seg_risk_assessment/GetAgentByExposureType', { exposureType }, function (data) {
+                    const agentSelect = $('#SegCreateAgents');
+                    agentSelect.empty().append('<option value="">-- Select Agent --</option>');
+                    $.each(data, function (i, agent) {
+                        agentSelect.append(`<option value="${agent.description}">${agent.description}</option>`);
+                    });
+                });
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
+
+@* @model EHS.ViewModels.SegViewModel
 
 @{
     ViewData["Title"] = "Create Risk Assessment";
@@ -9,133 +262,156 @@
         <div class="card-body">
             <h2 class="card-title mb-4">Create New Risk Assessment</h2>
             <form asp-action="Create" class="needs-validation" novalidate>
-                @Html.HiddenFor(m => m.created_user)
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_user)
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_user_fullname)
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_user_email)
+                @Html.HiddenFor(m => m.seg_risk_assessment.created_date)
+                @Html.HiddenFor(m => m.Username)
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                 <div class="row g-3">
                     <div class="col-md-3">
-                        <label asp-for="location" class="form-label"></label>
-                        @* <input asp-for="location" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.location, new SelectList(ViewBag.Locations, "Value", "Text"), "-- Select Location --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateLocations" })
-                        <span asp-validation-for="location" class="text-danger"></span>
+                        <label asp-for="seg_risk_assessment.location" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.location, new SelectList(ViewBag.Locations, "Value", "Text"), "-- Select Location --", new { @class = "form-control select2-single", @id = "SegCreateLocations" })
+                        <span asp-validation-for="seg_risk_assessment.location" class="text-danger"></span>
                     </div>
                     <div class="col-md-3">
-                        <label asp-for="exposure_type" class="form-label"></label>
-                        @* <input asp-for="exposure_type" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.exposure_type, new SelectList(ViewBag.ExposureTypes, "Value", "Text"), "-- Select Exposure Type --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateExposureTypes" })
-                        <span asp-validation-for="exposure_type" class="text-danger"></span>
+                        <label asp-for="seg_risk_assessment.exposure_type" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.exposure_type, new SelectList(ViewBag.ExposureTypes, "Value", "Text"), "-- Select Exposure Type --", new { @class = "form-control select2-single", @id = "SegCreateExposureTypes" })
+                        <span asp-validation-for="seg_risk_assessment.exposure_type" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.agent" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.agent, new SelectList(ViewBag.Agents, "Value", "Text"), "-- Select Agent --", new { @class = "form-control select2-single", @id = "SegCreateAgents" })
+                        <span asp-validation-for="seg_risk_assessment.agent" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.seg_role" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.seg_role, new SelectList(ViewBag.SegRoles, "Value", "Text"), new { @class = "form-control select2-single", @id = "SegCreateRole" })
+                        <span asp-validation-for="seg_risk_assessment.seg_role" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.task" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.task, new SelectList(ViewBag.Tasks, "Value", "Text"), new { @class = "form-control select2-single", @id = "SegCreateTask" })
+                        <span asp-validation-for="seg_risk_assessment.task" class="text-danger"></span>
+                    </div>                    
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.frequency_of_task" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.frequency_of_task, new SelectList(ViewBag.FrequencyOfTask, "Value", "Text"), "-- Select FrequencyOfTask --", new { @class = "form-control select2-single", @id = "SegCreateFrequencyOfTask" })
+                        <span asp-validation-for="seg_risk_assessment.frequency_of_task" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Duration of Task (Days / Hours / Minutes / Seconds)</label>
+                        <div class="row g-2">
+                            <div class="col">
+                                <input asp-for="DurationDays" class="form-control" placeholder="Days" />
+                            </div>
+                            <div class="col">
+                                <input asp-for="DurationHours" class="form-control" placeholder="Hours" />
+                            </div>
+                            <div class="col">
+                                <input asp-for="DurationMinutes" class="form-control" placeholder="Minutes" />
+                            </div>
+                            <div class="col">
+                                <input asp-for="DurationSeconds" class="form-control" placeholder="Seconds" />
+                            </div>
+                        </div>
+                        <div>
+                            <span asp-validation-for="DurationDays" class="text-danger"></span>
+                            <span asp-validation-for="DurationHours" class="text-danger"></span>
+                            <span asp-validation-for="DurationMinutes" class="text-danger"></span>
+                            <span asp-validation-for="DurationSeconds" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.oel" class="form-label fw-bold"></label>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.oel, new SelectList(ViewBag.OccupationalExposureLimits, "Value", "Text"), "-- Select OEL --", new { @class = "form-control select2-single", @id = "SegCreateOel" })
+                        <span asp-validation-for="seg_risk_assessment.oel" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.acute_chronic" class="form-label fw-bold"></label>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.acute_chronic, new SelectList(ViewBag.AcuteChronic, "Value", "Text"), "-- Select Acute/Chronic --", new { @class = "form-control select2-single", @id = "SegCreateAcuteChronic" })
+                        <span asp-validation-for="seg_risk_assessment.acute_chronic" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.route_of_entry" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Multi-Select"></i>
+                        @Html.ListBoxFor(model => model.seg_risk_assessment.route_of_entry, new MultiSelectList(ViewBag.RouteOfEntry, "Value", "Text"), new { @class = "form-control select2-multiple", @id = "SegCreateRouteOfEntry", multiple = true })
+                        <span asp-validation-for="seg_risk_assessment.route_of_entry" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.monitoring_data_required" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.monitoring_data_required, new SelectList(ViewBag.MonitoringDataRequired, "Value", "Text"), "-- Select Monitoring Data Required --", new { @class = "form-control select2-single", @id = "SegCreateMonitoringDataRequired" })
+                        <span asp-validation-for="seg_risk_assessment.monitoring_data_required" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.controls_recommended" class="form-label fw-bold"></label>
+                        <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Multi-Select"></i>
+                        @Html.ListBoxFor(model => model.seg_risk_assessment.controls_recommended, new MultiSelectList(ViewBag.ControlsRecommended, "Value", "Text"), new { @class = "form-control select2-multiple", @id = "SegCreateControlRecommended", multiple = true })
+                        <span asp-validation-for="seg_risk_assessment.controls_recommended" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.exposure_levels_acceptable" class="form-label fw-bold"></label>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.exposure_levels_acceptable, new SelectList(ViewBag.YesNo, "Value", "Text"), "-- Select Yes/No --", new { @class = "form-control select2-single", @id = "SegCreateYesNo" })
+                        <span asp-validation-for="seg_risk_assessment.exposure_levels_acceptable" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.date_conducted" class="form-label fw-bold"></label>
+                        <input asp-for="seg_risk_assessment.date_conducted" type="text" class="form-control datepicker" placeholder="Select date..." />
+                        <span asp-validation-for="seg_risk_assessment.date_conducted" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.assessment_methods_used" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.assessment_methods_used, new SelectList(ViewBag.AssessmentMethodsUsed, "Value", "Text"), "-- Select Assessment Methods Used --", new { @class = "form-control select2-single", @id = "SegCreateAssessmentMethodsUsed" })
+                        <span asp-validation-for="seg_risk_assessment.assessment_methods_used" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.seg_number_of_workers" class="form-label fw-bold"></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.seg_number_of_workers, new SelectList(ViewBag.NumberOfWorkers, "Value", "Text"), "-- Select Number of Workers --", new { @class = "form-control select2-single", @id = "SegCreateNumberOfWorkers" })
+                        <span asp-validation-for="seg_risk_assessment.seg_number_of_workers" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.has_agent_been_changed" class="form-label fw-bold"></label>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.has_agent_been_changed, new SelectList(ViewBag.HasAgentBeenChanged, "Value", "Text"), "-- Select --", new { @class = "form-control select2-single", @id = "SegCreateHasAgentBeenChanged" })
+                        <span asp-validation-for="seg_risk_assessment.has_agent_been_changed" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-3">
+                        <label asp-for="seg_risk_assessment.person_performing_assessment_username" class="form-label fw-bold" ></label>
+                        <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.person_performing_assessment_username, new SelectList(ViewBag.Employees, "Value", "Text"), "-- Select Employee --", new { @class = "form-control select2-single", @id = "SegCreatePersonPerformingAssessment" })
+                        <span asp-validation-for="seg_risk_assessment.person_performing_assessment_username" class="text-danger"></span>
                     </div>
 
-                    @* <div id="agent-container" class="collapse"> *@
                     <div class="col-md-3">
-                        <label asp-for="agent" class="form-label"></label>
-                        @* <input asp-for="agent" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.agent, new SelectList(ViewBag.Agents, "Value", "Text"), "-- Select Agent --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateAgents" })
-                        @* <select id="SegCreateAgents" class="form-select mt-2"></select> *@
-                        <span asp-validation-for="agent" class="text-danger"></span>
-                    </div>
-                    @* </div> *@
-
-                    <div class="col-md-3">
-                        <label asp-for="seg_role" class="form-label"></label>
-                        @* <input asp-for="seg_role" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.seg_role, new SelectList(ViewBag.SegRoles, "Value", "Text"), "-- Select Role --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateRole" })
-                        <span asp-validation-for="seg_role" class="text-danger"></span>
+                        <label asp-for="seg_risk_assessment.exposure_rating" class="form-label fw-bold"></label>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.exposure_rating, new SelectList(ViewBag.ExposureRatings, "Value", "Text"), "-- Select Rating --", new { @class = "form-control select2-single", @id = "SegCreateExposureRating" })
+                        <span asp-validation-for="seg_risk_assessment.exposure_rating" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-3">
-                        <label asp-for="task" class="form-label"></label>
-                        @* <input asp-for="task" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.task, new SelectList(ViewBag.Tasks, "Value", "Text"), "-- Select Task --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateTask" })
-                        <span asp-validation-for="task" class="text-danger"></span>
+                        <label asp-for="seg_risk_assessment.health_effect_rating" class="form-label fw-bold"></label>
+                        @Html.DropDownListFor(model => model.seg_risk_assessment.health_effect_rating, new SelectList(ViewBag.HealthEffectRatings, "Value", "Text"), "-- Select Rating --", new { @class = "form-control select2-single", @id = "SegCreateHealthEffectRating" })
+                        <span asp-validation-for="seg_risk_assessment.health_effect_rating" class="text-danger"></span>
                     </div>
 
-                    <div class="col-md-3">
-                        <label asp-for="oel" class="form-label"></label>
-                        @* <input asp-for="oel" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.oel, new SelectList(ViewBag.OccupationalExposureLimits, "Value", "Text"), "-- Select OEL --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateOel" })
-                        <span asp-validation-for="oel" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="acute_chronic" class="form-label"></label>
-                        @* <input asp-for="acute_chronic" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.acute_chronic, new SelectList(ViewBag.AcuteChronic, "Value", "Text"), "-- Select Accute/Chronic --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateAcuteChronic" })
-                        <span asp-validation-for="acute_chronic" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="route_of_entry" class="form-label"></label>
-                        @* <input asp-for="route_of_entry" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.route_of_entry, new SelectList(ViewBag.RouteOfEntry, "Value", "Text"), "-- Select Route of Entry --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreateRouteOfEntry" })
-                        <span asp-validation-for="route_of_entry" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="frequency_of_task" class="form-label"></label>
-                        <input asp-for="frequency_of_task" class="form-control" />
-                        <span asp-validation-for="frequency_of_task" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="duration_of_task" class="form-label"></label>
-                        <input asp-for="duration_of_task" class="form-control" />
-                        <span asp-validation-for="duration_of_task" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="monitoring_data_required" class="form-label"></label>
-                        <input asp-for="monitoring_data_required" class="form-control" />
-                        <span asp-validation-for="monitoring_data_required" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="controls_recommended" class="form-label"></label>
-                        <input asp-for="controls_recommended" class="form-control" />
-                        <span asp-validation-for="controls_recommended" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="exposure_levels_acceptable" class="form-label"></label>
-                        <input asp-for="exposure_levels_acceptable" class="form-control" />
-                        <span asp-validation-for="exposure_levels_acceptable" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="date_conducted" class="form-label"></label>
-                        @* <input asp-for="date_conducted" class="form-control" onclick="this.showPicker()" /> *@
-                        <input asp-for="date_conducted" type="text" class="form-control datepicker" placeholder="Select date..." />
-                        <span asp-validation-for="date_conducted" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="assessment_methods_used" class="form-label"></label>
-                        <input asp-for="assessment_methods_used" class="form-control" />
-                        <span asp-validation-for="assessment_methods_used" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="seg_number_of_workers" class="form-label"></label>
-                        <input asp-for="seg_number_of_workers" class="form-control" />
-                        <span asp-validation-for="seg_number_of_workers" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="has_agent_been_changed" class="form-label"></label>
-                        <input asp-for="has_agent_been_changed" class="form-control" />
-                        <span asp-validation-for="has_agent_been_changed" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="person_performing_assessment_username" class="form-label"></label>
-                        @* <input asp-for="person_performing_assessment" class="form-control" /> *@
-                        @Html.DropDownListFor(model => model.person_performing_assessment_username, new SelectList(ViewBag.Employees, "Value", "Text"), "-- Select Employee --", new { @class = "form-control select2-single"/* , multiple = true */, @id = "SegCreatePersonPerformingAssessment" })
-                        <span asp-validation-for="person_performing_assessment_username" class="text-danger"></span>
+                    <div class="col-md-12">
+                        <label asp-for="seg_risk_assessment.additional_notes" class="form-label fw-bold"></label>
+                        @Html.TextAreaFor(model => model.seg_risk_assessment.additional_notes, new { id = "editorSegRiskAssessmentNotes", @class = "form-control", @rows = 3 })
+                        <span asp-validation-for="seg_risk_assessment.additional_notes" class="text-danger"></span>
                     </div>
                 </div>
-
                 <div class="mt-4 d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
-                    <button type="submit" class="btn btn-primary px-4">Create</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-4">Save</button>
                 </div>
             </form>
         </div>
@@ -165,7 +441,7 @@
                 allowClear: true,
                 width: '100%' // ensures consistent layout
             });
-            $('#SegCreateRoles').select2({
+            $('#SegCreateRole').select2({
                 placeholder: "-- Select Role --",
                 allowClear: true,
                 width: '100%' // ensures consistent layout
@@ -190,6 +466,51 @@
                 allowClear: true,
                 width: '100%' // ensures consistent layout
             });
+            $('#SegCreateFrequencyOfTask').select2({
+                placeholder: "-- Select Frequency of Task --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateMonitoringDataRequired').select2({
+                placeholder: "-- Select Monitoring Data Required --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateControlRecommended').select2({
+                placeholder: "-- Select Control Recommended --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateYesNo').select2({
+                placeholder: "-- Select Yes/No --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateAssessmentMethodsUsed').select2({
+                placeholder: "-- Select Assessment Methods Used --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateNumberOfWorkers').select2({
+                placeholder: "-- Select Number of Workers --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateHasAgentBeenChanged').select2({
+                placeholder: "-- Select --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateExposureRating').select2({
+                placeholder: "-- Select --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
+            $('#SegCreateHealthEffectRating').select2({
+                placeholder: "-- Select --",
+                allowClear: true,
+                width: '100%' // ensures consistent layout
+            });
         });
 
         // prefill agent dropdown based on exposure_type dropdown selection.....
@@ -198,7 +519,6 @@
             $.getJSON('/seg_risk_assessment/GetAgentByExposureType', { exposureType }, function (data) {
                 const agentSelect = $('#SegCreateAgents');
                 agentSelect.empty().append('<option value="">-- Select Agent --</option>');
-                // agentSelect.empty();
                 $.each(data, function (i, agent) {
                     agentSelect.append(`<option value="${agent.description}">${agent.description}</option>`);
                 });
@@ -213,4 +533,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
+}  *@

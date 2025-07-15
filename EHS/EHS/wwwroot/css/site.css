@@ -315,6 +315,32 @@ body:not(.dark-mode) .form-control {
     color: #fff;
 }
 
+/* Select2 MULTISELECT - dark mode */
+    .dark-mode .select2-container--default .select2-selection--multiple {
+        background-color: #2a2a2a;
+        border-color: #444;
+        color: #ffffff;
+    }
+
+    .dark-mode .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+        color: #ffffff;
+    }
+
+    .dark-mode .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #444;
+        border-color: #666;
+        color: #ffffff;
+    }
+
+    .dark-mode .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: #ffffff;
+    }
+
+    .dark-mode .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
+        color: #ff6b6b;
+    }
+
+
 /* Dropdown results panel */
 .dark-mode .select2-container--default .select2-dropdown  {
     background-color: #2a2a2a;
@@ -486,6 +512,12 @@ html.dark-mode .btn-dark:hover {
     border-color: #1d2124 !important;
 }
 
+html.dark-mode thead.table-light th {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+    border-color: #444 !important;
+}
+
 
 /* Margin between table-controls and table */
 .table-controls {
@@ -543,24 +575,80 @@ body {
     visibility: hidden;
 }
 
-/*html.dark-mode span.text-danger.text-danger,
-html.dark-mode span.field-validation-error.field-validation-error,
-html.dark-mode div.text-danger.text-danger,
-html.dark-mode p.text-danger.text-danger,
-html.dark-mode label.text-danger.text-danger,
-html.dark-mode .validation-summary-errors li.validation-summary-errors {
-    color: #ff6b6b !important;
-}*/
 
-/*html.dark-mode .field-validation-error.text-danger,
-html.dark-mode span.field-validation-error.text-danger,
-html.dark-mode .validation-summary-errors li {
-    color: #ff6b6b !important;
+/* ===============================
+   Risk Matrix Cell Styling
+   =============================== */
+table.risk-matrix td.matrix-cell.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
 }
 
-html.dark-mode span.field-validation-error,
-html.dark-mode span.text-danger,
-html.dark-mode .field-validation-error.text-danger,
-html.dark-mode .validation-summary-errors li {
-    color: #ff6b6b !important;
-}*/
+table.risk-matrix td.matrix-cell.bg-success {
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+table.risk-matrix td.matrix-cell.bg-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+table.risk-matrix td.matrix-cell.bg-info {
+    background-color: #17a2b8 !important;
+    color: #ffffff !important;
+}
+
+/* Dark mode overrides */
+html.dark-mode table.risk-matrix td.matrix-cell.bg-warning {
+    background-color: #e0a800 !important;
+    color: #000 !important;
+}
+
+html.dark-mode table.risk-matrix td.matrix-cell.bg-success {
+    background-color: #218838 !important;
+    color: #fff !important;
+}
+
+html.dark-mode table.risk-matrix td.matrix-cell.bg-danger {
+    background-color: #c82333 !important;
+    color: #fff !important;
+}
+
+.rotate-label {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #6c757d;
+    white-space: nowrap;
+}
+
+html.dark-mode .rotate-label {
+    color: #adb5bd;
+}
+
+/* Define the glow-pulse class for the td */
+.glow-pulse {
+    animation: glowPulse 2s infinite alternate; /* Sets the animation duration, iteration, and direction */
+    /* Optional: initial box-shadow to start with a subtle glow */
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+/* Define the @keyframes for the animation */
+@keyframes glowPulse {
+    from {
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Initial glow */
+        transform: scale(1); /* Initial size */
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 1); /* Intense glow at midpoint */
+        transform: scale(1.05); /* Slightly larger size */
+    }
+
+    to {
+        box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); /* Return to initial glow */
+        transform: scale(1); /* Return to initial size */
+    }
+}
