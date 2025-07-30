@@ -1,0 +1,40 @@
+﻿@model EHS.Models.Dropdowns.assessment_methods_used
+
+@{
+    ViewData["Title"] = "Assessment Method Details";
+}
+
+<div class="container py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <h2 class="card-title text-primary mb-4">Assessment Method Details</h2>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr><th>@Html.DisplayNameFor(m => m.description)</th><td>@Html.DisplayFor(m => m.description)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.sort_order)</th><td>@Html.DisplayFor(m => m.sort_order)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.display)</th><td>@Html.DisplayFor(m => m.display)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user)</th><td>@Html.DisplayFor(m => m.created_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_fullname)</th><td>@Html.DisplayFor(m => m.created_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_email)</th><td>@Html.DisplayFor(m => m.created_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_date)</th><td>@Html.DisplayFor(m => m.created_date)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user)</th><td>@Html.DisplayFor(m => m.modified_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_fullname)</th><td>@Html.DisplayFor(m => m.modified_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_email)</th><td>@Html.DisplayFor(m => m.modified_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_date)</th><td>@Html.DisplayFor(m => m.modified_date)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user)</th><td>@Html.DisplayFor(m => m.deleted_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_fullname)</th><td>@Html.DisplayFor(m => m.deleted_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_email)</th><td>@Html.DisplayFor(m => m.deleted_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_date)</th><td>@Html.DisplayFor(m => m.deleted_date)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                <a asp-action="Edit" asp-route-id="@Model?.id" class="btn btn-primary px-4">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>

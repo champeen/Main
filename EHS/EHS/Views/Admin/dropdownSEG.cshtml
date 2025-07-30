@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Admin Access";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+            ← Back
+        </a>
+        <h2 class="text-center flex-grow-1">SEG Risk - Field Dropdown Maintenance</h2>
+        <span style="width: 80px;"></span> @* Spacer to balance layout since back button is on left *@
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-primary mb-4 border-bottom pb-2">Dropdowns</h4>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="location" asp-action="Index">Locations</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="exposure_type" asp-action="Index">Exposure Types</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="agent" asp-action="Index">Agents</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="role" asp-action="Index">SEG Roles</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="tasks" asp-action="Index">Tasks</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="occupational_exposure_limit" asp-action="Index">Occupational Exposure Limits</a>
+                        @* <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="acute_chronic" asp-action="Index">Acute/Chronic</a> *@
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="route_of_entry" asp-action="Index">Route of Entry</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="frequency_of_task" asp-action="Index">Frequency of Task</a>
+@*                         <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="monitoring_data_required" asp-action="Index">Monitoring Data Required</a> *@
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="controls_recommended" asp-action="Index">Controls Recommended</a>                    
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="assessment_methods_used" asp-action="Index">Assessment Methods Used</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="number_of_workers" asp-action="Index">Number of Workers</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="has_agent_been_changed" asp-action="Index">Has Agent Been Changed</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="exposure_rating" asp-action="Index">Exposure Ratings</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="health_effect_rating" asp-action="Index">Health Effect Ratings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-primary mb-4 border-bottom pb-2">Miscellaneous</h4>
+                    <p class="text-muted">No miscellaneous items defined yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

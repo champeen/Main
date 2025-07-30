@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Admin Access";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+            ← Back
+        </a>
+        <h2 class="text-center flex-grow-1">Admin Access – Control File Maintenance</h2>
+        <span style="width: 80px;"></span> @* Spacer to balance layout since back button is on left *@
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-primary mb-4 border-bottom pb-2">Dropdowns Specific to a Module</h4>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="Admin" asp-action="dropdownSEG">Similar Exposure Group (SEG) Risk Dropdowns</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-primary mb-4 border-bottom pb-2">Universal Dropdowns</h4>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="yes_no" asp-action="Index">Yes / No</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

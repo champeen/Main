@@ -1,0 +1,179 @@
+﻿@using EHS.ViewModels
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@* <div class="container py-4"> *@
+<div class="py-4">
+    @* <h1 class="display-4 text-center mb-4">Welcome to the EH&amp;S Portal</h1> *@
+
+    <div class="row mb-4">
+        <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+            <div>
+                @*<a asp-action="Create">Create New</a>*@
+                @*                 @Html.ActionLink("Create New PTN", "Create", "PTNs", new { source = "Home" }, new { @class = "btn btn-success" }) *@
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="text-center">
+                @*<h1 class="display-4">DASHBOARD</h1>*@
+                <p>EH&amp;S dashboard for user: <span class="text-primary fw-bold">@ViewBag.UserDisplayName (@ViewBag.Username)</span></p>
+                @*                 <p>EH&amp;S dashboard for user1: <span class="text-danger fw-bold">@ViewBag.Username1</span></p>
+                <p>EH&amp;S dashboard for user2: <span class="text-danger fw-bold">@ViewBag.Username2</span></p> *@
+            </div>
+        </div>
+        <div class="col-3 d-flex justify-content-center align-items-end mb-3">
+            @* @Html.ActionLink("Create New Task","Create","Tasks",new {source="Home"},new {@class="btn btn-primary"}) *@
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <a asp-controller="seg_risk_assessment" asp-action="Index" style="text-decoration: none;">
+                <div class="card shadow-sm rounded-3 h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mt-2">
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <h5 class="card-title">SEG/QEA Risk Matrix</h5>
+                            <span class="text-danger fw-bold">High</span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <!-- Y-axis label -->
+                            <div class="flex-shrink-0 me-2 d-flex flex-column justify-content-center align-items-center">
+                                <div class="rotate-label">Health Effect Rating</div>
+                            </div>
+
+                            <!-- Matrix + X-axis -->
+                            <div class="flex-grow-1">
+                                <table class="table table-bordered text-center align-middle risk-matrix w-100">
+                                    <tbody>
+                                        @for (int l = 4; l >= 1; l--)
+                                        {
+                                            <tr>
+                                                <td class="fw-bold bg-transparent border-0 text-white-50">@l</td>
+                                                @for (int s = 1; s <= 4; s++)
+                                                {
+                                                    var cell = ((List<RiskCell>)ViewBag.RiskMatrix)
+                                                    .FirstOrDefault(c => c.Severity == s && c.Likelihood == l);
+                                                    <td class="matrix-cell @cell.Color fw-bold">
+                                                        @cell.Quantity
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td class="border-0"></td>
+                                            @for (int s = 1; s <= 4; s++)
+                                            {
+                                                <td class="fw-bold bg-transparent text-white-50">@s</td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-2">
+                            <span class="text-success fw-bold">Low</span>
+                            <!-- X-axis label -->
+                            <div class="text-center mt-1 fw-bold">Exposure Rating</div>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body mt-2">
+                    <h5 class="card-title">Upcoming SEG/QEA Reviews (&lt;30 days)</h5>
+
+                    @{
+                        var reviews = ViewBag.UpcomingReviews as List<EHS.Models.seg_risk_assessment>;
+                    }
+
+                    @if (reviews != null && reviews.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in reviews)
+                            {
+                                var dueDate = item.date_reviewed != null
+                                ? item.date_reviewed.Value.AddYears(5)
+                                : item.date_conducted.Value.AddYears(5);
+
+                                var isOverdue = dueDate < DateTime.Today;
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        @item.location - @item.role - @item.task - @item.agent
+                                        <div class="small">
+                                            <span class="me-2 @(isOverdue ? "text-danger" : "text-muted")">
+                                                Due: @dueDate.ToString("yyyy-MM-dd")
+                                            </span>
+                                            @if (isOverdue)
+                                            {
+                                                <span class="badge bg-danger">Overdue</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark">Due Soon</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <a asp-controller="seg_risk_assessment" asp-action="Edit" asp-route-id="@item.id" class="btn btn-sm btn-outline-primary">
+                                        Review
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No reviews due in the next 30 days.</p>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Coming Soon</h5>
+                    <p class="card-text display-6 fw-bold">--</p>
+                    <p class="text-muted">Changes made in the last 7 days</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Coming Soon</h5>
+                    <div class="placeholder-glow">
+                        <div class="placeholder col-12 mb-2"></div>
+                        <div class="placeholder col-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm rounded-3 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Coming Soon</h5>
+                    <div class="placeholder-glow">
+                        <div class="placeholder col-12 mb-2"></div>
+                        <div class="placeholder col-10"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-muted text-center mt-5">
+        <small>EH&amp;S Portal © @DateTime.Now.Year – All rights reserved</small>
+    </div>
+</div>
