@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EHS.Migrations
 {
     [DbContext(typeof(EHSContext))]
-    [Migration("20250711124446_addInitial")]
-    partial class addInitial
+    [Migration("20250716130628_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1066,9 +1066,6 @@ namespace EHS.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<string>("acute_chronic")
-                        .HasColumnType("text");
-
                     b.Property<string>("additional_notes")
                         .HasColumnType("text");
 
@@ -1098,6 +1095,9 @@ namespace EHS.Migrations
 
                     b.Property<DateTime?>("date_conducted")
                         .IsRequired()
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("date_reviewed")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("deleted_date")
@@ -1155,10 +1155,6 @@ namespace EHS.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("modified_user_fullname")
-                        .HasColumnType("text");
-
-                    b.Property<string>("monitoring_data_required")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("oel")

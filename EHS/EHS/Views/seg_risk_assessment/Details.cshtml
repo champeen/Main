@@ -70,10 +70,10 @@
                                 <td>@createdDateFormatted</td>
                                 <td>@size</td>
                                 <td>
-                                    @Html.ActionLink("Download", "DownloadFile", "PTNs", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-secondary me-1" })
+                                    @Html.ActionLink("Download", "DownloadFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-secondary me-1" })
                                     @if (Model.IsAdmin || Model.Username == Model.seg_risk_assessment.created_user)
                                     {
-                                        @Html.ActionLink("Delete", "DeleteFile", "PTNs", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-danger" })
+                                        @Html.ActionLink("Delete", "DeleteFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-danger" })
                                     }
                                 </td>
                             </tr>

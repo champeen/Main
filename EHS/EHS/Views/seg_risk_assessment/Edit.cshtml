@@ -73,7 +73,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Duration of Task (Days / Hours / Minutes / Seconds)</label>
+                            <label class="form-label fw-bold">Duration of Task (Days / Hours / Minutes)</label>
                             <div class="row g-2">
                                 <div class="col">
                                     <input asp-for="DurationDays" class="form-control" placeholder="Days" />
@@ -84,15 +84,15 @@
                                 <div class="col">
                                     <input asp-for="DurationMinutes" class="form-control" placeholder="Minutes" />
                                 </div>
-                                <div class="col">
+@*                                 <div class="col">
                                     <input asp-for="DurationSeconds" class="form-control" placeholder="Seconds" />
-                                </div>
+                                </div> *@
                             </div>
                             <div>
                                 <span asp-validation-for="DurationDays" class="text-danger"></span>
                                 <span asp-validation-for="DurationHours" class="text-danger"></span>
                                 <span asp-validation-for="DurationMinutes" class="text-danger"></span>
-                                <span asp-validation-for="DurationSeconds" class="text-danger"></span>
+                                @* <span asp-validation-for="DurationSeconds" class="text-danger"></span> *@
                             </div>
                         </div>
                     </div>
@@ -107,11 +107,11 @@
                             <span asp-validation-for="seg_risk_assessment.oel" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-3">
+@*                         <div class="col-md-3">
                             <label asp-for="seg_risk_assessment.acute_chronic" class="form-label fw-bold"></label>
                             @Html.DropDownListFor(model => model.seg_risk_assessment.acute_chronic, new SelectList(ViewBag.AcuteChronic, "Value", "Text"), "-- Select Acute/Chronic --", new { @class = "form-control select2-single", @id = "SegEditAcuteChronic" })
                             <span asp-validation-for="seg_risk_assessment.acute_chronic" class="text-danger"></span>
-                        </div>
+                        </div> *@
 
                         <div class="col-md-3">
                             <label asp-for="seg_risk_assessment.route_of_entry" class="form-label fw-bold"></label>
@@ -121,14 +121,13 @@
                             <span asp-validation-for="seg_risk_assessment.route_of_entry" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-3">
+@*                         <div class="col-md-3">
                             <label asp-for="seg_risk_assessment.monitoring_data_required" class="form-label fw-bold"></label>
                             <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                             @Html.DropDownListFor(model => model.seg_risk_assessment.monitoring_data_required, new SelectList(ViewBag.MonitoringDataRequired, "Value", "Text"), "-- Select Monitoring Data Required --", new { @class = "form-control select2-single", @id = "SegEditMonitoringDataRequired" })
                             <span asp-validation-for="seg_risk_assessment.monitoring_data_required" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
+                        </div> *@
+
                         <div class="col-md-3">
                             <label asp-for="seg_risk_assessment.controls_recommended" class="form-label fw-bold"></label>
                             <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Multi-Select"></i>
@@ -141,23 +140,15 @@
                             @Html.DropDownListFor(model => model.seg_risk_assessment.exposure_levels_acceptable, new SelectList(ViewBag.YesNo, "Value", "Text"), "-- Select Yes/No --", new { @class = "form-control select2-single", @id = "SegEditYesNo" })
                             <span asp-validation-for="seg_risk_assessment.exposure_levels_acceptable" class="text-danger"></span>
                         </div>
-
-                        <div class="col-md-3">
-                            <label asp-for="seg_risk_assessment.date_conducted" class="form-label fw-bold"></label>
-                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                            <input asp-for="seg_risk_assessment.date_conducted" type="text" class="form-control datepicker" placeholder="Select date..." />
-                            <span asp-validation-for="seg_risk_assessment.date_conducted" class="text-danger"></span>
-                        </div>
-
+                    </div>
+                    <div class="row mb-3">
                         <div class="col-md-3">
                             <label asp-for="seg_risk_assessment.assessment_methods_used" class="form-label fw-bold"></label>
                             <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
                             @Html.DropDownListFor(model => model.seg_risk_assessment.assessment_methods_used, new SelectList(ViewBag.AssessmentMethodsUsed, "Value", "Text"), "-- Select Assessment Methods Used --", new { @class = "form-control select2-single", @id = "SegEditAssessmentMethodsUsed" })
                             <span asp-validation-for="seg_risk_assessment.assessment_methods_used" class="text-danger"></span>
                         </div>
-                    </div>
 
-                    <div class="row mb-3">
                         <div class="col-md-3">
                             <label asp-for="seg_risk_assessment.seg_number_of_workers" class="form-label fw-bold"></label>
                             <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
@@ -177,6 +168,22 @@
                             @Html.DropDownListFor(model => model.seg_risk_assessment.person_performing_assessment_username, new SelectList(ViewBag.Employees, "Value", "Text"), "-- Select Employee --", new { @class = "form-control select2-single", @id = "SegEditPersonPerformingAssessment" })
                             <span asp-validation-for="seg_risk_assessment.person_performing_assessment_username" class="text-danger"></span>
                         </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.date_conducted" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
+                            <input asp-for="seg_risk_assessment.date_conducted" type="date" class="form-control datepicker" placeholder="Select date..." />
+                            <span asp-validation-for="seg_risk_assessment.date_conducted" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="seg_risk_assessment.date_reviewed" class="form-label fw-bold"></label>
+                            <input asp-for="seg_risk_assessment.date_reviewed" type="date" class="form-control datepicker" placeholder="Select date..." />
+                            <span asp-validation-for="seg_risk_assessment.date_reviewed" class="text-danger"></span>
+                        </div>
+
                         <div class="col-md-3"></div>
                     </div>
                 </fieldset>

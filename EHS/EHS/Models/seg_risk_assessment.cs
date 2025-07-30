@@ -30,23 +30,18 @@ namespace EHS.Models
         public TimeSpan duration_of_task { get; set; }
         [Display(Name = "Occupational Exposure Limit")]
         public string? oel { get; set; }
-        [Display(Name = "Acute/Chronic")]
-        public string? acute_chronic { get; set; }
+        //[Display(Name = "Acute/Chronic")]
+        //public string? acute_chronic { get; set; }
         [Display(Name = "Route of Entry(s)")]
         [Required(ErrorMessage = "Route of Entry is required.")]
         public List<string>? route_of_entry { get; set; }
-        [Display(Name = "Monitoring Data Required")]
-        [Required(ErrorMessage = "Monitoring Data is required.")]
-        public string? monitoring_data_required { get; set; }
+        //[Display(Name = "Monitoring Data Required")]
+        //[Required(ErrorMessage = "Monitoring Data is required.")]
+        //public string? monitoring_data_required { get; set; }
         [Display(Name = "Controls Recommended")]
         public List<string>? controls_recommended { get; set; }
         [Display(Name = "Exposure Levels Acceptable")]
         public string? exposure_levels_acceptable { get; set; }
-        [Display(Name = "Date Conducted")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "Date Conducted is required.")]
-        public DateTime? date_conducted { get; set; }
         [Display(Name = "Assessment Methods Used")]
         [Required(ErrorMessage = "Assessment Methods Used is required.")]
         public string? assessment_methods_used { get; set; }
@@ -60,6 +55,15 @@ namespace EHS.Models
         public string? person_performing_assessment_username { get; set; }
         [Display(Name = "Person Performing Assessment")]
         public string? person_performing_assessment_displayname { get; set; }
+        [Display(Name = "Date Conducted")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Date Conducted is required.")]
+        public DateTime? date_conducted { get; set; }
+        [Display(Name = "Review Date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
+        [DataType(DataType.Date)]
+        public DateTime? date_reviewed { get; set; }
         [Display(Name = "Exposure Rating")]
         [Range(0, 4)]
         public int? exposure_rating { get; set; }

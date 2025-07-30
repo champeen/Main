@@ -37,9 +37,9 @@
                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.oel)
                     </th>
-                    <th>
+@*                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.acute_chronic)
-                    </th>
+                    </th> *@
                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.route_of_entry)
                     </th>
@@ -49,17 +49,14 @@
                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.duration_of_task)
                     </th>
-                    <th>
+@*                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.monitoring_data_required)
-                    </th>
+                    </th> *@
                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.controls_recommended)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.exposure_levels_acceptable)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.seg_risk_assessment.date_conducted)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.assessment_methods_used)
@@ -72,6 +69,12 @@
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.seg_risk_assessment.person_performing_assessment_displayname)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.date_conducted)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.seg_risk_assessment.date_reviewed)
                     </th>
                 </tr>
             </thead>
@@ -111,9 +114,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.oel)
                     </td>
-                    <td>
+@*                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.acute_chronic)
-                    </td>
+                    </td> *@
                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.route_of_entry)
                     </td>
@@ -128,17 +131,14 @@
                         <span>@formatted</span>
                         @* @Html.DisplayFor(modelItem => item.duration_of_task) *@
                     </td>
-                    <td>
+@*                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.monitoring_data_required)
-                    </td>
+                    </td> *@
                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.controls_recommended)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.exposure_levels_acceptable)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.date_conducted)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.assessment_methods_used)
@@ -151,6 +151,12 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => Model.seg_risk_assessment.person_performing_assessment_displayname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.date_conducted)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => Model.seg_risk_assessment.date_reviewed)
                     </td>
                 </tr>
                 @*                 } *@

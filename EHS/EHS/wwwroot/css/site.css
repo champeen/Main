@@ -628,6 +628,32 @@ html.dark-mode .rotate-label {
     color: #adb5bd;
 }
 
+html.dark-mode .card {
+    background-color: #1e1e1e !important;
+    color: #f0f0f0;
+    border: 1px solid #333;
+}
+
+html.dark-mode .list-group-item {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+html.dark-mode .text-muted {
+    color: #aaa !important;
+}
+
+html.dark-mode .btn-outline-primary {
+    color: #4da3ff;
+    border-color: #4da3ff;
+}
+
+    html.dark-mode .btn-outline-primary:hover {
+        background-color: #4da3ff;
+        color: #000;
+    }
+
 /* Define the glow-pulse class for the td */
 .glow-pulse {
     animation: glowPulse 2s infinite alternate; /* Sets the animation duration, iteration, and direction */

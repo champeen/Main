@@ -17,7 +17,7 @@
         <div class="col-6">
             <div class="text-center">
                 @*<h1 class="display-4">DASHBOARD</h1>*@
-                <p>EH&amp;S dashboard for user: <span class="text-danger fw-bold">@ViewBag.UserDisplayName (@ViewBag.Username)</span></p>
+                <p>EH&amp;S dashboard for user: <span class="text-primary fw-bold">@ViewBag.UserDisplayName (@ViewBag.Username)</span></p>
                 @*                 <p>EH&amp;S dashboard for user1: <span class="text-danger fw-bold">@ViewBag.Username1</span></p>
                 <p>EH&amp;S dashboard for user2: <span class="text-danger fw-bold">@ViewBag.Username2</span></p> *@
             </div>
@@ -62,7 +62,6 @@
                                                 }
                                             </tr>
                                         }
-
                                         <tr>
                                             <td class="border-0"></td>
                                             @for (int s = 1; s <= 4; s++)
@@ -72,15 +71,13 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
-
                             </div>
                         </div>
 
                         <div class="d-flex justify-content-between mt-2">
                             <span class="text-success fw-bold">Low</span>
                             <!-- X-axis label -->
-                            <div class="text-center mt-1 text-muted fw-semibold">Exposure Rating</div>
+                            <div class="text-center mt-1 fw-bold">Exposure Rating</div>
                             <span></span>
                         </div>
                     </div>
@@ -89,17 +86,61 @@
         </div>
         <div class="col-md-4">
             <div class="card shadow-sm rounded-3 h-100">
-                <div class="card-body">
-                    <h5 class="card-title">Monitoring Scheduled</h5>
-                    <p class="card-text display-6 fw-bold">--</p>
-                    <p class="text-muted">Upcoming industrial hygiene events</p>
+                <div class="card-body mt-2">
+                    <h5 class="card-title">Upcoming SEG/QEA Reviews (&lt;30 days)</h5>
+
+                    @{
+                        var reviews = ViewBag.UpcomingReviews as List<EHS.Models.seg_risk_assessment>;
+                    }
+
+                    @if (reviews != null && reviews.Any())
+                    {
+                        <ul class="list-group list-group-flush">
+                            @foreach (var item in reviews)
+                            {
+                                var dueDate = item.date_reviewed != null
+                                ? item.date_reviewed.Value.AddYears(5)
+                                : item.date_conducted.Value.AddYears(5);
+
+                                var isOverdue = dueDate < DateTime.Today;
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        @item.location - @item.role - @item.task - @item.agent
+                                        <div class="small">
+                                            <span class="me-2 @(isOverdue ? "text-danger" : "text-muted")">
+                                                Due: @dueDate.ToString("yyyy-MM-dd")
+                                            </span>
+                                            @if (isOverdue)
+                                            {
+                                                <span class="badge bg-danger">Overdue</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning text-dark">Due Soon</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <a asp-controller="seg_risk_assessment" asp-action="Edit" asp-route-id="@item.id" class="btn btn-sm btn-outline-primary">
+                                        Review
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No reviews due in the next 30 days.</p>
+                    }
+
                 </div>
             </div>
         </div>
+
         <div class="col-md-4">
             <div class="card shadow-sm rounded-3 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Recent Updates</h5>
+                    <h5 class="card-title">Coming Soon</h5>
                     <p class="card-text display-6 fw-bold">--</p>
                     <p class="text-muted">Changes made in the last 7 days</p>
                 </div>
@@ -111,7 +152,7 @@
         <div class="col-md-6">
             <div class="card shadow-sm rounded-3 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Exposure Summary</h5>
+                    <h5 class="card-title">Coming Soon</h5>
                     <div class="placeholder-glow">
                         <div class="placeholder col-12 mb-2"></div>
                         <div class="placeholder col-10"></div>
@@ -122,7 +163,7 @@
         <div class="col-md-6">
             <div class="card shadow-sm rounded-3 h-100">
                 <div class="card-body">
-                    <h5 class="card-title">Control Effectiveness</h5>
+                    <h5 class="card-title">Coming Soon</h5>
                     <div class="placeholder-glow">
                         <div class="placeholder col-12 mb-2"></div>
                         <div class="placeholder col-10"></div>

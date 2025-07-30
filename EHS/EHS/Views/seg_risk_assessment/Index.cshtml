@@ -13,6 +13,7 @@
         <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="https://www.ehs.com/2021/03/ih-101-introduction-to-industrial-hygiene-program-management-part-1-similar-exposure-groups-segs/" target="_blank">SEG Overview (Part 1)</a></li>
             <li><a class="dropdown-item" href="https://www.ehs.com/2021/03/ih-101-part-2-qeas-essential-risk-assessment-methodologies-for-industrial-hygiene-program-management/" target="_blank">Risk Assessment (Part 2)</a></li>
+            <li><a class="dropdown-item" href="~/Hierarchy of Controls.png" target="_blank">Industrial Hygiene Hierarchy of Controls</a></li>
         </ul>
     </div>
 </div>
@@ -48,9 +49,9 @@
                     <th>
                         @Html.DisplayNameFor(model => model.oel)
                     </th>
-                    <th>
+@*                     <th>
                         @Html.DisplayNameFor(model => model.acute_chronic)
-                    </th>
+                    </th> *@
                     <th>
                         @Html.DisplayNameFor(model => model.route_of_entry)
                     </th>
@@ -60,17 +61,14 @@
                     <th>
                         @Html.DisplayNameFor(model => model.duration_of_task)
                     </th>
-                    <th>
+@*                     <th>
                         @Html.DisplayNameFor(model => model.monitoring_data_required)
-                    </th>
+                    </th> *@
                     <th>
                         @Html.DisplayNameFor(model => model.controls_recommended)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.exposure_levels_acceptable)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.date_conducted)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.assessment_methods_used)
@@ -92,6 +90,12 @@
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.risk_score)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.date_conducted)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.date_reviewed)
                     </th>
                     <th class="search-only">
                         @Html.DisplayNameFor(model => model.additional_notes)
@@ -146,9 +150,9 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.oel)
                         </td>
-                        <td>
+@*                         <td>
                             @Html.DisplayFor(modelItem => item.acute_chronic)
-                        </td>
+                        </td> *@
                         <td>
                             @string.Join(", ", item.route_of_entry ?? new List<string>())
                             @* @Html.DisplayFor(modelItem => item.route_of_entry) *@
@@ -158,24 +162,21 @@
                         </td>
                     @{
                             var ts = item.duration_of_task;
-                            var formatted = $"{ts.Days}d {ts.Hours}h {ts.Minutes}m {ts.Seconds}s";
+                            var formatted = $"{ts.Days}d {ts.Hours}h {ts.Minutes}m";
                         }
                         <td>
                             <span>@formatted</span>
                             @* @Html.DisplayFor(modelItem => item.duration_of_task) *@
                         </td>
-                        <td>
+@*                         <td>
                             @Html.DisplayFor(modelItem => item.monitoring_data_required)
-                        </td>
+                        </td> *@
                         <td>
                             @string.Join(", ", item.controls_recommended ?? new List<string>())
                             @* @Html.DisplayFor(modelItem => item.controls_recommended) *@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.exposure_levels_acceptable)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.date_conducted)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.assessment_methods_used)
@@ -197,6 +198,12 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.risk_score)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.date_conducted)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.date_reviewed)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.additional_notes)

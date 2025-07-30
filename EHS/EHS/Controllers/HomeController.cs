@@ -23,9 +23,19 @@ namespace EHS.Controllers
         public async Task<IActionResult> Index()
         {
             var employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+
+            if (employee == null)
+            {
+                var ex = new Exception($"User '{_username}' not found.");
+                ErrorHandling.HandleException(ex);
+
+                return RedirectToAction("UserNotFound", "Error", new { username = _username });
+            }
+
             ViewBag.Username = employee.onpremisessamaccountname;
             ViewBag.UserDisplayName = employee.displayname;
 
+            // GET SEG RISK ASSESSMENT MATRIX DASHBOARD.....
             var assessments = await _contextEHS.seg_risk_assessment
                     .Where(r => r.exposure_rating.HasValue && r.health_effect_rating.HasValue)
                     .ToListAsync();
@@ -53,6 +63,22 @@ namespace EHS.Controllers
 
             ViewBag.RiskMatrix = matrix;
 
+            // GET REVIEWS NEEDED WITHIN 30 DAYS....
+            var today = DateTime.Today;
+            var thirtyDaysFromNow = today.AddDays(30);
+
+            ViewBag.UpcomingReviews = _contextEHS.seg_risk_assessment
+                .Where(r =>
+                    r.date_conducted != null && (
+                        (r.date_reviewed == null &&
+                            r.date_conducted.Value.AddYears(5) <= thirtyDaysFromNow)
+                        ||
+                        (r.date_reviewed != null &&
+                            r.date_reviewed.Value.AddYears(5) <= thirtyDaysFromNow)
+                    )
+                )
+                .ToList();
+
             return View();
         }
 
@@ -64,7 +90,19 @@ namespace EHS.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
+        }
+        public IActionResult StatusCode(int code)
+        {
+            if (code == 404)
+            {
+                return View("NotFound");
+            }
+
+            return View("Error");
         }
 
         private string GetColorForScore(int score)

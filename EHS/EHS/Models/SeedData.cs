@@ -26,14 +26,15 @@ namespace EHS.Models
                             role = "Fabrication Operator",
                             task =  "Twisting",
                             oel = "Mercury: OEL ACGIH TLV TWA: 0.025 mg/m3 SKIN, OSHA PEL Ceiling 0.1 mg/m3, STEL: 0.03 mg/m3.  IDLH is 10 mg/m3",
-                            acute_chronic = "Acute",
+                            //acute_chronic = "Acute",
                             route_of_entry = new List<string> { "Dermal-irritation" },
                             frequency_of_task = "Several times a day",
                             duration_of_task = new TimeSpan(0,0,0,0),
-                            monitoring_data_required = "Priority 2",
+                            //monitoring_data_required = "Priority 2",
                             controls_recommended = new List<string> { "Engineering Controls - Ventilation" },
                             exposure_levels_acceptable = "Yes",
                             date_conducted = DateTime.Now.AddDays(-45),
+                            date_reviewed = DateTime.Now.AddDays(-2000),
                             assessment_methods_used = "Employee interviews",
                             seg_number_of_workers = "1 to 4 workers",
                             has_agent_been_changed = "Yes - Quantity Used",
@@ -54,14 +55,15 @@ namespace EHS.Models
                             role = "Fabrication Operator",
                             task = "Awkward Posture",
                             oel = "Oxalic Acid: 1 mg/m3 ACGIH TLV & OSHA PEL",
-                            acute_chronic = "Acute",
+                            //acute_chronic = "Acute",
                             route_of_entry = new List<string> { "Ingestion" },
                             frequency_of_task = "1-2x a month",
                             duration_of_task = new TimeSpan(1, 1, 1, 1),
-                            monitoring_data_required = "Priority 2",
+                            //monitoring_data_required = "Priority 2",
                             controls_recommended = new List<string> { "Change people location 2" },
                             exposure_levels_acceptable = "No",
                             date_conducted = DateTime.Now,
+                            date_reviewed = DateTime.Now.AddDays(-1810),
                             assessment_methods_used = "Personal Monitoring",
                             seg_number_of_workers = "21 to 50 workers",
                             has_agent_been_changed = "Yes - Concentration ",
@@ -82,14 +84,15 @@ namespace EHS.Models
                             role = "Fabrication Operator",
                             task = "Area Noise",
                             oel = "Caustic Potash: KOH ACGIH TLV 2 mg/m3",
-                            acute_chronic = "Chronic",
+                            //acute_chronic = "Chronic",
                             route_of_entry = new List<string> { "Dermal-burn" },
                             frequency_of_task = "Quarterly or less frequent than that",
                             duration_of_task = new TimeSpan(2, 2, 2, 2),
-                            monitoring_data_required = "Priority 4",
+                            //monitoring_data_required = "Priority 4",
                             controls_recommended = new List<string> { "Change people location" },
                             exposure_levels_acceptable = "No",
                             date_conducted = DateTime.Now.AddDays(-7),
+                            date_reviewed = DateTime.Now.AddDays(-7),
                             assessment_methods_used = "FiDirect read measurementsller",
                             seg_number_of_workers = "51+ workers",
                             has_agent_been_changed = "No",
@@ -199,7 +202,7 @@ namespace EHS.Models
                         new agent
                         {
                             exposure_type = "Chemical",
-                            description = "Manganese: Potassium permanganate",
+                            description = "Manganese: Potassium Permanganate",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -208,7 +211,7 @@ namespace EHS.Models
                         new agent
                         {
                             exposure_type = "Chemical",
-                            description = "Manganese: Sodium permanganate",
+                            description = "Manganese: Sodium Permanganate",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -289,7 +292,7 @@ namespace EHS.Models
                         new agent
                         {
                             exposure_type = "Chemical",
-                            description = "Propane - 1,2 diol  (Cry-Tek 100 Antifreeze)",
+                            description = "Propane - 1,2 Diol  (Cry-Tek 100 Antifreeze)",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -298,7 +301,7 @@ namespace EHS.Models
                         new agent
                         {
                             exposure_type = "Chemical",
-                            description = "Phtahalic Anhydride (Crystal bond)",
+                            description = "Phtahalic Anhydride (Crystal Bond)",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -307,7 +310,7 @@ namespace EHS.Models
                         new agent
                         {
                             exposure_type = "Chemical",
-                            description = "Propylene glycol (Dow Frost's)",
+                            description = "Propylene Glycol (Dow Frost's)",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -316,7 +319,7 @@ namespace EHS.Models
                         new agent
                         {
                             exposure_type = "Chemical",
-                            description = "Ethylene gas",
+                            description = "Ethylene Gas",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -334,7 +337,7 @@ namespace EHS.Models
                         new agent
                         {
                             exposure_type = "Chemical",
-                            description = "Hydrochloric acid",
+                            description = "Hydrochloric Acid",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -601,7 +604,7 @@ namespace EHS.Models
                         },
                         new seg_role
                         {
-                            description = "Maintenance: E& I Tech/Electrician",
+                            description = "Maintenance: E&I Tech/Electrician",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -689,7 +692,7 @@ namespace EHS.Models
                         },
                         new task
                         {
-                            description = "Awkward posture",
+                            description = "Awkward Posture",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -753,7 +756,7 @@ namespace EHS.Models
                         },
                         new task
                         {
-                            description = "Making a batch",
+                            description = "Making a Batch",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -841,7 +844,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = "Potassium Hydroxide Ceiling:   NIOSH REL 2 mg/m3 ",
+                            description = "Potassium Hydroxide Ceiling: NIOSH REL 2 mg/m3 ",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -881,7 +884,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = "Graphite: ACGIH 2 mg/m3 TWA respirable fraction, 5 mg/m3 PEL. ",
+                            description = "Graphite: ACGIH 2 mg/m3 TWA Respirable Fraction, 5 mg/m3 PEL. ",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -897,7 +900,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = "Nitric acid: ACGIH OEL TWA 2 ppm, STEL 4 ppm ",
+                            description = "Nitric Acid: ACGIH OEL TWA 2 ppm, STEL 4 ppm ",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -905,7 +908,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = "Ethanediol ACGIH STEL 50 ppm (vapor) and 10 mg/m3 inhalable particulate), TLV TWA: 25 ppm vapor fraction",
+                            description = "Ethanediol ACGIH STEL 50 ppm (vapor) and 10 mg/m3 Inhalable Particulate), TLV TWA: 25 ppm vapor fraction",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -921,7 +924,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = "Ethylene gas: ACGIH TWA 200 ppm",
+                            description = "Ethylene Gas: ACGIH TWA 200 ppm",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -937,7 +940,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = " Hydrochloric acid: ACGIH TLV-C 2 ppm, OSHA PEL-T/C 5 ppm. ",
+                            description = " Hydrochloric Acid: ACGIH TLV-C 2 ppm, OSHA PEL-T/C 5 ppm. ",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -945,7 +948,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = "Hydrogen peroxide ACGIH TWA 1 ppm",
+                            description = "Hydrogen Peroxide ACGIH TWA 1 ppm",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -961,7 +964,7 @@ namespace EHS.Models
                         },
                         new occupational_exposure_limit
                         {
-                            description = "Mercury: OEL ACGIH TLV TWA: 0.025 mg/m3 SKIN, OSHA PEL Ceiling 0.1 mg/m3, STEL: 0.03 mg/m3.  IDLH is 10 mg/m3",
+                            description = "Mercury: OEL ACGIH TLV TWA: 0.025 mg/m3 SKIN, OSHA PEL Ceiling 0.1 mg/m3, STEL: 0.03 mg/m3. IDLH is 10 mg/m3",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1033,7 +1036,7 @@ namespace EHS.Models
                     context.route_of_entry.AddRange(
                         new route_of_entry
                         {
-                            description = "Dermal absorbtion",
+                            description = "Dermal Absorbtion",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1041,7 +1044,7 @@ namespace EHS.Models
                         },
                         new route_of_entry
                         {
-                            description = "Dermal-irritation",
+                            description = "Dermal-Irritation",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1057,7 +1060,7 @@ namespace EHS.Models
                         },
                         new route_of_entry
                         {
-                            description = "Inhalation-particles",
+                            description = "Inhalation-Particles",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1065,7 +1068,7 @@ namespace EHS.Models
                         },
                         new route_of_entry
                         {
-                            description = "Inhalation-vapor or mist",
+                            description = "Inhalation-Vapor or Mist",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1073,7 +1076,7 @@ namespace EHS.Models
                         },
                         new route_of_entry
                         {
-                            description = "Eye absorption",
+                            description = "Eye Absorption",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1081,7 +1084,7 @@ namespace EHS.Models
                         },
                         new route_of_entry
                         {
-                            description = "Dermal-burn",
+                            description = "Dermal-Burn",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1209,7 +1212,7 @@ namespace EHS.Models
                         },
                         new controls_recommended
                         {
-                            description = "Engineering Controls - Noise reduction efforts",
+                            description = "Engineering Controls - Noise Reduction Efforts",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1217,7 +1220,7 @@ namespace EHS.Models
                         },
                         new controls_recommended
                         {
-                            description = "PPE - hearing protection in specific area",
+                            description = "PPE - Hearing Protection in Specific Area",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1225,7 +1228,7 @@ namespace EHS.Models
                         },
                         new controls_recommended
                         {
-                            description = "PPE - change to respiratory protection",
+                            description = "PPE - Change to Respiratory Protection",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1233,7 +1236,7 @@ namespace EHS.Models
                         },
                         new controls_recommended
                         {
-                            description = "Change equipment location",
+                            description = "Change Equipment Location",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1241,7 +1244,7 @@ namespace EHS.Models
                         },
                         new controls_recommended
                         {
-                            description = "Research alternate chemical.",
+                            description = "Research Alternate Chemical.",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1249,7 +1252,7 @@ namespace EHS.Models
                         },
                         new controls_recommended
                         {
-                            description = "Update of process documentation",
+                            description = "Update of Process Documentation",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1297,7 +1300,7 @@ namespace EHS.Models
                     context.assessment_methods_used.AddRange(
                         new assessment_methods_used
                         {
-                            description = "Employee interviews",
+                            description = "Employee Interviews",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1321,7 +1324,7 @@ namespace EHS.Models
                         },
                         new assessment_methods_used
                         {
-                            description = "Direct read measurements",
+                            description = "Direct Read Measurements",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1329,7 +1332,7 @@ namespace EHS.Models
                         },
                         new assessment_methods_used
                         {
-                            description = "Investigate work task amoung SEG",
+                            description = "Investigate Work Task Among SEG",
                             sort_order = null,
                             display = true,
                             created_user = "MJWilson",
@@ -1478,7 +1481,7 @@ namespace EHS.Models
                         new health_effect_rating
                         {
                             value = 1,
-                            description = "Reversable health effects of concern",
+                            description = "Reversable Health Effects of Concern",
                             sort_order = "10",
                             display = true,
                             created_user = "MJWilson",
@@ -1487,7 +1490,7 @@ namespace EHS.Models
                         new health_effect_rating
                         {
                             value = 2,
-                            description = "Severe, reversable health effects",
+                            description = "Severe, Reversable Health Effects",
                             sort_order = "20",
                             display = true,
                             created_user = "MJWilson",
@@ -1496,7 +1499,7 @@ namespace EHS.Models
                         new health_effect_rating
                         {
                             value = 3,
-                            description = "Irreversible health effects of concern",
+                            description = "Irreversible Health Effects of Concern",
                             sort_order = "30",
                             display = true,
                             created_user = "MJWilson",
@@ -1505,7 +1508,7 @@ namespace EHS.Models
                         new health_effect_rating
                         {
                             value = 4,
-                            description = "Life Threatening or disabling injury or illness",
+                            description = "Life Threatening or Disabling Injury or Illness",
                             sort_order = "40",
                             display = true,
                             created_user = "MJWilson",
@@ -1514,12 +1517,6 @@ namespace EHS.Models
                     );
                     context.SaveChanges();
                 }
-
-
-
-
-
-
             }
         }
     }
