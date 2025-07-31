@@ -850,7 +850,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email Waiver creator to notify of Waiver Rejection....
-            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - Waiver Rejected";
             string body = @"Your Waiver has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
                 "<br/><br/><strong>Reason Rejected: </strong>" + waiver.RejectedReason + "." +
@@ -887,7 +887,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email Waiver creator that the Waiver was Approved....
-            var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personApproving = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - Waiver Approved by Admin";
             string body = @"Your Waiver has been <span style=""color:green"">approved</span> by " + personApproving.displayname + "." +
                 "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
@@ -930,7 +930,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email Waiver creator to notify of Waiver Rejection....
-            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - Waiver Rejected";
             string body = @"Your Waiver has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
                 "<br/><br/><strong>Reason Rejected: </strong>" + waiver.RejectedReason + "." +
@@ -1034,7 +1034,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email Waiver creator to notify of PTN Rejection....
-            var personClosing = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personClosing = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - Waiver Closed";
             string body = @"Your Waiver has been <span style=""color:green"">closed</span> by " + personClosing.displayname + "." +
                 "<br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Title: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
@@ -1169,7 +1169,7 @@ namespace PtnWaiver.Controllers
                         var adminApproverList = await _contextPtnWaiver.Administrators.Where(m => m.Approver == true).ToListAsync();
                         foreach (var record in adminApproverList)
                         {
-                            var adminToNotify = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == record.Username.ToLower()).FirstOrDefaultAsync();
+                            var adminToNotify = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (record.Username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
                             string subjectAdmin = @"Process Test Notification (PTN) - Waiver Approved";
                             string bodyAdmin = @"Waiver has been <span style=""color:green"">Approved</span>. <br/><br/><strong>Waiver#: </strong>" + waiverRec.WaiverNumber + @"<br/><strong>Waiver Title: </strong>" + waiverRec.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "/Waivers/Details?id=" + waiverRec.Id.ToString() + "&tab=Details&sourceScreen=Dashboard" + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
 
@@ -1303,7 +1303,7 @@ namespace PtnWaiver.Controllers
             {
                 foreach (var person in waiver.AdditionalEmailNotificationsOfMaterialDetails)
                 {
-                    var sendToPerson = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == person.ToLower()).FirstOrDefaultAsync();
+                    var sendToPerson = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (person ?? string.Empty).ToLower()).FirstOrDefaultAsync();
                     Initialization.EmailProviderSmtp.SendMessage(subject, body, sendToPerson.mail, null, null, null);
                     AddEmailHistory(null, subject, body, sendToPerson.displayname, sendToPerson.onpremisessamaccountname, sendToPerson.mail, null, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
                 }

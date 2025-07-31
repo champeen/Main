@@ -394,7 +394,7 @@ namespace PtnWaiver.Controllers
             if (ptn == null)
                 return View("Index");
 
-            var ptnOwner = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var ptnOwner = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
 
             ViewBag.Status = getPtnStatus();
             ViewBag.OriginatingGroups = getOriginatingGroups();
@@ -905,7 +905,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email PTN creator to notify of PTN Rejection....
-            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - PTN Rejected";
             string body = @"Your PTN has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
                 "<br/><br/><strong>Reason Rejected: </strong>" + ptn.RejectedReason + "." +
@@ -942,7 +942,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email PTN creator that the PTN was Approved....
-            var personApproving = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personApproving = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - PTN Approved by Admin";
             string body = @"Your PTN has been <span style=""color:green"">approved</span> by " + personApproving.displayname + ".<br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
             Initialization.EmailProviderSmtp.SendMessage(subject, body, ptn.CreatedUserEmail, personApproving.mail, null, null);
@@ -986,7 +986,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email PTN creator to notify of PTN Rejection....
-            var personRejecting = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personRejecting = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - PTN Rejected";
             string body = @"Your PTN has been <span style=""color:red"">rejected</span> by " + personRejecting.displayname + "." +
                 "<br/><br/><strong>Reason Rejected: </strong>" + ptn.RejectedReason + "." +
@@ -1023,7 +1023,7 @@ namespace PtnWaiver.Controllers
             await _contextPtnWaiver.SaveChangesAsync();
 
             // email PTN creator to notify of PTN Rejection....
-            var personClosing = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
+            var personClosing = await _contextMoc.__mst_employee.Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower()).FirstOrDefaultAsync();
             string subject = @"Process Test Notification (PTN) - PTN Closed";
             string body = @"Your PTN has been <span style=""color:green"">closed</span> by " + personClosing.displayname + "." +
                 "<br/><br/><strong>DocId: </strong>" + ptn.DocId + @"<br/><strong>PTN Title: </strong>" + ptn.Title + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";

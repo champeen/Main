@@ -115,7 +115,7 @@ namespace PtnWaiver.Controllers
 
             if (departmentArea.PrimaryApproverUsername != null)
             {
-                var primaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.PrimaryApproverUsername);
+                var primaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (departmentArea.PrimaryApproverUsername ?? string.Empty).ToLower());
                 if (primaryUser != null)
                 {
                     departmentArea.PrimaryApproverEmail = primaryUser.mail;
@@ -128,7 +128,7 @@ namespace PtnWaiver.Controllers
 
             if (departmentArea.SecondaryApproverUsername != null)
             {
-                var secondaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.SecondaryApproverUsername);
+                var secondaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (departmentArea.SecondaryApproverUsername ?? string.Empty).ToLower());
                 if (secondaryUser != null)
                 {
                     departmentArea.SecondaryApproverEmail = secondaryUser.mail;
@@ -197,7 +197,7 @@ namespace PtnWaiver.Controllers
 
             if (departmentArea.PrimaryApproverUsername != null)
             {
-                var primaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.PrimaryApproverUsername);
+                var primaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (departmentArea.PrimaryApproverUsername ?? string.Empty).ToLower());
                 if (primaryUser != null)
                 {
                     departmentArea.PrimaryApproverEmail = primaryUser.mail;
@@ -210,7 +210,7 @@ namespace PtnWaiver.Controllers
 
             if (departmentArea.SecondaryApproverUsername != null)
             {
-                var secondaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => m.onpremisessamaccountname == departmentArea.SecondaryApproverUsername);
+                var secondaryUser = await _contextMoc.__mst_employee.FirstOrDefaultAsync(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (departmentArea.SecondaryApproverUsername ?? string.Empty).ToLower());
                 if (secondaryUser != null)
                 {
                     departmentArea.SecondaryApproverEmail = secondaryUser.mail;

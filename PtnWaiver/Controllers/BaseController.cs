@@ -65,7 +65,7 @@ namespace PtnWaiver.Controllers
                 if (userDisplayName == null)
                 {
                     userDisplayName = _contextMoc.__mst_employee
-                        .Where(m => m.onpremisessamaccountname == _username)
+                        .Where(m =>(m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower())
                         .Where(m => m.accountenabled == true)
                         .Where(m => !String.IsNullOrWhiteSpace(m.mail))
                         .Select(m => m.displayname)
@@ -82,7 +82,7 @@ namespace PtnWaiver.Controllers
                 if (isAuthorized == null)
                 {
                     var found = _contextMoc.__mst_employee
-                        .Where(m => m.onpremisessamaccountname == _username)    // User Name logged in matches one in the database
+                        .Where(m =>(m.onpremisessamaccountname ?? string.Empty).ToLower() == (_username ?? string.Empty).ToLower())    // User Name logged in matches one in the database
                         .Where(m => m.accountenabled == true)                   // Account is enabled
                         .Where(m => !String.IsNullOrWhiteSpace(m.mail))         // There is an email address
                         .Any();
@@ -162,7 +162,7 @@ namespace PtnWaiver.Controllers
             foreach (var user in userList)
             {
                 SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                if (user.onpremisessamaccountname == username)
+                if (user.onpremisessamaccountname?.ToLower() == username?.ToLower())
                     item.Selected = true;
                 users.Add(item);
             }
@@ -370,7 +370,7 @@ namespace PtnWaiver.Controllers
                 return null;
 
             return _contextMoc.__mst_employee
-            .Where(m => m.onpremisessamaccountname == username)
+            .Where(m => (m.onpremisessamaccountname ?? string.Empty).ToLower() == (username ?? string.Empty).ToLower())
             .Where(m => m.accountenabled == true)
             .Where(m => !String.IsNullOrWhiteSpace(m.mail))
             //.Select(m => m.displayname)
