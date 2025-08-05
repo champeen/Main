@@ -5,6 +5,7 @@ using Management_of_Change.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Management_of_Change.Controllers
 {
@@ -583,6 +584,7 @@ namespace Management_of_Change.Controllers
             changeRequestViewModel.DeletedUserDisplayName = getUserDisplayName(changeRequest.DeletedUser);
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+            ViewBag.Employees = getUserList();
             ViewBag.QuestionsSaved = questionsSaved;
             ViewBag.RampUpSaved = rampUpSaved;
             if (!_isAdmin)
@@ -2437,5 +2439,33 @@ namespace Management_of_Change.Controllers
 
             return RedirectToAction("Details", new { id = changeRequestViewModel.ChangeRequest.Id, tab = "RampUp", rampUpSaved = "Yes"});
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateReviewer(int id, string newReviewer)
+        {
+            var record = await _context.ImpactAssessmentResponse.FindAsync(id);
+            if (record == null || record.ReviewCompleted == true)
+                return NotFound();
+
+            // get assigned-to person info....
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == newReviewer.ToLower()).FirstOrDefaultAsync();
+
+            if (toPerson != null)
+            {
+                record.Username = newReviewer;
+                record.Reviewer = toPerson?.displayname; 
+                record.ReviewerEmail = toPerson?.mail;
+
+                record.ModifiedUser = _username;
+                record.ModifiedDate = DateTime.Now;
+
+                _context.Update(record);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = record.ChangeRequestId, tab = "ImpactAssessments" });
+        }
+
     }
 }

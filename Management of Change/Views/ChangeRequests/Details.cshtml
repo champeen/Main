@@ -569,61 +569,61 @@
                                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
                                     {
                                         @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
-                                                 new SelectList(ViewBag.Responses), "--Select--",
-                                                 new { @class = "form-control form-select" })
-                                    }
-                                    else
-                                    {
-                                        @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Response)
-                                    }
-                                </td>
-                            </tr>
-                            @*<td class="text-nowrap">*@
-                            @*@Html.ActionLink("Edit","Edit","GeneralMocResponses",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})*@
-                            @*<a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a></td>*@
-                        }
-                    </tbody>
-                </table>
-                <div class="text-nowrap">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="btn-group">
-                                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
-                                {
-                                    <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
-                                    @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
-                                }
-                                @if (ViewBag.SourceScreen == "Dashboard")
-                                {
-                                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
-                                }
-                                else
-                                {
-                                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
-                                }
-                            </div>
-                        </div>
-                        <div class="col-lg-7">
-                            @if (@Model.ButtonSubmitForReview == true)
+                                        new SelectList(ViewBag.Responses), "--Select--",
+                                                        new { @class = "form-control form-select" })
+                                                        }
+                                                        else
                             {
-                                @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
-                                {
-                                    <div class="row">
-                                        <div class="col-md-10 text-xl-end mt-2">
-                                            <span class="bg-warning fw-bold">
-                                                WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
-                                            </span>
-                                        </div>
-                                        <div class="col-lg-2 mt-1">
-                                            @Html.ActionLink("Submit for Review", "SubmitForReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId4", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
-                                        </div>
-                                    </div>
-                                }
+                                @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Response)
+                            }
+                        </td>
+                    </tr>
+                    @*<td class="text-nowrap">*@
+                    @*@Html.ActionLink("Edit","Edit","GeneralMocResponses",new {id=@item.Id, tab="Details"},new {@class="btn btn-primary"})*@
+                    @*<a asp-controller="GeneralMocResponses" asp-action="Edit" asp-route-id="@item.Id">Edit</a></td>*@
+                                        }
+                </tbody>
+            </table>
+            <div class="text-nowrap">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="btn-group">
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                            {
+                                <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
+                                @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
+                            }
+                            @if (ViewBag.SourceScreen == "Dashboard")
+                            {
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
                             }
                         </div>
                     </div>
+                    <div class="col-lg-7">
+                        @if (@Model.ButtonSubmitForReview == true)
+                        {
+                            @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                            {
+                                <div class="row">
+                                    <div class="col-md-10 text-xl-end mt-2">
+                                        <span class="bg-warning fw-bold">
+                                            WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-2 mt-1">
+                                        @Html.ActionLink("Submit for Review", "SubmitForReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId4", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
-            }
+            </div>
+                        }
         </div>
 
         @******************************************************************************************************************@
@@ -783,7 +783,30 @@
                                     @Html.DisplayFor(modelItem => item.ChangeArea)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Reviewer)
+                                    @if (item.ReviewCompleted != true && ViewBag.IsAdmin)
+                                    {
+                                        <form asp-action="UpdateReviewer" method="post" class="d-flex align-items-center">
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <select name="newReviewer" class="form-control form-select form-select-sm select2 me-2" style="width: 100%">
+                                                @foreach (SelectListItem emp in ViewBag.Employees)
+                                                {
+                                                    if (item.Username == emp.Value)
+                                                    {
+                                                        <option value="@emp.Value" selected="selected">@emp.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@emp.Value">@emp.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary mx-1">Save</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Reviewer</span>
+                                    }
                                 </td>
                                 <td class="text-center">
                                     @Html.DisplayFor(modelItem => item.ReviewCompleted)
@@ -1593,10 +1616,19 @@
     </div>
 </div>
 
-<script>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var anchor = document.getElementById('@Model.IArecord');
+            if (anchor != null) { anchor.scrollIntoView(true); }
+        });
 
-    $(document).ready(function () {
-        var anchor = document.getElementById('@Model.IArecord');
-        if (anchor != null) { anchor.scrollIntoView(true); }
-    });
-</script>
+        $(document).ready(function () {
+            $('.select2').select2({
+                width: 'resolve',
+                placeholder: 'Select reviewer',
+                allowClear: true
+            });
+        });
+    </script>
+}
