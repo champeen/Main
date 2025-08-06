@@ -1,0 +1,18 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var anchor = document.getElementById('@Model.IArecord');
+            if (anchor != null) { anchor.scrollIntoView(true); }
+        });
+
+        $(document).ready(function () {
+            $('.select2').select2({
+                width: 'resolve',
+                placeholder: 'Select reviewer',
+                allowClear: true
+            });
+        });
+    </script>
+}

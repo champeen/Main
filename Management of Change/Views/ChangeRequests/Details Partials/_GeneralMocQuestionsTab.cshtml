@@ -1,0 +1,143 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveGeneralMocQuestions" id="nav-general-moc-questions" role="tabpanel" aria-labelledby="nav-general-moc-questions">
+    @using (Html.BeginForm("EditMocQuestions", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequest.Id }))
+    {
+        @if (ViewBag.QuestionsSaved != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                <strong>MoC Responses have been Saved</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <div class="">
+            <div class="row mt-5">
+                <div class="col-5">
+                    <div class="btn-group">
+                        @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                        {
+                            <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
+                            @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
+                        }
+                        @if (ViewBag.SourceScreen == "Dashboard")
+                        {
+                            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    @if (@Model.ButtonSubmitForReview == true)
+                    {
+                        @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                        {
+                            <div class="row">
+                                <div class="col-lg-10 text-xl-end mt-2">
+                                    <span class="bg-warning fw-bold">
+                                        WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                                    </span>
+                                </div>
+                                <div class="col-xl-2 mt=1">
+                                    @Html.ActionLink("Submit for Review", "SubmitForReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId3", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        @Html.HiddenFor(m => m.ChangeRequest.Id)
+        @Html.HiddenFor(m => m.Tab3Disabled)
+        @Html.HiddenFor(m => m.Tab4Disabled)
+        @Html.HiddenFor(m => m.TabActiveImpactAssessments)
+        @Html.HiddenFor(m => m.TabActiveGeneralMocQuestions)
+        @Html.HiddenFor(m => m.TabActiveDetail)
+        <table class="table table-bordered table-striped mt-3">
+            <thead class="table-primary">
+                <tr>
+                    <th>
+                        Question
+                    </th>
+                    <th class="text-center">
+                        Response
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.ChangeRequest.GeneralMocResponses.Count; i++)
+                {
+                    <tr>
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Id)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ChangeRequestId)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Question)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].Order)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].CreatedUser)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].CreatedDate)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ModifiedUser)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].ModifiedDate)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedUser)
+                        @Html.HiddenFor(m => m.ChangeRequest.GeneralMocResponses[i].DeletedDate)
+                        <td>
+                            @Html.Raw(Model.ChangeRequest.GeneralMocResponses[i].Question)
+                        </td>
+                        <td>
+                            @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                            {
+                                @Html.DropDownListFor(m => m.ChangeRequest.GeneralMocResponses[i].Response,
+                                new SelectList(ViewBag.Responses), "--Select--",
+                                        new { @class = "form-control form-select" })
+                                        }
+                                        else
+                    {
+                        @Html.DisplayFor(m => m.ChangeRequest.GeneralMocResponses[i].Response)
+                    }
+                </td>
+            </tr>
+                        }
+        </tbody>
+    </table>
+    <div class="text-nowrap">
+        <div class="row">
+            <div class="col-5">
+                <div class="btn-group">
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                    {
+                        <input type="submit" value="Save Changes" class="btn btn-primary me-1 mt-1" />
+                        @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "GeneralMocQuestions" }, new { @class = "btn btn-success me-1 mt-1" })
+                    }
+                    @if (ViewBag.SourceScreen == "Dashboard")
+                    {
+                        @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                    }
+                </div>
+            </div>
+            <div class="col-lg-7">
+                @if (@Model.ButtonSubmitForReview == true)
+                {
+                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                    {
+                        <div class="row">
+                            <div class="col-md-10 text-xl-end mt-2">
+                                <span class="bg-warning fw-bold">
+                                    WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                                </span>
+                            </div>
+                            <div class="col-lg-2 mt-1">
+                                @Html.ActionLink("Submit for Review", "SubmitForReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId4", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+        }
+</div>

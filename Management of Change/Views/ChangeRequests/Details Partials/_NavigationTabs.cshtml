@@ -1,0 +1,86 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<nav class="my-5">
+    <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveGeneralMocQuestions fw-bolder" id="nav-general-moc-questions-tab" data-bs-toggle="tab" href="#nav-general-moc-questions" role="tab" aria-controls="nav-profile" aria-selected="false">Questions</a>
+        </li>
+        @if (Model.TabClassificationReviewDisplayed == "Yes")
+        {
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveClassificationReview fw-bolder" id="nav-classificationReview-tab" data-bs-toggle="tab" href="#nav-classificationReview" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Classification Review
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This MoC's Classification requires review">
+                    </i>
+                </a>
+            </li>
+        }
+        @if (Model.TabChangeGradeReviewDisplayed == "Yes")
+        {
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveChangeGradeReview fw-bolder" id="nav-changeGradeReview-tab" data-bs-toggle="tab" href="#nav-changeGradeReview" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Change Grade Review
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="This Change Grade requires review to make sure no PCCB review is needed.">
+                    </i>
+                </a>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveImpactAssessments @Model.Tab3Disabled fw-bolder" id="nav-impact-assessment-tab" data-bs-toggle="tab" href="#nav-impact-assessment" role="tab" aria-controls="nav-contact" aria-selected="false">
+                Impact Assessments
+                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if General MOC Questions incomplete. All Impact Assessments must be complete to progress past this stage.">
+                </i>
+            </a>
+        </li>
+        @if (Model.TabPccbReviewDisplayed == "Yes")
+        {
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActivePccbReview @Model.TabPccbReviewDisabled fw-bolder" id="nav-pccbReview-tab" data-bs-toggle="tab" href="#nav-pccbReview" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    PCCB Review
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Must have at least 1 PCCB Meeting setup AND all PCCB Meetings closed to move on to Final Approvals">
+                    </i>
+                </a>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveFinalApprovals @Model.Tab4Disabled fw-bolder" id="nav-final-approvals-tab" data-bs-toggle="tab" href="#nav-final-approvals" role="tab" aria-controls="nav-contact" aria-selected="false">
+                Final Approvals
+                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Impact Assessments incomplete. Must complete 'Review Result' field in order to progress past this stage.">
+                </i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveImplementation @Model.Tab5Disabled fw-bolder" id="nav-implementation-tab" data-bs-toggle="tab" href="#nav-implementation" role="tab" aria-controls="nav-contact" aria-selected="false">
+                Implement
+                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete. All 'Pre Implementation' Tasks must be completed in order to progress past this stage.">
+                </i>
+            </a>
+        </li>
+        @if (Model.TabRampUpDisplayed == "Yes")
+        {
+            <li class="nav-item">
+                <a class="nav-link @Model.TabActiveRampUp @Model.TabRampUpDisabled fw-bolder" id="nav-rampUp-tab" data-bs-toggle="tab" href="#nav-rampUp" role="tab" aria-controls="nav-contact" aria-selected="false">
+                    Ramp-Up
+                    <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Implementation is incomplete. MoC Administrator(s) must approve Ramp-Up(s) in order to progress past this stage.">
+                    </i>
+                </a>
+            </li>
+        }
+        <li class="nav-item">
+            <a class="nav-link @Model.TabActiveCloseoutComplete @Model.Tab6Disabled fw-bolder" id="nav-closeout-complete-tab" data-bs-toggle="tab" href="#nav-closeout-complete" role="tab" aria-controls="nav-contact" aria-selected="false">
+                Close Out
+                <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-html="true" title="Disabled if Final Approvals incomplete. All tasks, including 'Post Implementation', must be completed in order to close/complete this Change Request.">
+                </i>
+            </a>
+        </li>
+        <li class="nav-item ms-auto">
+            <a class="nav-link @Model.TabActiveAttachments fw-bolder" id="nav-attachments-tab" data-bs-toggle="tab" href="#nav-attachments" role="tab" aria-controls="nav-profile" aria-selected="false">Attachments (@Model.Attachments.Count.ToString())</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-item me-auto nav-link @Model.TabActiveTasks fw-bolder" id="nav-tasks-tab" data-bs-toggle="tab" href="#nav-tasks" role="tab" aria-controls="nav-profile" aria-selected="false">Tasks (@Model.Tasks.Count.ToString())</a>
+        </li>
+    </ul>
+</nav>

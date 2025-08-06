@@ -1,0 +1,114 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveImpactAssessments" id="nav-impact-assessment" role="tabpanel" aria-labelledby="nav-impact-assessment-tab">
+    <div class="text-nowrap mt-5">
+        @if (ViewBag.SourceScreen == "Dashboard")
+        {
+            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+        }
+    </div>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="table-primary">
+            <tr>
+                <th>
+                    Review Type
+                </th>
+                <th>
+                    Area of Change
+                </th>
+                <th>
+                    Reviewer
+                </th>
+                <th class="text-center" style="width: 5%;">
+                    Review Completed
+                </th>
+                <th class="text-center" style="width: 5%;">
+                    Date Completed
+                </th>
+                <th>
+                    Comment
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ChangeRequest.ImpactAssessmentResponses != null)
+            {
+                int i = 0;
+                @foreach (var item in Model.ChangeRequest.ImpactAssessmentResponses)
+                {
+                    i = i + 1;
+                    string recId = "record" + i.ToString();
+                    <tr id="@recId">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReviewType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ChangeArea)
+                        </td>
+                        <td>
+                            @if (item.ReviewCompleted != true && ViewBag.IsAdmin)
+                            {
+                                <form asp-action="UpdateReviewer" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <select name="newReviewer" class="form-control form-select form-select-sm select2 me-2" style="width: 100%">
+                                        @foreach (SelectListItem emp in ViewBag.Employees)
+                                        {
+                                            if (item.Username == emp.Value)
+                                            {
+                                                <option value="@emp.Value" selected="selected">@emp.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@emp.Value">@emp.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary mx-1">Save</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span>@item.Reviewer</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.ReviewCompleted)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.DateCompleted)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comments)
+                        </td>
+                        <td class="text-nowrap">
+                            @Html.ActionLink("Review", "Details", "ImpactAssessmentResponses", new { id = @item.Id, tab = "ImpactAssessments" }, new { @class = "btn btn-secondary" })
+                            @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.ReviewCompleted != true))
+                            {
+                                <span>
+                                    @Html.ActionLink("Send Reminder", "AssessmentReminder", "ChangeRequests", new { id = @item.Id, tab = "ImpactAssessments" }, new { @class = "btn btn-info", onclick = "return DisplayProgressMessage(this, 'Sending...');" })
+                                </span>
+                            }
+                            @if ((ViewBag.IsAdmin || ViewBag.Username == item.Username) && (Model.ChangeRequest.Change_Status == "ImpactAssessmentReview") && (item.QuestionsAnswered == true) && (item.ReviewCompleted == false))
+                            {
+                                @Html.ActionLink("Mark as Complete", "MarkImpactAssessmentComplete", "ChangeRequests", new { id = @item.Id, tab = "ImpactAssessments", recId = recId }, new { @class = "btn btn-success", title = "Once Marked as Complete, You CANNOT Edit Again", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    @if (ViewBag.SourceScreen == "Dashboard")
+    {
+        @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+    }
+</div>

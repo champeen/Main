@@ -1,0 +1,88 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveTasks" id="nav-tasks" role="tabpanel" aria-labelledby="nav-tasks-tab">
+    <div class="text-nowrap mt-5">
+        @*<h4 class="mt-5">Tasks</h4>*@
+        @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+        @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success" })
+        @if (ViewBag.SourceScreen == "Dashboard")
+        {
+            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+        }
+    </div>
+    <table class="table table-bordered table-striped mt-5">
+        <thead class="align-top table-primary">
+            <tr>
+                <th>
+                    Task#
+                </th>
+                <th>
+                    Implementation Type
+                </th>
+                <th>
+                    Title
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Assigned To
+                </th>
+                <th>
+                    Assigned By
+                </th>
+                <th>
+                    Due Date
+                </th>
+                <th>
+                    Completion Date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Tasks)
+            {
+                <tr>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.Id)*@
+                        @Html.ActionLink("Task#" + item.Id.ToString(), "Details", "Tasks", new { id = @item.Id, destinationPage = "ChangeRequest", tab = "Tasks" }, new { @class = "" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ImplementationType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssignedToUserFullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AssignedByUserFullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DueDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompletionDate)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @Html.ActionLink("Create New", "CreateTask", new { changeRequestId = Model.ChangeRequest.Id, Tab = "Tasks" }, new { @class = "btn btn-success mt-4" })
+    @if (ViewBag.SourceScreen == "Dashboard")
+    {
+        @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-4" })
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-4" })
+    }
+</div>
