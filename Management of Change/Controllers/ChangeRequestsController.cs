@@ -2467,5 +2467,32 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = record.ChangeRequestId, tab = "ImpactAssessments" });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateFinalReviewer(int id, string newReviewer)
+        {
+            var record = await _context.ImplementationFinalApprovalResponse.FindAsync(id);
+            if (record == null || record.ReviewCompleted == true)
+                return NotFound();
+
+            // get assigned-to person info....
+            var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == newReviewer.ToLower()).FirstOrDefaultAsync();
+
+            if (toPerson != null)
+            {
+                record.Username = newReviewer;
+                record.Reviewer = toPerson?.displayname;
+                record.ReviewerEmail = toPerson?.mail;
+
+                record.ModifiedUser = _username;
+                record.ModifiedDate = DateTime.Now;
+
+                _context.Update(record);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", new { id = record.ChangeRequestId, tab = "FinalApprovals" });
+        }
+
     }
 }

@@ -50,7 +50,34 @@
                             @Html.DisplayFor(modelItem => item.FinalReviewType)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Reviewer)
+                            @if (item.ReviewCompleted != true && ViewBag.IsAdmin)
+                            {
+                                <form asp-action="UpdateFinalReviewer" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="id" value="@item.Id" />
+
+                                    <select name="newReviewer"
+                                            class="form-control form-select form-select-sm select2 me-2"
+                                            style="width:100%">
+                                        @foreach (SelectListItem emp in ViewBag.Employees)
+                                        {
+                                            if (item.Username == emp.Value)
+                                            {
+                                                <option value="@emp.Value" selected>@emp.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@emp.Value">@emp.Text</option>
+                                            }
+                                        }
+                                    </select>
+
+                                    <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <span>@item.Reviewer</span>
+                            }
                         </td>
                         <td class="text-center">
                             @Html.DisplayFor(modelItem => item.ReviewCompleted)
