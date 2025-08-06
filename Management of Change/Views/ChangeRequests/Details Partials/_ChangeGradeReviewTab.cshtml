@@ -1,0 +1,44 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveChangeGradeReview" id="nav-changeGradeReview" role="tabpanel" aria-labelledby="nav-changeGradeReview-tab">
+    <div class="row">
+        <div class="col-12">
+            @if ((ViewBag.IsAdmin || ViewBag.UserCanReviewChangeGrade) && (Model.ChangeRequest.Change_Status == "ChangeGradeReview"))
+            {
+                <div class="mx-5">
+                    MoC needs Change Grade reviewed. As it stands, this MoC will NOT go to PCCB review. Please look over the MoC and either approve the change grade as is, which will bypass PCCB review, or reject the change grade, which will notify the MoC writer via email that the change grade was rejected, changing the MoC status back to 'Draft'.
+                </div>
+                <div class="text-center mt-2">
+                    <form asp-action="RejectChangeGrade">
+                        <input type="hidden" asp-for="@Model.ChangeRequest.Id" />
+                        <div class="row mt-5">
+                            <div class="col-6 text-end">
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary m-1" })
+                                @Html.ActionLink("Approve Change Grade", "ApproveChangeGrade", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success m-1", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+                                <input type="submit" value="Reject Change Grade" class="btn btn-danger m-1" onclick="return DisplayProgressMessage(this, 'Saving...');" />
+                            </div>
+                            <div class="col-sm-6 text-start">
+                                <div class="row">
+                                    <div class="col-12">
+                                        @Html.TextBoxFor(m => m.ChangeRequest.ChangeGradeRejectedReason, new { @class = "form-control m-1", placeholder = "* Reason Required if Rejected *" })
+                                        <div class="text-danger m-1 fw-bold">@ViewBag.ChangeGradeReviewError</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <span></span>
+                </div>
+            }
+            @if (Model.ChangeRequest.Change_Status != "Draft" && Model.ChangeRequest.Change_Status != "ClassificationReview" && Model.ChangeRequest.Change_Status != "ChangeGradeReview")
+            {
+                <div class="text-nowrap text-center mt-2">
+                    <div class="my-5">
+                        Change Grade Review has been <span class="fw-bold text-success">Approved</span> by <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalUserFullName)</span> on <span class="fw-bold">@Html.DisplayFor(Model => Model.ChangeRequest.ChangeGradeApprovalDate)</span>.
+                    </div>
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+                </div>
+            }
+        </div>
+    </div>
+</div>

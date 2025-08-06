@@ -1,0 +1,41 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveCloseoutComplete" id="nav-closeout-complete" role="tabpanel" aria-labelledby="nav-final-approvals-tab">
+    <div class="text-nowrap text-center">
+        @*<h4 class="mt-5">Close-Out/Complete Change Request </h4>*@
+        @*    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |*@
+        @if (ViewBag.OpenTasks > 0)
+        {
+            <div class="fw-bold text-danger my-5">
+                Cannot Close-out/Complete Change Request.  There are 'Open/In-Progress/On Hold' Tasks for this Change Request.
+            </div>
+        }
+        else
+        {
+            @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Closeout"))
+            {
+                @Html.ActionLink("Close-Out/Complete", "CloseoutComplete", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success me-2 mt-3" })
+            }
+            else if (Model.ChangeRequest.Change_Status == "Closeout")
+            {
+                <div class="fw-bold text-danger my-5">
+                    MoC Administrator needs to Close-Out/Complete the MoC
+                </div>
+            }
+            @if (Model.ChangeRequest.Change_Status == "Closed")
+            {
+                <div class="fw-bold text-success my-5">
+                    Change Request has been Closed/Completed by @Html.DisplayFor(Model => Model.ChangeRequest.Closeout_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Closeout_Date)
+                </div>
+            }
+        }
+        @if (ViewBag.SourceScreen == "Dashboard")
+        {
+            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-4" })
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-4" })
+        }
+    </div>
+</div>

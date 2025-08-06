@@ -1,0 +1,27 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="row">
+    <div class="col-4">
+        <h1 style="display:inline">
+            <span class="me-2 text-nowrap">
+                Change Request
+            </span>
+            <span class="" title="Create New MoC based on this MoC.  Include all Details and General MoC Questions only. Status will be set to 'Draft' and ChangeOwner will be you.">
+                @Html.ActionLink("Clone", "Clone", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-success align-middle" })
+            </span>
+        </h1>
+    </div>
+    <div class="col-8 text-end">
+        <h4>
+            <span class="fw-bold">
+                @ViewBag.ChangeRequest
+            </span>
+        </h4>
+        <h4>
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status_Description):
+            <span class="text-success fw-bold">
+                @Html.DisplayFor(model => model.ChangeRequest.Change_Status_Description)
+            </span>
+        </h4>
+    </div>
+</div>

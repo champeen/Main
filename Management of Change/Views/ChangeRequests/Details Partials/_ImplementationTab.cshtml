@@ -1,0 +1,39 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveImplementation" id="nav-implementation" role="tabpanel" aria-labelledby="nav-implementation-tab">
+    <div class="text-nowrap text-center">
+        @if (ViewBag.OpenPreImplementationTasks > 0)
+        {
+            <div class="fw-bold text-danger my-5">
+                Cannot close Implementation.  There are 'Open/In-Progress/On Hold' Pre-Implementation Tasks for this Change Request.
+            </div>
+        }
+        else
+        {
+            @if (Model.ChangeRequest.Change_Status == "RampUp" || Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
+            {
+                <div class="fw-bold text-success my-5">
+                    Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
+                </div>
+            }
+            else
+            {
+                <div class="fw-bold text-danger my-5">
+                    Awaiting Implementation Approval by an MoC Administrator
+                </div>
+            }
+            @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "Implementation"))
+            {
+                @Html.ActionLink("Close Implementation", "CloseoutImplementation", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-success mt-3 me-2", id = "CloseImplementation", onclick = "return DisplayProgressMessage(this, 'Processing...');" })
+            }
+        }
+        @if (ViewBag.SourceScreen == "Dashboard")
+        {
+            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
+        }
+        else
+        {
+            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
+        }
+    </div>
+</div>

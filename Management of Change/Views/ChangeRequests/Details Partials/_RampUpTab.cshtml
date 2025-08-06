@@ -1,0 +1,194 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveRampUp" id="nav-rampUp" role="tabpanel" aria-labelledby="nav-rampUp-tab">
+    @using (Html.BeginForm("SaveRampUpStageCompletions", "ChangeRequests", FormMethod.Post, new { id = Model.ChangeRequest.Id }))
+    {
+        @Html.HiddenFor(m => m.ChangeRequest.Id)
+        @if (ViewBag.RampUpSaved != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
+                <strong>Ramp-Up Stages Have Been Saved</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <h2 class="mt-5">Ramp-Up Stage Completions</h2>
+        <div class="mx-5">
+            <div class="row mt-2">
+                <div class="col-12">
+                    <div class="form-group form-check">
+                        <label class="form-check-label fw-bold mb-1 my-1">
+                            @if (ViewBag.IsAdmin)
+                            {
+                                <input type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage1_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage1_Complete == true ? "checked" : "") />
+                            }
+                            else
+                            {
+                                <input disabled type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage1_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage1_Complete == true ? "checked" : "") />
+                                @Html.HiddenFor(m => m.ChangeRequest.Ramp_Up_Stage1_Complete)
+                            }
+                            <span>Ramp-Up Stage 1 Complete</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-12">
+                    <div class="form-group form-check">
+                        <label class="form-check-label fw-bold mb-1 my-1">
+                            @if (ViewBag.IsAdmin)
+                            {
+                                <input type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage2_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage2_Complete == true ? "checked" : "") />
+                            }
+                            else
+                            {
+                                <input disabled type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage2_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage2_Complete == true ? "checked" : "") />
+                                @Html.HiddenFor(m => m.ChangeRequest.Ramp_Up_Stage2_Complete)
+                            }
+                            <span>Ramp-Up Stage 2 Complete</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-12">
+                    <div class="form-group form-check">
+                        <label class="form-check-label fw-bold mb-1 my-1">
+                            @if (ViewBag.IsAdmin)
+                            {
+                                <input type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage3_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage3_Complete == true ? "checked" : "") />
+                            }
+                            else
+                            {
+                                <input disabled type="checkbox" class="form-check-input" name="ChangeRequest.Ramp_Up_Stage3_Complete" value="true" @(Model.ChangeRequest.Ramp_Up_Stage3_Complete == true ? "checked" : "") />
+                                @Html.HiddenFor(m => m.ChangeRequest.Ramp_Up_Stage3_Complete)
+                            }
+                            <span>Ramp-Up Stage 3 Complete</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            @if (ViewBag.IsAdmin)
+            {
+                <input type="submit" value="Save Ramp-Up Stage Completions" class="btn btn-success mt-2" @ViewBag.Disable>
+            }
+        </div>
+    }
+
+    <h2 class="mt-5">Ramp-Up Attachments</h2>
+    @if (ViewBag.IsAdmin)
+    {
+        <div class="mx-5">
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="text-nowrap fs-6">
+                        <span class="fw-bold">STEP 1:</span> Download Ramp-Up Template
+                        <a href="https://sksiltronusa.sharepoint.com/:x:/r/sites/Vault/_layouts/15/Doc.aspx?sourcedoc=%7BB016397A-FD49-42FF-83F8-2A7004CD1BE8%7D&file=Ramp-up%20Quality%20Verification%20Form.xlsx&wdOrigin=TEAMS-MAGLEV.p2p_ns.rwc&action=default&mobileredirect=true" target="_blank" class="btn btn-primary mt-3 ms-2" style="display:inline !important;">Get Ramp-Up Template</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="text-nowrap fs-6">
+                        <span class="fw-bold">STEP 2:</span> Complete Ramp-Up Template
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="text-nowrap fs-6">
+                        <span class="fw-bold">STEP 3:</span> Upload Completed Ramp-Up Template
+                    </div>
+                </div>
+            </div>
+            <div class="mt-3">
+                @using (Html.BeginForm("SaveFileRampUp", "ChangeRequests", new { id = Model.ChangeRequest.Id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="control-label fw-bold mt-4 mb-2">
+                        <strong>Upload Completed Ramp-Up Template:</strong>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="row">
+                            <div class="col-9">
+                                <input type="file" name="fileAttachment" class="form-control" @ViewBag.Disable />
+                                <div class="form-group text-danger fw-bold">
+                                    @Html.DisplayFor(m => m.FileAttachmentErrorRampUp)
+                                </div>
+                            </div>
+                            <div class="col-xl-3 block">
+                                <input type="submit" value="Upload Completed Ramp-Up Template" class="form-control btn btn-success" @ViewBag.Disable>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <table class="table table-bordered table-striped mt-4 mx-5">
+        <thead class="table-primary">
+            <tr>
+                <th>
+                    File Name
+                </th>
+                <th>
+                    Date Added
+                </th>
+                <th>
+                    Size
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.AttachmentsRampUp)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedDate)
+                    </td>
+                    <td>
+                        @{
+                            var size = item.Size / 1000 < 1 ? item.Size.ToString() + " bytes" : (item.Size / 1000).ToString("N0") + " KB";
+                        }
+                        @size
+                    </td>
+                    <td>
+                        @Html.ActionLink("Download File", "DownloadFile", "ChangeRequests", new { id = @Model.ChangeRequest.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
+                        @if (ViewBag.IsAdmin)
+                        {
+                            @Html.ActionLink("Delete", "DeleteFileRampUp", "ChangeRequests", new { id = @Model.ChangeRequest.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-danger", title = "Delete Attachment" })
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+        @if (Model.AttachmentsRampUp.Count() == 0)
+        {
+            <tr>
+                <td>No data found</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+    </table>
+    <div class="row mt-5">
+        <div class="col-12">
+            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+            {
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+            }
+            else
+            {
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+            }
+            @if ((ViewBag.IsAdmin) && (Model.ChangeRequest.Change_Status == "RampUp"))
+            {
+                @Html.ActionLink("Close Ramp-Up", "CloseoutRampUp", new { id = Model.ChangeRequest.Id }, new { @class = "btn btn-warning ms-2"/* , id = "CloseImplementation" */, onclick = "return DisplayProgressMessage(this, 'Processing...');", title = "Clicking this will advance to the 'Closeout' stage. Remember to save your Ramp-Up Stage Completions first if you haven't!" })
+            }
+        </div>
+    </div>
+</div>

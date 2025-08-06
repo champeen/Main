@@ -1,0 +1,331 @@
+﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
+
+<div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
+    <div class="">
+        <div class="row mt-5">
+            <div class="col-5 text-start">
+                <div class="btn-group">
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
+                        @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                    }
+                    @if (ViewBag.SourceScreen == "Dashboard")
+                    {
+                        @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                    }
+                </div>
+            </div>
+            <div class="col-lg-7">
+                @if (@Model.ButtonSubmitForReview == true)
+                {
+                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                    {
+                        <div class="row">
+                            <div class="col-xl-10 text-xl-end mt-2">
+                                <span class="bg-warning fw-bold">
+                                    WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                                </span>
+                            </div>
+                            <div class="col-xl-2 mt-1">
+                                @Html.ActionLink("Submit for Review", "SubmitForReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId1", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.MOC_Number)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.MOC_Number)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Owner)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.employee.displayname)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Status_Description)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Change_Status_Description)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Request_Date)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Request_Date)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Priority)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Priority)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Classification)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Classification)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Estimated_Completion_Date)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Estimated_Completion_Date)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Type)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Change_Type)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Expiration_Date_Temporary)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Expiration_Date_Temporary)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Area_of_Change)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Area_of_Change)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Waiver_Number)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Waiver_Number)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Location_Site)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Location_Site)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.PTN_Number)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @if (Model.ChangeRequest.PTN_Number != null)
+            {
+                var counter = 0;
+                @foreach (var ptn in Model.ChangeRequest.PTN_Number)
+                {
+                    counter = counter + 1;
+                    <span>@ptn</span>
+                    if (counter < Model.ChangeRequest.PTN_Number.Count)
+                    {
+                        <span>,&nbsp;</span>
+                    }
+                }
+            }
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Change_Level)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Change_Level)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Additional_Notification)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @if (ViewBag.EmployeesToNotify != null)
+            {
+                var counter = 0;
+                @foreach (var employeeToNotify in ViewBag.EmployeesToNotify)
+                {
+                    counter = counter + 1;
+                    <span>@employeeToNotify</span>
+                    if (counter < ViewBag.EmployeesToNotify.Count)
+                    {
+                        <span>,&nbsp;</span>
+                    }
+                }
+            }
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Proudct_Line)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Proudct_Line)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end"></dt>
+        <dd class="col-sm-4 my-1"></dd>
+        <hr />
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Title_Change_Description)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Title_Change_Description, new { @rows = 3 })
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Justification_of_the_Change)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Justification_of_the_Change, new { @rows = 2 })
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Scope_of_the_Change)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Scope_of_the_Change, new { @rows = 3 })
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
+        </dt>
+        <dd class="col-sm-10 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Raw_Material_Component_Numbers_Impacted)
+        </dd>
+        <hr />
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.ChangeGradeRejectedUserFullName)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.ChangeGradeRejectedUserFullName)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Username)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.CancelDisplayName)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.ChangeGradeRejectedDate)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.ChangeGradeRejectedDate)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Date)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Cancel_Date)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.ChangeGradeRejectedReason)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.ChangeGradeRejectedReason)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Cancel_Reason)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Cancel_Reason)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Username)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ImplementationDisplayName)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Closeout_Username)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.CloseoutDisplayName)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Implementation_Approval_Date)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Implementation_Approval_Date)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.Closeout_Date)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.Closeout_Date)
+        </dd>
+        <hr />
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.CreatedUser)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.CreatUserDisplayName)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.CreatedDate)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.CreatedDate)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedUser)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ModifiedUserDisplayName)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.ModifiedDate)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.ModifiedDate)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.DeletedUser)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.DeletedUserDisplayName)
+        </dd>
+        <dt class="col-sm-2 my-1 text-end">
+            @Html.DisplayNameFor(model => model.ChangeRequest.DeletedDate)
+        </dt>
+        <dd class="col-sm-4 my-1">
+            @Html.DisplayFor(model => model.ChangeRequest.DeletedDate)
+        </dd>
+        <hr />
+    </dl>
+    <div class="">
+        <div class="row">
+            <div class="col-5 text-start">
+                <div class="btn-group">
+                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                    {
+                        @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
+                        @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                    }
+                    @if (ViewBag.SourceScreen == "Dashboard")
+                    {
+                        @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-1" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
+                    }
+                </div>
+            </div>
+            <div class="col-lg-7">
+                @if (@Model.ButtonSubmitForReview == true)
+                {
+                    @if (ViewBag.IsAdmin || ViewBag.Username == Model.ChangeRequest.Change_Owner)
+                    {
+                        <div class="row">
+                            <div class="col-xl-10 text-xl-end mt-2">
+                                <span class="bg-warning fw-bold">
+                                    WARNING Once Review is submitted, Details and MoC Questions cannot be Changed!!
+                                </span>
+                            </div>
+                            <div class="col-xl-2 mt-1">
+                                @Html.ActionLink("Submit for Review", "SubmitForReview", new { id = @Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success text-start text-nowrap", title = "Once submitted for Review, Details and MoC Questions will be Locked.", id = "SubmitForReviewId1", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
