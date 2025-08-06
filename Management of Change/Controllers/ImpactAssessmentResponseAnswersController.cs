@@ -144,7 +144,7 @@ namespace Management_of_Change.Controllers
             foreach (var user in userList)
             {
                 SelectListItem item = new SelectListItem { Value = user.onpremisessamaccountname, Text = user.displayname + " (" + user.onpremisessamaccountname + ")" };
-                if (user.onpremisessamaccountname.ToLower() == impactAssessmentResponseAnswer.ActionOwner.ToLower())
+                if (user.onpremisessamaccountname?.ToLower() == impactAssessmentResponseAnswer.ActionOwner?.ToLower())
                     item.Selected = true;
                 users.Add(item);
             }
