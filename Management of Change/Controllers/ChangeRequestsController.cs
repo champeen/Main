@@ -2448,6 +2448,8 @@ namespace Management_of_Change.Controllers
             if (record == null || record.ReviewCompleted == true)
                 return NotFound();
 
+            var originalPerson = record.Reviewer;
+
             // get assigned-to person info....
             var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == newReviewer.ToLower()).FirstOrDefaultAsync();
 
@@ -2462,6 +2464,8 @@ namespace Management_of_Change.Controllers
 
                 _context.Update(record);
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessageImpactAssessment"] = "Reviewer updated successfully from '" + originalPerson + "" + "' to '" + toPerson?.displayname + "'.";
             }
 
             return RedirectToAction("Details", new { id = record.ChangeRequestId, tab = "ImpactAssessments" });
@@ -2474,6 +2478,8 @@ namespace Management_of_Change.Controllers
             var record = await _context.ImplementationFinalApprovalResponse.FindAsync(id);
             if (record == null || record.ReviewCompleted == true)
                 return NotFound();
+
+            var originalPerson = record.Reviewer;
 
             // get assigned-to person info....
             var toPerson = await _context.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == newReviewer.ToLower()).FirstOrDefaultAsync();
@@ -2489,6 +2495,8 @@ namespace Management_of_Change.Controllers
 
                 _context.Update(record);
                 await _context.SaveChangesAsync();
+
+                TempData["SuccessMessageFinalApproval"] = "Reviewer updated successfully from '" + originalPerson + "" + "' to '" + toPerson?.displayname + "'.";
             }
 
             return RedirectToAction("Details", new { id = record.ChangeRequestId, tab = "FinalApprovals" });
