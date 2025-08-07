@@ -1,6 +1,15 @@
 ﻿@model Management_of_Change.ViewModels.ChangeRequestViewModel
 
 <div class="tab-pane fade show @Model.TabActiveImpactAssessments" id="nav-impact-assessment" role="tabpanel" aria-labelledby="nav-impact-assessment-tab">
+
+    @if (TempData["SuccessMessageImpactAssessment"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessageImpactAssessment"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     <div class="text-nowrap mt-5">
         @if (ViewBag.SourceScreen == "Dashboard")
         {
@@ -11,6 +20,7 @@
             @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-1" })
         }
     </div>
+
     <table class="table table-bordered table-striped mt-3">
         <thead class="table-primary">
             <tr>
