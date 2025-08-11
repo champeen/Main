@@ -32,9 +32,11 @@ namespace Management_of_Change.Models
         public string? Description { get; set; }
         [Display(Name = "Due Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? DueDate { get; set; }
         [Display(Name = "Completion Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? CompletionDate {get; set;}
         [Display(Name = "Completion Notes")]
         public string? CompletionNotes { get; set; }

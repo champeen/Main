@@ -1,4 +1,21 @@
-﻿<!DOCTYPE html>
+﻿@using System.Linq
+@using System.Text.Json
+@inject Management_of_Change.Data.Management_of_ChangeContext _context
+
+@{
+    var admins = _context.Administrators
+        .Where(a => a.Approver)
+        .Join(
+            _context.__mst_employee,
+            a => a.Username,
+            e => e.onpremisessamaccountname!,
+            (a, e) => new { Name = e.displayname, Email = e.mail }
+        )
+        .ToList();
+    var adminJson = JsonSerializer.Serialize(admins);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,36 +42,6 @@
         };
 
         $(document).ready(function () {
-
-            // $("#btnAPICall").click(function () {
-            //     console.info("blah1");
-            //     $(".overlay,.popup").fadeIn();
-            //     CallAPI();
-            // });
-
-            // function LoadingBar() {
-            //     console.info("blah3");
-            //     $("#Fade_area").removeAttr("style");
-            //     $("#myModal").removeAttr("style");
-            // };
-
-            // function CallAPI() {
-            //     console.info("blah2");
-            //     $.ajax({
-            //         url:"",
-            //         type:'post',
-            //         contentType:'application/json',
-            //         success: function () {
-            //             console.info("blah4");
-            //             setTimeout(function () { LoadingBar() }, 10000);
-            //         },
-            //         Error: function () {
-            //             console.info("blah5");
-            //             setTimeout(function () { LoadingBar()}, 10000);
-            //         }
-            //     });
-            // };
-
             $("#changeRequestSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
                 $("#changeRequestTable tr").filter(function () {
@@ -85,27 +72,6 @@
                 //     $(this).toggle($(this.children[4]).text().toLowerCase().indexOf(value) > -1)
                 // });
             });
-
-            // $("#statusFilter").click(function () {
-            //     $("#statusFilter").change(function () {
-            //         var statusFilter = $(this).val();
-            //         // var PrevSort = document.getElementById("@(ViewBag.PrevSort)").value;
-            //         var prevSort = document.getElementById("PrevSortId").value.toString();
-
-            //         var url = '@Url.Action("Index", "ChangeRequests")?statusFilter=' + statusFilter + '&prevSort=' + prevSort;
-            //         window.location.href = url;
-            //     });
-            // });
-
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // $("#reviewTypeFilter").change(function () {
-            //     var value = $(this).val().toLowerCase();
-            //     $("#reviewTypeTable tr").filter(function () {
-            //         $(this).toggle($(this.children[0]).text().toLowerCase() === value)
-            //     });
-            // });
-            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
             $("#taskSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -144,130 +110,87 @@
         });
     </script>
 
-    <style>
-        .nav-link.active {
-            background-color: #3a6bfb !important;
-            color: white !important;
-        }
+    <style></style>
 
-        .nav-link.disabled {
-            pointer-events: auto;
-        }
-
-        @@media (min-width: 1800px) {
-            .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
-                max-width: 1740px;
-            }
-        }
-
-        input#session-date {
-            display: inline-block;
-            position: relative;
-        }
-
-        .submit-progress-bg {
-            background-color: lightgray;
-            opacity: .5;
-        }
-
-        .disableClick {
-            pointer-events: none;
-        }
-
-        .overlay1 {
-            position: absolute;
-            display: none;
-            background-color: rgba(128,128,128,.5);
-            top: 0;
-            left: 0;
-            right: 0;
-        }
-
-        .popup1 {
-            position: fixed;
-            z-index: 99;
-            vertical-align: central;
-            display: none;
-            margin-left: 30%;
-            margin-bottom: 30%;
-        }
-
-        .height40 {
-            height: 35vh; /* 40% of the viewport height */
-            overflow-y: auto;
-        }
-    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 navbar-dark bg-primary text-white" @*style="z-index:1;"*@>
-            <div class="container-fluid">
-                <div class="me-3">
-                                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index">
-                    <img src="~/HappyWings_PNG.png" class="img-fluid" width="48" height="48">
-                    </a>
-                </div>
-                <div class="me-5 text-center text-wrap vw-5">
-                    <a class="nav-link text-light" asp-controller="Home" asp-action="Index">
-                        <span style="font-size: 1.5em;">MoC Dashboard</span>
-                        @*<br />Dashboard*@
-                    </a>
-                </div>
-                @*<a class="navbar-brand" asp-area="" asp-controller="ChangeRequests" asp-action="Index">Management of Change</a>*@
-                @*<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Management of Change</a>*@
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item me-3">
-                            <a class="nav-link text-light" asp-controller="ChangeRequests" asp-action="Index">
-                                @* <i class="bi bi-book"></i> *@
-                                Change Requests
-                            </a>
-                        </li>
-                        <li class="nav-item me-3">
-                            <a class="nav-link text-white" asp-controller="Tasks" asp-action="Index">
-                                @* <i class="bi bi-list-task" ></i> *@
-                                Tasks
-                            </a>
-                        </li>
-                        <li class="nav-item me-3 ms-lg-auto">
-                            <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank">
-                                <i class="bi bi-diagram-2-fill" data-bs-toggle="tooltip" data-bs-html="true">
-                                </i>
-                                MoC Process Flow
-                            </a>
-                        </li>
-                        <li class="nav-item me-3">
-                            <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=%20%22MOC%20Training%2Epptx%22" target="_blank">
-                                <i class="bi bi-book" data-bs-toggle="tooltip" data-bs-html="true">
-                                </i>
-                                Training
-                            </a>
-                        </li>
-                        <li class="nav-item me-3">
-                            <a class="nav-link text-light" asp-controller="Help" asp-action="Index" target="_blank">
-                                <i class="bi bi-question-circle-fill" data-bs-toggle="tooltip" data-bs-html="true">
-                                </i>
-                                Help
-                            </a>
-                        </li>
-                        @if (ViewBag.IsAdmin == true)
-                        {
+    <header class="container-fluid">
+        <div class="mx-5">
+            <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 navbar-dark bg-primary text-white">
+                <div class="container-fluid">
+                    <div class="me-3">
+                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index">
+                            <img src="~/HappyWings_PNG.png" class="img-fluid" width="48" height="48">
+                        </a>
+                    </div>
+                    <div class="me-5 text-center text-wrap vw-5">
+                        <a class="nav-link text-light" asp-controller="Home" asp-action="Index">
+                            <span style="font-size: 1.5em;">MoC Dashboard</span>
+                        </a>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item me-3">
-                                <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">
-                                    <i class="bi bi-person-fill-add" data-bs-toggle="tooltip" data-bs-html="true">
-                                    </i>
-                                    Admin
+                                <a class="nav-link text-light" asp-controller="ChangeRequests" asp-action="Index">
+                                    Change Requests
                                 </a>
                             </li>
-                        }
-                    </ul>
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-white" asp-controller="Tasks" asp-action="Index">
+                                    Tasks
+                                </a>
+                            </li>
+                            <li class="nav-item me-3 ms-lg-auto">
+                                <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank">
+                                    <i class="bi bi-diagram-2-fill" data-bs-toggle="tooltip" data-bs-html="true">
+                                    </i>
+                                    MoC Process Flow
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-light" href="https://sksiltronusa.sharepoint.com/sites/Vault/NoCRWithoutTrn/Forms/AllItems.aspx?view=7&q=%20%22MOC%20Training%2Epptx%22" target="_blank">
+                                    <i class="bi bi-book" data-bs-toggle="tooltip" data-bs-html="true">
+                                    </i>
+                                    Training
+                                </a>
+                            </li>
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-light" asp-controller="Help" asp-action="Index" target="_blank">
+                                    <i class="bi bi-question-circle-fill" data-bs-toggle="tooltip" data-bs-html="true">
+                                    </i>
+                                    Help
+                                </a>
+                            </li>
+                            @if (ViewBag.IsAdmin == true)
+                            {
+                                <li class="nav-item me-3">
+                                    <a class="nav-link text-light" asp-controller="Admin" asp-action="Index">
+                                        <i class="bi bi-person-fill-add" data-bs-toggle="tooltip" data-bs-html="true">
+                                        </i>
+                                        Admin
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item me-3">
+                                    <a href="javascript:void(0)"
+                                       id="adminInfoBtn"
+                                       class="nav-link text-light">
+                                        <i class="bi bi-people-fill"></i>
+                                        Display Admins
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </div>        
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3" style="margin-top: 100px;">
@@ -279,13 +202,57 @@
         </main>
     </div>
     <footer class="border-top footer text-center text-primary">
-        <div class="container-fluid fixed-bottom bg-white">
-            &copy; 2023 - SK Siltron CSS - Management of Change @*- <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+        <div class="container-fluid fixed-bottom bg-white fw-bolder">
+            &copy; 2023 - SK Siltron CSS - Management of Change 
         </div>
     </footer>
+
+    <!-- 1) jQuery, then Bootstrap JS -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @*    <script src="~/js/site.js" asp-append-version="true"></script>*@
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Popover init via pure JS -->
+    <script>
+
+                document.addEventListener('DOMContentLoaded', function () {
+          var tooltipTriggerList = Array.prototype.slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+          tooltipTriggerList.forEach(function (el) { new bootstrap.Tooltip(el); });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+          // 1) Grab the JSON you serialized server-side
+          var adminData = @Html.Raw(adminJson);
+          console.log('adminData:', adminData);
+
+          // 2) Find the trigger element
+          var triggerEl = document.getElementById('adminInfoBtn');
+          if (!triggerEl) {
+            console.error("Element #adminInfoBtn not found");
+            return;
+          }
+
+          // 3) Initialize the popover, with HTML allowed and sanitization off
+          new bootstrap.Popover(triggerEl, {
+            trigger: 'hover focus',
+            html: true,
+            sanitize: false,
+            container: 'body',
+            title: 'Administrator Contacts',
+            content: function() {
+              // Build table rows
+              var rows = adminData.map(function(a) {
+                return '<tr><td>' + (a.Name  || '') + '</td>'
+                     +    '<td>' + (a.Email || '') + '</td></tr>';
+              }).join('');
+              return '<table class="table table-sm mb-0">'
+                   +   '<thead><tr><th>Name</th><th>Email</th></tr></thead>'
+                   +   '<tbody>' + rows + '</tbody>'
+                   + '</table>';
+            }
+          });
+        });
+    </script>    
 </body>
 </html>

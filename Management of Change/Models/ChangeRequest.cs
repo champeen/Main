@@ -57,6 +57,7 @@ namespace Management_of_Change.Models
         //public string? CMT_Number { get; set; }
         [Display(Name = "Estimated Completion Date")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? Estimated_Completion_Date { get; set; }
         public String? ChangeGradeApprovalUser { get; set; }
         [Display(Name = "Change Grade Approval Username")]

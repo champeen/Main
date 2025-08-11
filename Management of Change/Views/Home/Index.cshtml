@@ -3,1203 +3,528 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row">
+<div class="row mb-3">
     <div class="col-3 d-flex justify-content-center align-items-end mb-3">
-        <div>
-            @Html.ActionLink("Create New Change Request", "Create", "ChangeRequests", new { source = "Home" }, new { @class = "btn btn-success" })
-        </div>
+        @Html.ActionLink(
+        "Create New Change Request",
+                "Create", "ChangeRequests",
+                new { source = "Home" },
+                new { @class = "btn btn-success btn-lg rounded-pill px-4" }
+                )
     </div>
-    <div class="col-6">
-        <div class="text-center">
-            <p>Management of Change Dashboard for user: <span class="text-danger fw-bold">@ViewBag.UserDisplayName (@ViewBag.Username)</span></p>
-        </div>
+    <div class="col-6 d-flex align-items-end justify-content-center mb-3">
+        <p class="mb-0">
+            Management of Change Dashboard for user:
+            <span class="text-danger fw-bold">
+                @ViewBag.UserDisplayName (@ViewBag.Username)
+            </span>
+        </p>
     </div>
     <div class="col-3 d-flex justify-content-center align-items-end mb-3">
-        @Html.ActionLink("Create New Task", "Create", "Tasks", new { source = "Home" }, new { @class = "btn btn-success" })
+        @Html.ActionLink(
+                "Create New Task",
+                "Create", "Tasks",
+                new { source = "Home" },
+                new { @class = "btn btn-success btn-lg rounded-pill px-4" }
+                )
     </div>
 </div>
 
-<div class="row mt-3">
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Drafts
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                    @*@Html.DisplayNameFor(model => model.MOC_Number)*@
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.DraftMocs)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "GeneralMocQuestions", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.DraftMocs.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Classification Reviews
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                    @*@Html.DisplayNameFor(model => model.MOC_Number)*@
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.ClassificationReviews)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ClassificationReview", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.ClassificationReviews.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Change Grade Reviews
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                    @*@Html.DisplayNameFor(model => model.MOC_Number)*@
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.ChangeGradeReviews)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ChangeGradeReview", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.ChangeGradeReviews.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Open Impact Assessment MoC's
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                    @*@Html.DisplayNameFor(model => model.MOC_Number)*@
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.IncompleteImpactAssessments)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ImpactAssessments", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.IncompleteImpactAssessments.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Open PCCB Reviews
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                    @*@Html.DisplayNameFor(model => model.MOC_Number)*@
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.IncompletePccbReviews)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "PccbReview", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.IncompletePccbReviews.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Open Final Approvals
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.IncompleteFinalApprovals)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.IncompleteFinalApprovals.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Pending Implementation Approvals
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.ApprovedForImplementation)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "Implementation", sourceScreen = "Dashboard" }, new { @class = "" })
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.ApprovedForImplementation.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Ramp-Up MoC's
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    MOC #
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Change Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Estimated Completion Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.IncompleteRampUps)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "RampUp", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-                                        @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                    </td>
-                                    @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.IncompleteRampUps.Count() == 0)
-                        {
-                            <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>    
-</div>
-@* <div class="row">
-    <div class="col-3 p-3">
-        <div class="row">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Your Draft MOCs
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        MOC #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Change Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Estimated Completion Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.DraftMocs)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "GeneralMocQuestions", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-
-                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                        </td>
-                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.DraftMocs.Count() == 0)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-3">
-        <div class="row mt-1">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Your Classification Reviews
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        MOC #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Change Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Estimated Completion Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.ClassificationReviews)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ClassificationReview", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-
-                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                        </td>
-                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.ClassificationReviews.Count() == 0)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-3">
-        <div class="row mt-1">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Your Change Grade Reviews
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        MOC #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Change Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Estimated Completion Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.ChangeGradeReviews)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ChangeGradeReview", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-
-                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                        </td>
-                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.ChangeGradeReviews.Count() == 0)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-3 p-3">
-        <div class="row">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Your Open Impact Assessment MOCs
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        MOC #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Change Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Estimated Completion Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.IncompleteImpactAssessments)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "ImpactAssessments", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                        </td>
-                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.IncompleteImpactAssessments.Count() == 0)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- First row of cards -->
 <div class="row">
-    <div class="col-3 p-3">
-        <div class="row mt-1">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Open PCCB Reviews
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        MOC #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Change Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Estimated Completion Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.IncompletePccbReviews)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "PccbReview", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                        </td>
-                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.IncompletePccbReviews.Count() == 0)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
+    @* Your Drafts *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Drafts
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.DraftMocs)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "GeneralMocQuestions", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.DraftMocs.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="col-3 p-3">
-        <div class="row">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Your Open Final Approval MOCs
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        MOC #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Change Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Estimated Completion Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.IncompleteFinalApprovals)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                        </td>
-                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.IncompleteFinalApprovals.Count() == 0)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
+
+    @* Your Classification Reviews *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Classification Reviews
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ClassificationReviews)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "ClassificationReview", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.ClassificationReviews.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="col-3 p-3">
-        <div class="row">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Your Ramp-Up MoC's
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        MOC #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Change Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Estimated Completion Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.IncompleteFinalApprovals)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink(item.MOC_Number, "Details", "ChangeRequests", new { id = @item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-                                            @Html.DisplayFor(modelItem => item.Title_Change_Description)
-                                        </td>
-                                        @if (DateTime.Now > item.Estimated_Completion_Date && item.Cancel_Date == null && item.Closeout_Date == null)
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.IncompleteFinalApprovals.Count() == 0)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
+
+    @* Your Change Grade Reviews *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Change Grade Reviews
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ChangeGradeReviews)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "ChangeGradeReview", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.ChangeGradeReviews.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="col-3 p-3">
-        <div class="row">
-            <div class="col-12 border border-dark">
-                <div class="my-3">
-                    <h5 class="text-center">
-                        Your Open MOC Tasks
-                    </h5>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-striped mt-3 ">
-                            <thead class="align-top align-text-top table-primary">
-                                <tr>
-                                    <th class="text-nowrap">
-                                        Task #
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Title/Short Description
-                                    </th>
-                                    <th class="text-nowrap">
-                                        Due Date
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.OpenTasks)
-                                {
-                                    <tr>
-                                        <td class="text-nowrap">
-                                            @Html.ActionLink("Task# " + item.Id.ToString(), "Details", "Tasks", new { id = @item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        </td>
-                                        <td class="text-nowrap">
-                                            @if (item.Priority == "High")
-                                            {
-                                                <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                            }
-                                            @Html.DisplayFor(modelItem => item.Title)
-                                        </td>
-                                        @if (DateTime.Now > item.DueDate && item.Status == "Open")
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.DueDate)
-                                            </td>
-                                        }
-                                        else if (DateTime.Now > item.DueDate && item.Status == "In-Progress")
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.DueDate)
-                                            </td>
-                                        }
-                                        else if (DateTime.Now > item.DueDate && item.Status == "On Hold")
-                                        {
-                                            <td class="fw-bolder text-danger">
-                                                @Html.DisplayFor(modelItem => item.DueDate)
-                                            </td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.DueDate)
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.OpenTasks.Count() == 0)
-                            {
-                                <tr>
-                                    <td>No data found</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
-                </div>
+
+    @* Your Open Impact Assessment MoC's *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Open Impact Assessment MoC’s
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.IncompleteImpactAssessments)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "ImpactAssessments", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.IncompleteImpactAssessments.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</div> *@
+</div>
+
+<!-- Second row of cards -->
 <div class="row mt-3">
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Your Open MOC Tasks
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    Task #
-                                    @*@Html.DisplayNameFor(model => model.MOC_Number)*@
-                                </th>
-                                <th class="text-nowrap">
-                                    Title/Short Description
-                                </th>
-                                <th class="text-nowrap">
-                                    Due Date
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OpenTasks)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.ActionLink("Task# " + item.Id.ToString(), "Details", "Tasks", new { id = @item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" }, new { @class = "" })
-                                        @*@Html.DisplayFor(modelItem => item.MOC_Number) (ID: @Html.DisplayFor(modelItem => item.Id))*@
-                                    </td>
-                                    <td class="text-nowrap">
-                                        @if (item.Priority == "High")
-                                        {
-                                            <i class="bi bi-exclamation-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs- html="true" title="High Priority"></i>
-                                        }
-                                        @Html.DisplayFor(modelItem => item.Title)
-                                    </td>
-                                    @if (DateTime.Now > item.DueDate && item.Status == "Open")
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.DueDate)
-                                        </td>
-                                    }
-                                    else if (DateTime.Now > item.DueDate && item.Status == "In-Progress")
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.DueDate)
-                                        </td>
-                                    }
-                                    else if (DateTime.Now > item.DueDate && item.Status == "On Hold")
-                                    {
-                                        <td class="fw-bolder text-danger">
-                                            @Html.DisplayFor(modelItem => item.DueDate)
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.DueDate)
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.OpenTasks.Count() == 0)
+    @* Your Open PCCB Reviews *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Open PCCB Reviews
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.IncompletePccbReviews)
                         {
                             <tr>
-                                <td>No data found</td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "PccbReview", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
                             </tr>
                         }
-                    </table>
-                </div>
+                        @if (!Model.IncompletePccbReviews.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="col-3 p-1">
-        <div class="border border-dark height40">
-            <div class="my-3">
-                <h5 class="text-center">
-                    Company-Wide Overdue Tasks
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped mt-3 ">
-                        <thead class="align-top align-text-top table-primary">
-                            <tr>
-                                <th class="text-nowrap">
-                                    Assigned User
-                                </th>
-                                <th class="text-nowrap">
-                                    Overdue Tasks
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OverdueTasks)
-                            {
-                                <tr>
-                                    <td class="text-nowrap">
-                                        @Html.DisplayFor(modelItem => item.UserName)
-                                    </td>
-                                    <td class="fw-bolder text-danger">
-                                        @Html.DisplayFor(modelItem => item.Count)
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                        @if (Model.OverdueTasks.Count() == 0)
+
+    @* Your Open Final Approvals *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Open Final Approvals
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.IncompleteFinalApprovals)
                         {
                             <tr>
-                                <td class="text-nowrap">No data found</td>
-                                <td></td>
-                                <td></td>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
                             </tr>
                         }
-                    </table>
-                </div>
+                        @if (!Model.IncompleteFinalApprovals.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @* Your Pending Implementation Approvals *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Pending Implementation Approvals
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ApprovedForImplementation)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "Implementation", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.ApprovedForImplementation.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @* Your Ramp-Up MoC’s *@
+    <div class="col-3 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Ramp-Up MoC’s
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MOC #</th>
+                            <th>Title/Description</th>
+                            <th>Est. Comp Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.IncompleteRampUps)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(
+                                    item.MOC_Number,
+                                                                "Details","ChangeRequests",
+                                                                new { id = item.Id, tab = "RampUp", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:150px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title_Change_Description
+                                </td>
+                                <td class="@(DateTime.Now > item.Estimated_Completion_Date ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.Estimated_Completion_Date)
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.IncompleteRampUps.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Third row: Tasks & Overdue -->
+<div class="row mt-3">
+    <div class="col-6 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Your Open MOC Tasks
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-striped table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Task #</th>
+                            <th>Title/Description</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OpenTasks)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(
+                                    "Task #" + item.Id,
+                                                                "Details","Tasks",
+                                                                new { id = item.Id, tab = "FinalApprovals", sourceScreen = "Dashboard" },
+                                                                new { @class = "text-decoration-none" }
+                                                                )
+                            </td>
+                            <td class="text-nowrap text-truncate" style="max-width:200px;">
+                                @if (item.Priority == "High")
+                                    {
+                                        <span class="badge bg-danger me-1">High</span>
+                                    }
+                                    @item.Title
+                                </td>
+                                <td class="@(DateTime.Now > item.DueDate && item.Status != "Closed" ? "text-danger fw-bold" : "")">
+                                    @Html.DisplayFor(modelItem => item.DueDate)
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.OpenTasks.Any())
+                        {
+                            <tr>
+                                <td colspan="3" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 p-1 d-flex align-items-stretch">
+        <div class="card rounded-4 shadow-sm w-100">
+            <div class="card-header bg-primary text-white text-center">
+                Company-Wide Overdue Tasks
+            </div>
+            <div class="card-body p-2 overflow-auto" style="max-height:30vh;">
+                <table class="table table-hover table-sm table-striped align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Assigned User</th>
+                            <th>Overdue Tasks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OverdueTasks)
+                        {
+                            <tr>
+                                <td>@item.UserName</td>
+                                <td class="text-danger fw-bold">@item.Count</td>
+                            </tr>
+                        }
+                        @if (!Model.OverdueTasks.Any())
+                        {
+                            <tr>
+                                <td colspan="2" class="text-center">No data found</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
