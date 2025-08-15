@@ -4,19 +4,6 @@
     ViewData["Title"] = "Details";
 }
 
-@* <h1>Waiver</h1>
-<h4>Details</h4>
-<hr />
-<div class="row my-4">
-    <div class="col-12">
-        <div class="form-group">
-            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a>
-            @Html.ActionLink("Cancel","Details","PTNs",new {id=Model.PTNId, tab="Waivers"},new {@class="btn btn-secondary mx-2"})
-        </div>
-    </div>
-</div> *@
-
-
 <div class="row">
     <div class="col-4">
         <div class="text-nowrap">
@@ -31,15 +18,12 @@
             </h1>
         </div>
     </div>
+
     <div class="col-8 text-end">
         <h4>
             <span class="fw-bold">
                 @Html.DisplayFor(model => model.Waiver.WaiverNumber)
             </span>
-            @* revision:
-            <span class="fw-bold">
-                @Html.DisplayFor(model => model.Waiver.RevisionNumber)
-            </span> *@
         </h4>
         <h4>
             @Html.DisplayNameFor(model => model.Waiver.Status):
@@ -61,7 +45,7 @@
         <li class="nav-item">
             <a class="nav-link @Model.TabActiveDetail fw-bolder" id="nav-detail-tab" data-bs-toggle="tab" href="#nav-detail" role="tab" aria-controls="nav-home" aria-selected="true">Details</a>
         </li>
-        @* <li class="nav-item ms-auto"> *@
+
         <li class="nav-item">
             <a class="nav-link @Model.TabActiveAttachmentsWaiver fw-bolder" id="nav-attachmentsWaiver-tab" data-bs-toggle="tab" href="#nav-attachmentsWaiver" role="tab" aria-controls="nav-profile" aria-selected="false">Upload Waiver Template (@Model.AttachmentsWaiver.Count.ToString())</a>
         </li>
@@ -94,9 +78,7 @@
                     @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") @* && (Model.Ptn.Status == "Approved") *@)
                     {
                         @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
-                        @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
-                    }
-                    @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" }) *@
+                    }            
                 </div>
             </div>
             <hr />
@@ -128,7 +110,6 @@
                                     }
                                 }
                             }
-                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
                         </dd>
                     </div>
 
@@ -150,7 +131,6 @@
                                     }
                                 }
                             }
-                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
                         </dd>
                     </div>
 
@@ -172,20 +152,8 @@
                                     }
                                 }
                             }
-                            @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
                         </dd>
-                    </div>
-                    @*                     <div class="row">
-
-                    </div> *@
-                    @*                     <div class="row">
-                    <dt class="col-3 my-1 text-end">
-                    @Html.DisplayNameFor(model => model.Waiver.CorrectiveActionDueDate)
-                    </dt>
-                    <dd class="col-9 my-1">
-                    @Html.DisplayFor(model => model.Waiver.CorrectiveActionDueDate)
-                    </dd>
-                    </div> *@
+                    </div>                    
                     <div class="row">
                         <dt class="col-3 my-1 text-end">
                             @Html.DisplayNameFor(model => model.Waiver.RejectedReason)
@@ -220,7 +188,6 @@
                             @Html.DisplayFor(model => model.Waiver.RevisionNumber)
                         </dd>
                     </div>
-
                 </div>
             </div>
             <div class="accordion mt-3" id="accordionWaiverDetails">
@@ -505,19 +472,7 @@
                     <div class="row mt-5">
                         <div class="col-12">
                             @Html.ActionLink("Submit for Approval", "SubmitWaiverForApproval", "Waivers", new { id = Model.Waiver.Id }, new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
-                            @*                             @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary ms-1" }) *@
-                            @* <input type="submit" value="Reject Waiver" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" /> *@
                         </div>
-                        @*                         <div class="row mt-3 mb-1">
-                <div class="col-12">
-                <label asp-for="Waiver.RejectedReason" class="control-label fw-bold mb-1"></label>
-                @Html.TextAreaFor(model => model.Waiver.RejectedReason, new {@class = "form-control", @rows = 3 })
-                @if (@ViewBag.RejectedReason != null)
-                {
-                <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
-                }
-                </div>
-                </div> *@
                     </div>
                 </form>
             }
@@ -570,6 +525,15 @@
     @*  WAIVER REVIEW APPROVAL ****************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveWaiverAdminApproval" id="nav-waiverAdminApproval" role="tabpanel" aria-labelledby="nav-waiverAdminApproval-tab">
+
+        @if (TempData["SuccessMessageImpactAssessment"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessageImpactAssessment"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <div class="row my-3">
             <div class="col-12 text-start">
                 @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" }) *@
@@ -602,7 +566,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <form asp-controller="Waivers" asp-action="Index">
+            @* <form asp-controller="Waivers" asp-action="Index"> *@
             <tbody id="groupApproverReviewIndexTable">
                     @foreach (var item in Model.GroupApproversReview)
                     {
@@ -621,10 +585,62 @@
                                 @Html.DisplayFor(modelItem => item.Group)
                         </td>
                         <td>
+                            @if (item.ReviewedBy == null && ViewBag.IsAdmin)
+                            {
+                                <form asp-action="UpdatePrimaryReviewer" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="waiverId" value="@Model.Waiver.Id" />
+                                    <select name="newReviewer" class="form-control form-select form-select-sm select2 js-reviewer me-2" style="width: 100%" required>
+                                        @foreach (SelectListItem emp in ViewBag.Employees)
+                                        {
+                                            if (item.PrimaryApproverUsername == emp.Value)
+                                            {
+                                                <option value="@emp.Value" selected="selected">@emp.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@emp.Value">@emp.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary mx-1">Save</button>
+                                </form>
+                            }
+                            else
+                            {
                                 @Html.DisplayFor(modelItem => item.PrimaryApproverFullName)
+                            }
                         </td>
                         <td>
+                            @if (item.ReviewedBy == null && ViewBag.IsAdmin)
+                            {
+                                <form asp-action="UpdateSecondaryReviewer" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="waiverId" value="@Model.Waiver.Id" />
+                                    <select name="newReviewer" class="form-control form-select form-select-sm select2 js-reviewer me-2" style="width: 100%">
+                                        @if (string.IsNullOrEmpty(item.SecondaryApproverUsername))
+                                        {
+                                            <option value="" selected disabled>-- Select Reviewer --</option>
+                                        }
+                                        @foreach (SelectListItem emp in ViewBag.Employees)
+                                        {
+                                            if (item.SecondaryApproverUsername == emp.Value)
+                                            {
+                                                <option value="@emp.Value" selected="selected">@emp.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@emp.Value">@emp.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary mx-1">Save</button>
+                                </form>
+                            }
+                            else
+                            {
                                 @Html.DisplayFor(modelItem => item.SecondaryApproverFullName)
+                            }
                         </td>
                         <td class="@color">
                                 @Html.DisplayFor(modelItem => item.Status)
@@ -655,7 +671,7 @@
                     </tr>
                     }
             </tbody>
-            </form>
+            @* </form> *@
             @if (Model.GroupApproversReview.Count() == 0)
             {
                 <tr>
@@ -681,7 +697,7 @@
     @*  WAIVER MATERIAL DETAILS  **************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveWaiverMaterialDetails" id="nav-waiverMaterialDetails" role="tabpanel" aria-labelledby="nav-waiverMaterialDetails-tab">
-        <div @* class="text-nowrap" *@>
+        <div>
             <div class="row">
                 <div class="col-12">
                     @if (ViewBag.SaveMessageMaterialDetail != null)
@@ -753,8 +769,6 @@
                                             @size
                                         </td>
                                         <td>
-                                            @*<a href="@item.FullPath" data-type="URL" target="_blank">View File</a>*@
-                                            @*<a asp-controller="ChangeRequests" asp-action="DisplayAttachment" asp-route-id="@item.Id">Edit</a>*@
                                             @Html.ActionLink("Download File", "DownloadFile", "Waivers", new { id = @Model.Waiver.Id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-secondary", title = "Download to Download Folder" })
                                             @if (ViewBag.Username == Model.Waiver.CreatedUser || ViewBag.IsAdmin == true)
                                             {
@@ -790,11 +804,6 @@
                                         <label asp-for="Waiver.MaterialDetailNotes" class="control-label fw-bold mb-1"></label>
                                         @* <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i> *@
                                         @Html.TextAreaFor(model => model.Waiver.MaterialDetailNotes, new { id = "editorMaterialDetailNotes", @class = "form-control", @rows = 3 })
-@*                                         <div>
-                                            <textarea id="editorMaterialDetailNotes" name="editor">@Model.Waiver.MaterialDetailNotes</textarea>
-                                        </div> *@
-                                 @* WORKS!!       @Html.TextAreaFor(model => model.Waiver.MaterialDetailNotes, new { @id = "editorMaterialDetailNotes" })  *@                    
-                                        @* <span asp-validation-for="Waiver.MaterialDetailNotes" class="text-danger fw-bold mt-1"></span> *@
                                     </div>
                                     <div class="mt-2">
                                         <input type="submit" value="Save Notes" class="btn btn-success">
@@ -819,9 +828,6 @@
                                     <label asp-for="Waiver.AdditionalEmailNotificationsOfMaterialDetails" class="control-label fw-bold mb-1"></label>
                                     <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Upon clicking 'Send Reminder Now' button, notifications will automatically email out to distribution list DispoTeam@sksiltron.com, plus any users additionally selected in this field.">
                                     </i>
-@*                                     <div>
-                                        @Html.DropDownListFor(model => model.Waiver.AdditionalEmailNotificationsOfMaterialDetails, new MultiSelectList(ViewBag.Employees, "Value", "Text"), new { @class = "form-control form-select", @style = "width:100%;", multiple = true, @id = "WaiversDetailsAdditionalEmailNotificationsOfMaterialDetails" })
-                                    </div> *@
                                     <select asp-for="@Model.Waiver.AdditionalEmailNotificationsOfMaterialDetails" id="WaiversDetailsAdditionalEmailNotificationsOfMaterialDetails" multiple="multiple" style="width:100%;">
                                         @foreach (SelectListItem item in ViewBag.Employees)
                                         {
@@ -858,5 +864,17 @@
             placeholder: "Select Employee(s)",
             allowClear: true
         });
+    });
+
+    $(function () {
+      $('select.js-reviewer').each(function () {
+        $(this).select2({
+          placeholder: $(this).find('option[disabled][selected]').text() || '-- Select --',
+          allowClear: true,
+          width: '100%',
+          // helps when inside modals or overflowed containers:
+          dropdownParent: $(this).closest('form')
+        });
+      });
     });
 </script>
