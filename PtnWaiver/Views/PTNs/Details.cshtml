@@ -557,6 +557,15 @@
     @*  PTN REVIEW APPROVAL *******************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActivePtnAdminApproval" id="nav-ptnAdminApproval" role="tabpanel" aria-labelledby="nav-ptnAdminApproval-tab">
+
+        @if (TempData["SuccessMessageImpactAssessment"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessageImpactAssessment"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <div class="row my-3">
             <div class="col-12 text-start">
                 @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
@@ -596,60 +605,112 @@
                     <th></th>
                 </tr>
             </thead>
-            <form asp-controller="PTNs" asp-action="Index">
+            @* <form asp-controller="PTNs" asp-action="Index"> *@
             <tbody id="groupApproverReviewIndexTable">
-                    @foreach (var item in Model.GroupApproversReview)
+                @foreach (var item in Model.GroupApproversReview)
+                {
+                    var color = "";
+                    if (item.Status == "Rejected")
                     {
-                        var color = "";
-                        if (item.Status == "Rejected")
-                        {
-                            color = "text-danger fw-bold";
-                        }
-                        else if (item.Status == "Approved")
-                        {
-                            color = "text-success fw-bold";
-                        }
+                        color = "text-danger fw-bold";
+                    }
+                    else if (item.Status == "Approved")
+                    {
+                        color = "text-success fw-bold";
+                    }
                     <tr>
                         <input type="hidden" asp-for="@item.Id" />
                         <td>
-                                @Html.DisplayFor(modelItem => item.Group)
+                            @Html.DisplayFor(modelItem => item.Group)
                         </td>
                         <td>
+                            @if (item.ReviewedBy == null && ViewBag.IsAdmin)
+                            {
+                                <form asp-action="UpdatePrimaryReviewer" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="ptnId" value="@Model.PTN.Id" />
+                                    <select name="newReviewer" class="form-control form-select form-select-sm select2 js-reviewer me-2" style="width: 100%" required>
+                                        @foreach (SelectListItem emp in ViewBag.Employees)
+                                        {
+                                            if (item.PrimaryApproverUsername == emp.Value)
+                                            {
+                                                <option value="@emp.Value" selected="selected">@emp.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@emp.Value">@emp.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary mx-1">Save</button>
+                                </form>
+                            }
+                            else
+                            {
                                 @Html.DisplayFor(modelItem => item.PrimaryApproverFullName)
+                            }
                         </td>
                         <td>
+                            @if (item.ReviewedBy == null && ViewBag.IsAdmin)
+                            {
+                                <form asp-action="UpdateSecondaryReviewer" method="post" class="d-flex align-items-center">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <input type="hidden" name="ptnId" value="@Model.PTN.Id" />
+                                    <select name="newReviewer" class="form-control form-select form-select-sm select2 js-reviewer me-2" style="width: 100%">
+                                        @if (string.IsNullOrEmpty(item.SecondaryApproverUsername))
+                                        {
+                                            <option value="" selected disabled>-- Select Reviewer --</option>
+                                        }
+                                        @foreach (SelectListItem emp in ViewBag.Employees)
+                                        {
+                                            if (item.SecondaryApproverUsername == emp.Value)
+                                            {
+                                                <option value="@emp.Value" selected="selected">@emp.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@emp.Value">@emp.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary mx-1">Save</button>
+                                </form>
+                            }
+                            else
+                            {
                                 @Html.DisplayFor(modelItem => item.SecondaryApproverFullName)
+                            }
                         </td>
                         <td class="@color">
-                                @Html.DisplayFor(modelItem => item.Status)
+                            @Html.DisplayFor(modelItem => item.Status)
                         </td>
                         <td>
-                                @Html.DisplayFor(modelItem => item.ReviewedBy)
+                            @Html.DisplayFor(modelItem => item.ReviewedBy)
                         </td>
                         <td>
-                                @Html.DisplayFor(modelItem => item.ReviewDate)
+                            @Html.DisplayFor(modelItem => item.ReviewDate)
                         </td>
                         <td>
-                                @Html.DisplayFor(modelItem => item.Comment)
+                            @Html.DisplayFor(modelItem => item.Comment)
                         </td>
                         <td class="text-nowrap">
-                                @if (Model.PTN.Status == "Pending Approval" && (ViewBag.IsAdmin == true || ViewBag.Username == item.PrimaryApproverUsername || ViewBag.Username == item.SecondaryApproverUsername))
+                            @if (Model.PTN.Status == "Pending Approval" && (ViewBag.IsAdmin == true || ViewBag.Username == item.PrimaryApproverUsername || ViewBag.Username == item.SecondaryApproverUsername))
+                            {
+                                @if (item.Status == null || item.Status == "")
                                 {
-                                    @if (item.Status == null || item.Status == "")
-                                    {
-                                        @* <input type="submit" value="Save" class="btn btn-primary" /> *@
-                                        @Html.ActionLink("Approve", "GroupApprove", new { ptnId = Model.PTN.Id, groupApproverId = @item.Id, status = "Approved" }, new { @class = "btn btn-success" })
-                                    }
-                                    @if (item.Status == null || item.Status == "")
-                                    {
-                                        @Html.ActionLink("Reject", "GroupApprove", new { ptnId = Model.PTN.Id, groupApproverId = @item.Id, status = "Rejected" }, new { @class = "btn btn-danger ms-1" })
-                                    }
+                                    @* <input type="submit" value="Save" class="btn btn-primary" /> *@
+                                    @Html.ActionLink("Approve", "GroupApprove", new { ptnId = Model.PTN.Id, groupApproverId = @item.Id, status = "Approved" }, new { @class = "btn btn-success" })
                                 }
+                                @if (item.Status == null || item.Status == "")
+                                {
+                                    @Html.ActionLink("Reject", "GroupApprove", new { ptnId = Model.PTN.Id, groupApproverId = @item.Id, status = "Rejected" }, new { @class = "btn btn-danger ms-1" })
+                                }
+                            }
                         </td>
                     </tr>
-                    }
+                }
             </tbody>
-            </form>
+            @* </form> *@
             @if (Model.GroupApproversReview.Count() == 0)
             {
                 <tr>
@@ -682,12 +743,6 @@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveWaivers" id="nav-activeWaivers" role="tabpanel" aria-labelledby="nav-activeWaivers-tab">
         <div class="">
-            @*             <div class="row mt-5">
-            <div class="col-12 text-start">
-            @Html.ActionLink("Create","Create","Waivers",new {ptnId=@Model?.PTN?.Id, tab="Waivers"},new {@class="btn btn-success"})
-            @Html.ActionLink("Back to List","Index", new {}, new {@class="btn btn-secondary ms-1"})
-            </div>
-            </div> *@
             <div class="row mt-5">
                 <div class="col-12 text-start">
                     <div class="row">
@@ -698,13 +753,11 @@
                             <strong>Note: </strong>Production trial waiver approval requires the same approvers listed on the POR Waiver Form (TMP-0015). The waiver requestor is responsible for ensuring all required approvers are included.
                         </div>
                     </div>
-                    
+
                     <hr />
                     <form asp-controller="Waivers" asp-action="Index">
                         <div class="row">
                             <div class="col-12">
-                                @*                                 <input hidden value=@ViewBag.PrevSort id="WaiverPrevSortId" />
-                                <input hidden value=@ViewBag.PrevStatusFilter id="WaiverPrevStatusFilterId" /> *@
                                 <div class="row mb-3">
                                     <div class="col-12 text-start">
                                         <span class="flex-nowrap">
@@ -722,15 +775,6 @@
                                             }
                                         </span>
                                     </div>
-                                    @*                                     <div class="col-3 text-center">
-                                    <input class="form-control" id="waiverIndexSearch" type="text" placeholder="Search..">
-                                    </div>
-                                    <div class="col-1 fw-bold text-end mt-2">
-                                    Status:
-                                    </div>
-                                    <div class="col-2 text-start">
-                                    @Html.DropDownList("statusFilter", new SelectList(ViewBag.StatusList,"Value","Text"), new {@class = "form-control form-select", @id="waiverIndexStatusFilter"})
-                                    </div> *@
                                 </div>
                             </div>
                         </div>
@@ -738,15 +782,9 @@
                     <table class="table table-bordered table-striped">
                         <thead class="align-top align-text-top table-primary">
                             <tr>
-                                @*             <th>
-                                @Html.DisplayNameFor(model => model.PTN.DocId)
-                                </th> *@
                                 <th>
                                     Waiver Number
                                 </th>
-                                @*                                 <th>
-                                PTN Doc Id
-                                </th> *@
                                 <th>
                                     External ID-MES
                                 </th>
@@ -768,9 +806,6 @@
                                 <th>
                                     Status
                                 </th>
-                                @*                                 <th>
-                                Corrective Action Due Date
-                                </th> *@
                                 <th></th>
                             </tr>
                         </thead>
@@ -799,15 +834,9 @@
                                     color = "text-danger fw-bold";
                                 }
                                 <tr>
-                                    @*                 <td>
-                                @Html.DisplayFor(modelItem => item.PTN.DocId)
-                                </td> *@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.WaiverNumber)
                                     </td>
-                                    @*                                     <td>
-                                @Html.ActionLink(item.PtnDocId,"Details","PTNs",new {id=@item.PTNId, tab="Details"},new {@class="btn btn-primary text-nowrap"})
-                                </td> *@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.ExternalIdMes)
                                     </td>
@@ -850,7 +879,6 @@
                                         }
                                     </td>
                                     <td>
-                                        @* @Html.DisplayFor(modelItem => item.GroupApprover) *@
                                         @if (item.GroupApprover != null)
                                         {
                                             var counter = 0;
@@ -868,11 +896,7 @@
                                     <td class="@color">
                                         @Html.DisplayFor(modelItem => item.Status)
                                     </td>
-                                    @*                                     <td>
-                                @Html.DisplayFor(modelItem => item.CorrectiveActionDueDate)
-                                </td> *@
                                     <td class="text-nowrap">
-                                        @* @Html.ActionLink("Edit","Edit","Waivers",new {id=@item.Id, tab="Waivers"},new {@class="btn btn-primary"}) *@
                                         @Html.ActionLink("Details", "Details", "Waivers", new { id = @item.Id, tab = "Waivers" }, new { @class = "btn btn-secondary ms-1" })
                                         @if (ViewBag.IsAdmin == true || ViewBag.Username == item.CreatedUser)
                                         {
@@ -898,7 +922,6 @@
                             <tr>
                                 <td>No data found</td>
                                 <td></td>
-                                @* <td></td> *@
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -906,7 +929,6 @@
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                @*                                 <td></td> *@
                             </tr>
                         }
                     </table>
@@ -915,3 +937,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(function () {
+      $('select.js-reviewer').each(function () {
+        $(this).select2({
+          placeholder: $(this).find('option[disabled][selected]').text() || '-- Select --',
+          allowClear: true,
+          width: '100%',
+          // helps when inside modals or overflowed containers:
+          dropdownParent: $(this).closest('form')
+        });
+      });
+    });
+</script>

@@ -1,4 +1,27 @@
-﻿<!DOCTYPE html>
+﻿@using System.Linq
+@using System.Text.Json
+@using Microsoft.EntityFrameworkCore
+@inject PtnWaiver.Data.MocContext _contextMoc
+@inject PtnWaiver.Data.PtnWaiverContext _contextPtnWaiver
+
+@{
+    // 1) Get usernames from PtnWaiver (first context)
+    var approverUsernames = await _contextPtnWaiver.Administrators
+        .Where(a => a.Approver)
+        .Select(a => a.Username.ToLower())
+        .Distinct()
+        .ToListAsync();
+
+    // 2) Use those usernames to query employees in MOC (second context)
+    var admins = await _contextMoc.__mst_employee
+        .Where(e => approverUsernames.Contains(e.onpremisessamaccountname.ToLower()))
+        .Select(e => new { Name = e.displayname, Email = e.mail })
+        .ToListAsync();
+
+    var adminJson = JsonSerializer.Serialize(admins);
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,7 +31,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-@*     <link href="~/Content/rte_theme_default.css" rel="stylesheet" />
+    @*     <link href="~/Content/rte_theme_default.css" rel="stylesheet" />
     <script src="~/Scripts/rte.js"></script> *@
     <script src="~/tinymce/tinymce.min.js"></script>
     <script>
@@ -34,7 +57,7 @@
             return true;
         };
 
-        $(document).ready(function () {            
+        $(document).ready(function () {
 
             $("#ptnIndexSearch").on("keyup", function () {
                 var value = $(this).val().toLowerCase();
@@ -144,7 +167,7 @@
                         </li>
                         <li class="nav-item me-3">
                             @* <a class="nav-link text-light" href="~/MoC Process Flow.png" target="_blank"> *@
-                                <a class="nav-link text-light" href="~/PTN Waiver Flow.html" target="_blank">
+                            <a class="nav-link text-light" href="~/PTN Waiver Flow.html" target="_blank">
                                 <i class="bi bi-diagram-2-fill" data-bs-toggle="tooltip" data-bs-html="true">
                                 </i>
                                 PTN Process Flow
@@ -181,6 +204,17 @@
                                 </a>
                             </li>
                         }
+                        else
+                        {
+                        <li class="nav-item me-3">
+                            <a href="javascript:void(0)"
+                               id="adminInfoBtn"
+                               class="nav-link text-light">
+                                <i class="bi bi-people-fill"></i>
+                                Display Admins
+                            </a>
+                        </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -206,5 +240,48 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     @*    <script src="~/js/site.js" asp-append-version="true"></script>*@
     @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Popover init via pure JS -->
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+          var tooltipTriggerList = Array.prototype.slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+          tooltipTriggerList.forEach(function (el) { new bootstrap.Tooltip(el); });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+          // 1) Grab the JSON you serialized server-side
+          var adminData = @Html.Raw(adminJson);
+          console.log('adminData:', adminData);
+
+          // 2) Find the trigger element
+          var triggerEl = document.getElementById('adminInfoBtn');
+          if (!triggerEl) {
+            console.error("Element #adminInfoBtn not found");
+            return;
+          }
+
+          // 3) Initialize the popover, with HTML allowed and sanitization off
+          new bootstrap.Popover(triggerEl, {
+            trigger: 'hover focus',
+            html: true,
+            sanitize: false,
+            container: 'body',
+            title: 'Administrator Contacts',
+            content: function() {
+              // Build table rows
+              var rows = adminData.map(function(a) {
+                return '<tr><td>' + (a.Name  || '') + '</td>'
+                     +    '<td>' + (a.Email || '') + '</td></tr>';
+              }).join('');
+              return '<table class="table table-sm mb-0">'
+                   +   '<thead><tr><th>Name</th><th>Email</th></tr></thead>'
+                   +   '<tbody>' + rows + '</tbody>'
+                   + '</table>';
+            }
+          });
+        });
+    </script>
+
 </body>
 </html>

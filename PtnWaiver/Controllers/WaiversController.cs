@@ -1310,5 +1310,69 @@ namespace PtnWaiver.Controllers
             }
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverMaterialDetails", saveMessageMaterialDetail = "Email Notifications have been sent out" });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePrimaryReviewer(int id, int waiverId, string newReviewer)
+        {
+            var record = await _contextPtnWaiver.GroupApproversReview.FindAsync(id);
+            if (record == null)
+                return NotFound();
+
+            var originalPerson = record.PrimaryApproverFullName;
+
+            // get assigned-to person info....
+            var toPerson = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == newReviewer.ToLower()).FirstOrDefaultAsync();
+
+            if (toPerson != null)
+            {
+                record.PrimaryApproverUsername = newReviewer;
+                record.PrimaryApproverFullName = toPerson?.displayname;
+                record.PrimaryApproverEmail = toPerson?.mail;
+                record.PrimaryApproverTitle = toPerson?.jobtitle;
+
+                record.ModifiedUser = _username;
+                record.ModifiedDate = DateTime.Now;
+
+                _contextPtnWaiver.Update(record);
+                await _contextPtnWaiver.SaveChangesAsync();
+
+                TempData["SuccessMessageImpactAssessment"] = "Reviewer updated successfully from '" + originalPerson + "" + "' to '" + toPerson?.displayname + "'.";
+            }
+
+            return RedirectToAction("Details", new { id = waiverId, tabWaiver = "WaiverAdminApproval" });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateSecondaryReviewer(int id, int waiverId, string newReviewer)
+        {
+            var record = await _contextPtnWaiver.GroupApproversReview.FindAsync(id);
+            if (record == null)
+                return NotFound();
+
+            var originalPerson = record.SecondaryApproverFullName;
+
+            // get assigned-to person info....
+            var toPerson = await _contextMoc.__mst_employee.Where(m => m.onpremisessamaccountname.ToLower() == (newReviewer ?? "").ToLower()).FirstOrDefaultAsync();
+
+            //if (toPerson != null)
+            //{
+            record.SecondaryApproverUsername = newReviewer;
+            record.SecondaryApproverFullName = toPerson?.displayname;
+            record.SecondaryApproverEmail = toPerson?.mail;
+            record.SecondaryApproverTitle = toPerson?.jobtitle;
+
+            record.ModifiedUser = _username;
+            record.ModifiedDate = DateTime.Now;
+
+            _contextPtnWaiver.Update(record);
+            await _contextPtnWaiver.SaveChangesAsync();
+
+            TempData["SuccessMessageImpactAssessment"] = "Reviewer updated successfully from '" + originalPerson + "" + "' to '" + toPerson?.displayname + "'.";
+            //}
+
+            return RedirectToAction("Details", new { id = waiverId, tabWaiver = "WaiverAdminApproval" });
+        }
     }
 }

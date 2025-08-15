@@ -16,3 +16,16 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Let popover tables expand */
+.popover {
+    max-width: none;
+}
+
+.navbar .nav-link {
+    border-radius: 9999px;
+}
+
+.navbar .nav-link:hover {
+    background-color: rgba(255,255,255,.12);
+}
