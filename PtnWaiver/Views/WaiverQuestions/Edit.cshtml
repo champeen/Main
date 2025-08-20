@@ -1,0 +1,75 @@
+﻿@model PtnWaiver.Models.WaiverQuestion
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Waiver Questions</h1>
+<h4 class="mt-5">Edit</h4>
+<hr />
+<div class="row">
+    <div class="col-6">
+        <form asp-action="Edit">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+
+            <!-- Hidden metadata (match source pattern) -->
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="CreatedUser" />
+            <input type="hidden" asp-for="CreatedUserFullName" />
+            <input type="hidden" asp-for="CreatedUserEmail" />
+            <input type="hidden" asp-for="CreatedDate" />
+
+            <div class="form-group my-3">
+                <label asp-for="Question" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Question" class="form-control" />
+                <span asp-validation-for="Question" class="text-danger"></span>
+            </div>
+
+            <div class="form-group my-3">
+                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
+                @* Change from textbox to dropdown for consistency *@
+                @Html.ListBoxFor(
+                         model => model.GroupApprover,
+                         new SelectList(ViewBag.GroupApprovers, "Value", "Text"),
+                         // "-- select --",
+                         new
+                         {
+                             @class = "form-control select2-multiple",
+                             id = "GroupApproverSelect",
+                             multiple = "multiple",
+                             data_val = "true",
+                             data_val_required = "Select at least one approver."
+                         })
+                <span asp-validation-for="GroupApprover" class="text-danger"></span>
+            </div>
+
+            <div class="form-group my-3">
+                <label asp-for="Order" class="control-label fw-bold mb-1"></label>
+                <input asp-for="Order" class="form-control" />
+                <span asp-validation-for="Order" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-5">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a class="mx-2 btn btn-secondary" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            $('select[name="GroupApprover"]').select2({
+                placeholder: "-- select --",
+                width: 'resolve',
+                allowClear: true
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

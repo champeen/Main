@@ -64,5 +64,7 @@ namespace PtnWaiver.Models
         [Display(Name ="PTN Doc Id")]
         public string? PtnDocId { get; set; }
         public virtual PTN? PTN {  get; set; }
+
+        public virtual List<WaiverQuestionResponse>? WaiverQuestionResponse { get; set; }
     }
 }

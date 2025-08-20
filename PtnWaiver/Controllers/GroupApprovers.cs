@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PtnWaiver.Data;
 using PtnWaiver.Models;
@@ -52,9 +47,7 @@ namespace PtnWaiver.Controllers
             if (id == null || _contextPtnWaiver.GroupApprovers == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.GroupApprovers
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var area = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Id == id);
             if (area == null)
                 return NotFound();
 
@@ -163,7 +156,6 @@ namespace PtnWaiver.Controllers
                 return NotFound();
 
             var area = await _contextPtnWaiver.GroupApprovers.FindAsync(id);
-
             if (area == null)
                 return NotFound();
 
@@ -261,9 +253,7 @@ namespace PtnWaiver.Controllers
             if (id == null || _contextPtnWaiver.GroupApprovers == null)
                 return NotFound();
 
-            var area = await _contextPtnWaiver.GroupApprovers
-                .FirstOrDefaultAsync(m => m.Id == id);
-
+            var area = await _contextPtnWaiver.GroupApprovers.FirstOrDefaultAsync(m => m.Id == id);
             if (area == null)
                 return NotFound();
 
@@ -284,10 +274,9 @@ namespace PtnWaiver.Controllers
             ViewBag.Username = _username;
 
             if (_contextPtnWaiver.GroupApprovers == null)
-                return Problem("Entity set 'PtnWaiverContext.Area'  is null.");
+                return Problem("Entity set 'PtnWaiverContext.Area' is null.");
 
             var area = await _contextPtnWaiver.GroupApprovers.FindAsync(id);
-
             if (area != null)
                 _contextPtnWaiver.GroupApprovers.Remove(area);
 

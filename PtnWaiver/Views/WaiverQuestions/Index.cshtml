@@ -1,0 +1,49 @@
+﻿@model IEnumerable<PtnWaiver.Models.WaiverQuestion>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Waiver Questions</h1>
+
+<div class="row mt-5 mb-3">
+    <div class="col-12">
+        <a asp-action="Create" class="me-2 btn btn-success">Create New</a>
+        <span><a asp-controller="Admin" asp-action="Index" class="btn btn-secondary">Back</a></span>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-primary">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Question)</th>
+            <th>@Html.DisplayNameFor(model => model.GroupApprover)</th>
+            <th>@Html.DisplayNameFor(model => model.Order)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Question)</td>
+                <td>@string.Join(", ", item.GroupApprover)</td>
+                <td>@Html.DisplayFor(modelItem => item.Order)</td>
+                <td>
+                    <span class="text-nowrap">
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-secondary ms-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger ms-1">Delete</a>
+                    </span>
+                </td>
+            </tr>
+        }
+
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center">No data found</td>
+            </tr>
+        }
+    </tbody>
+</table>

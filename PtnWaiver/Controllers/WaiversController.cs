@@ -354,13 +354,10 @@ namespace PtnWaiver.Controllers
             if (ptn == null)
                 return NotFound();
 
-            //ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
-            //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
             ViewBag.Areas = getAreas();
-            //ViewBag.Groups = getGroupApprovers();
-            ViewBag.PtnGroupApprovers = ptn.GroupApprover;
+            ViewBag.PtnGroupApprovers = ptn.GroupApprover;            
 
             var groups = getGroupApprovers();
             foreach (SelectListItem group in groups)
@@ -386,6 +383,26 @@ namespace PtnWaiver.Controllers
                 CreatedUserEmail = userInfo.mail
             };
 
+            // Get Waiver Questions that writer needs to answer...
+            var waiverQuestions = await _contextPtnWaiver.WaiverQuestion.Where(m => m.DeletedDate == null).OrderBy(m => m.Order).ToListAsync();
+
+            waiver.WaiverQuestionResponse = new List<WaiverQuestionResponse>();
+
+            foreach (var question in waiverQuestions)
+            {
+                var WaiverQuestionResponse = new WaiverQuestionResponse
+                {
+                    GroupApprover = question.GroupApprover,
+                    Question = question.Question,
+                    Response = null,
+                    CreatedUser = waiver.CreatedUser,
+                    CreatedUserFullName = waiver.CreatedUserFullName,
+                    CreatedUserEmail = waiver.CreatedUserEmail,
+                    CreatedDate = DateTime.Now
+                };
+                waiver.WaiverQuestionResponse.Add(WaiverQuestionResponse);
+            }
+
             return View(waiver);
         }
 
@@ -406,19 +423,6 @@ namespace PtnWaiver.Controllers
 
             if (ModelState.IsValid)
             {
-                //// This weird naming convention is striaght from how they are doing it in the spreadsheet.....
-                //string year = DateTime.Now.Year.ToString();
-                //string waiverNumber = "";
-                //for (int i = 1; i < 10000; i++)
-                //{
-                //    waiverNumber = "INS" + DateTime.Now.Year.ToString() + "-" + i.ToString();
-                //    Waiver record = await _contextPtnWaiver.Waiver
-                //        .FirstOrDefaultAsync(m => m.WaiverNumber == waiverNumber);
-                //    if (record == null)
-                //        break;
-                //}
-                //waiver.WaiverNumber = waiverNumber;
-
                 waiver.WaiverSequence = getWaiverSerialNumber(waiver.PtnDocId);
                 waiver.RevisionNumber = 0;
                 waiver.ExternalIdMes = waiver.DateSequence + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");

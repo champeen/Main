@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PtnWaiver.Data;
@@ -12,9 +13,11 @@ using PtnWaiver.Data;
 namespace PtnWaiver.Migrations
 {
     [DbContext(typeof(PtnWaiverContext))]
-    partial class PtnWaiverContextModelSnapshot : ModelSnapshot
+    [Migration("20250820174034_addWaiverQuestionResponseRelationship")]
+    partial class addWaiverQuestionResponseRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1201,7 +1204,7 @@ namespace PtnWaiver.Migrations
                     b.Property<string>("Response")
                         .HasColumnType("text");
 
-                    b.Property<int>("WaiverId")
+                    b.Property<int?>("WaiverId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -1289,9 +1292,7 @@ namespace PtnWaiver.Migrations
                 {
                     b.HasOne("PtnWaiver.Models.Waiver", "Waiver")
                         .WithMany("WaiverQuestionResponse")
-                        .HasForeignKey("WaiverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("WaiverId");
 
                     b.Navigation("Waiver");
                 });
