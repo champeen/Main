@@ -69,7 +69,17 @@ namespace PtnWaiver.Controllers
                 return NotFound();
 
             Waiver waiver = await _contextPtnWaiver.Waiver
+                .Include(w => w.WaiverQuestionResponse)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (waiver?.WaiverQuestionResponse != null)
+            {
+                waiver.WaiverQuestionResponse = waiver.WaiverQuestionResponse
+                    .OrderBy(r => int.TryParse(r.Order, out var n) ? n : int.MaxValue)
+                    .ThenBy(r => r.Question)
+                    .ToList();
+            }
 
             PTN ptn = await _contextPtnWaiver.PTN
                 .FirstOrDefaultAsync(m => m.Id == waiver.PTNId);
@@ -181,7 +191,8 @@ namespace PtnWaiver.Controllers
 
             // Render Tabs Disabled/Enabled
             // Submit for Admin Approval Tab...
-            waiverVM.TabSubmitWaiverForApprovalDisabled = waiverVM.AttachmentsWaiver.Count == 0 ? "disabled" : "";
+            int incompleteWaiverQuestionCount = _contextPtnWaiver.WaiverQuestionResponse.Where(m => m.WaiverId == waiver.Id && m.Response == null).Count();
+            waiverVM.TabSubmitWaiverForApprovalDisabled = waiverVM.AttachmentsWaiver.Count == 0 || incompleteWaiverQuestionCount > 0 ? "disabled" : "";
             // Admin Approve Waiver Tab...
             waiverVM.TabApproveWaiverDisabled = waiverVM.Waiver.Status == "Pending Approval" || waiverVM.Waiver.Status == "Approved" || waiverVM.Waiver.Status == "Closed" || waiverVM.Waiver.Status == "Rejected" ? "" : "disabled";
             waiverVM.TabWaiverMaterialDetailsDisabled = waiverVM.Ptn.isWaferingDepartment == true ? "" : "disabled";
@@ -208,8 +219,18 @@ namespace PtnWaiver.Controllers
             // Format: https://localhost:7214/Waivers/MesLookup?id=2025-1000-W01-R02
             Waiver waiver = await _contextPtnWaiver.Waiver
                 .Where(m => m.ExternalIdMes == id)  //.Where(m => m.WaiverNumber == docId)
+                .Include(w => w.WaiverQuestionResponse)
+                .AsNoTracking()
                 .OrderByDescending(m => m.RevisionNumber)
                 .FirstOrDefaultAsync();
+
+            if (waiver?.WaiverQuestionResponse != null)
+            {
+                waiver.WaiverQuestionResponse = waiver.WaiverQuestionResponse
+                    .OrderBy(r => int.TryParse(r.Order, out var n) ? n : int.MaxValue)
+                    .ThenBy(r => r.Question)
+                    .ToList();
+            }
 
             PTN ptn = await _contextPtnWaiver.PTN
                 .FirstOrDefaultAsync(m => m.Id == waiver.PTNId);
@@ -357,7 +378,7 @@ namespace PtnWaiver.Controllers
             ViewBag.Status = getWaiverStatus();
             ViewBag.ProductProcess = getProductProcess();
             ViewBag.Areas = getAreas();
-            ViewBag.PtnGroupApprovers = ptn.GroupApprover;            
+            ViewBag.PtnGroupApprovers = ptn.GroupApprover;
 
             var groups = getGroupApprovers();
             foreach (SelectListItem group in groups)
@@ -395,6 +416,7 @@ namespace PtnWaiver.Controllers
                     GroupApprover = question.GroupApprover,
                     Question = question.Question,
                     Response = null,
+                    Order = question.Order,
                     CreatedUser = waiver.CreatedUser,
                     CreatedUserFullName = waiver.CreatedUserFullName,
                     CreatedUserEmail = waiver.CreatedUserEmail,
@@ -411,53 +433,64 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PorProject,Description,ProductProcess,Areas,GroupApprover,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,DateSequence,Status,PrimaryApproverUsername,PrimaryApproverFullName,PrimaryApproverEmail,PrimaryApproverTitle,SecondaryApproverUsername,SecondaryApproverFullName,SecondaryApproverEmail,SecondaryApproverTitle,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] Waiver waiver)
+        public async Task<IActionResult> Create(Waiver waiver)
         {
             ErrorViewModel errorViewModel = CheckAuthorization();
-            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+            if (errorViewModel != null && !string.IsNullOrEmpty(errorViewModel.ErrorMessage))
                 return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
 
             ViewBag.IsAdmin = _isAdmin;
             ViewBag.Username = _username;
+
             waiver.IsMostCurrentWaiver = true;
 
             if (ModelState.IsValid)
             {
                 waiver.WaiverSequence = getWaiverSerialNumber(waiver.PtnDocId);
                 waiver.RevisionNumber = 0;
-                waiver.ExternalIdMes = waiver.DateSequence + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
-                waiver.WaiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+                waiver.ExternalIdMes = $"{waiver.DateSequence}-{waiver.WaiverSequence}-R{waiver.RevisionNumber:00}";
+                waiver.WaiverNumber = $"{waiver.PtnDocId}-{waiver.WaiverSequence}-R{waiver.RevisionNumber:00}";
 
-                // Create Waiver Directory to store attachments in....
-                string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
-                DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
-                if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
-                    pathWaiver.Create();
+                // Create attachments directory
+                var waiverNumber = waiver.WaiverNumber;
+                var waiverDir = Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber);
+                if (!Directory.Exists(waiverDir))
+                    Directory.CreateDirectory(waiverDir);
 
-                //waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m=>m.Id == waiver.PTNId).Select(m=>m.DocId).FirstOrDefaultAsync();
+                // Optional: ensure child rows have audit fields, etc.
+                if (waiver.WaiverQuestionResponse != null)
+                {
+                    foreach (var q in waiver.WaiverQuestionResponse)
+                    {
+                        // EF will set WaiverId automatically because the child is in the parent's collection.
+                        // Set any defaults if needed:
+                        q.CreatedUser ??= waiver.CreatedUser;
+                        q.CreatedUserFullName ??= waiver.CreatedUserFullName;
+                        q.CreatedUserEmail ??= waiver.CreatedUserEmail;
+                        q.CreatedDate = waiver.CreatedDate == null ? DateTime.Now : q.CreatedDate;
+                    }
+                }
+
                 _contextPtnWaiver.Add(waiver);
                 await _contextPtnWaiver.SaveChangesAsync();
+
                 return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab = "Waivers" });
-                //return RedirectToAction(nameof(Index));
             }
 
+            // Rebuild ViewBags on validation failure (unchanged from yours) ...
             PTN ptn = await _contextPtnWaiver.PTN.FirstOrDefaultAsync(m => m.Id == waiver.PTNId);
-            if (ptn == null)
-                return NotFound();
+            if (ptn == null) return NotFound();
 
-            ViewBag.Ptns = getPtns();
             ViewBag.Status = getWaiverStatus();
-            //ViewBag.PorProjects = getPorProjects();
             ViewBag.ProductProcess = getProductProcess();
             ViewBag.Areas = getAreas();
-            //ViewBag.Groups = getGroupApprovers();
             ViewBag.PtnGroupApprovers = ptn.GroupApprover;
 
             var groups = getGroupApprovers();
             foreach (SelectListItem group in groups)
             {
-                bool found = waiver.GroupApprover.Contains(group.Value);
-                if (found == true)
+                bool found = waiver.GroupApprover?.Contains(group.Value) == true;
+                if (found)
                 {
                     group.Selected = true;
                     group.Disabled = true;
@@ -487,7 +520,18 @@ namespace PtnWaiver.Controllers
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
-            var waiver = await _contextPtnWaiver.Waiver.FindAsync(id);
+            Waiver waiver = await _contextPtnWaiver.Waiver
+                .Include(w => w.WaiverQuestionResponse)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (waiver?.WaiverQuestionResponse != null)
+            {
+                waiver.WaiverQuestionResponse = waiver.WaiverQuestionResponse
+                    .OrderBy(r => int.TryParse(r.Order, out var n) ? n : int.MaxValue)
+                    .ThenBy(r => r.Question)
+                    .ToList();
+            }
 
             if (waiver == null)
                 return NotFound();
@@ -510,75 +554,149 @@ namespace PtnWaiver.Controllers
         // POST: Waivers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,WaiverSequence,DateSequence,ExternalIdMes,PorProject,Areas,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        public async Task<IActionResult> Edit(int ptnId, Waiver model)
         {
-            ErrorViewModel errorViewModel = CheckAuthorization();
-            if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
-                return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
-
-            ViewBag.IsAdmin = _isAdmin;
-            ViewBag.Username = _username;
-
-            if (id != waiver.Id)
-                return NotFound();
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    // attachment storage file path should already exist, but just make sure....
-                    string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
-                    DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
-                    if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
-                        pathWaiver.Create();
+                ViewBag.Ptns = getPtns();
+                ViewBag.Status = getWaiverStatus();
+                ViewBag.ProductProcess = getProductProcess();
+                ViewBag.Areas = getAreas();
 
-                    var userInfo = getUserInfo(_username);
-                    if (userInfo != null)
+                var groups = getGroupApprovers();
+                foreach (SelectListItem group in groups)
+                {
+                    bool found = model.GroupApprover.Contains(group.Value);
+                    if (found == true)
                     {
-                        waiver.ModifiedUser = userInfo.onpremisessamaccountname;
-                        waiver.ModifiedUserFullName = userInfo.displayname;
-                        waiver.ModifiedUserEmail = userInfo.mail;
-                        waiver.ModifiedDate = DateTime.Now;
+                        group.Selected = true;
+                        group.Disabled = true;
                     }
-
-                    waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m => m.Id == waiver.PTNId).Select(m => m.DocId).FirstOrDefaultAsync();
-                    _contextPtnWaiver.Update(waiver);
-                    await _contextPtnWaiver.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!WaiverExists(waiver.Id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab = "Details" });
-                //return RedirectToAction(nameof(Index));
+                ViewBag.Groups = groups;
+                return View(model);
             }
-            ViewBag.Ptns = getPtns();
-            ViewBag.Status = getWaiverStatus();
-            //ViewBag.PorProjects = getPorProjects();
-            ViewBag.ProductProcess = getProductProcess();
-            ViewBag.Areas = getAreas();
-            //ViewBag.Groups = getGroupApprovers();
 
-            var groups = getGroupApprovers();
-            foreach (SelectListItem group in groups)
+            // Load the current waiver + children from DB
+            var waiver = await _contextPtnWaiver.Waiver
+                .Include(w => w.WaiverQuestionResponse)
+                .FirstOrDefaultAsync(w => w.Id == model.Id);
+
+            if (waiver == null) return NotFound();
+
+            // Update simple fields
+            waiver.Description = model.Description;
+            waiver.ProductProcess = model.ProductProcess;
+            waiver.Areas = model.Areas;
+            waiver.GroupApprover = model.GroupApprover;
+
+            var userInfo = getUserInfo(_username);
+            waiver.ModifiedUser = _username;
+            if (userInfo != null)
             {
-                bool found = waiver.GroupApprover.Contains(group.Value);
-                if (found == true)
-                {
-                    group.Selected = true;
-                    group.Disabled = true;
-                }
-
+                waiver.ModifiedUserFullName = userInfo.displayname;
+                waiver.ModifiedUserEmail = userInfo.mail;
+                waiver.ModifiedDate = DateTime.Now;
             }
-            ViewBag.Groups = groups;
 
-            return View(waiver);
+            // Update question responses (match by Question + Order, or by index if you prefer)
+            if (model.WaiverQuestionResponse != null && waiver.WaiverQuestionResponse != null)
+            {
+                foreach (var posted in model.WaiverQuestionResponse)
+                {
+                    var existing = waiver.WaiverQuestionResponse
+                        .FirstOrDefault(x =>
+                            string.Equals(x.Question, posted.Question, StringComparison.OrdinalIgnoreCase)
+                            && string.Equals(x.Order, posted.Order, StringComparison.OrdinalIgnoreCase));
+
+                    if (existing != null)
+                    {
+                        // Only response is editable on Edit; GroupApprover/Question/Order are metadata
+                        existing.Response = string.IsNullOrWhiteSpace(posted.Response) ? null : posted.Response;
+                        existing.ModifiedUser = waiver.ModifiedUser;
+                        existing.ModifiedUserFullName = waiver.ModifiedUserFullName;
+                        existing.ModifiedUserEmail = waiver.ModifiedUserEmail;
+                        existing.ModifiedDate = DateTime.UtcNow;
+                    }
+                }
+            }
+
+            await _contextPtnWaiver.SaveChangesAsync();
+            return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab = "Details" });
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int id, [Bind("Id,RevisionNumber,WaiverNumber,WaiverSequence,DateSequence,ExternalIdMes,PorProject,Areas,GroupApprover,Description,ProductProcess,Status,DateClosed,CorrectiveActionDueDate,PTNId,PtnDocId,IsMostCurrentWaiver,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] Waiver waiver)
+        //{
+        //    ErrorViewModel errorViewModel = CheckAuthorization();
+        //    if (errorViewModel != null && !String.IsNullOrEmpty(errorViewModel.ErrorMessage))
+        //        return RedirectToAction(errorViewModel.Action, errorViewModel.Controller, new { message = errorViewModel.ErrorMessage });
+
+        //    ViewBag.IsAdmin = _isAdmin;
+        //    ViewBag.Username = _username;
+
+        //    if (id != waiver.Id)
+        //        return NotFound();
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            // attachment storage file path should already exist, but just make sure....
+        //            string waiverNumber = waiver.PtnDocId + "-" + waiver.WaiverSequence + "-R" + waiver.RevisionNumber.ToString("###00");
+        //            DirectoryInfo pathWaiver = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber));
+        //            if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectoryWaiver, waiverNumber)))
+        //                pathWaiver.Create();
+
+        //            var userInfo = getUserInfo(_username);
+        //            if (userInfo != null)
+        //            {
+        //                waiver.ModifiedUser = userInfo.onpremisessamaccountname;
+        //                waiver.ModifiedUserFullName = userInfo.displayname;
+        //                waiver.ModifiedUserEmail = userInfo.mail;
+        //                waiver.ModifiedDate = DateTime.Now;
+        //            }
+
+        //            waiver.PtnDocId = await _contextPtnWaiver.PTN.Where(m => m.Id == waiver.PTNId).Select(m => m.DocId).FirstOrDefaultAsync();
+        //            _contextPtnWaiver.Update(waiver);
+        //            await _contextPtnWaiver.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!WaiverExists(waiver.Id))
+        //                return NotFound();
+        //            else
+        //                throw;
+        //        }
+        //        return RedirectToAction("Details", "Waivers", new { id = waiver.Id, tab = "Details" });
+        //        //return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewBag.Ptns = getPtns();
+        //    ViewBag.Status = getWaiverStatus();
+        //    //ViewBag.PorProjects = getPorProjects();
+        //    ViewBag.ProductProcess = getProductProcess();
+        //    ViewBag.Areas = getAreas();
+        //    //ViewBag.Groups = getGroupApprovers();
+
+        //    var groups = getGroupApprovers();
+        //    foreach (SelectListItem group in groups)
+        //    {
+        //        bool found = waiver.GroupApprover.Contains(group.Value);
+        //        if (found == true)
+        //        {
+        //            group.Selected = true;
+        //            group.Disabled = true;
+        //        }
+
+        //    }
+        //    ViewBag.Groups = groups;
+
+        //    return View(waiver);
+        //}
 
         // GET: Waivers/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -786,7 +904,7 @@ namespace PtnWaiver.Controllers
             string subject = @"Process Test Notification (PTN) - Waiver Review Needed";
             string body = @"Your Review is needed. Please follow link below and review/respond to the following Waiver request. <br/><br/><strong>Waiver Number: </strong>" + waiver.WaiverNumber + "-" + waiver.RevisionNumber.ToString() + @"<br/><strong>Waiver Description: </strong>" + waiver.Description + "<br/><strong>Link: <a href=\"" + Initialization.WebsiteUrl + "\" target=\"blank\" >PTN System</a></strong><br/><br/>";
 
-            // Create the GroupApproverReviews 
+            // Create the GroupApproverReviews based on user's selected GroupApprovers for this Waiver...
             foreach (var approver in waiver.GroupApprover)
             {
                 GroupApproversReview groupApproversReview = new GroupApproversReview();
@@ -818,6 +936,18 @@ namespace PtnWaiver.Controllers
                         AddEmailHistory(null, subject, body, groupApproversReview.SecondaryApproverFullName, groupApproversReview.SecondaryApproverUsername, groupApproversReview.SecondaryApproverEmail, null, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
                 }
             }
+
+            // Create the GroupApproverReviews based on user's responses to the Waiver Questions that have GroupApprovers associated with them...
+            var waiverQuestionsWithGroupApprovers = waiver.WaiverQuestionResponse.Where(m => m.WaiverId == waiver.Id && m.Response == "Yes").ToList();
+            foreach (var record in waiverQuestionsWithGroupApprovers)
+            {
+                foreach (var group in record.GroupApprover.Split(','))
+                {
+
+                }
+            }
+
+
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }
 

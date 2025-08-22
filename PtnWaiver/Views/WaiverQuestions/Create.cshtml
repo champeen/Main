@@ -21,7 +21,7 @@
 
             <div class="form-group my-3">
                 <label asp-for="Question" class="control-label fw-bold mb-1"></label>
-                <input asp-for="Question" class="form-control" />
+                @Html.TextAreaFor(model => model.Question, new { @class = "form-control", @rows = 3 })                
                 <span asp-validation-for="Question" class="text-danger"></span>
             </div>
 

@@ -7,186 +7,230 @@
 <div class="row">
     <div class="col-4">
         <h1>PTN</h1>
-        <h4>Edit</h4>
     </div>
     <div class="col-8 text-end">
         <h4>
             <span class="fw-bold">
-                @Html.DisplayFor(model => model.DocId)
+                @Html.DisplayFor(m => m.DocId)
             </span>
         </h4>
         <h4>
-            @Html.DisplayNameFor(model => model.Status):
+            @Html.DisplayNameFor(m => m.Status):
             <span class="text-success fw-bold">
-                @Html.DisplayFor(model => model.Status)
+                @Html.DisplayFor(m => m.Status)
             </span>
         </h4>
     </div>
 </div>
 
+<h4 class="mt-5">Edit</h4>
 <hr />
+
 <form asp-action="Edit">
-    @if (Model.Status != "Draft")
-    {
-        var _readOnly = "readonly";
-    }
-    <div class="row my-4">
+    @Html.AntiForgeryToken()
+
+    <!-- Top actions -->
+    <div class="d-flex justify-content-start mt-4">
+        <div class="d-flex gap-2">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+        </div>
+    </div>
+
+    <!-- Validation summary -->
+    <div class="row">
         <div class="col-12">
-            <div class="form-group">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
+        </div>
+    </div>
+
+    <!-- Hidden fields (system/state) -->
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="DocId" />
+    <input type="hidden" asp-for="Status" />
+    <input type="hidden" asp-for="OriginatingGroup" />
+    <input type="hidden" asp-for="ProductSize" />
+    <input type="hidden" asp-for="OriginatorInitials" />
+    <input type="hidden" asp-for="OriginatorYear" />
+    <input type="hidden" asp-for="SerialNumber" />
+
+    <input type="hidden" asp-for="RejectedBeforeSubmission" />
+    <input type="hidden" asp-for="RejectedByApprover" />
+    <input type="hidden" asp-for="RejectedReason" />
+    <input type="hidden" asp-for="SubmittedForApprovalUser" />
+    <input type="hidden" asp-for="SubmittedForApprovalUserFullName" />
+    <input type="hidden" asp-for="SubmittedForApprovalDate" />
+    <input type="hidden" asp-for="ApprovedByUser" />
+    <input type="hidden" asp-for="ApprovedByUserFullName" />
+    <input type="hidden" asp-for="ApprovedByDate" />
+    <input type="hidden" asp-for="CompletedBylUser" />
+    <input type="hidden" asp-for="CompletedBylUserFullName" />
+    <input type="hidden" asp-for="CompletedByDate" />
+
+    <input type="hidden" asp-for="CreatedUser" />
+    <input type="hidden" asp-for="CreatedUserFullName" />
+    <input type="hidden" asp-for="CreatedUserEmail" />
+    <input type="hidden" asp-for="CreatedDate" />
+    <input type="hidden" asp-for="ModifiedUser" />
+    <input type="hidden" asp-for="ModifiedUserFullName" />
+    <input type="hidden" asp-for="ModifiedUserEmail" />
+    <input type="hidden" asp-for="ModifiedDate" />
+    <input type="hidden" asp-for="DeletedUser" />
+    <input type="hidden" asp-for="DeletedUserFullName" />
+    <input type="hidden" asp-for="DeletedUserEmail" />
+    <input type="hidden" asp-for="DeletedDate" />
+
+    <!-- General Information -->
+    <div class="card shadow-sm rounded-3 mt-3">
+        <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">General Information</h5>
+            <div class="d-flex gap-2 text-nowrap">
                 <input type="submit" value="Save" class="btn btn-primary" />
-                <a class="mx-1 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+                <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="DocId" />
-            <input type="hidden" asp-for="Status" />
-            <input type="hidden" asp-for="OriginatingGroup" />
-            <input type="hidden" asp-for="ProductSize" />
-            <input type="hidden" asp-for="OriginatorInitials" />
-            <input type="hidden" asp-for="OriginatorYear" />
-            <input type="hidden" asp-for="SerialNumber" />
-            <input type="hidden" asp-for="CreatedUser" />
-            <input type="hidden" asp-for="CreatedUserFullName" />
-            <input type="hidden" asp-for="CreatedUserEmail" />
-            <input type="hidden" asp-for="CreatedDate" />
-            <input type="hidden" asp-for="ModifiedUser" />
-            <input type="hidden" asp-for="ModifiedUserFullName" />
-            <input type="hidden" asp-for="ModifiedUserEmail" />
-            <input type="hidden" asp-for="ModifiedDate" />
-            <input type="hidden" asp-for="DeletedUser" />
-            <input type="hidden" asp-for="DeletedUserFullName" />
-            <input type="hidden" asp-for="DeletedUserEmail" />
-            <input type="hidden" asp-for="DeletedDate" />
-        </div>
-    </div>
-    @*     <div class="row">
-    <div class="col-12">
-    <select class="js-example-basic-multiple" name="@Model.SubjectType" multiple="multiple" style="width:50%">
-    </select>
-    </div>
-    </div> *@
-    <div class="row">
-        <div class="col-6">
-            @* THIS IS JUST TEMPORARY TO GET OLD PTN's IN MJWII *@
-            <div class="form-group my-3">
-                <label asp-for="DocId" class="control-label fw-bold mb-1"></label>
-                <input asp-for="DocId" class="form-control" disabled/>
-                <span asp-validation-for="DocId" class="text-danger fw-bold mt-1"></span>
-            </div>
-            @* END TEMPORARY *@
-            <div class="form-group my-3">
-                <label asp-for="Title" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @if (Model.Status == "Draft")
-                {
-                    @Html.TextAreaFor(model => model.Title, new { @class = "form-control", @rows = 3 })
-                }
-                else
-                {
-                    @Html.TextAreaFor(model => model.Title, new { @class = "form-control", @rows = 3, disabled = "disabled" })
-                    <input type="hidden" asp-for="Title" />
 
-                }
-                <span asp-validation-for="Title" class="text-danger fw-bold"></span>
-            </div>
-            <div class="form-group form-check my-3">
-                <label class="form-check-label fw-bold mb-1 my-1">
-                    @if (Model.Status == "Draft")
-                    {
-                        <input class="form-check-input" asp-for="isWaferingDepartment" /> @Html.DisplayNameFor(model => model.isWaferingDepartment)
-                    }
-                    else
-                    {
-                        <input class="form-check-input" asp-for="isWaferingDepartment" disabled/> @Html.DisplayNameFor(model => model.isWaferingDepartment)
-                    }
+        <div class="card-body">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mb-3" })
 
-                </label>
-            </div>
-@*             <div class="form-group my-3">
-                <label asp-for="PtrNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="PtrNumber" class="form-control" />
-                <span asp-validation-for="PtrNumber" class="text-danger fw-bold"></span>
-            </div> *@
-            <div class="form-group my-3">
-                <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
-                @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
-                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", @rows = 3 })
-                <span asp-validation-for="Comments" class="text-danger fw-bold"></span>
-            </div>
-        </div>
-        <div class="col-6">
-            <div class="form-group my-3">
-                <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
-                </i>
-                @if (Model.Status == "Draft")
-                {
-                    <select asp-for=SubjectType id="PtnsEditSubjectTypes" multiple="multiple" style="width:100%;">
-                        @foreach (SelectListItem item in ViewBag.SubjectTypes)
+            <div class="row g-4">
+                <!-- Left column -->
+                <div class="col-md-6">
+                    <!-- DocId (temporary display) -->
+                    <div class="form-group mb-3">
+                        <label asp-for="DocId" class="control-label fw-bold mb-1"></label>
+                        <input asp-for="DocId" class="form-control" disabled />
+                        <span asp-validation-for="DocId" class="text-danger fw-bold mt-1"></span>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Title" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        @if (Model.Status == "Draft")
                         {
-                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                            @Html.TextAreaFor(m => m.Title, new { @class = "form-control", @rows = 3 })
                         }
-                    </select>
-                }
-                else
-                {
-                    <select asp-for=SubjectType id="PtnsEditSubjectTypes2" multiple="multiple" style="width:100%;" disabled>
-                        @foreach (SelectListItem item in ViewBag.SubjectTypes)
+                        else
                         {
-                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                            @Html.TextAreaFor(m => m.Title, new { @class = "form-control", @rows = 3, disabled = "disabled" })
+                            <input type="hidden" asp-for="Title" />
                         }
-                    </select>
-                    @for (int i = 0; i < Model.SubjectType.Count; i++)
-                    {
-                        @Html.HiddenFor(Model => Model.SubjectType[i])
-                    }
-                }
-                <span asp-validation-for="SubjectType" class="text-danger fw-bold"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @if (Model.Status == "Draft")
-                {
-                    <select asp-for=GroupApprover id="PtnsEditGroupApprovers" multiple="multiple" style="width:100%;">
-                        @foreach (SelectListItem item in ViewBag.Groups)
+                        <span asp-validation-for="Title" class="text-danger fw-bold"></span>
+                    </div>
+
+                    <!-- Wafering Department -->
+                    <div class="form-group form-check mb-3">
+                        <label class="form-check-label fw-bold mb-1">
+                            @if (Model.Status == "Draft")
+                            {
+                                <!-- Editable: Tag Helper is fine; no extra hidden input -->
+                                <input class="form-check-input" asp-for="isWaferingDepartment" />
+                            }
+                            else
+                            {
+                                <!-- Read-only: use plain checkbox + one hidden boolean -->
+                                <input type="checkbox"
+                                       class="form-check-input"
+                                       @(Model.isWaferingDepartment ? "checked" : "")
+                                       disabled />
+                                <input type="hidden"
+                                       name="isWaferingDepartment"
+                                       value="@(Model.isWaferingDepartment.ToString().ToLower())" />
+                            }
+                            @Html.DisplayNameFor(m => m.isWaferingDepartment)
+                        </label>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
+                        @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", @rows = 3 })
+                        <span asp-validation-for="Comments" class="text-danger fw-bold"></span>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="col-md-6">
+                    <!-- Subject Type -->
+                    <div class="form-group mb-3">
+                        <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Hold Ctrl (⌘ on Mac) to select multiple; hold again to deselect."></i>
+
+                        @if (Model.Status == "Draft")
                         {
-                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                            <select asp-for="SubjectType" id="PtnsEditSubjectTypes" multiple="multiple" style="width:100%;">
+                                @foreach (SelectListItem item in ViewBag.SubjectTypes)
+                                {
+                                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                }
+                            </select>
                         }
-                    </select>
-                }
-                else
-                {
-                    <select asp-for=GroupApprover id="PtnsEditGroupApprovers2" multiple="multiple" style="width:100%;" disabled>
-                        @foreach (SelectListItem item in ViewBag.Groups)
+                        else
                         {
-                            <option value=@item.Value selected="@item.Selected">@item.Text </option>
+                            <select asp-for="SubjectType" id="PtnsEditSubjectTypes2" multiple="multiple" style="width:100%;" disabled>
+                                @foreach (SelectListItem item in ViewBag.SubjectTypes)
+                                {
+                                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                }
+                            </select>
+                            @for (int i = 0; i < Model.SubjectType.Count; i++)
+                            {
+                                @Html.HiddenFor(m => m.SubjectType[i])
+                            }
                         }
-                    </select>
-                    @for (int i = 0; i < Model.GroupApprover.Count; i++)
-                    {
-                        @Html.HiddenFor(Model => Model.GroupApprover[i])
-                    }
-                }
-                <span asp-validation-for="GroupApprover" class="text-danger fw-bold"></span>
+                        <span asp-validation-for="SubjectType" class="text-danger fw-bold"></span>
+                    </div>
+
+                    <!-- Group Approver -->
+                    <div class="form-group mb-3">
+                        <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+
+                        @if (Model.Status == "Draft")
+                        {
+                            <select asp-for="GroupApprover" id="PtnsEditGroupApprovers" multiple="multiple" style="width:100%;">
+                                @foreach (SelectListItem item in ViewBag.Groups)
+                                {
+                                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <select asp-for="GroupApprover" id="PtnsEditGroupApprovers2" multiple="multiple" style="width:100%;" disabled>
+                                @foreach (SelectListItem item in ViewBag.Groups)
+                                {
+                                    <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                }
+                            </select>
+                            @for (int i = 0; i < Model.GroupApprover.Count; i++)
+                            {
+                                @Html.HiddenFor(m => m.GroupApprover[i])
+                            }
+                        }
+                        <span asp-validation-for="GroupApprover" class="text-danger fw-bold"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="form-group mt-4">
-        <input type="submit" value="Save" class="btn btn-primary" />
-        <a class="mx-1 btn btn-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+    <!-- /General Information -->
+
+    <!-- Bottom actions -->
+    <div class="d-flex justify-content-start mt-4">
+        <div class="d-flex gap-2">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Id">Cancel</a>
+        </div>
     </div>
 </form>
 
 <script>
     $(document).ready(function () {
-
+        // Select2 initializations
         $('#PtnsEditSubjectTypes').select2({
             placeholder: "Select Subject Type(s)"
         });
@@ -199,89 +243,8 @@
         $('#PtnsEditGroupApprovers2').select2({
             placeholder: "Select Group/Approver(s)"
         });
-
-        //     var data = [
-        //         {
-        //             id: '1',
-        //             text: 'Alabama'
-        //         },
-        //         {
-        //             id: '2',
-        //             text: 'Michigan'
-        //         },
-        //         {
-        //             id: '3',
-        //             text: 'Ohio'
-        //         }
-        //     ]
-
-        // Adding Another item to dropdown list....
-        // var options = new Option('Michigan', '5', false,true);
-        // $('.js-example-basic-multiple').append(options).trigger('change');
-
-        //     $('.js-example-basic-multiple').select2(
-        //         {
-        //             placeholder: 'search...',
-        //             data: data
-        //         }
-        //     );
-        // });
-
-        // $('#PtnsEditSubjectTypes').select2({
-        //     var data = [
-        //         {
-        //             id: '0',
-        //             text: 'enhancement'
-        //         },
-        //         {
-        //             id: '1',
-        //             text: 'bug'
-        //         },
-        //         {
-        //             id: '2',
-        //             text: 'duplicate'
-        //         },
-        //         {
-        //             id: '3',
-        //             text: 'invalid'
-        //         },
-        //         {
-        //             id:'4',
-        //             text: 'wontfix'
-        //         }
-        //     ];
-
-
-        // data = data,
-        // placeholder: "Select SOMETHING"
-        // });
-
-        // $('#PtnsEditGroupApprovers').select2({
-        //     multiple: true,
-        //     data: @Model.GroupApprover,
-        //     placeholder: "Select Group/Approver(s)"
-        // });
-
-        // $('#PtnsEditSubjectTypes2').select2({
-        //     placeholder: "Select Subject Type(s)"
-        // });
-
-        // $('#PtnsEditGroupApprovers2').select2({
-        //     multiple: true,
-        //     data: @Model.GroupApprover,
-        //     placeholder: "Select Group/Approver(s)"
     });
-
 </script>
-
-@* <script>
-    $(document).ready(function () {
-        $('#PtnsEditSubjectTypes').select2({
-            // data: @ViewBag.Test,
-            placeholder: "Select Subject Type(s)"
-        });
-    });
-</script> *@
 
 @section Scripts {
     @{

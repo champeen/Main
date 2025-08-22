@@ -7,118 +7,139 @@
 <h1>PTN</h1>
 <h4>Create</h4>
 <hr />
+
 <form asp-action="Create" asp-route-source="@ViewBag.Source">
-    <div class="row my-4">
-        <div class="col-md-12">
-            <div class="text-nowrap">
-                <span class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </span>
-                <span class="mx-2">
-                    @Html.ActionLink("Cancel", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
-                </span>
-            </div>
+    @Html.AntiForgeryToken()
+
+    <!-- Top actions -->
+    <div class="d-flex justify-content-start mt-4">
+        <div class="d-flex gap-2">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-outline-secondary" })
         </div>
     </div>
-    <div class="row">
+
+    <!-- Hidden/system fields + Validation summary -->
+    <div class="row ">
         <div class="col-12">
             <input type="hidden" asp-for="Status" />
             <input type="hidden" asp-for="CreatedDate" />
             <input type="hidden" asp-for="CreatedUser" />
             <input type="hidden" asp-for="CreatedUserFullName" />
             <input type="hidden" asp-for="CreatedUserEmail" />
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
         </div>
     </div>
-    <div class="row">
-        <div class="col-6">
-            <div class="form-group my-3">
-                <label asp-for="Title" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @Html.TextAreaFor(model => model.Title, new { @class = "form-control", @rows = 3 })
-                <span asp-validation-for="Title" class="text-danger fw-bold mt-1"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="OriginatingGroup" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @Html.DropDownListFor(model => model.OriginatingGroup, new SelectList(ViewBag.OriginatingGroups, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @style = "max-width:50%;" })
-                <span asp-validation-for="OriginatingGroup" class="text-danger fw-bold mt-1"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="ProductSize" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @*                 <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="Product Size may be required based on what Originating Group is selected">
-                </i> *@
-                @Html.DropDownListFor(model => model.ProductSize, new SelectList(ViewBag.ProductSizes, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @style = "max-width:25%;" })
-                <span asp-validation-for="ProductSize" class="text-danger fw-bold mt-1"></span>
-            </div>
-            <div class="form-group form-check my-3">
-                <label class="form-check-label fw-bold mb-1 my-1">
-                    <input class="form-check-input" asp-for="isWaferingDepartment" /> @Html.DisplayNameFor(model => model.isWaferingDepartment)
-                </label>
-            </div>
-@*             <div class="form-group my-3">
-                <label asp-for="PtrNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="PtrNumber" class="form-control" />
-                <span asp-validation-for="PtrNumber" class="text-danger fw-bold mt-1"></span>
-            </div> *@
-            <div class="form-group my-3">
-                <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
-                @* <input asp-for="Roadblocks" class="form-control" style="max-width:100%;" /> *@
-                @Html.TextAreaFor(model => model.Comments, new { @class = "form-control", @rows = 3 })
-                <span asp-validation-for="Comments" class="text-danger fw-bold mt-1"></span>
-            </div>
+
+    <!-- General Information -->
+    <div class="card h-100 border-3 shadow-sm rounded-3 mt-3 mb-4">
+        <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">General Information</h5>
         </div>
-        <div class="col-6">
-            <div class="form-group my-3">
-                <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
-                </i>
-                @*                 @Html.ListBoxFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes,"Value","Text", Model.SubjectType), new { @class="form-control chosen-select", multiple=true, data_placeholder = "Select User(s)", size=9 }) *@
-@*                 @Html.DropDownListFor(model => model.SubjectType, new MultiSelectList(ViewBag.SubjectTypes, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsCreateSubjectTypes" }) *@
-                <select asp-for=SubjectType id="PtnsCreateSubjectTypes" multiple="multiple" style="width:100%;">
-                    @foreach (SelectListItem item in ViewBag.SubjectTypes)
-                    {
-                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
-                    }
-                </select>
-                <span asp-validation-for="SubjectType" class="text-danger fw-bold mt-1"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
-                </i>
-                @*                 @Html.ListBoxFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text", Model.GroupApprover), new { @class = "form-control chosen-select", multiple = true, data_placeholder = "Select Approver(s)", size = 9 }) *@
-@*                 @Html.DropDownListFor(model => model.GroupApprover, new MultiSelectList(ViewBag.Groups, "Value", "Text"), "-- select --", new { @class = "form-control form-select", multiple = true, @id = "PtnsCreateGroupApprovers" }) *@
-                <select asp-for=GroupApprover id="PtnsCreateGroupApprovers" multiple="multiple" style="width:100%;">
-                    @foreach (SelectListItem item in ViewBag.Groups)
-                    {
-                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
-                    }
-                </select>
-                <span asp-validation-for="GroupApprover" class="text-danger fw-bold mt-1"></span>
+
+        <div class="card-body">
+            <div class="row g-4">
+                <!-- Left column -->
+                <div class="col-md-6">
+                    <!-- Title -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Title" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        @Html.TextAreaFor(m => m.Title, new { @class = "form-control", rows = 3 })
+                        <span asp-validation-for="Title" class="text-danger fw-bold mt-1"></span>
+                    </div>
+
+                    <!-- Originating Group -->
+                    <div class="form-group mb-3">
+                        <label asp-for="OriginatingGroup" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        @Html.DropDownListFor(
+                        m => m.OriginatingGroup,
+                                                new SelectList(ViewBag.OriginatingGroups, "Value", "Text"),
+                                                "-- select --",
+                                                new { @class = "form-select" })
+                        <span asp-validation-for="OriginatingGroup" class="text-danger fw-bold mt-1"></span>
+                    </div>
+
+                    <!-- Product Size -->
+                    <div class="form-group mb-3">
+                        <label asp-for="ProductSize" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        @Html.DropDownListFor(
+                                                m => m.ProductSize,
+                                                new SelectList(ViewBag.ProductSizes, "Value", "Text"),
+                                                "-- select --",
+                                                new { @class = "form-select" })
+                        <span asp-validation-for="ProductSize" class="text-danger fw-bold mt-1"></span>
+                    </div>
+
+                    <!-- Wafering Department -->
+                    <div class="form-group form-check mb-3">
+                        <label class="form-check-label fw-bold mb-1">
+                            <input class="form-check-input" asp-for="isWaferingDepartment" />
+                            @Html.DisplayNameFor(m => m.isWaferingDepartment)
+                        </label>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="form-group mb-3">
+                        <label asp-for="Comments" class="control-label fw-bold mb-1"></label>
+                        @Html.TextAreaFor(m => m.Comments, new { @class = "form-control", rows = 3 })
+                        <span asp-validation-for="Comments" class="text-danger fw-bold mt-1"></span>
+                    </div>
+                </div>
+
+                <!-- Right column -->
+                <div class="col-md-6">
+                    <!-- Subject Type -->
+                    <div class="form-group mb-3">
+                        <label asp-for="SubjectType" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Hold Ctrl (⌘ on Mac) to select multiple; hold again to deselect."></i>
+
+                        <select asp-for="SubjectType" id="PtnsCreateSubjectTypes" multiple="multiple" style="width:100%;">
+                            @foreach (SelectListItem item in ViewBag.SubjectTypes)
+                            {
+                                <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="SubjectType" class="text-danger fw-bold mt-1"></span>
+                    </div>
+
+                    <!-- Group Approver -->
+                    <div class="form-group mb-3">
+                        <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Hold Ctrl (⌘ on Mac) to select multiple; hold again to deselect."></i>
+
+                        <select asp-for="GroupApprover" id="PtnsCreateGroupApprovers" multiple="multiple" style="width:100%;">
+                            @foreach (SelectListItem item in ViewBag.Groups)
+                            {
+                                <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="GroupApprover" class="text-danger fw-bold mt-1"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="text-nowrap">
-                <span class="form-group">
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                </span>
-                <span class="mx-2">
-                    @Html.ActionLink("Cancel", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
-                </span>
-            </div>
+    <!-- /General Information -->
+
+    <!-- Bottom actions -->
+    <div class="d-flex justify-content-start mt-4">
+        <div class="d-flex gap-2">
+            <input type="submit" value="Save" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn btn-outline-secondary" })
         </div>
     </div>
 </form>
 
 <script>
     $(document).ready(function () {
+        // Select2 initializations
         $('#PtnsCreateSubjectTypes').select2({
             placeholder: "Select Subject Type(s)"
         });

@@ -32,11 +32,11 @@
             <input type="hidden" asp-for="CreatedUserFullName" />
             <input type="hidden" asp-for="CreatedUserEmail" />
             @Html.AntiForgeryToken()
-            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
         </div>
     </div>
 
-    <div class="card shadow-sm rounded-3 mb-4">
+    <div class="card h-100 border-3 shadow-sm rounded-3 mb-4">
         <div class="card-header bg-light fw-bold">
             <h5 class="mb-0 fw-bold">General Information</h5>
         </div>
@@ -94,9 +94,13 @@
     <!-- Waiver Questions -->
     <div class="row mt-4">
         <div class="col-12">
-            <div class="card shadow-sm rounded-3 mb-4">
+            <div class="card h-100 border-3 shadow-sm rounded-3 mb-4">
                 <div class="card-header bg-light border-bottom">
-                    <h5 class="mb-0 fw-bold">Waiver Questions</h5>
+                    <h5 class="mb-0 fw-bold">
+                        Waiver Questions                
+                        <i class="bi bi-info-circle" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="These questions are required to be filled out in order to proceed to the 'Submit Waiver for Approval' stage">
+                        </i>
+                    </h5>
                 </div>
                 <div class="card-body">
                     @if (Model.WaiverQuestionResponse != null && Model.WaiverQuestionResponse.Count > 0)
@@ -123,6 +127,10 @@
                                                     <!-- Hidden fields to carry question metadata back -->
                                                     <input type="hidden" asp-for="WaiverQuestionResponse[@i].Question" />
                                                     <input type="hidden" asp-for="WaiverQuestionResponse[@i].Order" />
+                                                    <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedUser" />
+                                                    <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedUserFullName" />
+                                                    <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedUserEmail" />
+                                                    <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedDate" />
 
                                                     @* Preserve GroupApprover (List<string>) so it binds back *@
                                                     @if (Model.WaiverQuestionResponse[i].GroupApprover != null)
@@ -137,7 +145,7 @@
 
                                                     <label class="form-label fw-semibold">Your Response</label>
                                                     <select asp-for="WaiverQuestionResponse[@i].Response"
-                                                            class="form-select select2-yn"
+                                                            class="form-select select2-yn w-auto"
                                                             asp-items="yesNoItems"
                                                             data-placeholder="Yes/No">
                                                     </select>

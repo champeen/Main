@@ -22,6 +22,7 @@
         </h4>
     </div>
 </div>
+
 <h4 class="mt-5">Edit</h4>
 <hr />
 <form asp-action="Edit" asp-route-ptnId="@Model.PTNId">
@@ -50,6 +51,7 @@
     <input type="hidden" asp-for="DeletedDate" />
     <input type="hidden" asp-for="PtnDocId" />
     <input type="hidden" asp-for="DateClosed" />
+
     <div class="row mt-4">
         <div class="col-12">
             <div class="form-group">
@@ -58,75 +60,183 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-12">
             @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-@*             <div class="form-group my-3">
-                <label asp-for="WaiverNumber" class="control-label fw-bold mb-1"></label>
-                <input asp-for="WaiverNumber" class="form-control" readonly />
-                <span asp-validation-for="WaiverNumber" class="text-danger fw-bold"></span>
-            </div> *@
-@*             <div class="form-group my-3">
-                <div class="control-label fw-bold mb-1">PTN</div>
-                @Html.DropDownListFor(model => model.PTNId, new SelectList(ViewBag.Ptns, "Value", "Text"), "-- select --", new { @class = "form-control form-select", @disabled = "disabled" })
-                <span asp-validation-for="PTNId" class="text-danger fw-bold"></span>
-            </div> *@
-            <div class="form-group my-3">
-                <label asp-for="Description" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @rows = 8 })
-                <span asp-validation-for="Description" class="text-danger fw-bold"></span>
+
+    <!-- General Information -->
+    <div class="card shadow-sm rounded-3 mt-4">
+        <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">General Information</h5>
+            <div class="text-nowrap">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                @Html.ActionLink("Cancel", "Details", "Waivers", new { id = Model.Id, tab = "Details" }, new { @class = "btn btn-secondary ms-2" })
             </div>
         </div>
-        <div class="col-6">
-            <div class="form-group my-3">
-                <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
-                </i>
-                <select asp-for=ProductProcess id="WaiverEditProductProcess" multiple="multiple" style="width:100%;">
-                    @foreach (SelectListItem item in ViewBag.ProductProcess)
-                    {
-                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
-                        @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
-                    }
-                </select>
-                <span asp-validation-for="ProductProcess" class="text-danger fw-bold"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="Areas" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
-                </i>
-                <select asp-for=Areas id="WaiverEditAreas" multiple="multiple" style="width:100%;" required>
-                    @foreach (SelectListItem item in ViewBag.Areas)
-                    {
-                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
-                        @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
-                    }
-                </select>
-                <span asp-validation-for="Areas" class="text-danger fw-bold"></span>
-            </div>
-            <div class="form-group my-3">
-                <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
-                <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" data-bs-html="true" title="Required"></i>
-                <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="If multiple select, hold down 'Ctrl' key and select/click one or more. To de-select, hold down 'Ctrl' and select the one to remove from selection">
-                </i>
-                <select asp-for=GroupApprover id="WaiverEditGroupApprovers" multiple="multiple" style="width:100%;">
-                    @foreach (SelectListItem item in ViewBag.Groups)
-                    {
-                        <option value=@item.Value selected="@item.Selected">@item.Text </option>
-                        @* <option value="@item["ListID"]" selected>@item["ListTitle"]</option> *@
-                    }
-                </select>
-                <span asp-validation-for="GroupApprover" class="text-danger fw-bold mt-1"></span>
+
+        <div class="card-body">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mb-3" })
+
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @rows = 8 })
+                        <span asp-validation-for="Description" class="text-danger fw-bold"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label asp-for="ProductProcess" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Hold Ctrl (⌘ on Mac) to select multiple; hold again to deselect."></i>
+
+                        <select asp-for="ProductProcess" id="WaiverEditProductProcess" multiple="multiple" style="width:100%;">
+                            @foreach (SelectListItem item in ViewBag.ProductProcess)
+                            {
+                                <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="ProductProcess" class="text-danger fw-bold"></span>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label asp-for="Areas" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Hold Ctrl (⌘ on Mac) to select multiple; hold again to deselect."></i>
+
+                        <select asp-for="Areas" id="WaiverEditAreas" multiple="multiple" style="width:100%;" required>
+                            @foreach (SelectListItem item in ViewBag.Areas)
+                            {
+                                <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Areas" class="text-danger fw-bold"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
+                        <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Hold Ctrl (⌘ on Mac) to select multiple; hold again to deselect."></i>
+
+                        <select asp-for="GroupApprover" id="WaiverEditGroupApprovers" multiple="multiple" style="width:100%;">
+                            @foreach (SelectListItem item in ViewBag.Groups)
+                            {
+                                <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="GroupApprover" class="text-danger fw-bold mt-1 d-block"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <!-- /General Information -->
+    <!-- Waiver Questions & Responses -->
+    <div class="card shadow-sm rounded-3 mt-4">
+        <div class="card-header bg-light border-bottom">
+            <h5 class="mb-0 fw-bold">
+                Waiver Questions &amp; Responses                
+                <i class="bi bi-info-circle" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="These questions are required to be filled out in order to proceed to the 'Submit Waiver for Approval' stage">
+                </i>
+            </h5>
+        </div>
+
+        <div class="card-body">
+            @if (Model.WaiverQuestionResponse != null && Model.WaiverQuestionResponse.Count > 0)
+            {
+                <div class="vstack gap-3">
+                    @for (int i = 0; i < Model.WaiverQuestionResponse.Count; i++)
+                    {
+                        <div class="card rounded-3 border">
+                            <div class="card-body py-3">
+                                <div class="row align-items-center">
+                                    <!-- Left: Question + Response (compact) -->
+                                    <div class="col-12 col-md-7">
+                                        <div class="d-flex align-items-center gap-2 mb-2">
+                                            <h6 class="mb-0">@Model.WaiverQuestionResponse[i].Question</h6>
+                                            @if (!string.IsNullOrWhiteSpace(Model.WaiverQuestionResponse[i].Order))
+                                            {
+                                                <span class="badge bg-light text-muted border">Order: @Model.WaiverQuestionResponse[i].Order</span>
+                                            }
+                                        </div>
+
+                                        <!-- Hidden metadata so the collection binds back -->
+                                        <input type="hidden" asp-for="WaiverQuestionResponse[@i].Question" />
+                                        <input type="hidden" asp-for="WaiverQuestionResponse[@i].Order" />
+                                        <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedUser" />
+                                        <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedUserFullName" />
+                                        <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedUserEmail" />
+                                        <input type="hidden" asp-for="WaiverQuestionResponse[@i].CreatedDate" />
+
+                                        @* GroupApprover is List<string>; re-emit as hidden inputs for binding *@
+                                        @if (Model.WaiverQuestionResponse[i].GroupApprover != null)
+                                        {
+                                            for (int g = 0; g < Model.WaiverQuestionResponse[i].GroupApprover.Count; g++)
+                                            {
+                                                <input type="hidden"
+                                                       name="WaiverQuestionResponse[@i].GroupApprover[@g]"
+                                                       value="@Model.WaiverQuestionResponse[i].GroupApprover[g]" />
+                                            }
+                                        }
+
+                                        <label class="form-label fw-semibold small mb-1">Your Response</label>
+                                        <select asp-for="WaiverQuestionResponse[@i].Response"
+                                                class="form-select form-select-sm waiver-response-select"
+                                                data-placeholder="Select response"
+                                                style="max-width: 220px;">
+                                            <option value=""></option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                        <span asp-validation-for="WaiverQuestionResponse[@i].Response" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Right: Group/Approvers badges -->
+                                    <div class="col-12 col-md-5 mt-3 mt-md-0">
+                                        <div class="d-flex flex-column align-items-md-end">
+                                            <div class="text-muted fw-bold small mb-1">Group/Approvers</div>
+                                            @{
+                                                var ga = Model.WaiverQuestionResponse[i].GroupApprover;
+                                            }
+                                            @if (ga != null && ga.Any())
+                                            {
+                                                <div class="d-flex flex-wrap gap-1 justify-content-md-end">
+                                                    @foreach (var g in ga)
+                                                    {
+                                                        <span class="badge bg-light text-dark border">@g</span>
+                                                    }
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">None listed</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div> <!-- /row -->
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-muted">No waiver questions found.</div>
+            }
+        </div>
+    </div>
+    <!-- /Waiver Questions & Responses -->
+
+
     <div class="row mt-5">
         <div class="col-12">
             <div class="form-group">
@@ -142,11 +252,21 @@
         $('#WaiverEditGroupApprovers').select2({
             placeholder: "Select Group/Approver(s)"
         });
+
         $('#WaiverEditProductProcess').select2({
             placeholder: "Select Product/Processes"
         });
+
         $('#WaiverEditAreas').select2({
             placeholder: "Select Area(s)"
+        });
+
+        // NEW: Yes/No for each question, nullable, compact
+        $('.waiver-response-select').select2({
+            placeholder: 'Select response',
+            allowClear: true,
+            minimumResultsForSearch: Infinity,
+            width: 'style'
         });
     });
 </script>

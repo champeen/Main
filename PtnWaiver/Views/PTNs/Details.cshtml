@@ -68,288 +68,398 @@
         </li>
     </ul>
 </nav>
+
 <div class="tab-content" id="nav-tabContent">
     @******************************************************************************************************************@
     @*  DETAIL TAB ****************************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
-        @*<h4 class="mt-5">Details</h4>*@
-        @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-        <a class="mx-2" asp-action="Index">Back to List</a>*@
-        <div class="row mt-5">
-            <div class="col-12 text-start">
+
+        <!-- Top actions -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="d-flex gap-2">
                 @if (ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser)
                 {
-                    @Html.ActionLink("Edit", "Edit", new { id = @Model?.PTN?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
-                    @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
-                }
+                    @Html.ActionLink("Edit", "Edit",
+                    new { id = @Model?.PTN?.Id, tab = "Details" },
+                                new { @class = "btn btn-primary" })
+                                }
+
                 @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
                 {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-secondary" })
                 }
                 else
                 {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-outline-secondary" })
                 }
             </div>
         </div>
-        <hr />
-        <div class="row">
-            <div class="col-6">
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.Title)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.Title)
-                    </dd>
-                </div>
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.OriginatingGroup)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.OriginatingGroup)
-                    </dd>
-                </div>
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.ProductSize)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.ProductSize)
-                    </dd>
-                </div>
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.isWaferingDepartment)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.isWaferingDepartment)
-                    </dd>
-                </div>
-                @*                 <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.PtrNumber)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.PtrNumber)
-                    </dd>
-                </div> *@
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.Comments)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.Comments)
-                    </dd>
-                </div>
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.RejectedReason)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @Html.DisplayFor(model => model.PTN.RejectedReason)
-                    </dd>
-                </div>
+
+        <!-- General Information -->
+        <div class="card h-100 border-3 shadow-sm rounded-4 mt-4 mb-3">
+            <div class="card-header bg-light border-bottom">
+                <h5 class="mb-0 fw-bold">General Information</h5>
             </div>
-            <div class="col-6">
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        @Html.DisplayNameFor(model => model.PTN.SubjectType)
-                    </dt>
-                    @*                 <dd class="col-sm-4 my-1">
-                    @Html.DisplayFor(model => model.PTN.SubjectType)
-                    </dd> *@
-                    <dd class="col-sm-9 my-1">
-                        @if (Model.PTN.SubjectType != null)
-                        {
-                            var counter = 0;
-                            @foreach (var subjectType in Model.PTN.SubjectType)
-                            {
-                                counter = counter + 1;
-                                <span>@subjectType</span>
-                                if (counter < Model.PTN.SubjectType.Count)
+            <div class="card-body pt-0">
+                <div class="row g-4 mt-1">
+                    <!-- Left column -->
+                    <div class="col-lg-6">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-3 text-sm-end fw-bold">
+                                @Html.DisplayNameFor(m => m.PTN.Title)
+                            </dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.PTN.Title)</dd>
+
+                            <dt class="col-sm-3 text-sm-end fw-bold">
+                                @Html.DisplayNameFor(m => m.PTN.OriginatingGroup)
+                            </dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.PTN.OriginatingGroup)</dd>
+
+                            <dt class="col-sm-3 text-sm-end fw-bold">
+                                @Html.DisplayNameFor(m => m.PTN.ProductSize)
+                            </dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.PTN.ProductSize)</dd>
+
+                            <dt class="col-sm-3 text-sm-end fw-bold">
+                                @Html.DisplayNameFor(m => m.PTN.isWaferingDepartment)
+                            </dt>
+                            <dd class="col-sm-9">
+                                @if (Model.PTN.isWaferingDepartment == true)
                                 {
-                                    <span>,&nbsp;</span>
+                                    <span class="badge bg-success">Yes</span>
                                 }
-                            }
-                        }
-                    </dd>
-                </div>
-                <div class="row">
-                    <dt class="col-sm-3 my-1 text-sm-end">
-                        Group / Approver(s)
-                    </dt>
-                    <dd class="col-sm-9 my-1">
-                        @if (Model.PTN.GroupApprover != null)
-                        {
-                            var counter = 0;
-                            @foreach (var groupApprover in Model.PTN.GroupApprover)
-                            {
-                                counter = counter + 1;
-                                <span>@groupApprover</span>
-                                if (counter < Model.PTN.GroupApprover.Count())
+                                else if (Model.PTN.isWaferingDepartment == false)
                                 {
-                                    <span>,&nbsp;</span>
+                                    <span class="badge bg-danger">No</span>
                                 }
-                            }
-                        }
-                        @* @Html.DisplayFor(model => model.PTN.GroupApprover) *@
-                    </dd>
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary border">Not set</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-3 text-sm-end fw-bold">
+                                @Html.DisplayNameFor(m => m.PTN.Comments)
+                            </dt>
+                            <dd class="col-sm-9">
+                                @if (!string.IsNullOrWhiteSpace(Model.PTN.Comments))
+                                {
+                                    @Html.DisplayFor(m => m.PTN.Comments)
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </dd>
+
+                            <dt class="col-sm-3 text-sm-end fw-bold">
+                                @Html.DisplayNameFor(m => m.PTN.RejectedReason)
+                            </dt>
+                            <dd class="col-sm-9">
+                                @if (!string.IsNullOrWhiteSpace(Model.PTN.RejectedReason))
+                                {
+                                    @Html.DisplayFor(m => m.PTN.RejectedReason)
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+
+                    <!-- Right column -->
+                    <div class="col-lg-6">
+                        <dl class="row mb-0">
+                            <!-- Subject Types -->
+                            <div class="row">
+                                <dt class="col-sm-3 my-1 text-end fw-bold">
+                                    @Html.DisplayNameFor(m => m.PTN.SubjectType)
+                                </dt>
+                                <dd class="col-sm-9 my-1">
+                                    @if (Model.PTN.SubjectType != null && Model.PTN.SubjectType.Any())
+                                    {
+                                        foreach (var st in Model.PTN.SubjectType)
+                                        {
+                                            <span class="badge bg-light text-dark border me-1">@st</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </dd>
+                            </div>
+
+                            <!-- Group Approvers -->
+                            <div class="row">
+                                <dt class="col-sm-3 my-1 text-end fw-bold">
+                                    Group / Approver(s)
+                                </dt>
+                                <dd class="col-sm-9 my-1">
+                                    @if (Model.PTN.GroupApprover != null && Model.PTN.GroupApprover.Any())
+                                    {
+                                        <div class="d-flex flex-wrap gap-1">
+                                            @foreach (var g in Model.PTN.GroupApprover)
+                                            {
+                                                <span class="badge bg-light text-dark border">@g</span>
+                                            }
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </dd>
+                            </div>
+                        </dl>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="accordion" id="accordionPtnDetails">
-            <div class="accordion-item ">
-                <h2 class="accordion-header" id="headingPtnDetails">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePtnDetails" aria-expanded="false" aria-controls="collapsePtnDetails">
-                        <strong>User/Timestamp Info</strong>
-                    </button>
-                </h2>
-                <div id="collapsePtnDetails" class="accordion-collapse collapse" aria-labelledby="headingPtnDetails" data-bs-parent="#accordionPtnDetails">
-                    <div class="accordion-body">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="row mt-1">
-                                    <div class="col-12 text-center">
-                                        <h4>Created</h4>
-                                    </div>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Username
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.CreatedUser)
-                                    </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Full Name
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.CreatedUserFullName)
-                                    </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Email
-                                    </dt>
-                                    <dd class="col-lg-9 mt-1 mb-3">
-                                        @Html.DisplayFor(model => model.PTN.CreatedUserEmail)
-                                    </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Date
-                                    </dt>
-                                    <dd class="col-lg-9 mt-1 mb-3">
-                                        @Html.DisplayFor(model => model.PTN.CreatedDate)
-                                    </dd>
+
+        <!-- User & Timestamp Info -->
+        <div class="card h-100 border-3 shadow-sm rounded-4 mt-4">
+            <div class="card-header bg-light border-bottom">
+                <h5 class="mb-0 fw-bold">User &amp; Timestamp Info</h5>
+            </div>
+            <div class="card-body pt-2">
+                <div class="row g-3">
+                    <!-- Created -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-plus-circle text-success"></i>
+                                    <h6 class="mb-0 text-uppercase text-muted small">Created</h6>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="row mt-1">
-                                    <div class="col-12 text-center">
-                                        <h4>Modified</h4>
-                                    </div>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Username
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.ModifiedUser)
+                            <div class="card-body pt-2">
+                                <dl class="row mb-0 small">
+                                    <dt class="col-5 text-muted">Username</dt>
+                                    <dd class="col-7">
+                                        @if (!string.IsNullOrWhiteSpace(Model.PTN.CreatedUser))
+                                        {
+                                            @Model.PTN.CreatedUser
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                        }
                                     </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Full Name
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.ModifiedUserFullName)
+
+                                    <dt class="col-5 text-muted">Full name</dt>
+                                    <dd class="col-7">
+                                        @if (!string.IsNullOrWhiteSpace(Model.PTN.CreatedUserFullName))
+                                        {
+                                            @Model.PTN.CreatedUserFullName
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                        }
                                     </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Email
-                                    </dt>
-                                    <dd class="col-lg-9 mt-1 mb-3">
-                                        @Html.DisplayFor(model => model.PTN.ModifiedUserEmail)
+
+                                    <dt class="col-5 text-muted">Email</dt>
+                                    <dd class="col-7">
+                                        @if (!string.IsNullOrWhiteSpace(Model.PTN.CreatedUserEmail))
+                                        {
+                                            <a href="mailto:@Model.PTN.CreatedUserEmail">@Model.PTN.CreatedUserEmail</a>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                        }
                                     </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Date
-                                    </dt>
-                                    <dd class="col-lg-9 mt-1 mb-3">
-                                        @Html.DisplayFor(model => model.PTN.ModifiedDate)
+
+                                    <dt class="col-5 text-muted">Date</dt>
+                                    <dd class="col-7">
+                                        @if (Model.PTN.CreatedDate != DateTime.MinValue)
+                                        {
+                                            <time>@Model.PTN.CreatedDate.ToString("yyyy-MM-dd HH:mm")</time>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                        }
                                     </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modified -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-pencil-square text-warning"></i>
+                                    <h6 class="mb-0 text-uppercase text-muted small">Modified</h6>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="row mt-1">
-                                    <div class="col-12 text-center">
-                                        <h4>Deleted</h4>
-                                    </div>
+                            <div class="card-body pt-2">
+                                @if (string.IsNullOrWhiteSpace(Model.PTN.ModifiedUser) &&
+                                                                string.IsNullOrWhiteSpace(Model.PTN.ModifiedUserFullName) &&
+                                                                string.IsNullOrWhiteSpace(Model.PTN.ModifiedUserEmail) &&
+                                                                !Model.PTN.ModifiedDate.HasValue)
+                                {
+                                    <div class="alert alert-light border small mb-0">No modifications recorded.</div>
+                                }
+                                else
+                                {
+                                    <dl class="row mb-0 small">
+                                        <dt class="col-5 text-muted">Username</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.PTN.ModifiedUser))
+                                            {
+                                                @Model.PTN.ModifiedUser
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Full name</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.PTN.ModifiedUserFullName))
+                                            {
+                                                @Model.PTN.ModifiedUserFullName
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Email</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.PTN.ModifiedUserEmail))
+                                            {
+                                                <a href="mailto:@Model.PTN.ModifiedUserEmail">@Model.PTN.ModifiedUserEmail</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Date</dt>
+                                        <dd class="col-7">
+                                            @if (Model.PTN.ModifiedDate.HasValue)
+                                            {
+                                                <time>@Model.PTN.ModifiedDate.Value.ToString("yyyy-MM-dd HH:mm")</time>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+                                    </dl>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deleted -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-trash3 text-danger"></i>
+                                    <h6 class="mb-0 text-uppercase text-muted small">Deleted</h6>
                                 </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Username
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.DeletedUser)
-                                    </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Full Name
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.DeletedUserFullName)
-                                    </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Email
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.DeletedUserEmail)
-                                    </dd>
-                                </div>
-                                <div class="row mt-1">
-                                    <dt class="col-lg-3 my-1 text-lg-end">
-                                        Date
-                                    </dt>
-                                    <dd class="col-lg-9 my-1">
-                                        @Html.DisplayFor(model => model.PTN.DeletedDate)
-                                    </dd>
-                                </div>
+                            </div>
+                            <div class="card-body pt-2">
+                                @if (string.IsNullOrWhiteSpace(Model.PTN.DeletedUser) &&
+                                                                string.IsNullOrWhiteSpace(Model.PTN.DeletedUserFullName) &&
+                                                                string.IsNullOrWhiteSpace(Model.PTN.DeletedUserEmail) &&
+                                                                !Model.PTN.DeletedDate.HasValue)
+                                {
+                                    <div class="alert alert-light border small mb-0">Not deleted.</div>
+                                }
+                                else
+                                {
+                                    <dl class="row mb-0 small">
+                                        <dt class="col-5 text-muted">Username</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.PTN.DeletedUser))
+                                            {
+                                                @Model.PTN.DeletedUser
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Full name</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.PTN.DeletedUserFullName))
+                                            {
+                                                @Model.PTN.DeletedUserFullName
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Email</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.PTN.DeletedUserEmail))
+                                            {
+                                                <a href="mailto:@Model.PTN.DeletedUserEmail">@Model.PTN.DeletedUserEmail</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Date</dt>
+                                        <dd class="col-7">
+                                            @if (Model.PTN.DeletedDate.HasValue)
+                                            {
+                                                <time>@Model.PTN.DeletedDate.Value.ToString("yyyy-MM-dd HH:mm")</time>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+                                    </dl>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-5">
-            <div class="col-5 text-start">
+
+        <!-- Bottom actions -->
+        <div class="d-flex justify-content-start mt-4">
+            <div class="d-flex gap-2">
                 @if (ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser)
                 {
-                    @Html.ActionLink("Edit", "Edit", new { id = @Model?.PTN?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
-                    @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
-                }
+                    @Html.ActionLink("Edit", "Edit",
+                    new { id = @Model?.PTN?.Id, tab = "Details" },
+                                new { @class = "btn btn-primary" })
+                                }
+
                 @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
                 {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-outline-secondary" })
                 }
                 else
                 {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-outline-secondary" })
                 }
             </div>
         </div>
     </div>
+
     @******************************************************************************************************************@
     @*  ATTACHMENTS TAB  **********************************************************************************************@
     @******************************************************************************************************************@
@@ -458,101 +568,147 @@
                         </tr>
                     }
                 </table>
-                @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
-                {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary mt-3" })
-                }
-                else
-                {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary mt-3" })
-                }
             </div>
-        </div>
-    </div>
-    @******************************************************************************************************************@
-    @*  SUBMIT FOR ADMIN APPROVAL TAB *********************************************************************************@
-    @******************************************************************************************************************@
-    <div class="tab-pane fade show @Model.TabActivePtnApproval" id="nav-ptnApproval" role="tabpanel" aria-labelledby="nav-ptnApproval-tab">
-        @if (@Model.PTN.Status == "Draft")
-        {
-            @if (ViewBag.IsAdmin || ViewBag.Username == Model.PTN.CreatedUser)
+            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
             {
-                <div class="row">
-                    <div class="col-12">
-                        <h5>
-                            Once submitted for approval, you can only edit the comment or PTR Number field.  Make sure everything is complete before submitting for approval.
-                        </h5>
-                    </div>
-                </div>
-                @* <form asp-action="RejectPtn" asp-route-id="@Model.PTN.Id"> *@
-                <form asp-action="RejectPtn">
-                    <input type="hidden" asp-for="@Model.PTN.Id" />
-                    <div class="row mt-5">
-                        <div class="col-12">
-                            @Html.ActionLink("Submit for Approval", "SubmitPtnForApproval", "PTNs", new { id = Model.PTN.Id }, new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
-                            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
-                            {
-                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
-                            }
-                            else
-                            {
-                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
-                            }
-                            @* <input type="submit" value="Reject PTN" class="btn btn-danger ms-1" onclick="return DisplayProgressMessage(this, 'Saving...');" /> *@
-                        </div>
-                        @*                         <div class="row mt-3 mb-1">
-                <div class="col-12">
-                <label asp-for="PTN.RejectedReason" class="control-label fw-bold mb-1"></label>
-                @Html.TextAreaFor(model => model.PTN.RejectedReason, new { @class = "form-control", @rows = 3 })
-                @if (@ViewBag.RejectedReason != null)
-                {
-                <span class="text-danger fw-bold mt-1">@ViewBag.RejectedReason</span>
-                }
-                </div>
-                </div> *@
-                    </div>
-                </form>
+                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary mt-3" })
             }
             else
             {
-                <div class="row">
-                    <div class="col-12">
-                        <h5>
-                            PTN Creater or PTN administrator must submit this PTN for approval in order to move on to next phase.
-                        </h5>
-                    </div>
-                </div>
+                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary mt-3" })
             }
-        }
-        else
-        {
-            @if (Model.PTN.SubmittedForApprovalUser != null)
-            {
+        </div>
+    </div>
 
-                @if (Model.PTN.RejectedBeforeSubmission == true)
+    @******************************************************************************************************************@
+    @*  SUBMIT FOR ADMIN APPROVAL TAB (Card-wrapped) ******************************************************************@
+    @******************************************************************************************************************@
+    <div class="tab-pane fade show @Model.TabActivePtnApproval" id="nav-ptnApproval" role="tabpanel" aria-labelledby="nav-ptnApproval-tab">
+        <div class="card h-100 border-3 shadow-sm rounded-3 mt-3">
+            <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">Submit PTN for Approval</h5>
+            </div>
+
+            <div class="card-body">
+                @if (Model.PTN.Status == "Draft")
                 {
-                    <div class="row">
-                        <div class="col-12">
-                            PTN has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.PTN.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.PTN.SubmittedForApprovalDate</span>.
+                    if (ViewBag.IsAdmin == true || ViewBag.Username == Model.PTN.CreatedUser)
+                    {
+                        <div class="alert alert-info">
+                            Once submitted for approval, you can only edit the <strong>Comment</strong> or <strong>PTR Number</strong> fields.
+                            Make sure everything is complete before submitting for approval.
                         </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <span class="fw-bold">Reason for Rejection: </span>@Model.PTN.RejectedReason
+
+                        @* Duplicate actions at body top (optional). Remove if header actions are enough. *@
+                        <div class="d-flex gap-2 mb-2">
+                            @Html.ActionLink(
+                            "Submit for Approval",
+                                        "SubmitPtnForApproval",
+                                        "PTNs",
+                                        new { id = Model.PTN.Id },
+                                        new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                            {
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary" })
+                            }
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mb-0">
+                            PTN creator or a PTN administrator must submit this PTN for approval to move to the next phase.
+                        </div>
+                        @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                        {
+                            @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary mt-3" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary mt-3" })
+                        }
+                    }
                 }
                 else
                 {
-                    <div class="row">
-                        <div class="col-12">
-                            PTN has been <span class="text-success fw-bold">submitted for approval</span> by <span class="fw-bold">@Model.PTN.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.PTN.SubmittedForApprovalDate</span>.
+                    var hasSubmissionRecord = !string.IsNullOrWhiteSpace(Model.PTN.SubmittedForApprovalUser);
+                    var rejectedBefore = Model.PTN.RejectedBeforeSubmission == true;
+                    var canSubmit = (ViewBag.IsAdmin == true) || (ViewBag.Username == Model.PTN.CreatedUser);
+
+                    if (hasSubmissionRecord)
+                    {
+                        if (rejectedBefore)
+                        {
+                            <div class="alert alert-danger mb-2">
+                                PTN has been <strong>Rejected</strong> by
+                                <strong>@Model.PTN.SubmittedForApprovalUserFullName</strong>
+                                on <strong>@Model.PTN.SubmittedForApprovalDate</strong>.
+                            </div>
+                            <div>
+                                <span class="fw-bold">Reason for Rejection: </span>@Model.PTN.RejectedReason
+                            </div>
+                            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                            {
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary mt-3" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary mt-3" })
+                            }
+                        }
+                        else
+                        {
+                            <div class="alert alert-success mb-0">
+                                PTN has been <strong>submitted for approval</strong> by
+                                <strong>@Model.PTN.SubmittedForApprovalUserFullName</strong>
+                                on <strong>@Model.PTN.SubmittedForApprovalDate</strong>.
+                            </div>
+                            @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                            {
+                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary mt-3" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary mt-3" })
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            This PTN has not been submitted for approval yet.
                         </div>
-                    </div>
+
+                        @* Optional: allow submit even when not in Draft (if your business rules permit) *@
+                        @if (canSubmit)
+                        {
+                            <div class="d-flex gap-2">
+                                @Html.ActionLink(
+                                "Submit for Approval",
+                                        "SubmitPtnForApproval",
+                                        "PTNs",
+                                        new { id = Model.PTN.Id },
+                                        new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                                @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
+                                {
+                                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary" })
+                                }
+                            </div>
+                        }
+                    }
                 }
-            }
-        }
+
+            </div>
+        </div>
     </div>
+
     @******************************************************************************************************************@
     @*  PTN REVIEW APPROVAL *******************************************************************************************@
     @******************************************************************************************************************@
@@ -570,11 +726,11 @@
             <div class="col-12 text-start">
                 @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
                 {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary" })
                 }
                 else
                 {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary" })
                 }
             </div>
         </div>
@@ -729,11 +885,11 @@
             <div class="col-12 text-start">
                 @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
                 {
-                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary" })
                 }
                 else
                 {
-                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                    @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary" })
                 }
             </div>
         </div>
@@ -767,11 +923,11 @@
                                             }
                                             @if (ViewBag.SourceString != null && ViewBag.SourceString == "Index")
                                             {
-                                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-secondary" })
+                                                @Html.ActionLink("Back to List", "Index", new { }, new { @class = "btn btn-outline-secondary" })
                                             }
                                             else
                                             {
-                                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-secondary" })
+                                                @Html.ActionLink("Back to List", "Index", "Home", new { }, new { @class = "btn btn-outline-secondary" })
                                             }
                                         </span>
                                     </div>
