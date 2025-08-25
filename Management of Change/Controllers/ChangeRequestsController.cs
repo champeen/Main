@@ -1668,8 +1668,7 @@ namespace Management_of_Change.Controllers
                     List<ReviewType> reviews = await _context.ReviewType
                         .Where(rt =>
                             (rt.Type == assessment.ReviewType && rt.ChangeArea == null) ||
-                            (rt.Type == assessment.ReviewType && assessment.ReviewType == "Quality" && rt.ChangeArea == changeRequest.Area_of_Change) ||
-                            (rt.Type == assessment.ReviewType && assessment.ReviewType == "Test" && rt.ChangeArea == changeRequest.Area_of_Change))
+                            (rt.Type == assessment.ReviewType && rt.ChangeArea == changeRequest.Area_of_Change && (assessment.ReviewType != "Equipment" && assessment.ReviewType != "Maintenance & Reliability")))
                         .ToListAsync();
 
                     foreach (var review in reviews)
