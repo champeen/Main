@@ -89,7 +89,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Group,PrimaryApproverUsername,SecondaryApproverUsername,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")] GroupApprovers departmentArea)
+        public async Task<IActionResult> Create(/*[Bind("Id,Group,PrimaryApproverUsername,SecondaryApproverUsername,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate")]*/ GroupApprovers departmentArea)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
@@ -167,7 +167,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Group,PrimaryApproverUsername,SecondaryApproverUsername,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] GroupApprovers departmentArea)
+        public async Task<IActionResult> Edit(int id, /*, [Bind("Id,Group,PrimaryApproverUsername,SecondaryApproverUsername,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")]*/ GroupApprovers departmentArea)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();

@@ -63,18 +63,14 @@
 
     <div class="row">
         <div class="col-12">
-            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold" })
+            @Html.ValidationSummary(false, "", new { @class = "text-danger fw-bold mt-3" })
         </div>
     </div>
 
     <!-- General Information -->
-    <div class="card shadow-sm rounded-3 mt-4">
+    <div class="card shadow-sm rounded-3 mt-3">
         <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
             <h5 class="mb-0 fw-bold">General Information</h5>
-            <div class="text-nowrap">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                @Html.ActionLink("Cancel", "Details", "Waivers", new { id = Model.Id, tab = "Details" }, new { @class = "btn btn-secondary ms-2" })
-            </div>
         </div>
 
         <div class="card-body">
@@ -250,7 +246,7 @@
 <script>
     $(document).ready(function () {
         $('#WaiverEditGroupApprovers').select2({
-            placeholder: "Select Group/Approver(s)"
+            placeholder: "Select Department Approver"
         });
 
         $('#WaiverEditProductProcess').select2({

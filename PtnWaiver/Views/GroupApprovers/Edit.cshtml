@@ -42,6 +42,13 @@
                 @Html.DropDownListFor(model => model.SecondaryApproverUsername, new SelectList(ViewBag.Users,"Value","Text"), "-- select --", new { @class="form-control form-select", @style="max-width:50%;"})
                 <span asp-validation-for="SecondaryApproverUsername" class="text-danger"></span>
             </div>
+            <div class="form-group my-3">
+                <div class="form-check">
+                    <input asp-for="WaiverMandatoryApproval" class="form-check-input" />
+                    <label asp-for="WaiverMandatoryApproval" class="form-check-label fw-bold"></label>
+                </div>
+                <span asp-validation-for="WaiverMandatoryApproval" class="text-danger"></span>
+            </div>
 @*             <div class="form-group my-3">
                 <label asp-for="Order" class="control-label fw-bold mb-1"></label>
                 <input asp-for="Order" class="form-control" />

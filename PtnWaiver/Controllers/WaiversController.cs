@@ -880,7 +880,9 @@ namespace PtnWaiver.Controllers
             if (id == null || _contextPtnWaiver.Waiver == null)
                 return NotFound();
 
-            var waiver = await _contextPtnWaiver.Waiver.FirstOrDefaultAsync(m => m.Id == id);
+            var waiver = await _contextPtnWaiver.Waiver
+                .Include(w => w.WaiverQuestionResponse)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (waiver == null)
                 return RedirectToAction("Index");
 
@@ -896,9 +898,6 @@ namespace PtnWaiver.Controllers
                 waiver.SubmittedForApprovalDate = DateTime.Now;
             }
             waiver.Status = "Pending Approval";
-
-            _contextPtnWaiver.Waiver.Update(waiver);
-            await _contextPtnWaiver.SaveChangesAsync();
 
             // Setup email Primary and Secondary Approvers to review and Approve/Reject (for below)...
             string subject = @"Process Test Notification (PTN) - Waiver Review Needed";
@@ -980,6 +979,45 @@ namespace PtnWaiver.Controllers
                     }
                 }
             }
+
+            // add group/approver mandatory waiver approvers.....
+            var mandatoryWaiverApproverGroups = _contextPtnWaiver.GroupApprovers.Where(m => m.WaiverMandatoryApproval == true).ToList();
+            foreach (var record in mandatoryWaiverApproverGroups)
+            {
+                // make sure the group does not already exist in the GroupApproverReviews for this Waiver. If it doesnt, add it...
+                var exists = await _contextPtnWaiver.GroupApproversReview.Where(m => m.SourceId == waiver.Id && m.SourceTable == "Waiver" && m.Group == record.Group).AnyAsync();
+                // add the group approver review because it does not already exist for this Waiver...
+                if (!exists)
+                {
+                    GroupApproversReview groupApproversReview = new GroupApproversReview();
+                    groupApproversReview.SourceId = waiver.Id;
+                    groupApproversReview.SourceTable = "Waiver";
+                    groupApproversReview.Group = record.Group;
+                    groupApproversReview.PrimaryApproverUsername = record.PrimaryApproverUsername;
+                    groupApproversReview.PrimaryApproverFullName = record.PrimaryApproverFullName;
+                    groupApproversReview.PrimaryApproverEmail = record.PrimaryApproverEmail;
+                    groupApproversReview.PrimaryApproverTitle = record.PrimaryApproverTitle;
+                    groupApproversReview.SecondaryApproverUsername = record.SecondaryApproverUsername;
+                    groupApproversReview.SecondaryApproverFullName = record.SecondaryApproverFullName;
+                    groupApproversReview.SecondaryApproverEmail = record.SecondaryApproverEmail;
+                    groupApproversReview.SecondaryApproverTitle = record.SecondaryApproverTitle;
+                    groupApproversReview.CreatedDate = DateTime.Now;
+                    groupApproversReview.CreatedUser = userInfo.onpremisessamaccountname != null ? userInfo.onpremisessamaccountname : "";
+                    groupApproversReview.CreatedUserFullName = userInfo.displayname != null ? userInfo.displayname : "";
+                    groupApproversReview.CreatedUserEmail = userInfo.mail != null ? userInfo.mail : "";
+
+                    _contextPtnWaiver.GroupApproversReview.Add(groupApproversReview);
+                    await _contextPtnWaiver.SaveChangesAsync();
+
+                    Initialization.EmailProviderSmtp.SendMessage(subject, body, groupApproversReview.PrimaryApproverEmail, groupApproversReview.SecondaryApproverEmail, null, null);
+                    AddEmailHistory(null, subject, body, groupApproversReview.PrimaryApproverFullName, groupApproversReview.PrimaryApproverUsername, groupApproversReview.PrimaryApproverEmail, null, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+                    if (groupApproversReview.PrimaryApproverEmail != null)
+                        AddEmailHistory(null, subject, body, groupApproversReview.SecondaryApproverFullName, groupApproversReview.SecondaryApproverUsername, groupApproversReview.SecondaryApproverEmail, null, waiver.Id, null, "Waiver", waiver.Status, DateTime.Now, _username);
+                }
+            }
+
+            _contextPtnWaiver.Waiver.Update(waiver);
+            await _contextPtnWaiver.SaveChangesAsync();
 
             return RedirectToAction("Details", new { id = id, tabWaiver = "WaiverAdminApproval" });
         }

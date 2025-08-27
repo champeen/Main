@@ -195,7 +195,7 @@
                             <!-- Group Approvers -->
                             <div class="row">
                                 <dt class="col-sm-3 my-1 text-end fw-bold">
-                                    Group / Approver(s)
+                                    @Html.DisplayNameFor(m => m.PTN.GroupApprover)
                                 </dt>
                                 <dd class="col-sm-9 my-1">
                                     @if (Model.PTN.GroupApprover != null && Model.PTN.GroupApprover.Any())
@@ -957,7 +957,7 @@
                                     Area(s)
                                 </th>
                                 <th>
-                                    Group/Approver(s)
+                                    Department Approver
                                 </th>
                                 <th>
                                     Status

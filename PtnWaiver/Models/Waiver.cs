@@ -17,7 +17,7 @@ namespace PtnWaiver.Models
         public string Status { get; set; }
         [Display(Name = "Product/Process")]
         public List<string> ProductProcess { get; set; }
-        [Display(Name = "Group/Approver(s)")]
+        [Display(Name = "Department Approver")]
         public List<string> GroupApprover { get; set; }
         [Display(Name = "Date Closed")]
         [DataType(DataType.Date)]
