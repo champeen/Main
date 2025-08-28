@@ -5,10 +5,21 @@
         <div class="row mt-5">
             <div class="col-5 text-start">
                 <div class="btn-group">
-                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                    @if (ViewBag.IsAdmin == true)
                     {
                         @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
-                        @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                        @if (Model.ChangeRequest.Change_Status == "Draft")
+                        {
+                            @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                        }
+                    }
+                    else
+                    {
+                        @if (ViewBag.Username == Model.ChangeRequest.Change_Owner && Model.ChangeRequest.Change_Status == "Draft")
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
+                            @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                        }
                     }
                     @if (ViewBag.SourceScreen == "Dashboard")
                     {
@@ -293,10 +304,21 @@
         <div class="row">
             <div class="col-5 text-start">
                 <div class="btn-group">
-                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.ChangeRequest.Change_Owner) && (Model.ChangeRequest.Change_Status == "Draft"))
+                    @if (ViewBag.IsAdmin == true)
                     {
                         @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
-                        @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                        @if (Model.ChangeRequest.Change_Status == "Draft")
+                        {
+                            @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                        }
+                    }
+                    else
+                    {
+                        @if (ViewBag.Username == Model.ChangeRequest.Change_Owner && Model.ChangeRequest.Change_Status == "Draft")
+                        {
+                            @Html.ActionLink("Edit", "Edit", new { id = @Model?.ChangeRequest?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 mt-1" })
+                            @Html.ActionLink("Add Impact Assessment Reviewers", "Index", "AdditionalImpactAssessmentReviewers", new { changeRequestId = Model.ChangeRequest.Id, tab = "Details" }, new { @class = "btn btn-success me-1 mt-1" })
+                        }
                     }
                     @if (ViewBag.SourceScreen == "Dashboard")
                     {

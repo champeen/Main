@@ -2501,5 +2501,22 @@ namespace Management_of_Change.Controllers
             return RedirectToAction("Details", new { id = record.ChangeRequestId, tab = "FinalApprovals" });
         }
 
+        [HttpPost]
+        public async Task<ActionResult> UpdateImplementationApprovalDate(int id, DateTime? Implementation_Approval_Date)
+        {
+            var cr = await _context.ChangeRequest.FindAsync(id);
+            if (cr != null)
+            {
+                cr.Implementation_Approval_Date = Implementation_Approval_Date;
+                cr.Implementation_Username = _username;
+                cr.ModifiedUser = _username;
+                cr.ModifiedDate = DateTime.Now;
+                _context.Update(cr);
+                await _context.SaveChangesAsync();
+
+                TempData["ImplementationDateChangeSuccessMessage"] = $"Implementation approval date updated to {Implementation_Approval_Date:MM/dd/yyyy}.";
+            }
+            return RedirectToAction("Details", new { id = id, tab = "Implementation" });
+        }
     }
 }
