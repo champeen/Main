@@ -121,7 +121,7 @@
                         <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                         <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
                         <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
-                           title="Hold Ctrl (⌘ on Mac) to select multiple; hold again to deselect."></i>
+                           title="Select your direct supervisor and/or the manager of the department impacted by the waiver."></i>
 
                         <select asp-for="GroupApprover" id="WaiverEditGroupApprovers" multiple="multiple" style="width:100%;">
                             @foreach (SelectListItem item in ViewBag.Groups)

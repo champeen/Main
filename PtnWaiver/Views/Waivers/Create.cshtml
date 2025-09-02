@@ -76,8 +76,8 @@
                     <div class="form-group my-3">
                         <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                         <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
-                        <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip"
-                           title="If multiple select, hold down 'Ctrl' key and click one or more. To de-select, hold down 'Ctrl' and click again."></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Select your direct supervisor and/or the manager of the department impacted by the waiver."></i>
                         <select asp-for="GroupApprover"
                                 asp-items="@(new SelectList((IEnumerable<SelectListItem>)ViewBag.Groups, "Value", "Text"))"
                                 id="WaiverCreateGroupApprovers"

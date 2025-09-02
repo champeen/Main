@@ -188,6 +188,8 @@
                     <div class="form-group mb-3">
                         <label asp-for="GroupApprover" class="control-label fw-bold mb-1"></label>
                         <i class="bi bi-r-circle-fill ms-1" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                        <i class="bi bi-info-circle-fill ms-1" style="color:blue;" data-bs-toggle="tooltip"
+                           title="Select your direct supervisor and/or the manager of the department impacted by the waiver."></i>
 
                         @if (Model.Status == "Draft")
                         {
