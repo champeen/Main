@@ -12,9 +12,80 @@
         {
             @if (Model.ChangeRequest.Change_Status == "RampUp" || Model.ChangeRequest.Change_Status == "Closeout" || Model.ChangeRequest.Change_Status == "Closed")
             {
-                <div class="fw-bold text-success my-5">
-                    Implementation has been Approved by @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Username) on @Html.DisplayFor(Model => Model.ChangeRequest.Implementation_Approval_Date)
-                </div>
+                @* Admin edit UI for Implementation Approval Date *@
+                @if (ViewBag.IsAdmin)
+                {
+                    @if (TempData["ImplementationDateChangeSuccessMessage"] is string msg)
+                    {
+                        <div id="implDateSaved"
+                             class="alert alert-success alert-dismissible fade show mx-auto mt-3"
+                             style="max-width: 520px;" role="alert">
+                            @msg
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm(
+                            actionName: "UpdateImplementationApprovalDate",
+                            controllerName: "ChangeRequests",
+                            routeValues: new { id = Model.ChangeRequest.Id },
+                            method: FormMethod.Post,
+                            antiforgery: (bool?)null,
+                            htmlAttributes: new { @class = "d-block" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ChangeRequest.Id)
+
+                        <div class="card mx-auto shadow-sm" style="max-width: 520px;">
+                            <div class="card-header fw-bolder">
+                                Implementation Approval
+                            </div>
+                            <div class="card-body text-start">
+                                @* force left alignment *@
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Approved By:</label>
+                                    <div class="form-control-plaintext">
+                                        @Html.DisplayFor(m => m.ChangeRequest.Implementation_Username)
+                                    </div>
+                                </div>
+
+                                <div class="mb-2">
+                                    <label for="Implementation_Approval_Date" class="form-label fw-bold">Approval Date</label>
+                                    <input type="date"
+                                           id="Implementation_Approval_Date"
+                                           name="Implementation_Approval_Date"
+                                           class="form-control"
+                                           value="@(Model.ChangeRequest.Implementation_Approval_Date.HasValue
+                                                ? Model.ChangeRequest.Implementation_Approval_Date.Value.ToString("yyyy-MM-dd")
+                                                : DateTime.Today.ToString("yyyy-MM-dd"))" 
+                                           onclick="this.showPicker()" />
+                                </div>
+
+                                <div class="d-flex justify-content-center gap-2 mt-3">
+                                    <button type="submit" class="btn btn-primary">Save Approval Date</button>
+
+                                    @*                     @if (ViewBag.SourceScreen == "Dashboard")
+                                    {
+                                        @Html.ActionLink("Back to List", "Index", "Home", null, new { @class = "btn btn-secondary" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Back to List", "Index", null, null, new { @class = "btn btn-secondary" })
+                                    } *@
+                                </div>
+                            </div>
+                        </div>
+                }
+                }
+                else
+                {
+                    <div class="fw-bold text-success my-5">
+                        Implementation has been Approved by
+                        @Html.DisplayFor(m => m.ChangeRequest.Implementation_Username)
+                        on
+                        @Html.DisplayFor(m => m.ChangeRequest.Implementation_Approval_Date)
+                    </div>
+                }
             }
             else
             {
@@ -37,3 +108,10 @@
         }
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const el = document.getElementById('implDateSaved');
+      if (el && window.bootstrap?.Alert) setTimeout(() => new bootstrap.Alert(el).close(), 4000);
+    });
+</script>
