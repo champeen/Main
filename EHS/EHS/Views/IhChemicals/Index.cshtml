@@ -1,0 +1,557 @@
+﻿@model EHS.ViewModels.IhChemicalsIndexViewModel
+@using EHS.Utilities
+@{
+    ViewData["Title"] = "IH Chemicals";
+}
+
+<!-- Tooltip color override (blue) + dark-mode modal contrast -->
+<style>
+    .tooltip .tooltip-inner {
+        background-color: #0d6efd !important; /* Bootstrap primary */
+        color: #fff !important;
+    }
+
+    .tooltip .tooltip-arrow::before {
+        border-top-color: #0d6efd !important;
+        border-right-color: #0d6efd !important;
+        border-bottom-color: #0d6efd !important;
+        border-left-color: #0d6efd !important;
+    }
+
+    /* Dark mode modal contrast (optional if you already have this in site.css) */
+    .dark-mode .modal-content {
+        background-color: #212529; /* near bg-dark */
+        color: #f8f9fa;
+        border-color: #2b3035;
+    }
+
+    .dark-mode .modal-header,
+    .dark-mode .modal-footer {
+        border-color: #2b3035;
+    }
+
+    .dark-mode .btn-close {
+        filter: invert(1) grayscale(100%);
+    }
+</style>
+
+<div class="container-fluid py-3">
+    <div class="row g-3">
+        <!-- LEFT: Lookup + History -->
+        <div class="col-lg-3">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">CAS Lookup (Fetch Only)</h5>
+                    <form id="fetchForm" asp-action="Index" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <div class="mb-3">
+                            <label class="form-label">CAS Number</label>
+                            <input asp-for="CasInput" class="form-control" placeholder="e.g., 50-00-0" required />
+                            <span class="text-danger" asp-validation-for="CasInput"></span>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Fetch</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm rounded-4 mt-3">
+                <div class="card-body">
+                    <h6 class="card-title">History (most recent 25)</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>CAS</th>
+                                    <th>Name</th>
+                                    <th class="text-center">CID</th>
+                                    <th class="text-center">Syn</th>
+                                    <th class="text-center">Props</th>
+                                    <th class="text-center">Haz</th>
+                                    <th class="text-center">OEL</th>
+                                    <th class="text-center">Meth</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var r in Model.Recent)
+                                {
+                                    <tr>
+                                        <td class="text-nowrap">@r.CasNumber</td>
+                                        <td class="text-truncate" style="max-width:220px">@r.PreferredName</td>
+                                        <td class="text-center">@r.PubChemCid</td>
+                                        <td class="text-center">@r.SynonymCount</td>
+                                        <td class="text-center">@r.PropertyCount</td>
+                                        <td class="text-center">@r.HazardCount</td>
+                                        <td class="text-center">@r.OelCount</td>
+                                        <td class="text-center">@r.SamplingCount</td>
+                                        <td class="text-end">
+                                            <a asp-action="Details" asp-route-id="@r.Id" class="btn btn-sm btn-outline-primary">View</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Results -->
+        <div class="col-lg-9">
+            @if (Model.Result != null)
+            {
+                <!-- Save/Cancel controls -->
+                <div class="d-flex gap-2 mb-2">
+                    <form asp-action="Save" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="cas" value="@Model.Result.CasNumber" />
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </form>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+
+                <!-- Warning banner -->
+                @if (Model.UnavailableSources != null && Model.UnavailableSources.Any())
+                {
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Heads up:</strong> Some sources were unavailable during fetch.
+                        <ul class="mb-0">
+                            @foreach (var s in Model.UnavailableSources.Distinct())
+                            {
+                                <li>@s</li>
+                            }
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <!-- Header card -->
+                <div class="card shadow-sm rounded-4 mb-3">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-md-4">
+                                <div class="small text-muted">CAS Number</div>
+                                <div class="fw-semibold">@Model.Result.CasNumber</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="small text-muted">Preferred Name</div>
+                                <div class="fw-semibold">@Model.Result.PreferredName</div>
+                            </div>
+                            <div class="col-md-2 text-md-end">
+                                @if (Model.Result.PubChemCid.HasValue)
+                                {
+                                    <span class="badge bg-secondary">CID @Model.Result.PubChemCid</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Properties -->
+                <div class="card shadow-sm rounded-4 mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            Core Properties
+                            <span class="text-muted">(@(Model.Result.Properties?.Count ?? 0))</span>
+                        </h6>
+                        @if ((Model.Result.Properties?.Count ?? 0) == 0)
+                        {
+                            <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-outline-primary" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseCoreProps"
+                                    aria-expanded="false" aria-controls="collapseCoreProps">
+                                Expand
+                            </button>
+                        }
+                    </div>
+                    <div id="collapseCoreProps" class="collapse">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        @foreach (var kv in Model.Result.Properties.OrderBy(k => k.Key))
+                                        {
+                                            <tr>
+                                                <th class="text-nowrap" style="width:260px">@kv.Key</th>
+                                                <td>@kv.Value</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Synonyms -->
+                <div class="card shadow-sm rounded-4 mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            Synonyms
+                            <span class="text-muted">(@(Model.Result.Synonyms?.Length ?? 0))</span>
+                        </h6>
+                        @if ((Model.Result.Synonyms?.Length ?? 0) == 0)
+                        {
+                            <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-outline-primary" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseSynonyms"
+                                    aria-expanded="false" aria-controls="collapseSynonyms">
+                                Expand
+                            </button>
+                        }
+                    </div>
+                    <div id="collapseSynonyms" class="collapse">
+                        <div class="card-body">
+                            <ul class="mt-2 mb-0" style="columns: 3; -webkit-columns: 3; -moz-columns: 3;">
+                                @foreach (var s in Model.Result.Synonyms)
+                                {
+                                    <li>@s</li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hazards -->
+                <div class="card shadow-sm rounded-4 mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            Hazards: Globally Harmonized System (GHS), NFPA 704, HMIS, and Toxicology
+                            <span class="text-muted">(@(Model.Result.Hazards?.Count ?? 0))</span>
+                        </h6>
+                        @if ((Model.Result.Hazards?.Count ?? 0) == 0)
+                        {
+                            <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-outline-primary" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseHazards"
+                                    aria-expanded="false" aria-controls="collapseHazards">
+                                Expand
+                            </button>
+                        }
+                    </div>
+                    <div id="collapseHazards" class="collapse">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:160px">Source</th>
+                                            <th style="width:100px">Code</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var h in Model.Result.Hazards)
+                                        {
+                                            <tr>
+                                                <td>@h.Source</td>
+                                                <td>@h.Code</td>
+                                                <td>@h.Description</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OELs -->
+                <div class="card shadow-sm rounded-4 mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <h6 class="mb-0">
+                                Occupational Exposure Limits (OSHA PEL / NIOSH REL / ACGIH TLV / Cal/OSHA)
+                                <span class="text-muted">(@(Model.Result.OELs?.Count ?? 0))</span>
+                            </h6>
+                        </div>
+
+                        @if ((Model.Result.OELs?.Count ?? 0) == 0)
+                        {
+                            <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-outline-primary" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseOEL"
+                                    aria-expanded="false" aria-controls="collapseOEL">
+                                Expand
+                            </button>
+                        }
+                    </div>
+                    <div id="collapseOEL" class="collapse">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Source
+                                                <span id="oelSourceInfo"
+                                                      role="button"
+                                                      tabindex="0"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-placement="top"
+                                                      title="What are these sources?">
+                                                    <i class="bi bi-info-circle-fill text-primary"></i>
+                                                </span>
+                                            </th>
+                                            <th>
+                                                Type
+                                                <span id="oelTypeInfo"
+                                                      role="button"
+                                                      tabindex="0"
+                                                      data-bs-toggle="tooltip"
+                                                      data-bs-placement="top"
+                                                      title="What do these types mean?">
+                                                    <i class="bi bi-info-circle-fill text-primary"></i>
+                                                </span>
+                                            </th>
+                                            <th>Value</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var o in Model.Result.OELs)
+                                        {
+                                            <tr>
+                                                <td>@o.Source</td>
+                                                <td>@OelText.PrettyType(o.Type, o.Notes)</td>
+                                                <td>@o.Value</td>
+                                                <td>@o.Notes</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sampling Methods -->
+                <div class="card shadow-sm rounded-4 mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                            Sampling Methods
+                            <span class="text-muted">(@(Model.Result.SamplingMethods?.Count ?? 0))</span>
+                        </h6>
+                        @if ((Model.Result.SamplingMethods?.Count ?? 0) == 0)
+                        {
+                            <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-sm btn-outline-primary" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseMethods"
+                                    aria-expanded="false" aria-controls="collapseMethods">
+                                Expand
+                            </button>
+                        }
+                    </div>
+                    <div id="collapseMethods" class="collapse">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Source</th>
+                                            <th>Method</th>
+                                            <th>Link</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var m in Model.Result.SamplingMethods)
+                                        {
+                                            <tr>
+                                                <td>@m.Source</td>
+                                                <td>@m.MethodId</td>
+                                                <td>
+                                                    @if (!string.IsNullOrWhiteSpace(m.Url))
+                                                    {
+                                                        <a href="@m.Url" target="_blank" rel="noopener">Open</a>
+                                                        <div class="small text-muted d-none d-md-block">@m.Url</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        var q = $"{m.Source} {m.MethodId} site:osha.gov filetype:pdf";
+                                                        <a href="https://www.google.com/search?q=@Uri.EscapeDataString(q)" target="_blank" rel="noopener">Search</a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card shadow-sm rounded-4">
+                    <div class="card-body">
+                        <div class="text-muted">Enter a CAS number to fetch, then choose Save or Cancel.</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- OEL legend modal -->
+<div class="modal fade" id="oelLegendModal" tabindex="-1" aria-labelledby="oelLegendLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="oelLegendLabel">OEL Types — quick guide</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row">
+                    <dt class="col-sm-3">TWA</dt>
+                    <dd class="col-sm-9">Time-Weighted Average over a standard 8-hour shift (unless otherwise noted). Average exposure across the shift.</dd>
+
+                    <dt class="col-sm-3">STEL</dt>
+                    <dd class="col-sm-9">Short-Term Exposure Limit, typically 15-minutes. Do not exceed during any part of the workday.</dd>
+
+                    <dt class="col-sm-3">Ceiling</dt>
+                    <dd class="col-sm-9">Must never be exceeded at any time (instantaneous upper bound).</dd>
+
+                    <dt class="col-sm-3">Action Level</dt>
+                    <dd class="col-sm-9">Trigger for required actions (medical surveillance, exposure monitoring, etc.). Often set at ½ of the PEL.</dd>
+                </dl>
+                <p class="mb-0 small text-muted">
+                    Sources: OSHA PEL, NIOSH REL, ACGIH TLV, and Cal/OSHA. Units commonly ppm or mg/m³.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Fetching modal (shown while posting the CAS Lookup form) -->
+<div class="modal fade" id="fetchingModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-body d-flex align-items-center gap-3">
+                <div class="spinner-border" role="status" aria-hidden="true"></div>
+                <div>
+                    <div class="fw-semibold">Fetching Chemical Data from Multiple Sites…</div>
+                    <div class="text-muted small">This can take a few seconds while we contact PubChem, NIOSH, OSHA, etc.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OEL sources modal -->
+<div class="modal fade" id="oelSourceModal" tabindex="-1" aria-labelledby="oelSourceLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="oelSourceLabel">OEL Sources — what’s the difference?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">
+                    <strong>OSHA</strong> is a regulatory body that creates and enforces legally binding standards for employers.
+                </p>
+                <p class="mb-0">
+                    <strong>NIOSH</strong> is a research agency that provides recommendations to OSHA and other health and safety organizations.
+                    Its limits are <em>not</em> legally binding.
+                </p>
+                <!-- (Optional) You can add a quick note about ACGIH/Cal/OSHA here if you want -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Init any bootstrap tooltips already marked up with data-bs-toggle="tooltip"
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.forEach(function (el) { new bootstrap.Tooltip(el); });
+
+            // Helper: bind an element to show a modal on hover (slight delay) and on click/keyboard
+            function bindHoverModal(triggerId, modalId) {
+                var trigger = document.getElementById(triggerId);
+                var modalEl = document.getElementById(modalId);
+                if (!trigger || !modalEl) return;
+
+                // Ensure tooltip exists on the trigger (blue styling handled in site.css)
+                new bootstrap.Tooltip(trigger);
+
+                var modal = new bootstrap.Modal(modalEl);
+                var hoverTimer;
+
+                trigger.addEventListener('mouseenter', function () {
+                    hoverTimer = setTimeout(function () { modal.show(); }, 150);
+                });
+                trigger.addEventListener('mouseleave', function () {
+                    if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; }
+                });
+                trigger.addEventListener('click', function () {
+                    modal.show();
+                });
+                trigger.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        modal.show();
+                    }
+                });
+            }
+
+            // Bind the info icons in the OEL table header
+            // - Type legend modal (TWA/STEL/Ceiling/Action Level)
+            bindHoverModal('oelTypeInfo', 'oelLegendModal');
+            // - Source explainer modal (OSHA vs NIOSH)
+            bindHoverModal('oelSourceInfo', 'oelSourceModal');
+
+            // Show the “Fetching Chemical Data…” modal while the form posts
+            // Requires a modal with id="fetchingModal" in your view markup.
+            var fetchForm = document.querySelector('form[asp-action="Index"]') || document.querySelector('form[action$="/Index"]') || document.querySelector('form');
+            var fetchingEl = document.getElementById('fetchingModal');
+            if (fetchForm && fetchingEl) {
+                fetchForm.addEventListener('submit', function () {
+                    var fm = new bootstrap.Modal(fetchingEl, { backdrop: 'static', keyboard: false });
+                    fm.show();
+                });
+            }
+        });
+    </script>
+
+    @* Toasts via alert() (kept from your original) *@
+    @if (TempData["Toast"] is string toast1 && !string.IsNullOrWhiteSpace(toast1))
+    {
+        <script>
+            setTimeout(function () { alert('@toast1'.replace(/'/g, "\\'")); }, 200);
+        </script>
+    }
+    else if (ViewData["Toast"] is string toast2 && !string.IsNullOrWhiteSpace(toast2))
+    {
+        <script>
+            setTimeout(function () { alert('@toast2'.replace(/'/g, "\\'")); }, 200);
+        </script>
+    }
+}

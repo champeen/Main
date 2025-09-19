@@ -1,11 +1,10 @@
+using EHS;
 using EHS.Data;
 using EHS.Models;
+using EHS.Services.Chemicals;
 using EHS.Utilities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics;
-using EHS;
 using Microsoft.AspNetCore.Authentication.Negotiate;
+using Microsoft.EntityFrameworkCore;
 
 try
 {
@@ -17,8 +16,25 @@ try
     builder.Services.AddDbContext<EHSContext>(options => options.UseNpgsql(Initialization.ConnectionStringEhs, npgsqlOptions =>
         npgsqlOptions.MigrationsHistoryTable("__EFMigrationsHistory", "ehs")));
     builder.Services.AddDbContext<MOCContext>(options => options.UseNpgsql(Initialization.ConnectionStringMoc));
+    builder.Services.AddDbContext<EHSContext>(o => o.UseNpgsql(builder.Configuration.GetConnectionString("EHSContext")));
 
     // Add services to the container.
+    builder.Services.AddHttpClient<PubChemClient>();
+    builder.Services.AddHttpClient<OshaNioshClient>(c =>
+        {
+            c.Timeout = TimeSpan.FromSeconds(15);
+            c.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36");
+            c.DefaultRequestHeaders.TryAddWithoutValidation("Accept",
+                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+            c.DefaultRequestHeaders.TryAddWithoutValidation("Accept-Language", "en-US,en;q=0.9");
+        })
+        .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate
+        });
+    builder.Services.AddScoped<PugViewParser>();
+    builder.Services.AddScoped<ChemicalIngestService>();
     builder.Services.AddControllersWithViews();
 
     if (Initialization.Environment != "Development")
