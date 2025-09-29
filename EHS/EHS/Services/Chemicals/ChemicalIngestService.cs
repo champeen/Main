@@ -427,6 +427,111 @@ namespace EHS.Services.Chemicals
             return deduped;
         }
 
+        // ChemicalIngestService.cs (or a repository)
+        public async Task<EHS.ViewModels.ChemicalCoreDto?> BuildDtoFromDbAsync(
+            string cas, CancellationToken ct = default)
+        {
+            cas = cas.Trim();
+
+            // Replace EhsDbContext / DbSets with your real ones
+            var chem = await _db.IhChemicals
+                .AsNoTracking()
+                .Include(x => x.Synonyms)
+                .Include(x => x.Properties)
+                .Include(x => x.Hazards)
+                .Include(x => x.Oels)
+                .Include(x => x.Methods)
+                .SingleOrDefaultAsync(x => x.CasNumber == cas, ct);
+
+            if (chem == null) return null;
+
+            var props = (chem.Properties ?? new List<IhChemicalProperty>())
+                .GroupBy(p => p.Key, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(g => g.Key, g => g.First().Value, StringComparer.OrdinalIgnoreCase);
+
+            return new EHS.ViewModels.ChemicalCoreDto(
+                cas: chem.CasNumber,
+                preferredName: chem.PreferredName,
+                pubChemCid: chem.PubChemCid,
+                synonyms: (chem.Synonyms ?? new List<IhChemicalSynonym>()).Select(s => s.Name).ToArray(),
+                properties: props,
+                hazards: (chem.Hazards ?? new List<IhChemicalHazard>()).Select(h => new IhChemicalHazard
+                {
+                    Source = h.Source,
+                    Code = h.Code,
+                    Description = h.Description
+                }).ToList(),
+                oELs: (chem.Oels ?? new List<IhChemicalOel>()).Select(o => new IhChemicalOel
+                {
+                    Source = o.Source,
+                    Type = o.Type,
+                    Value = o.Value,
+                    Notes = o.Notes
+                }).ToList(),
+                samplingMethods: (chem.Methods ?? new List<IhChemicalSamplingMethod>()).Select(m => new IhChemicalSamplingMethod
+                {
+                    Source = m.Source,
+                    MethodId = m.MethodId,
+                    Url = m.Url
+                }).ToList()
+            );
+        }
+
+        public async Task UpsertFromDtoAsync(EHS.ViewModels.ChemicalCoreDto dto, CancellationToken ct = default)
+        {
+            var chem = await _db.IhChemicals
+                .Include(x => x.Synonyms)
+                .Include(x => x.Properties)
+                .Include(x => x.Hazards)
+                .Include(x => x.Oels)
+                .Include(x => x.Methods)
+                .SingleOrDefaultAsync(x => x.CasNumber == dto.CasNumber, ct);
+
+            if (chem == null)
+            {
+                chem = new IhChemical
+                {
+                    CasNumber = dto.CasNumber,
+                    PreferredName = dto.PreferredName,
+                    PubChemCid = dto.PubChemCid
+                };
+                _db.IhChemicals.Add(chem);
+            }
+            else
+            {
+                chem.PreferredName = dto.PreferredName;
+                chem.PubChemCid = dto.PubChemCid;
+
+                // wipe children for simplicity (fine for admin ingest)
+                _db.IhChemicalSynonyms.RemoveRange(chem.Synonyms);
+                _db.IhChemicalProperties.RemoveRange(chem.Properties);
+                _db.IhChemicalHazards.RemoveRange(chem.Hazards);
+                _db.IhChemicalOels.RemoveRange(chem.Oels);
+                _db.IhChemicalSamplingMethods.RemoveRange(chem.Methods);
+            }
+
+            chem.Synonyms = (dto.Synonyms ?? Array.Empty<string>())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(s => new IhChemicalSynonym { Name = s }).ToList();
+
+            chem.Properties = (dto.Properties ?? new Dictionary<string, string?>())
+                .Select(kv => new IhChemicalProperty { Key = kv.Key, Value = kv.Value })
+                .ToList();
+
+            chem.Hazards = (dto.Hazards ?? new List<IhChemicalHazard>())
+                .Select(h => new IhChemicalHazard { Source = h.Source, Code = h.Code, Description = h.Description })
+                .ToList();
+
+            chem.Oels = (dto.OELs ?? new List<IhChemicalOel>())
+                .Select(o => new IhChemicalOel { Source = o.Source, Type = o.Type, Value = o.Value, Notes = o.Notes })
+                .ToList();
+
+            chem.Methods = (dto.SamplingMethods ?? new List<IhChemicalSamplingMethod>())
+                .Select(m => new IhChemicalSamplingMethod { Source = m.Source, MethodId = m.MethodId, Url = m.Url })
+                .ToList();
+
+            await _db.SaveChangesAsync(ct);
+        }
 
     }
 }

@@ -71,27 +71,76 @@ namespace EHS.Controllers
             return View(vm);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Index(string? cas, CancellationToken ct = default)
+        {
+            var vm = new EHS.ViewModels.IhChemicalsIndexViewModel
+            {
+                Recent = await _svc.GetRecentAsync(25, ct)
+            };
+
+            if (!string.IsNullOrWhiteSpace(cas))
+            {
+                // 1) Try DB first (verifies what we saved)
+                var dtoFromDb = await _svc.BuildDtoFromDbAsync(cas, ct);
+                if (dtoFromDb != null)
+                {
+                    vm.Result = dtoFromDb;
+                    // optional: vm.UnavailableSources = new List<string> { "Loaded from database." };
+                    return View(vm);
+                }
+
+                // 2) Fallback: live fetch if not in DB yet
+                var (dto, unavailable) = await _svc.FetchByCasWithStatusAsync(cas, ct);
+                vm.Result = dto;
+                vm.UnavailableSources = unavailable;
+            }
+
+            return View(vm);
+        }
+
         // SAVE after reviewing fetched data
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Save(string cas)
+        //{
+        //    if (string.IsNullOrWhiteSpace(cas))
+        //    {
+        //        TempData["Toast"] = "No CAS provided to save.";
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    var dto = await _svc.IngestByCasAsync(cas.Trim());
+        //    // Look up saved record id for redirect
+        //    var id = await _db.ih_chemical
+        //        .Where(c => c.CasNumber == dto.CasNumber)
+        //        .Select(c => c.Id)
+        //        .FirstOrDefaultAsync();
+
+        //    TempData["Toast"] = $"Saved data for CAS {dto.CasNumber}.";
+        //    if (id == 0) return RedirectToAction(nameof(Index));
+        //    return RedirectToAction(nameof(Details), new { id });
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(string cas)
+        public async Task<IActionResult> Save(string cas, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(cas))
             {
-                TempData["Toast"] = "No CAS provided to save.";
+                TempData["Toast"] = "No CAS provided.";
                 return RedirectToAction(nameof(Index));
             }
 
-            var dto = await _svc.IngestByCasAsync(cas.Trim());
-            // Look up saved record id for redirect
-            var id = await _db.ih_chemical
-                .Where(c => c.CasNumber == dto.CasNumber)
-                .Select(c => c.Id)
-                .FirstOrDefaultAsync();
+            // Use the same live fetch pipeline you already have
+            var (dto, _) = await _svc.FetchByCasWithStatusAsync(cas, ct);
 
-            TempData["Toast"] = $"Saved data for CAS {dto.CasNumber}.";
-            if (id == 0) return RedirectToAction(nameof(Index));
-            return RedirectToAction(nameof(Details), new { id });
+            // Persist everything you care about
+            await _svc.UpsertFromDtoAsync(dto, ct);
+
+            TempData["Toast"] = $"Saved: {dto.PreferredName ?? dto.CasNumber}";
+            // After save, show what’s in the DB:
+            return RedirectToAction(nameof(Index), new { cas = dto.CasNumber });
         }
 
         [HttpGet]
