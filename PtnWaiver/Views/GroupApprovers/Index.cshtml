@@ -35,6 +35,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.SecondaryApproverEmail)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WaiverMandatoryApproval)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -62,6 +65,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SecondaryApproverEmail)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WaiverMandatoryApproval)
                 </td>
                 <td>
                     <span class="text-nowrap">

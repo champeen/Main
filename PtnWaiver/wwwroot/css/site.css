@@ -29,3 +29,14 @@ body {
 .navbar .nav-link:hover {
     background-color: rgba(255,255,255,.12);
 }
+
+/* Add spacing between text and clear (x) button */
+.select2-selection__rendered {
+    padding-right: 1.5em !important; /* adjust value as needed */
+}
+
+/* Make the clear 'x' button a little offset */
+.select2-selection__clear {
+    margin-left: 0.5em !important;
+    margin-right: 0.25em !important;
+}

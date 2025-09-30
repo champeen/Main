@@ -13,13 +13,13 @@ namespace PtnWaiver.Data
             : base(options)
         {
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        }
 
         public DbSet<PtnWaiver.Models.Administrators>? Administrators { get; set; }
         public DbSet<PtnWaiver.Models.PTN> PTN { get; set; } = default!;
         public DbSet<PtnWaiver.Models.Waiver>? Waiver { get; set; }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-        }
         public DbSet<PtnWaiver.Models.PtnStatus>? PtnStatus { get; set; }
         public DbSet<PtnWaiver.Models.ProductSize>? ProductSize { get; set; }
         public DbSet<PtnWaiver.Models.SubjectType>? SubjectType { get; set; }
@@ -32,5 +32,7 @@ namespace PtnWaiver.Data
         public DbSet<PtnWaiver.Models.AllowedAttachmentExtensions>? AllowedAttachmentExtensions { get; set; }
         public DbSet<PtnWaiver.Models.EmailHistory>? EmailHistory { get; set; }
         public DbSet<PtnWaiver.Models.GroupApproversReview>? GroupApproversReview { get; set; }
+        public DbSet<PtnWaiver.Models.WaiverQuestion>? WaiverQuestion { get; set; }
+        public DbSet<PtnWaiver.Models.WaiverQuestionResponse>? WaiverQuestionResponse { get; set; }
     }
 }

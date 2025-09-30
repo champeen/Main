@@ -18,7 +18,6 @@
             </h1>
         </div>
     </div>
-
     <div class="col-8 text-end">
         <h4>
             <span class="fw-bold">
@@ -40,6 +39,7 @@
         </h4>
     </div>
 </div>
+
 <nav class="mt-5">
     <ul class="nav nav-tabs" id="nav-tab" role="tablist">
         <li class="nav-item">
@@ -64,274 +64,370 @@
         </li>
     </ul>
 </nav>
+
 <div class="tab-content" id="nav-tabContent">
     @******************************************************************************************************************@
     @*  DETAIL TAB ****************************************************************************************************@
     @******************************************************************************************************************@
     <div class="tab-pane fade show @Model.TabActiveDetail" id="nav-detail" role="tabpanel" aria-labelledby="nav-home-tab">
-        <div>
-            @*<h4 class="mt-5">Details</h4>*@
-            @*                <a class="me-2" asp-action="Edit" asp-route-id="@Model?.ChangeRequest?.Id">Edit</a>
-            <a class="mx-2" asp-action="Index">Back to List</a>*@
-            <div class="row mt-5">
-                <div class="col-12 text-start">
-                    @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") @* && (Model.Ptn.Status == "Approved") *@)
-                    {
-                        @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
-                    }            
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-6">
-                    <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.Description)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.Description)
-                        </dd>
-                    </div>
-                    <div class="row">
-                        <dt class="col-sm-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
-                        </dt>
-                        <dd class="col-sm-9 my-1">
-                            @if (Model.Waiver.ProductProcess != null)
-                            {
-                                var counter = 0;
-                                @foreach (var productProcess in Model.Waiver.ProductProcess)
-                                {
-                                    counter = counter + 1;
-                                    <span>@productProcess</span>
-                                    if (counter < Model.Waiver.ProductProcess.Count)
-                                    {
-                                        <span>,&nbsp;</span>
-                                    }
-                                }
-                            }
-                        </dd>
-                    </div>
 
-                    <div class="row">
-                        <dt class="col-sm-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.Areas)
-                        </dt>
-                        <dd class="col-sm-9 my-1">
-                            @if (Model.Waiver.Areas != null)
-                            {
-                                var counter = 0;
-                                @foreach (var areas in Model.Waiver.Areas)
-                                {
-                                    counter = counter + 1;
-                                    <span>@areas</span>
-                                    if (counter < Model.Waiver.Areas.Count)
-                                    {
-                                        <span>,&nbsp;</span>
-                                    }
-                                }
-                            }
-                        </dd>
-                    </div>
-
-                    <div class="row">
-                        <dt class="col-sm-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.GroupApprover)
-                        </dt>
-                        <dd class="col-sm-9 my-1">
-                            @if (Model.Waiver.GroupApprover != null)
-                            {
-                                var counter = 0;
-                                @foreach (var groupApprover in Model.Waiver.GroupApprover)
-                                {
-                                    counter = counter + 1;
-                                    <span>@groupApprover</span>
-                                    if (counter < Model.Waiver.GroupApprover.Count)
-                                    {
-                                        <span>,&nbsp;</span>
-                                    }
-                                }
-                            }
-                        </dd>
-                    </div>                    
-                    <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.RejectedReason)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.RejectedReason)
-                        </dd>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.PtnDocId)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.PtnDocId)
-                        </dd>
-                    </div>
-                    <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.WaiverSequence)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.WaiverSequence)
-                        </dd>
-                    </div>
-                    <div class="row">
-                        <dt class="col-3 my-1 text-end">
-                            @Html.DisplayNameFor(model => model.Waiver.RevisionNumber)
-                        </dt>
-                        <dd class="col-9 my-1">
-                            @Html.DisplayFor(model => model.Waiver.RevisionNumber)
-                        </dd>
-                    </div>
-                </div>
+        <!-- Top actions -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
+            <div class="d-flex gap-2">
+                @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft"))
+                {
+                    @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1 " })
+                }
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
             </div>
-            <div class="accordion mt-3" id="accordionWaiverDetails">
-                <div class="accordion-item ">
-                    <h2 class="accordion-header" id="headingWaiverDetails">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWaiverDetails" aria-expanded="false" aria-controls="collapseWaiverDetails">
-                            <strong>User/Timestamp Info</strong>
-                        </button>
-                    </h2>
-                    <div id="collapseWaiverDetails" class="accordion-collapse collapse" aria-labelledby="headingWaiverDetails" data-bs-parent="#accordionWaiverDetails">
-                        <div class="accordion-body">
+        </div>
+
+        <!-- General Information -->
+        <div class="card h-100 border-3 shadow-sm rounded-4 mt-4 mb-3">
+            <div class="card-header bg-light border-bottom">
+                <h5 class="mb-0 fw-bold">General Information</h5>
+            </div>
+            <div class="card-body pt-0">
+                <div class="row g-4 mt-1">
+                    <div class="col-lg-6">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-3 text-sm-end fw-bold">
+                                Description
+                            </dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.Waiver.Description)</dd>
+
+                            <!-- Product/Process -->
                             <div class="row">
-                                <div class="col-sm-4">
-                                    <div class="row mt-1">
-                                        <div class="col-12 text-center">
-                                            <h4>Created</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Username
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.CreatedUser)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Full Name
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.CreatedUserFullName)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Email
-                                        </dt>
-                                        <dd class="col-lg-9 mt-1 mb-3">
-                                            @Html.DisplayFor(model => model.Waiver.CreatedUserEmail)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Date
-                                        </dt>
-                                        <dd class="col-lg-9 mt-1 mb-3">
-                                            @Html.DisplayFor(model => model.Waiver.CreatedDate)
-                                        </dd>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="row mt-1">
-                                        <div class="col-12 text-center">
-                                            <h4>Modified</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Username
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.ModifiedUser)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Full Name
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.ModifiedUserFullName)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Email
-                                        </dt>
-                                        <dd class="col-lg-9 mt-1 mb-3">
-                                            @Html.DisplayFor(model => model.Waiver.ModifiedUserEmail)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Date
-                                        </dt>
-                                        <dd class="col-lg-9 mt-1 mb-3">
-                                            @Html.DisplayFor(model => model.Waiver.ModifiedDate)
-                                        </dd>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4">
-                                    <div class="row mt-1">
-                                        <div class="col-12 text-center">
-                                            <h4>Deleted</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Username
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.DeletedUser)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Full Name
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.DeletedUserFullName)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Email
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.DeletedUserEmail)
-                                        </dd>
-                                    </div>
-                                    <div class="row mt-1">
-                                        <dt class="col-lg-3 my-1 text-lg-end">
-                                            Date
-                                        </dt>
-                                        <dd class="col-lg-9 my-1">
-                                            @Html.DisplayFor(model => model.Waiver.DeletedDate)
-                                        </dd>
-                                    </div>
-                                </div>
+                                <dt class="col-sm-3 my-1 text-end">
+                                    @Html.DisplayNameFor(model => model.Waiver.ProductProcess)
+                                </dt>
+                                <dd class="col-sm-9 my-1">
+                                    @if (Model.Waiver.ProductProcess != null && Model.Waiver.ProductProcess.Any())
+                                    {
+                                        foreach (var productProcess in Model.Waiver.ProductProcess)
+                                        {
+                                            <span class="badge bg-light text-dark border me-1">@productProcess</span>
+                                        }
+                                    }
+                                </dd>
                             </div>
 
+                            <!-- Areas -->
+                            <div class="row">
+                                <dt class="col-sm-3 my-1 text-end">
+                                    @Html.DisplayNameFor(model => model.Waiver.Areas)
+                                </dt>
+                                <dd class="col-sm-9 my-1">
+                                    @if (Model.Waiver.Areas != null && Model.Waiver.Areas.Any())
+                                    {
+                                        foreach (var area in Model.Waiver.Areas)
+                                        {
+                                            <span class="badge bg-light text-dark border me-1">@area</span>
+                                        }
+                                    }
+                                </dd>
+                            </div>
+
+                            <!-- Group Approvers -->
+                            <div class="row">
+                                <dt class="col-sm-3 my-1 text-end">
+                                    @Html.DisplayNameFor(model => model.Waiver.GroupApprover)
+                                </dt>
+                                <dd class="col-sm-9 my-1">
+                                    @if (Model.Waiver.GroupApprover != null && Model.Waiver.GroupApprover.Any())
+                                    {
+                                        foreach (var g in Model.Waiver.GroupApprover)
+                                        {
+                                            <span class="badge bg-light text-dark border me-1">@g</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
+                                </dd>
+                            </div>
+
+                            <dt class="col-sm-3 text-sm-end">Rejected Reason</dt>
+                            <dd class="col-sm-9">@Html.DisplayFor(m => m.Waiver.RejectedReason)</dd>
+                        </dl>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4 text-sm-end">PTN Doc Id</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(m => m.Waiver.PtnDocId)</dd>
+
+                            <dt class="col-sm-4 text-sm-end">Sequence</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(m => m.Waiver.WaiverSequence)</dd>
+
+                            <dt class="col-sm-4 text-sm-end">Revision</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(m => m.Waiver.RevisionNumber)</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Waiver Questions & Responses -->
+        <div class="card h-100 border-3 shadow-sm rounded-3 mt-4">
+            <div class="card-header bg-light border-bottom">
+                <h5 class="mb-0 fw-bold">Waiver Questions &amp; Responses
+                <i class="bi bi-info-circle" style="color:blue;" data-bs-toggle="tooltip" data-bs-html="true" title="These questions are required to be filled out in order to proceed to the 'Submit Waiver for Approval' stage">
+                </i>
+                </h5>
+            </div>
+
+            <div class="card-body">
+                @if (Model.Waiver.WaiverQuestionResponse != null && Model.Waiver.WaiverQuestionResponse.Any())
+                {
+                    <div class="vstack gap-3">
+                        @foreach (var q in Model.Waiver.WaiverQuestionResponse
+                                            .OrderBy(q => q.Order)
+                                            .ThenBy(q => q.Question))
+                        {
+                            <div class="card shadow-sm rounded-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <!-- Left: Question + Response -->
+                                        <div class="col-12 col-md-6 col-lg-4">
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <h6 class="mb-0">@q.Question</h6>
+                                            </div>
+
+                                            <div class="mt-1">
+                                                <span class="text-muted small d-block mb-1">Response:</span>
+
+                                                @{
+                                                    var resp = q.Response?.Trim();
+                                                    if (string.IsNullOrWhiteSpace(resp))
+                                                    {
+                                                        <span class="badge bg-secondary-subtle text-secondary border">— No response —</span>
+                                                    }
+                                                    else if (resp.Equals("Yes", StringComparison.OrdinalIgnoreCase))
+                                                    {
+                                                        <span class="badge bg-success">Yes</span>
+                                                    }
+                                                    else if (resp.Equals("No", StringComparison.OrdinalIgnoreCase))
+                                                    {
+                                                        <span class="badge bg-danger">No</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="badge bg-info text-dark">@resp</span>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+
+                                        <!-- Right: Group/Approvers -->
+                                        <div class="col-12 col-md-4 mt-3 mt-md-0">
+                                            <div class="h-100 d-flex flex-column align-items-md-end">
+                                                <div class="text-muted fw-bold small mb-1">Group/Approvers</div>
+
+                                                @{
+                                                    var ga = q.GroupApprover;
+                                                }
+                                                @if (ga != null && ga.Any())
+                                                {
+                                                    <div class="d-flex flex-wrap gap-1 justify-content-md-end">
+                                                        @foreach (var g in ga)
+                                                        {
+                                                            <span class="badge bg-light text-dark border">@g</span>
+                                                        }
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">None listed</span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div> <!-- /row -->
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-muted">No waiver questions found.</div>
+                }
+            </div>
+        </div>
+        <!-- /Waiver Questions & Responses -->
+        <!-- User & Timestamp Info -->
+        <div class="card h-100 border-3 shadow-sm rounded-4 mt-4">
+            <div class="card-header bg-light border-bottom">
+                <h5 class="mb-0 fw-bold">User & Timestamp Info</h5>
+            </div>
+            <div class="card-body pt-2">
+                <div class="row g-3">
+                    <!-- Created -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-plus-circle text-success"></i>
+                                    <h6 class="mb-0 text-uppercase text-muted small">Created</h6>
+                                </div>
+                            </div>
+                            <div class="card-body pt-2">
+                                <dl class="row mb-0 small">
+                                    <dt class="col-5 text-muted">Username</dt>
+                                    <dd class="col-7">@(!string.IsNullOrWhiteSpace(Model.Waiver.CreatedUser) ? Model.Waiver.CreatedUser : Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>"))</dd>
+
+                                    <dt class="col-5 text-muted">Full name</dt>
+                                    <dd class="col-7">@(!string.IsNullOrWhiteSpace(Model.Waiver.CreatedUserFullName) ? Model.Waiver.CreatedUserFullName : Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>"))</dd>
+
+                                    <dt class="col-5 text-muted">Email</dt>
+                                    <dd class="col-7">
+                                        @if (!string.IsNullOrWhiteSpace(Model.Waiver.CreatedUserEmail))
+                                        {
+                                            <a href="mailto:@Model.Waiver.CreatedUserEmail">@Model.Waiver.CreatedUserEmail</a>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                        }
+                                    </dd>
+                                    <dt class="col-5 text-muted">Date</dt>
+                                    <dd class="col-7">
+                                        @if (Model.Waiver.CreatedDate != DateTime.MinValue)
+                                        {
+                                            <time>@Model.Waiver.CreatedDate.ToString("yyyy-MM-dd HH:mm")</time>
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                        }
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modified -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-pencil-square text-warning"></i>
+                                    <h6 class="mb-0 text-uppercase text-muted small">Modified</h6>
+                                </div>
+                            </div>
+                            <div class="card-body pt-2">
+                                @if (string.IsNullOrWhiteSpace(Model.Waiver.ModifiedUser) &&
+                                                                string.IsNullOrWhiteSpace(Model.Waiver.ModifiedUserFullName) &&
+                                                                string.IsNullOrWhiteSpace(Model.Waiver.ModifiedUserEmail) &&
+                                                                !Model.Waiver.ModifiedDate.HasValue)
+                                {
+                                    <div class="alert alert-light border small mb-0">No modifications recorded.</div>
+                                }
+                                else
+                                {
+                                    <dl class="row mb-0 small">
+                                        <dt class="col-5 text-muted">Username</dt>
+                                        <dd class="col-7">@(!string.IsNullOrWhiteSpace(Model.Waiver.ModifiedUser) ? Model.Waiver.ModifiedUser : Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>"))</dd>
+
+                                        <dt class="col-5 text-muted">Full name</dt>
+                                        <dd class="col-7">@(!string.IsNullOrWhiteSpace(Model.Waiver.ModifiedUserFullName) ? Model.Waiver.ModifiedUserFullName : Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>"))</dd>
+
+                                        <dt class="col-5 text-muted">Email</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.Waiver.ModifiedUserEmail))
+                                            {
+                                                <a href="mailto:@Model.Waiver.ModifiedUserEmail">@Model.Waiver.ModifiedUserEmail</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Date</dt>
+                                        <dd class="col-7">
+                                            @if (Model.Waiver.ModifiedDate.HasValue)
+                                            {
+                                                <time>@Model.Waiver.ModifiedDate.Value.ToString("yyyy-MM-dd HH:mm")</time>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+                                    </dl>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deleted -->
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-transparent border-0 pb-0">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="bi bi-trash3 text-danger"></i>
+                                    <h6 class="mb-0 text-uppercase text-muted small">Deleted</h6>
+                                </div>
+                            </div>
+                            <div class="card-body pt-2">
+                                @if (string.IsNullOrWhiteSpace(Model.Waiver.DeletedUser) &&
+                                                                string.IsNullOrWhiteSpace(Model.Waiver.DeletedUserFullName) &&
+                                                                string.IsNullOrWhiteSpace(Model.Waiver.DeletedUserEmail) &&
+                                                                !Model.Waiver.DeletedDate.HasValue)
+                                {
+                                    <div class="alert alert-light border small mb-0">Not deleted.</div>
+                                }
+                                else
+                                {
+                                    <dl class="row mb-0 small">
+                                        <dt class="col-5 text-muted">Username</dt>
+                                        <dd class="col-7">@(!string.IsNullOrWhiteSpace(Model.Waiver.DeletedUser) ? Model.Waiver.DeletedUser : Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>"))</dd>
+
+                                        <dt class="col-5 text-muted">Full name</dt>
+                                        <dd class="col-7">@(!string.IsNullOrWhiteSpace(Model.Waiver.DeletedUserFullName) ? Model.Waiver.DeletedUserFullName : Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>"))</dd>
+
+                                        <dt class="col-5 text-muted">Email</dt>
+                                        <dd class="col-7">
+                                            @if (!string.IsNullOrWhiteSpace(Model.Waiver.DeletedUserEmail))
+                                            {
+                                                <a href="mailto:@Model.Waiver.DeletedUserEmail">@Model.Waiver.DeletedUserEmail</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+
+                                        <dt class="col-5 text-muted">Date</dt>
+                                        <dd class="col-7">
+                                            @if (Model.Waiver.DeletedDate.HasValue)
+                                            {
+                                                <time>@Model.Waiver.DeletedDate.Value.ToString("yyyy-MM-dd HH:mm")</time>
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw("<span class='badge bg-secondary-subtle text-secondary border'>Not set</span>")
+                                            }
+                                        </dd>
+                                    </dl>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row mt-5">
-            <div class="col-5 text-start">
+
+        <!-- Bottom actions -->
+        <div class="d-flex justify-content-start mt-4">
+            <div class="d-flex gap-2">
                 @if ((ViewBag.IsAdmin == true || ViewBag.Username == Model.Waiver.CreatedUser) && (Model.Waiver.Status == "Draft") && (Model.Ptn.Status == "Approved"))
                 {
                     @Html.ActionLink("Edit", "Edit", new { id = @Model?.Waiver?.Id, tab = "Details" }, new { @class = "btn btn-primary me-1" })
-                    @*                     @Html.ActionLink("Add Impact Assessment Reviewers","Index","AdditionalImpactAssessmentReviewers", new {ptnId=Model.PTN.Id, tab="Details"}, new {@class="btn btn-success ms-1"}) *@
                 }
-                @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary" }) *@
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
             </div>
         </div>
     </div>
@@ -444,7 +540,12 @@
                         </tr>
                     }
                 </table>
-                @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" }) *@
+            </div>
+            <div class="row mt-5">
+                <div class="col-12 text-start">
+                    @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" }) *@
+                    @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
+                </div>
             </div>
         </div>
     </div>
@@ -457,7 +558,7 @@
         {
             @if (ViewBag.IsAdmin || (ViewBag.Username == Model.Waiver.CreatedUser || ViewBag.Username == Model.Ptn.CreatedUser))
             {
-                <div class="row mt-4">
+                <div class="row mt-5">
                     <div class="col-12">
                         <h5>
                             Once submitted for approval, you can only edit the comment field.  Make sure everything is complete before submitting for approval.
@@ -469,21 +570,25 @@
                     @* <input type="hidden" asp-for="@Model.Waiver.Id" /> *@
                     <input type="hidden" asp-for="@Model.Waiver.Id" />
                     <input type="hidden" asp-for="@Model.Ptn.Id" />
-                    <div class="row mt-5">
+                    <div class="row mt-3">
                         <div class="col-12">
-                            @Html.ActionLink("Submit for Approval", "SubmitWaiverForApproval", "Waivers", new { id = Model.Waiver.Id }, new { @class = "btn btn-success", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            @Html.ActionLink("Submit for Approval", "SubmitWaiverForApproval", "Waivers", new { id = Model.Waiver.Id }, new { @class = "btn btn-success me-1", onclick = "return DisplayProgressMessage(this, 'Saving...');" })
+                            @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
                         </div>
                     </div>
                 </form>
             }
             else
             {
-                <div class="row mt-4">
+                <div class="row mt-5">
                     <div class="col-12">
                         <h5>
                             Waiver Creater or PTN administrator must submit this Waiver for approval in order to move on to next phase.
                         </h5>
                     </div>
+                </div>
+                <div>
+                    @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary mt-3" })
                 </div>
             }
         }
@@ -494,7 +599,7 @@
 
                 @if (Model.Waiver.RejectedBeforeSubmission == true)
                 {
-                    <div class="row mt-4">
+                    <div class="row mt-5">
                         <div class="col-12">
                             Waiver has been <span class="text-danger fw-bold">Rejected</span> by <span class="fw-bold">@Model.Waiver.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForApprovalDate</span>.
                         </div>
@@ -504,21 +609,29 @@
                             <span class="fw-bold">Reason for Rejection: </span>@Model.Waiver.RejectedReason
                         </div>
                     </div>
+                    <div>
+                        @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary mt-3" })
+                    </div>
                 }
                 else
                 {
-                    <div class="row mt-4">
+                    <div class="row mt-5">
                         <div class="col-12">
                             Waiver has been <span class="text-success fw-bold">submitted for approval</span> by <span class="fw-bold">@Model.Waiver.SubmittedForApprovalUserFullName</span> on <span class="fw-bold">@Model.Waiver.SubmittedForApprovalDate</span>.
                         </div>
                     </div>
+                    <div>
+                        @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary mt-3" })
+                    </div>
+
                 }
             }
         }
-        <div class="row mt-5">
+@*         <div class="row mt-5">
             <div class="col-12 text-start">
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
             </div>
-        </div>
+        </div> *@
     </div>
 
     @******************************************************************************************************************@
@@ -568,21 +681,21 @@
             </thead>
             @* <form asp-controller="Waivers" asp-action="Index"> *@
             <tbody id="groupApproverReviewIndexTable">
-                    @foreach (var item in Model.GroupApproversReview)
+                @foreach (var item in Model.GroupApproversReview)
+                {
+                    var color = "";
+                    if (item.Status == "Rejected")
                     {
-                        var color = "";
-                        if (item.Status == "Rejected")
-                        {
-                            color = "text-danger fw-bold";
-                        }
-                        else if (item.Status == "Approved")
-                        {
-                            color = "text-success fw-bold";
-                        }
+                        color = "text-danger fw-bold";
+                    }
+                    else if (item.Status == "Approved")
+                    {
+                        color = "text-success fw-bold";
+                    }
                     <tr>
                         <input type="hidden" asp-for="@item.Id" />
                         <td>
-                                @Html.DisplayFor(modelItem => item.Group)
+                            @Html.DisplayFor(modelItem => item.Group)
                         </td>
                         <td>
                             @if (item.ReviewedBy == null && ViewBag.IsAdmin)
@@ -643,33 +756,33 @@
                             }
                         </td>
                         <td class="@color">
-                                @Html.DisplayFor(modelItem => item.Status)
+                            @Html.DisplayFor(modelItem => item.Status)
                         </td>
                         <td>
-                                @Html.DisplayFor(modelItem => item.ReviewedBy)
+                            @Html.DisplayFor(modelItem => item.ReviewedBy)
                         </td>
                         <td>
-                                @Html.DisplayFor(modelItem => item.ReviewDate)
+                            @Html.DisplayFor(modelItem => item.ReviewDate)
                         </td>
                         <td>
-                                @Html.DisplayFor(modelItem => item.Comment)
+                            @Html.DisplayFor(modelItem => item.Comment)
                         </td>
                         <td class="text-nowrap">
-                                @if (Model.Waiver.Status == "Pending Approval" && (ViewBag.IsAdmin == true || ViewBag.Username == item.PrimaryApproverUsername || ViewBag.Username == item.SecondaryApproverUsername))
+                            @if (Model.Waiver.Status == "Pending Approval" && (ViewBag.IsAdmin == true || ViewBag.Username == item.PrimaryApproverUsername || ViewBag.Username == item.SecondaryApproverUsername))
+                            {
+                                @if (item.Status == null || item.Status == "")
                                 {
-                                    @if (item.Status == null || item.Status == "")
-                                    {
-                                        @* <input type="submit" value="Save" class="btn btn-primary" /> *@
-                                        @Html.ActionLink("Approve", "GroupApprove", new { waiverId = Model.Waiver.Id, groupApproverId = @item.Id, status = "Approved" }, new { @class = "btn btn-success" })
-                                    }
-                                    @if (item.Status == null || item.Status == "")
-                                    {
-                                        @Html.ActionLink("Reject", "GroupApprove", new { waiverId = Model.Waiver.Id, groupApproverId = @item.Id, status = "Rejected" }, new { @class = "btn btn-danger ms-1" })
-                                    }
+                                    @* <input type="submit" value="Save" class="btn btn-primary" /> *@
+                                    @Html.ActionLink("Approve", "GroupApprove", new { waiverId = Model.Waiver.Id, groupApproverId = @item.Id, status = "Approved" }, new { @class = "btn btn-success" })
                                 }
+                                @if (item.Status == null || item.Status == "")
+                                {
+                                    @Html.ActionLink("Reject", "GroupApprove", new { waiverId = Model.Waiver.Id, groupApproverId = @item.Id, status = "Rejected" }, new { @class = "btn btn-danger ms-1" })
+                                }
+                            }
                         </td>
                     </tr>
-                    }
+                }
             </tbody>
             @* </form> *@
             @if (Model.GroupApproversReview.Count() == 0)
@@ -689,6 +802,7 @@
         <div class="row mt-3">
             <div class="col-12 text-start">
                 @* @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" }) *@
+                @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
             </div>
         </div>
     </div>
@@ -848,15 +962,23 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="row mt-5">
-    <div class="col-12">
-        <div class="text-nowrap fs-6">
-            @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-secondary mt-3" })
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="text-nowrap fs-6">
+                    @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+@* <div class="row mt-3">
+    <div class="col-12">
+        <div class="text-nowrap fs-6">
+            @Html.ActionLink("Back to PTN", "Details", "PTNs", new { id = Model.Waiver.PTNId, tab = "Waivers" }, new { @class = "btn btn-outline-secondary" })
+        </div>
+    </div>
+</div> *@
 
 <script>
     $(document).ready(function () {

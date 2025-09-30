@@ -24,5 +24,8 @@ namespace PtnWaiver.Models
         [Display(Name = "Secondary Approver Title")]
         public string? SecondaryApproverTitle { get; set; }
         public string? Order { get; set; }
+        public bool PtnMandatoryApproval { get; set; } = false;     // this group will be setup as an approver for every PTN
+        [Display(Name = "Waiver Mandatory Approval")]
+        public bool WaiverMandatoryApproval { get; set; } = false;  // this group will be setup as an approver for every Waiver
     }
 }

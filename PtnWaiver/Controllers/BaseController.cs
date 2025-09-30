@@ -31,7 +31,6 @@ namespace PtnWaiver.Controllers
         {
 
         }
-
         public string _username
         {
             get
@@ -45,7 +44,6 @@ namespace PtnWaiver.Controllers
                     return userName;
             }
         }
-
         public int _getDaysSince1900
         {
             get

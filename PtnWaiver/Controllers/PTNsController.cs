@@ -581,7 +581,7 @@ namespace PtnWaiver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DocId,OriginatingGroup,,ProductSize,OriginatorInitials,OriginatorYear,SerialNumber,SubjectType,Title,GroupApprover,PdfLocation,Status,isWaferingDepartment,Comments,PtrNumber,MostCurrent,CreatedUser,CreatedUserFullName,CreatedUserEmail,CreatedDate,ModifiedUser,ModifiedUserFullName,ModifiedUserEmail,ModifiedDate,DeletedUser,DeletedUserFullName,DeletedUserEmail,DeletedDate")] PTN pTN)
+        public async Task<IActionResult> Edit(int id, PTN pTN)
         {
             // make sure valid Username
             ErrorViewModel errorViewModel = CheckAuthorization();
