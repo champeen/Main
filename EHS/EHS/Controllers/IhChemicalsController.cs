@@ -10,121 +10,96 @@ namespace EHS.Controllers
     {
         private readonly EHSContext _db;
         private readonly ChemicalIngestService _svc;
+
         public IhChemicalsController(EHSContext db, ChemicalIngestService svc)
         { _db = db; _svc = svc; }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var vm = new IhChemicalsIndexViewModel
-            {
-                Recent = await _db.ih_chemical
-                    .OrderByDescending(c => c.Id)
-                    .Select(c => new IhChemHistoryRow
-                    {
-                        Id = c.Id,
-                        CasNumber = c.CasNumber,
-                        PreferredName = c.PreferredName,
-                        PubChemCid = c.PubChemCid,
-                        SynonymCount = c.Synonyms.Count,
-                        PropertyCount = c.Properties.Count,
-                        HazardCount = c.Hazards.Count,
-                        OelCount = c.OELs.Count,
-                        SamplingCount = c.SamplingMethods.Count
-                    })
-                    .Take(25)
-                    .ToListAsync()
-            };
-            return View(vm);
-        }
-
-        // FETCH ONLY
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(IhChemicalsIndexViewModel vm)
-        {
-            if (string.IsNullOrWhiteSpace(vm.CasInput))
-                ModelState.AddModelError("CasInput", "CAS number is required.");
-
-            vm.Recent = await _db.ih_chemical
-                .OrderByDescending(c => c.Id)
-                .Select(c => new IhChemHistoryRow
-                {
-                    Id = c.Id,
-                    CasNumber = c.CasNumber,
-                    PreferredName = c.PreferredName,
-                    PubChemCid = c.PubChemCid,
-                    SynonymCount = c.Synonyms.Count,
-                    PropertyCount = c.Properties.Count,
-                    HazardCount = c.Hazards.Count,
-                    OelCount = c.OELs.Count,
-                    SamplingCount = c.SamplingMethods.Count
-                })
-                .Take(25)
-                .ToListAsync();
-
-            if (!ModelState.IsValid) return View(vm);
-
-            var (dto, unavailable) = await _svc.FetchByCasWithStatusAsync(vm.CasInput.Trim());
-            vm.Result = dto;
-            vm.UnavailableSources = unavailable.Distinct().ToList();
-            return View(vm);
-        }
-
+        // GET /IhChemicals?cas=50-00-0   (optional "cas")
         [HttpGet]
         public async Task<IActionResult> Index(string? cas, CancellationToken ct = default)
         {
-            var vm = new EHS.ViewModels.IhChemicalsIndexViewModel
+            var vm = new IhChemicalsIndexViewModel
             {
                 Recent = await _svc.GetRecentAsync(25, ct)
             };
 
-            if (!string.IsNullOrWhiteSpace(cas))
-            {
-                // 1) Try DB first (verifies what we saved)
-                var dtoFromDb = await _svc.BuildDtoFromDbAsync(cas, ct);
-                if (dtoFromDb != null)
-                {
-                    vm.Result = dtoFromDb;
-                    // optional: vm.UnavailableSources = new List<string> { "Loaded from database." };
-                    return View(vm);
-                }
+            if (string.IsNullOrWhiteSpace(cas))
+                return View(vm);
 
-                // 2) Fallback: live fetch if not in DB yet
-                var (dto, unavailable) = await _svc.FetchByCasWithStatusAsync(cas, ct);
-                vm.Result = dto;
-                vm.UnavailableSources = unavailable;
+            cas = cas.Trim();
+
+            // 1) Try DB first so the page reflects exactly what was saved
+            var dtoFromDb = await _svc.BuildDtoFromDbAsync(cas);
+            if (dtoFromDb != null)
+            {
+                vm.Result = dtoFromDb;
+
+                var existing = await _db.ih_chemical
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.CasNumber == cas, ct);
+
+                vm.ExistsAlready = existing != null;
+                vm.ExistingId = existing?.Id;
+                // vm.ExistingUpdatedAt = existing?.UpdatedAt; // if you add this col later
+
+                return View(vm);
+            }
+
+            // 2) Fallback to live fetch if not in DB
+            var (dto, unavailable) = await _svc.FetchByCasWithStatusAsync(cas, ct);
+            vm.Result = dto;
+            vm.UnavailableSources = unavailable?.Distinct().ToList();
+
+            // Even if we fetched live, check whether the DB already has a record for this CAS
+            var existingLive = await _db.ih_chemical
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.CasNumber == dto.CasNumber, ct);
+
+            if (existingLive != null)
+            {
+                vm.ExistsAlready = true;
+                vm.ExistingId = existingLive.Id;
+                // vm.ExistingUpdatedAt = existingLive.UpdatedAt;
             }
 
             return View(vm);
         }
 
-        // SAVE after reviewing fetched data
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Save(string cas)
-        //{
-        //    if (string.IsNullOrWhiteSpace(cas))
-        //    {
-        //        TempData["Toast"] = "No CAS provided to save.";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    var dto = await _svc.IngestByCasAsync(cas.Trim());
-        //    // Look up saved record id for redirect
-        //    var id = await _db.ih_chemical
-        //        .Where(c => c.CasNumber == dto.CasNumber)
-        //        .Select(c => c.Id)
-        //        .FirstOrDefaultAsync();
-
-        //    TempData["Toast"] = $"Saved data for CAS {dto.CasNumber}.";
-        //    if (id == 0) return RedirectToAction(nameof(Index));
-        //    return RedirectToAction(nameof(Details), new { id });
-        //}
-
+        // FETCH ONLY (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Save(string cas, CancellationToken ct = default)
+        public async Task<IActionResult> Index(IhChemicalsIndexViewModel vm, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(vm.CasInput))
+                ModelState.AddModelError("CasInput", "CAS number is required.");
+
+            // Keep the “recent” list consistent by using the service here too
+            vm.Recent = await _svc.GetRecentAsync(25, ct);
+
+            if (!ModelState.IsValid) return View(vm);
+
+            var cas = vm.CasInput.Trim();
+            var (dto, unavailable) = await _svc.FetchByCasWithStatusAsync(cas, ct);
+
+            vm.Result = dto;
+            vm.UnavailableSources = unavailable?.Distinct().ToList();
+
+            // Flag existence so the view can warn and the Save click will show the modal
+            var existing = await _db.ih_chemical
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.CasNumber == dto.CasNumber, ct);
+
+            vm.ExistsAlready = existing != null;
+            vm.ExistingId = existing?.Id;
+            // vm.ExistingUpdatedAt = existing?.UpdatedAt;
+
+            return View(vm);
+        }
+
+        // SAVE (with overwrite guard)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Save(string cas, bool OverwriteConfirmed = false, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(cas))
             {
@@ -132,14 +107,51 @@ namespace EHS.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Use the same live fetch pipeline you already have
+            cas = cas.Trim();
+
+            // Does a record already exist?
+            var existing = await _db.ih_chemical
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.CasNumber == cas, ct);
+
+            var existsAlready = existing != null;
+
+            if (existsAlready && !OverwriteConfirmed)
+            {
+                // Build the page back with fetched preview + force the overwrite modal to open
+                var vm = new IhChemicalsIndexViewModel
+                {
+                    Recent = await _svc.GetRecentAsync(25, ct),
+                    OpenOverwriteModal = true,
+                    ExistsAlready = true,
+                    ExistingId = existing?.Id,
+                    // ExistingUpdatedAt = existing?.UpdatedAt
+                };
+
+                var (dtoPreview, unavailable) = await _svc.FetchByCasWithStatusAsync(cas, ct);
+                vm.Result = dtoPreview;
+                vm.UnavailableSources = unavailable?.Distinct().ToList();
+
+                // Optional: model-level message (shows if you render validation summary)
+                ModelState.AddModelError(string.Empty, "A record for this CAS already exists. Confirm overwrite to continue.");
+
+                return View("Index", vm);
+            }
+
+            // Proceed to fetch current data and upsert (overwrite if exists)
             var (dto, _) = await _svc.FetchByCasWithStatusAsync(cas, ct);
 
-            // Persist everything you care about
-            await _svc.UpsertFromDtoAsync(dto, ct);
+            // Overwrite or insert via your service
+            await _svc.UpsertFromDtoAsync(dto, CancellationToken.None);
 
-            TempData["Toast"] = $"Saved: {dto.PreferredName ?? dto.CasNumber}";
-            // After save, show what’s in the DB:
+            TempData["Toast"] = existsAlready
+                ? $"Updated existing: {dto.PreferredName ?? dto.CasNumber}"
+                : $"Saved: {dto.PreferredName ?? dto.CasNumber}";
+
+            // **NEW**: mark that we just saved so the view shows a green success banner instead of the yellow warning
+            TempData["JustSaved"] = "true";
+
+            // After save, land on GET /Index?cas=... so the page shows what's stored
             return RedirectToAction(nameof(Index), new { cas = dto.CasNumber });
         }
 
@@ -166,7 +178,14 @@ namespace EHS.Controllers
                 chem.SamplingMethods.ToList()
             );
 
-            var vm = new IhChemicalsIndexViewModel { Result = dto };
+            var vm = new IhChemicalsIndexViewModel
+            {
+                Result = dto,
+                ExistsAlready = true,
+                ExistingId = chem.Id
+                // ExistingUpdatedAt = chem.UpdatedAt
+            };
+
             return View("Index", vm);
         }
     }

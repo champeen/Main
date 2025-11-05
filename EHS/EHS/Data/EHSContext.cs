@@ -74,6 +74,27 @@ namespace EHS.Data
             modelBuilder.Entity<IhChemicalOel>().HasIndex(x => new { x.IhChemicalId, x.Source, x.Type });
             modelBuilder.Entity<IhChemicalSamplingMethod>().HasIndex(x => new { x.IhChemicalId, x.Source, x.MethodId }).IsUnique();
 
+            // --- Performance indexes for foreign key lookups ---
+            modelBuilder.Entity<IhChemicalProperty>()
+                .HasIndex(x => x.IhChemicalId)
+                .HasDatabaseName("ix_ih_chemical_property_ihchemicalid");
+
+            modelBuilder.Entity<IhChemicalSynonym>()
+                .HasIndex(x => x.IhChemicalId)
+                .HasDatabaseName("ix_ih_chemical_synonym_ihchemicalid");
+
+            modelBuilder.Entity<IhChemicalHazard>()
+                .HasIndex(x => x.IhChemicalId)
+                .HasDatabaseName("ix_ih_chemical_hazard_ihchemicalid");
+
+            modelBuilder.Entity<IhChemicalOel>()
+                .HasIndex(x => x.IhChemicalId)
+                .HasDatabaseName("ix_ih_chemical_oel_ihchemicalid");
+
+            modelBuilder.Entity<IhChemicalSamplingMethod>()
+                .HasIndex(x => x.IhChemicalId)
+                .HasDatabaseName("ix_ih_chemical_sampling_method_ihchemicalid");
+
             modelBuilder.Entity<IhChemicalSynonym>()
             .HasOne(s => s.IhChemical)
             .WithMany(c => c.Synonyms)

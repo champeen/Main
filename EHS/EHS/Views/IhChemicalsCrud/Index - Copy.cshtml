@@ -1,0 +1,46 @@
+﻿@model IEnumerable<EHS.Controllers.IhChemicalListRow>
+
+@{
+    ViewData["Title"] = "IH Chemicals";
+}
+
+<h1>IH Chemicals</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-sm btn-success">Create New</a>
+</p>
+
+<div class="table-responsive">
+    <table class="table table-sm table-striped align-middle">
+        <thead>
+            <tr>
+                <th>CAS Number</th>
+                <th>Preferred Name</th>
+                <th class="text-center">Properties</th>
+                <th class="text-center">Synonyms</th>
+                <th class="text-center">Hazards</th>
+                <th class="text-center">OELs</th>
+                <th class="text-center">Sampling Methods</th>
+                <th ></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in Model)
+            {
+                <tr>
+                    <td>@row.CasNumber</td>
+                    <td>@row.PreferredName</td>
+                    <td class="text-center">@row.PropertyCount</td>
+                    <td class="text-center">@row.SynonymCount</td>
+                    <td class="text-center">@row.HazardCount</td>
+                    <td class="text-center">@row.OelCount</td>
+                    <td class="text-center">@row.SamplingCount</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@row.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@row.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

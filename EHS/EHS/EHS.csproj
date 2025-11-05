@@ -6,16 +6,25 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="8.0.17" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
-  </ItemGroup>
+<ItemGroup>
+  <!-- EF Core runtime -->
+  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.11" />
+
+  <!-- EF Core tools (design-time) -->
+  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+  </PackageReference>
+
+  <!-- Npgsql EF Core provider -->
+  <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.10" />
+
+  <!-- Your other packages -->
+  <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="8.0.17" />
+  <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7" />
+  <PackageReference Include="HtmlAgilityPack" Version="1.12.2" />
+</ItemGroup>
 
   <ItemGroup>
     <None Include="Models\seg_risk_assessment.cs" />

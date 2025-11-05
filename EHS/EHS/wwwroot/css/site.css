@@ -77,7 +77,7 @@ html.dark-mode body {
     html.dark-mode textarea,
     html.dark-mode p,
     /*html.dark-mode span,*/
-    html.dark-mode div,
+    /*html.dark-mode div,*/
     html.dark-mode li,
     html.dark-mode h1,
     html.dark-mode h2,
@@ -804,3 +804,43 @@ body.dark-mode .alert.alert-warning {
 .dark-mode .modal-backdrop.show {
     opacity: .7;
 }
+
+/* Toast tweaks for light/dark */
+.toast.text-bg-success {
+    /* keep Bootstrap coloring, just soften corners/shadow */
+    border-radius: 0.75rem;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+
+.dark-mode .toast.text-bg-success {
+    /* ensure readable contrast in dark */
+    background-color: #198754 !important; /* bs-success */
+    color: #e9f7ef !important;
+}
+
+/* Dark mode: let alerts use their own variable palette */
+html.dark-mode .alert {
+    background-color: var(--bs-alert-bg) !important;
+    color: var(--bs-alert-color) !important;
+    border-color: var(--bs-alert-border-color) !important;
+}
+
+/* Success in dark mode */
+html.dark-mode .alert-success {
+    /* Works for BS 5.1 (direct colors) and 5.3 (variables) */
+    --bs-alert-color: #e9f7ef; /* readable light text */
+    --bs-alert-bg: rgba(25, 135, 84, 0.25); /* success-green tinted bg */
+    --bs-alert-border-color: rgba(25, 135, 84, 0.5);
+}
+
+    /* Ensure nested “muted” text doesn’t disappear */
+    html.dark-mode .alert-success .text-muted {
+        color: #e9f7ef !important;
+        opacity: 0.85;
+    }
+
+    /* Make the success icon pop on dark */
+    html.dark-mode .alert-success .bi {
+        color: #75b798 !important; /* success-subtle tone */
+    }
+
