@@ -1,0 +1,877 @@
+﻿@model EHS.Models.IH.IhChemical
+@using System
+@using System.Linq
+@using System.Collections.Generic
+@using EHS.Models.IH
+@using EHS.Utilities
+
+@{
+    ViewData["Title"] = "Chemical Details";
+}
+
+<style>
+    /* Borrow small helpers so this page visually matches your fetch UI */
+
+    .ppe-list {
+        margin: 0;
+        padding-left: 1.1rem;
+        line-height: 1.45;
+    }
+
+    .dark-mode .ppe-list {
+        color: #e9ecef;
+    }
+
+    .status-modal .modal-dialog {
+        max-width: 420px;
+    }
+
+    .status-modal .modal-content {
+        border-radius: 1rem;
+    }
+
+    .status-modal .modal-body {
+        font-size: .975rem;
+    }
+</style>
+
+@{
+    // ---- Build a case-insensitive dictionary of Core Properties from the DB ----
+    // Assumes IhChemicalProperty { string Key; string? Value; }
+    var propsDict = (Model?.Properties ?? new List<IhChemicalProperty>())
+        .GroupBy(p => p.Key ?? string.Empty, StringComparer.OrdinalIgnoreCase)
+        .ToDictionary(g => g.Key, g => g.Select(x => x.Value ?? "").FirstOrDefault() ?? "",
+                      StringComparer.OrdinalIgnoreCase);
+
+    string Get(string key) =>
+        propsDict.TryGetValue(key, out var v) ? (v ?? "") : "";
+
+    // Filtered Core Properties (keep Flat, hide structured PPE keys)
+    var filteredProps = propsDict
+        .Where(kv => !(kv.Key.StartsWith("PPE (NPG):", StringComparison.OrdinalIgnoreCase)
+                       && !kv.Key.Equals("PPE (NPG): Flat", StringComparison.OrdinalIgnoreCase)))
+        .OrderBy(k => k.Key)
+        .ToList();
+    var propsCount = filteredProps.Count;
+
+    // Push "PPE (NPG): Flat" to the very end of Core Properties
+    var flatKey = "PPE (NPG): Flat";
+    var flatIndex = filteredProps.FindIndex(kv => kv.Key.Equals(flatKey, StringComparison.OrdinalIgnoreCase));
+    if (flatIndex >= 0)
+    {
+        var flat = filteredProps[flatIndex];
+        filteredProps.RemoveAt(flatIndex);
+        filteredProps.Add(flat);
+    }
+
+    // PPE keys (same canonical set you used on the fetch page)
+    string personalRaw = Get("PPE (NPG): Personal protection & sanitation");
+
+    string aboveRaw = Get("PPE (NPG): Respirator — above REL/detectable");
+    if (string.IsNullOrWhiteSpace(aboveRaw))
+        aboveRaw = Get("PPE (NPG): Respirator — above REL / detectable"); // legacy spacing
+
+    string escapeRaw = Get("PPE (NPG): Respirator — escape");
+
+    // Flat fallback
+    string flatRaw = Get("PPE (NPG): Flat");
+
+    // --- helpers copied from your fetch view (trimmed to what's needed here) ---
+    string Clean(string s) => System.Text.RegularExpressions.Regex.Replace(s ?? "", @"\s+", " ").Trim();
+
+    bool IsChrome(string l)
+    {
+        if (string.IsNullOrWhiteSpace(l)) return true;
+        var t = l;
+        string[] chrome =
+        {
+            "Page last reviewed:", "Content source:", "NIOSH Homepage",
+            "Workplace Safety & Health Topics", "Follow NIOSH",
+            "NIOSH Pocket Guide to Chemical Hazards", "Introduction",
+            "Related Pages", "Appendices expand", "Search the Pocket Guide"
+        };
+        return chrome.Any(c => t.IndexOf(c, StringComparison.OrdinalIgnoreCase) >= 0);
+    }
+
+    string ExtractBetween(string text, string startMarker, string endMarker)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var t = text;
+        var si = t.IndexOf(startMarker, StringComparison.OrdinalIgnoreCase);
+        if (si < 0) return "";
+        si += startMarker.Length;
+        var ei = t.IndexOf(endMarker, si, StringComparison.OrdinalIgnoreCase);
+        if (ei < 0) ei = t.Length;
+        return t.Substring(si, ei - si);
+    }
+
+    string ExtractFrom(string text, string startMarker)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return "";
+        var t = text;
+        var si = t.IndexOf(startMarker, StringComparison.OrdinalIgnoreCase);
+        if (si < 0) return "";
+        return t.Substring(si + startMarker.Length);
+    }
+
+    bool LooksLikeResp(string s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return false;
+        var t = Clean(s);
+
+        if (t.StartsWith("Respirator Recommendations", StringComparison.OrdinalIgnoreCase)) return false;
+        if (t.StartsWith("NIOSH/OSHA", StringComparison.OrdinalIgnoreCase)) return false;
+
+        if (System.Text.RegularExpressions.Regex.IsMatch(t,
+            @"\b(Target Organs|Symptoms|First Aid|Personal Protection/Sanitation|Exposure Limits?|Measurement Methods|Physical Description)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            return false;
+
+        if (t.StartsWith("Emergency or planned entry into unknown concentrations or IDLH conditions", StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (System.Text.RegularExpressions.Regex.IsMatch(t, @"APF\s*=\s*10,?000", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            return true;
+
+        if (t.StartsWith("(APF", StringComparison.OrdinalIgnoreCase)) return true;
+        if (t.StartsWith("At concentrations", StringComparison.OrdinalIgnoreCase)) return true;
+        if (t.StartsWith("Escape", StringComparison.OrdinalIgnoreCase)) return true;
+        if (t.StartsWith("Up to ", StringComparison.OrdinalIgnoreCase)) return true;
+
+        var hasRespKeyword = System.Text.RegularExpressions.Regex.IsMatch(t,
+            @"\b(APF|SCBA|self[-\s]?contained|supplied[-\s]?air|SAR|air[-\s]?line|positive[-\s]?pressure|gas mask|full[-\s]?facepiece|half[-\s]?facepiece|P[0-9]{2}|cartridge|canister|air[-\s]?purifying|respirator|escape)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        if (!hasRespKeyword) return false;
+
+        var hasRecForm = t.StartsWith("Any ", StringComparison.OrdinalIgnoreCase) ||
+                         t.StartsWith("Use ", StringComparison.OrdinalIgnoreCase);
+
+        if (hasRecForm) return true;
+
+        var hasAnyApf = System.Text.RegularExpressions.Regex.IsMatch(t, @"\bAPF\s*=\s*[\d,]+", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        return hasAnyApf;
+    }
+
+    bool LooksLikePersonal(string s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return false;
+        var t = Clean(s);
+
+        if (System.Text.RegularExpressions.Regex.IsMatch(t, @"\b(First Aid|Symptoms|Target Organs|Carcinogen|TLV|REL|PEL|NIOSH|OSHA|ACGIH|Respirator|Escape|APF|Exposure Limit|Concentration|Recommendations)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+            return false;
+
+        if (System.Text.RegularExpressions.Regex.IsMatch(t, @"^[A-Za-z][A-Za-z \-/]{2,40}\s*:\s*.+$"))
+            return true;
+
+        return System.Text.RegularExpressions.Regex.IsMatch(
+            t,
+            @"\b(glove|goggles?|eye(?:wear| protection)?|face(?:\s|[\p{Pd}])?shield|faceshield|face\W*protection|apron|protective clothing|impervious|wash skin|remove clothing|change clothing|eyewash|quick drench|contact lenses?)\b",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase | System.Text.RegularExpressions.RegexOptions.CultureInvariant
+        )
+        || t.StartsWith("Avoid ", StringComparison.OrdinalIgnoreCase)
+        || t.StartsWith("Do not ", StringComparison.OrdinalIgnoreCase)
+        || t.StartsWith("Provide ", StringComparison.OrdinalIgnoreCase);
+    }
+
+    string FixParens(string t)
+    {
+        if (string.IsNullOrWhiteSpace(t)) return t;
+        int opens = t.Count(ch => ch == '(');
+        int closes = t.Count(ch => ch == ')');
+        if (opens > closes) t = t + new string(')', opens - closes);
+        return t;
+    }
+
+    List<string> SplitBullets(string s)
+    {
+        if (string.IsNullOrWhiteSpace(s)) return new();
+
+        var lines = s.Replace("\r", "")
+                     .Split('\n', StringSplitOptions.RemoveEmptyEntries)
+                     .Select(t => t.Trim())
+                     .Where(t => t.Length > 0)
+                     .ToList();
+
+        var expanded = new List<string>();
+        foreach (var line in lines)
+        {
+            var parts = line.Split('•', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var p in parts) expanded.Add(p.Trim());
+        }
+
+        lines = expanded.Select(t => t.TrimStart('•').Trim())
+                        .Where(t => t.Length > 0 && !IsChrome(t))
+                        .ToList();
+
+        var merged = new List<string>();
+        bool IsStandaloneApf(string x) =>
+            System.Text.RegularExpressions.Regex.IsMatch(
+                x ?? "", @"^\(?\s*APF\s*=\s*[\d,]+\s*\)?$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        for (int i = 0; i < lines.Count; i++)
+        {
+            var cur = lines[i];
+            if (IsStandaloneApf(cur) && i + 1 < lines.Count && !IsStandaloneApf(lines[i + 1]))
+            {
+                merged.Add($"{cur} — {lines[i + 1]}");
+                i++;
+            }
+            else merged.Add(cur);
+        }
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var outList = new List<string>();
+        foreach (var m in merged.Select(Clean))
+        {
+            var fixedLine = FixParens(m);
+            if (fixedLine.Length > 0 && seen.Add(fixedLine)) outList.Add(fixedLine);
+        }
+        return outList;
+    }
+
+    // Build PPE lists from properties
+    var personalList = SplitBullets(personalRaw).Where(LooksLikePersonal).ToList();
+    var aboveList = SplitBullets(aboveRaw).Where(LooksLikeResp).ToList();
+    var escapeList = SplitBullets(escapeRaw).Where(LooksLikeResp).ToList();
+
+    if (!string.IsNullOrWhiteSpace(flatRaw))
+    {
+        var aboveBlockRaw = ExtractBetween(flatRaw, "Respirator Recommendations", "Escape:");
+        var escapeBlockRaw = ExtractFrom(flatRaw, "Escape:");
+
+        if (string.IsNullOrWhiteSpace(aboveBlockRaw) && string.IsNullOrWhiteSpace(escapeBlockRaw))
+        {
+            aboveBlockRaw = flatRaw;
+            escapeBlockRaw = "";
+        }
+
+        var flatAbove = SplitBullets(aboveBlockRaw).Where(LooksLikeResp).ToList();
+        var flatEscape = SplitBullets(escapeBlockRaw).Where(LooksLikeResp).ToList();
+
+        if (!personalList.Any())
+        {
+            var allFlat = SplitBullets(flatRaw);
+            personalList = allFlat.Where(LooksLikePersonal).ToList();
+        }
+
+        if (!aboveList.Any()) aboveList = flatAbove;
+        if (!escapeList.Any()) escapeList = flatEscape;
+
+        var aboveSet = new HashSet<string>(aboveList, StringComparer.OrdinalIgnoreCase);
+        escapeList = escapeList.Where(x => !aboveSet.Contains(x)).ToList();
+    }
+
+    var leftTitle = personalList.Any() ? "Personal protection & sanitation" : "Respirator — above REL / detectable";
+    var leftList = personalList.Any() ? personalList : aboveList;
+    var rightTitle = "Respirator — escape";
+    var rightList = escapeList;
+
+    if (!rightList.Any() && !personalList.Any() && aboveList.Count > 6)
+    {
+        int mid = aboveList.Count / 2;
+        leftList = aboveList.Take(mid).ToList();
+        rightList = aboveList.Skip(mid).ToList();
+        rightTitle = "Respirator — (continued)";
+    }
+
+    int ppeCount = (personalList?.Count ?? 0) + (aboveList?.Count ?? 0) + (escapeList?.Count ?? 0);
+
+    // // Filtered Core Properties (keep Flat, hide structured PPE keys)
+    // var filteredProps = propsDict
+    //     .Where(kv => !(kv.Key.StartsWith("PPE (NPG):", StringComparison.OrdinalIgnoreCase)
+    //                    && !kv.Key.Equals("PPE (NPG): Flat", StringComparison.OrdinalIgnoreCase)))
+    //     .OrderBy(k => k.Key)
+    //     .ToList();
+    // var propsCount = filteredProps.Count;
+
+    // Helpers for safe access to related items
+    string SynText(IhChemicalSynonym s) => s?.Synonym ?? ""; // adjust if your entity differs
+}
+
+<div class="container-fluid py-3">
+    <div class="row g-3 justify-content-center">
+        <div class="col-12 col-xxl-9">
+
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-body py-2 d-flex justify-content-between align-items-center">
+                    <h1 class="h3 mb-0">Industrial Hygiene — Chemical Details</h1>
+                    <a class="btn btn-outline-secondary btn-sm" asp-action="Index">Back to List</a>
+                </div>
+            </div>
+
+            <!-- Header card -->
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-body">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                            <div class="small text-muted">CAS Number</div>
+                            <div class="fw-semibold">@Model?.CasNumber</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="small text-muted">Preferred Name</div>
+                            <div class="fw-semibold">@Model?.PreferredName</div>
+                        </div>
+                        <div class="col-md-2 text-md-end">
+                            @if (Model?.PubChemCid != null)
+                            {
+                                <span class="badge bg-secondary">CID @Model.PubChemCid</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Properties -->
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        Core Properties
+                        <span class="text-muted">(@propsCount)</span>
+                    </h6>
+                    @if (propsCount == 0)
+                    {
+                        <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-outline-primary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseCoreProps"
+                                aria-expanded="false" aria-controls="collapseCoreProps">
+                            Expand
+                        </button>
+                    }
+                </div>
+                <div id="collapseCoreProps" class="collapse">
+                    <div class="card-body">
+                        @if (propsCount > 0)
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <tbody>
+                                        @{
+                                            // split Core Properties into: everything-except-Flat, and the Flat row
+                                            var flat = filteredProps.FirstOrDefault(kv =>
+                                            kv.Key.Equals("PPE (NPG): Flat", StringComparison.OrdinalIgnoreCase));
+
+                                            var others = filteredProps.Where(kv =>
+                                            !kv.Key.Equals("PPE (NPG): Flat", StringComparison.OrdinalIgnoreCase));
+                                        }
+
+                                        @* regular rows *@
+                                        @foreach (var kv in others)
+                                        {
+                                            <tr>
+                                                <th class="text-nowrap" style="width:260px">@kv.Key</th>
+                                                <td>@kv.Value</td>
+                                            </tr>
+                                        }
+
+                                        @* special row for 'PPE (NPG): Flat' — moved to the end and collapsed by default *@
+                                        @if (!string.IsNullOrWhiteSpace(flat.Key))
+                                        {
+                                            var full = flat.Value ?? "";
+                                            var preview = full.Length > 160 ? (full.Substring(0, 160) + "…") : full;
+                                            var collapseId = $"flatPpe_{(Model?.Id.ToString() ?? Guid.NewGuid().ToString("N"))}";
+                                            <tr>
+                                                <th class="text-nowrap" style="width:260px">@flat.Key</th>
+                                                <td>
+                                                    <div class="text-muted small">Preview:</div>
+                                                    <div class="mb-1">@preview</div>
+
+                                                    <button class="btn btn-link btn-sm p-0 mt-1 flat-toggle"
+                                                            type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#@collapseId"
+                                                            aria-expanded="false"
+                                                            aria-controls="@collapseId">
+                                                        Show full text
+                                                    </button>
+
+                                                    <div id="@collapseId" class="collapse mt-2">
+                                                        <pre class="mb-0 small" style="white-space: pre-wrap;">@full</pre>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary float-end my-2" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseCoreProps"
+                                    aria-expanded="false" aria-controls="collapseCoreProps">
+                                Collapse
+                            </button>
+                        }
+                        else
+                        {
+                            <div class="text-muted">No data found.</div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Synonyms -->
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        Synonyms
+                        <span class="text-muted">(@(Model?.Synonyms?.Count ?? 0))</span>
+                    </h6>
+                    @if ((Model?.Synonyms?.Count ?? 0) == 0)
+                    {
+                        <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-outline-primary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseSynonyms"
+                                aria-expanded="false" aria-controls="collapseSynonyms">
+                            Expand
+                        </button>
+                    }
+                </div>
+                <div id="collapseSynonyms" class="collapse">
+                    <div class="card-body">
+                        <ul class="mt-2 mb-0" style="columns: 3; -webkit-columns: 3; -moz-columns: 3;">
+                            @foreach (var s in (Model?.Synonyms ?? new List<IhChemicalSynonym>()))
+                            {
+                                <li>@SynText(s)</li>
+                            }
+                        </ul>
+                        <button class="btn btn-sm btn-outline-primary float-end my-2" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseSynonyms"
+                                aria-expanded="false" aria-controls="collapseSynonyms">
+                            Collapse
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hazards -->
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        Hazards: GHS, NFPA 704, HMIS, Toxicology
+                        <span class="text-muted">(@(Model?.Hazards?.Count ?? 0))</span>
+                    </h6>
+                    @if ((Model?.Hazards?.Count ?? 0) == 0)
+                    {
+                        <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-outline-primary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseHazards"
+                                aria-expanded="false" aria-controls="collapseHazards">
+                            Expand
+                        </button>
+                    }
+                </div>
+                <div id="collapseHazards" class="collapse">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle">
+                                <thead>
+                                    <tr>
+                                        <th style="width:160px">Source</th>
+                                        <th style="width:100px">Code</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var h in (Model?.Hazards ?? new List<IhChemicalHazard>()))
+                                    {
+                                        <tr>
+                                            <td>@h.Source</td>
+                                            <td>@h.Code</td>
+                                            <td>@h.Description</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary float-end mb-2" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseHazards"
+                                aria-expanded="false" aria-controls="collapseHazards">
+                            Collapse
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OELs -->
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        Occupational Exposure Limits (OSHA PEL / NIOSH REL / ACGIH TLV / Cal/OSHA)
+                        <span class="text-muted">(@(Model?.OELs?.Count ?? 0))</span>
+                    </h6>
+                    @if ((Model?.OELs?.Count ?? 0) == 0)
+                    {
+                        <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-outline-primary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseOEL"
+                                aria-expanded="false" aria-controls="collapseOEL">
+                            Expand
+                        </button>
+                    }
+                </div>
+                <div id="collapseOEL" class="collapse">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Source
+                                            <span id="oelSourceInfo"
+                                                  role="button"
+                                                  tabindex="0"
+                                                  data-bs-toggle="tooltip"
+                                                  data-bs-placement="top"
+                                                  title="What are these sources?">
+                                                <i class="bi bi-info-circle-fill text-primary"></i>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            Type
+                                            <span id="oelTypeInfo"
+                                                  role="button"
+                                                  tabindex="0"
+                                                  data-bs-toggle="tooltip"
+                                                  data-bs-placement="top"
+                                                  title="What do these types mean?">
+                                                <i class="bi bi-info-circle-fill text-primary"></i>
+                                            </span>
+                                        </th>
+                                        <th>Value</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var o in (Model?.OELs ?? new List<IhChemicalOel>()))
+                                    {
+                                        <tr>
+                                            <td>@o.Source</td>
+                                            <td>@OelText.PrettyType(o.Type, o.Notes)</td>
+                                            <td>@o.Value</td>
+                                            <td>@o.Notes</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary float-end mb-2" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseOEL"
+                                aria-expanded="false" aria-controls="collapseOEL">
+                            Collapse
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PPE (from NIOSH Pocket Guide) -->
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        Personal Protective Equipment (from NIOSH Pocket Guide)
+                        <span class="text-muted">(@ppeCount)</span>
+                    </h6>
+                    @if (ppeCount > 0)
+                    {
+                        <button class="btn btn-sm btn-outline-primary"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapsePPE"
+                                aria-expanded="false"
+                                aria-controls="collapsePPE">
+                            Expand
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                    }
+                </div>
+                <div id="collapsePPE" class="collapse">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="fw-bold mb-1">@leftTitle</div>
+                                @if (leftList.Any())
+                                {
+                                    <ul class="ppe-list">
+                                        @foreach (var line in leftList)
+                                        {
+                                            <li>@line</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <div class="text-muted small">No items found.</div>
+                                }
+                            </div>
+                            <div class="col-md-6">
+                                @if (personalList.Any() && aboveList.Any() && escapeList.Any())
+                                {
+                                    <div class="fw-bold mb-1">Respirator — above REL / detectable</div>
+                                    <ul class="ppe-list">
+                                        @foreach (var line in aboveList)
+                                        {
+                                            <li>@line</li>
+                                        }
+                                    </ul>
+                                    <hr class="my-3" />
+                                    <div class="fw-bold mb-1">Respirator — escape</div>
+                                    <ul class="ppe-list">
+                                        @foreach (var line in escapeList)
+                                        {
+                                            <li>@line</li>
+                                        }
+                                    </ul>
+                                    <div class="small text-muted mt-3">
+                                        Note: NIOSH recommendations are guidance, not regulatory limits.
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="fw-bold mb-1">@rightTitle</div>
+                                    @if (rightList.Any())
+                                    {
+                                        <ul class="ppe-list">
+                                            @foreach (var line in rightList)
+                                            {
+                                                <li>@line</li>
+                                            }
+                                        </ul>
+                                        <div class="small text-muted mt-3">
+                                            Note: NIOSH recommendations are guidance, not regulatory limits.
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-muted small">No items found.</div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary float-end mt-3 mb-2"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapsePPE"
+                                aria-expanded="false"
+                                aria-controls="collapsePPE">
+                            Collapse
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sampling Methods -->
+            <div class="card shadow-sm rounded-4 mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        Sampling Methods
+                        <span class="text-muted">(@(Model?.SamplingMethods?.Count ?? 0))</span>
+                    </h6>
+                    @if ((Model?.SamplingMethods?.Count ?? 0) == 0)
+                    {
+                        <button class="btn btn-sm btn-outline-secondary" type="button" disabled>No data</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-sm btn-outline-primary" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseMethods"
+                                aria-expanded="false" aria-controls="collapseMethods">
+                            Expand
+                        </button>
+                    }
+                </div>
+                <div id="collapseMethods" class="collapse">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Source</th>
+                                        <th>Method</th>
+                                        <th>Link</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var m in (Model?.SamplingMethods ?? new List<IhChemicalSamplingMethod>()))
+                                    {
+                                        <tr>
+                                            <td>@m.Source</td>
+                                            <td>@m.MethodId</td>
+                                            <td>
+                                                @if (!string.IsNullOrWhiteSpace(m.Url))
+                                                {
+                                                    <a href="@m.Url" target="_blank" rel="noopener">Open</a>
+                                                    <div class="small text-muted d-none d-md-block">@m.Url</div>
+                                                }
+                                                else
+                                                {
+                                                    var q = $"{m.Source} {m.MethodId} site:osha.gov filetype:pdf";
+                                                    <a href="https://www.google.com/search?q=@Uri.EscapeDataString(q)" target="_blank" rel="noopener">Search</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-sm btn-outline-primary float-end mb-2" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseMethods"
+                                aria-expanded="false" aria-controls="collapseMethods">
+                            Collapse
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OEL Type Legend Modal -->
+<div class="modal fade" id="oelLegendModal" tabindex="-1" aria-labelledby="oelLegendLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="oelLegendLabel">OEL Types — quick guide</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">TWA</dt>
+                    <dd class="col-sm-9">Time-Weighted Average over a standard 8-hour shift (unless noted). Average exposure.</dd>
+                    <dt class="col-sm-3">STEL</dt>
+                    <dd class="col-sm-9">Short-Term Exposure Limit, typically 15 minutes. Do not exceed.</dd>
+                    <dt class="col-sm-3">Ceiling</dt>
+                    <dd class="col-sm-9">Must never be exceeded at any time (instantaneous upper bound).</dd>
+                    <dt class="col-sm-3">Action Level</dt>
+                    <dd class="col-sm-9">Trigger for required actions (monitoring, medical surveillance, etc.). Often ½ PEL.</dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- OEL Sources Modal -->
+<div class="modal fade" id="oelSourceModal" tabindex="-1" aria-labelledby="oelSourceLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+            <div class="modal-header">
+                <h5 class="modal-title" id="oelSourceLabel">OEL Sources — what’s the difference?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2"><strong>OSHA (PEL)</strong>: U.S. regulatory limits. Legally enforceable for employers.</p>
+                <p class="mb-2"><strong>NIOSH (REL)</strong>: Research-based recommendations; not legally binding.</p>
+                <p class="mb-2"><strong>ACGIH (TLV)</strong>: Professional/consensus guidelines; not law but widely used.</p>
+                <p class="mb-0"><strong>Cal/OSHA</strong>: California’s state OSHA; may be more stringent than federal OSHA.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        // Toggle "Expand" <-> "Collapse" labels on header buttons
+        (function () {
+            document.querySelectorAll('.card-header [data-bs-toggle="collapse"]').forEach(function (btn) {
+                var targetSel = btn.getAttribute('data-bs-target');
+                var target = targetSel ? document.querySelector(targetSel) : null;
+                if (!target) return;
+
+                function syncLabel() {
+                    var isShown = target.classList.contains('show');
+                    btn.textContent = isShown ? 'Collapse' : 'Expand';
+                    btn.setAttribute('aria-expanded', String(isShown));
+                }
+                syncLabel();
+                target.addEventListener('show.bs.collapse', syncLabel);
+                target.addEventListener('hide.bs.collapse', syncLabel);
+                target.addEventListener('shown.bs.collapse', syncLabel);
+                target.addEventListener('hidden.bs.collapse', syncLabel);
+            });
+        })();
+
+        // Flat PPE "Show full text" <-> "Hide full text" toggler (scoped to .flat-toggle only)
+        document.addEventListener('click', function (e) {
+            const btn = e.target.closest('.flat-toggle');
+            if (!btn) return;
+            const sel = btn.getAttribute('data-bs-target');
+            const el  = sel ? document.querySelector(sel) : null;
+            if (!el) return;
+
+            // Let Bootstrap finish the collapse animation before reading state
+            setTimeout(() => {
+                const shown = el.classList.contains('show');
+                btn.textContent = shown ? 'Hide full text' : 'Show full text';
+            }, 200);
+        });
+
+        // OEL Help Tooltip Modals
+        document.addEventListener('DOMContentLoaded', function () {
+          // bootstrap tooltips for the little (i) icons
+          document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+            new bootstrap.Tooltip(el);
+          });
+
+          // helper to open a modal on hover or click (same pattern you used on Index)
+          function bindHoverModal(triggerId, modalId) {
+            var trigger = document.getElementById(triggerId);
+            var modalEl = document.getElementById(modalId);
+            if (!trigger || !modalEl) return;
+
+            var modal = new bootstrap.Modal(modalEl);
+            var timer, openedByHover = false;
+
+            trigger.addEventListener('mouseenter', function () {
+              timer = setTimeout(function () { modal.show(); openedByHover = true; }, 150);
+            });
+            trigger.addEventListener('mouseleave', function () {
+              if (timer) { clearTimeout(timer); timer = null; }
+              if (openedByHover) {
+                setTimeout(function () {
+                  var isOver = modalEl.matches(':hover') || trigger.matches(':hover');
+                  if (!isOver) { modal.hide(); openedByHover = false; }
+                }, 150);
+              }
+            });
+
+            // accessible open via click / keyboard
+            trigger.addEventListener('click', function () { modal.show(); openedByHover = false; });
+            trigger.addEventListener('keydown', function (e) {
+              if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); modal.show(); openedByHover = false; }
+            });
+            modalEl.addEventListener('mouseleave', function () {
+              if (openedByHover) { modal.hide(); openedByHover = false; }
+            });
+          }
+
+          // attach to our two header icons
+          bindHoverModal('oelTypeInfo', 'oelLegendModal');
+          bindHoverModal('oelSourceInfo', 'oelSourceModal');
+
+          // (keep your existing collapse label sync code here as-is)
+        });
+    </script>
+}

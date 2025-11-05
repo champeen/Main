@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EHS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EHS.Migrations
 {
     [DbContext(typeof(EHSContext))]
-    partial class EHSContextModelSnapshot : ModelSnapshot
+    [Migration("20250911151257_IhChem_Initial")]
+    partial class IhChem_Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1104,9 +1107,6 @@ namespace EHS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IhChemicalId")
-                        .HasDatabaseName("ix_ih_chemical_hazard_ihchemicalid");
-
                     b.HasIndex("IhChemicalId", "Source", "Code");
 
                     b.ToTable("ih_chemical_hazard", "ehs");
@@ -1139,9 +1139,6 @@ namespace EHS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IhChemicalId")
-                        .HasDatabaseName("ix_ih_chemical_oel_ihchemicalid");
-
                     b.HasIndex("IhChemicalId", "Source", "Type");
 
                     b.ToTable("ih_chemical_oel", "ehs");
@@ -1166,9 +1163,6 @@ namespace EHS.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IhChemicalId")
-                        .HasDatabaseName("ix_ih_chemical_property_ihchemicalid");
 
                     b.HasIndex("IhChemicalId", "Key")
                         .IsUnique();
@@ -1203,9 +1197,6 @@ namespace EHS.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IhChemicalId")
-                        .HasDatabaseName("ix_ih_chemical_sampling_method_ihchemicalid");
-
                     b.HasIndex("IhChemicalId", "Source", "MethodId")
                         .IsUnique();
 
@@ -1228,9 +1219,6 @@ namespace EHS.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IhChemicalId")
-                        .HasDatabaseName("ix_ih_chemical_synonym_ihchemicalid");
 
                     b.HasIndex("IhChemicalId", "Synonym")
                         .IsUnique();

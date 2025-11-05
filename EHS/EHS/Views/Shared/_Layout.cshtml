@@ -59,12 +59,23 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item dropdown mx-3">
-                            <a class="nav-link dropdown-toggle" href="#" id="ihDropdown" role="button" @* data-bs-toggle="dropdown" aria-expanded="false" *@>
+                            <a class="nav-link dropdown-toggle" href="#" id="ihDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Industrial Hygiene
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="ihDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-controller="seg_risk_assessment" asp-action="Index">Similar Exposure Group (SEG) Risk</a></li>
                                 <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Chemical Risk Assessment</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">IH Monitoring Methods</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Noise and Radiation Monitoring</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Ergonomics</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Monitoring Methods/Data</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Medical Surveillance & Fit Testing</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Results and Communication</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Calibration and Maintenance of Equipment</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Ventilation</a></li>
+                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Chain of Custody</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="IhChemicalsCrud" asp-action="Index" disabled="true">SK's Chemical Database</a></li>
                             </ul>
                         </li>
 

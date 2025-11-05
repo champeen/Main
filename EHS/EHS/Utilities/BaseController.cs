@@ -201,17 +201,28 @@ namespace EHS.Utilities
 
         public List<SelectListItem> getAgents(string? agentIn = null)
         {
-            // Create Dropdown List of Users...
+            // Create all agents setup (should no longer be chemicals in here, they are in a seperate table)...
             var agentList = _contextEHS.agent
                 .Where(m => m.deleted_date == null && m.display == true)
                 .OrderBy(m => m.sort_order)
                 .ThenBy(m => m.description)
                 .ToList();
+
+            // Get list of chemicals and add them to the agent list also....
+            var chemicalList = _contextEHS.ih_chemical.OrderBy(m=>m.PreferredName).ToList();
+
             List<SelectListItem> agents = new List<SelectListItem>();
             foreach (var agent in agentList)
             {
                 SelectListItem item = new SelectListItem { Value = agent.description, Text = agent.description };
                 if (agent.description == agentIn)
+                    item.Selected = true;
+                agents.Add(item);
+            }
+            foreach (var agent in chemicalList)
+            {
+                SelectListItem item = new SelectListItem { Value = agent.PreferredName, Text = agent.PreferredName };
+                if (agent.PreferredName == agentIn)
                     item.Selected = true;
                 agents.Add(item);
             }

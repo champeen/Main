@@ -1,0 +1,103 @@
+﻿@model EHS.Models.IH.IhChemical
+@using EHS.Models.IH
+
+@{
+    ViewData["Title"] = "Delete Chemical";
+    var synCount = Model?.Synonyms?.Count ?? 0;
+    var propCount = Model?.Properties?.Count ?? 0;
+    var hazCount = Model?.Hazards?.Count ?? 0;
+    var oelCount = Model?.OELs?.Count ?? 0;
+    var smCount = Model?.SamplingMethods?.Count ?? 0;
+    var anyChildren = (synCount + propCount + hazCount + oelCount + smCount) > 0;
+}
+
+<div class="container py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="card-title text-danger mb-0">Confirm Deletion</h2>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
+            </div>
+
+            <p class="mb-3">
+                Are you sure you want to delete this chemical? This action cannot be undone.
+            </p>
+
+            <div class="alert alert-warning d-flex align-items-start" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <div>
+                    <div class="fw-semibold mb-1">Cascade delete</div>
+                    Deleting this record will also remove all related data
+                    (Synonyms, Core Properties, Hazards, OELs, Sampling Methods) due to cascade rules.
+                    @if (anyChildren)
+                    {
+                        <div class="small mt-1 text-muted">
+                            Detected child rows: Properties @propCount • Synonyms @synCount • Hazards @hazCount • OELs @oelCount • Sampling Methods @smCount
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="table-responsive mb-3">
+                <table class="table table-bordered table-striped align-middle">
+                    <tbody>
+                        <tr>
+                            <th style="width: 260px">@Html.DisplayNameFor(m => m.CasNumber)</th>
+                            <td class="fw-semibold">@Html.DisplayFor(m => m.CasNumber)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.PreferredName)</th>
+                            <td>@Html.DisplayFor(m => m.PreferredName)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.PubChemCid)</th>
+                            <td>
+                                @if (Model?.PubChemCid != null)
+                                {
+                                    <span class="badge bg-secondary">CID @Model.PubChemCid</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">—</span>
+                                }
+                            </td>
+                        </tr>
+
+                        @* Optional: show child counts as separate rows *@
+                        <tr>
+                            <th>Core Properties</th>
+                            <td>@propCount</td>
+                        </tr>
+                        <tr>
+                            <th>Synonyms</th>
+                            <td>@synCount</td>
+                        </tr>
+                        <tr>
+                            <th>Hazards</th>
+                            <td>@hazCount</td>
+                        </tr>
+                        <tr>
+                            <th>OELs</th>
+                            <td>@oelCount</td>
+                        </tr>
+                        <tr>
+                            <th>Sampling Methods</th>
+                            <td>@smCount</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <form asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-trash-fill me-1"></i> Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

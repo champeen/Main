@@ -1,5 +1,6 @@
 ﻿using EHS.Data;
 using EHS.Models;
+using EHS.Models.Dropdowns;
 using EHS.Utilities;
 using EHS.ViewModels;
 using Microsoft.AspNetCore.DataProtection;
@@ -24,7 +25,7 @@ namespace EHS.Controllers
         // GET: seg_risk_assessments
         public async Task<IActionResult> Index()
         {
-            return View(await _contextEHS.seg_risk_assessment.Where(m=>m.deleted_date == null).OrderBy(m=>m.id).ToListAsync());
+            return View(await _contextEHS.seg_risk_assessment.Where(m => m.deleted_date == null).OrderBy(m => m.id).ToListAsync());
         }
 
         public async Task<IActionResult> Attachments(int? id)
@@ -196,6 +197,8 @@ namespace EHS.Controllers
             segViewModel.Username = _username;
 
             getDropdownSelectionLists();
+            ViewBag.Agents = GetAgentByExposureTypeList(seg_risk_assessments.exposure_type, seg_risk_assessments.agent);
+
             return View(segViewModel);
         }
 
@@ -240,6 +243,7 @@ namespace EHS.Controllers
             }
 
             getDropdownSelectionLists();
+            ViewBag.Agents = GetAgentByExposureTypeList(viewModel.seg_risk_assessment.exposure_type, viewModel.seg_risk_assessment.agent);
             return View(viewModel);
         }
 
@@ -263,7 +267,7 @@ namespace EHS.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var seg_risk_assessment = await _contextEHS.seg_risk_assessment.FindAsync(id);
-            if (seg_risk_assessment == null) 
+            if (seg_risk_assessment == null)
                 return NotFound();
 
             __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
@@ -346,10 +350,60 @@ namespace EHS.Controllers
         [HttpGet]
         public JsonResult GetAgentByExposureType(string exposureType)
         {
-            var agents = _contextEHS.agent.Where(s => s.exposure_type == exposureType && s.deleted_date == null && s.display == true)
-                                        .Select(s => new { s.description })
-                                        .OrderBy(s => s.description).ToList();
-            return Json(agents);
+            if (exposureType == "Chemical")
+            {
+                var agents = _contextEHS.ih_chemical
+                    .Select(s => new {description = s.PreferredName})
+                    .OrderBy(m => m.description)
+                    .ToList();
+                return Json(agents);
+            }
+            else
+            {
+                var agents = _contextEHS.agent
+                    .Where(s => s.exposure_type == exposureType && s.deleted_date == null && s.display == true)
+                    .Select(s => new { s.description })
+                    .OrderBy(s => s.description)
+                    .ToList();
+                return Json(agents);
+            }            
+        }
+
+        public List<SelectListItem> GetAgentByExposureTypeList(string exposureType, string agentIn)
+        {
+            List<SelectListItem> agents = new List<SelectListItem>();
+
+            if (exposureType == "Chemical")
+            {
+                // Get list of chemicals and add them to the agent list also....
+                var chemicalList = _contextEHS.ih_chemical.OrderBy(m => m.PreferredName).ToList();
+
+                foreach (var agent in chemicalList)
+                {
+                    SelectListItem item = new SelectListItem { Value = agent.PreferredName, Text = agent.PreferredName };
+                    if (agent.PreferredName == agentIn)
+                        item.Selected = true;
+                    agents.Add(item);
+                }
+            }
+            else
+            {
+                // Create all agents setup (should no longer be chemicals in here, they are in a seperate table)...
+                var agentList = _contextEHS.agent
+                    .Where(m => m.deleted_date == null && m.display == true)
+                    .OrderBy(m => m.sort_order)
+                    .ThenBy(m => m.description)
+                    .ToList();
+                
+                foreach (var agent in agentList)
+                {
+                    SelectListItem item = new SelectListItem { Value = agent.description, Text = agent.description };
+                    if (agent.description == agentIn)
+                        item.Selected = true;
+                    agents.Add(item);
+                }
+            }
+            return agents;
         }
 
         public static void WriteToEventLog(string message, EventLogEntryType type = EventLogEntryType.Information)
