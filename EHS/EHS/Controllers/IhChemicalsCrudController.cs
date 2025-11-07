@@ -141,27 +141,39 @@ namespace EHS.Controllers
         // POST: IhChemicalsCrud/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CasNumber,PubChemCid,PreferredName")] IhChemical ihChemical)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CasNumber,PreferredName")] IhChemical form)
         {
-            if (id != ihChemical.Id) return NotFound();
+            if (id != form.Id) return NotFound();
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(ihChemical);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.ih_chemical.Any(e => e.Id == ihChemical.Id))
-                        return NotFound();
-                    throw;
-                }
-                return RedirectToAction(nameof(Index));
+                // Re-hydrate immutable fields for redisplay while keeping typed PreferredName
+                var current = await _context.ih_chemical.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
+                if (current == null) return NotFound();
+                current.PreferredName = form.PreferredName; // preserve user input
+                return View(current);
             }
-            return View(ihChemical);
+
+            var entity = await _context.ih_chemical.FirstOrDefaultAsync(c => c.Id == id);
+            if (entity == null) return NotFound();
+
+            entity.PreferredName = string.IsNullOrWhiteSpace(form.PreferredName)
+                ? null
+                : form.PreferredName.Trim();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.ih_chemical.Any(e => e.Id == id)) return NotFound();
+                throw;
+            }
+
+            return RedirectToAction(nameof(Details), new { id });
         }
+
 
         // GET: IhChemicalsCrud/Delete/5
         public async Task<IActionResult> Delete(int? id)
