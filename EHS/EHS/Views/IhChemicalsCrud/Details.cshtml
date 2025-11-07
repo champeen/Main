@@ -310,7 +310,10 @@
                         </div>
                         <div class="col-md-6">
                             <div class="small text-muted">Preferred Name</div>
-                            <div class="fw-semibold">@Model?.PreferredName</div>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="fw-semibold">@Model?.PreferredName</div>
+                                <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit name</a>
+                            </div>
                         </div>
                         <div class="col-md-2 text-md-end">
                             @if (Model?.PubChemCid != null)

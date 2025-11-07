@@ -1,44 +1,74 @@
 ﻿@model EHS.Models.IH.IhChemical
-
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Chemical";
 }
 
-<h1>Edit</h1>
+<div class="container-fluid py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="card-title mb-0">Edit Preferred Name</h2>
+                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary btn-sm">Back to Details</a>
+            </div>
 
-<h4>IhChemical</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="CasNumber" class="control-label"></label>
-                <input asp-for="CasNumber" class="form-control" />
-                <span asp-validation-for="CasNumber" class="text-danger"></span>
+            <p class="text-muted mb-4">
+                CAS Number and PubChem CID are system identifiers and cannot be changed here. Update the Preferred Name below.
+            </p>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">CAS Number</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        <input class="form-control bg-body-tertiary"
+                               value="@Model.CasNumber"
+                               disabled
+                               aria-readonly="true"
+                               tabindex="-1"
+                               title="System-assigned (read-only)" />
+                    </div>
+                    <div class="form-text">System-assigned (read-only)</div>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label small text-muted">PubChem CID</label>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                        <input class="form-control bg-body-tertiary"
+                               value="@(Model.PubChemCid?.ToString() ?? "")"
+                               disabled
+                               aria-readonly="true"
+                               tabindex="-1"
+                               title="System-assigned (read-only)" />
+                    </div>
+                    <div class="form-text">System-assigned (read-only)</div>
+                </div>
+
+
+                <div class="col-md-8">
+                    <form asp-action="Edit" method="post" class="mt-2">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="CasNumber" />
+
+                        <div class="mb-3">
+                            <label asp-for="PreferredName" class="form-label">Preferred Name</label>
+                            <input asp-for="PreferredName" class="form-control" />
+                            <span asp-validation-for="PreferredName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="PubChemCid" class="control-label"></label>
-                <input asp-for="PubChemCid" class="form-control" />
-                <span asp-validation-for="PubChemCid" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PreferredName" class="control-label"></label>
-                <input asp-for="PreferredName" class="form-control" />
-                <span asp-validation-for="PreferredName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

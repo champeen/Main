@@ -4,7 +4,7 @@
     ViewData["Title"] = "Route of Entry";
 }
 
-<div class="container py-4">
+<div class="container-fluid py-4">
     <div class="card shadow rounded-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -18,7 +18,7 @@
             <div class="table-wrapper">
                 <div class="table-container">
                     <table id="segTable" class="table table-striped table-hover table-bordered nowrap datatable-hidden" style="width:100%">
-                        <thead class="table-light">
+                        <thead>
                             <tr>
                                 <th>@Html.DisplayNameFor(model => model.description)</th>
                                 <th>@Html.DisplayNameFor(model => model.sort_order)</th>
@@ -33,11 +33,11 @@
                                     <td>@Html.DisplayFor(modelItem => item.description)</td>
                                     <td>@Html.DisplayFor(modelItem => item.sort_order)</td>
                                     <td>@Html.DisplayFor(modelItem => item.display)</td>
-                                    <td>
-                                        <div class="d-flex gap-1 flex-wrap">
-                                            <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-sm btn-outline-primary">Edit</a>
-                                            <a asp-action="Details" asp-route-id="@item.id" class="btn btn-sm btn-outline-info">Details</a>
-                                            <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    <td class="text-nowrap">
+                                        <div class="d-flex gap-1 flex-nowrap align-items-center">
+                                            <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-sm btn-outline-primary flex-shrink-0">Edit</a>
+                                            <a asp-action="Details" asp-route-id="@item.id" class="btn btn-sm btn-outline-info flex-shrink-0">Details</a>
+                                            <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm btn-outline-danger flex-shrink-0">Delete</a>
                                         </div>
                                     </td>
                                 </tr>

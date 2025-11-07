@@ -2,7 +2,7 @@
     ViewData["Title"] = "Admin Access";
 }
 
-<div class="container py-4">
+<div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
             ← Back
@@ -20,7 +20,7 @@
                         <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="location" asp-action="Index">Locations</a>
                         <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="exposure_type" asp-action="Index">Exposure Types</a>
                         <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="agent" asp-action="Index">Agents</a>
-                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="role" asp-action="Index">SEG Roles</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="seg_role" asp-action="Index">SEG Roles</a>
                         <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="tasks" asp-action="Index">Tasks</a>
                         <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="occupational_exposure_limit" asp-action="Index">Occupational Exposure Limits</a>
                         @* <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="acute_chronic" asp-action="Index">Acute/Chronic</a> *@
