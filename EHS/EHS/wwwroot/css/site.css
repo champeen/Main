@@ -940,3 +940,35 @@ html.dark-mode .dropdown-menu .dropdown-item[aria-disabled="true"] {
         background: transparent !important;
         opacity: .6;
     }
+
+/* Dark mode base inputs + selects */
+body.dark-mode .form-control,
+body.dark-mode .form-select {
+    background-color: #212529;
+    color: #f8f9fa;
+    border-color: #444;
+}
+
+    body.dark-mode .form-control:focus,
+    body.dark-mode .form-select:focus {
+        background-color: #212529;
+        color: #f8f9fa;
+        border-color: #0d6efd;
+    }
+
+/* Dark mode for Select2 (Bootstrap 5 theme) */
+body.dark-mode .select2-container--bootstrap-5 .select2-selection--single {
+    background-color: #212529;
+    color: #f8f9fa;
+    border-color: #444;
+}
+
+body.dark-mode .select2-container--bootstrap-5
+.select2-selection--single .select2-selection__rendered {
+    color: #f8f9fa;
+}
+
+body.dark-mode .select2-container--bootstrap-5
+.select2-selection--single .select2-selection__placeholder {
+    color: #adb5bd;
+}

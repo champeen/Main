@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Admin Access";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+            ← Back
+        </a>
+        <h2 class="text-center flex-grow-1">SEG Risk - Field Dropdown Maintenance</h2>
+        <span style="width: 80px;"></span> @* Spacer to balance layout since back button is on left *@
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-primary mb-4 border-bottom pb-2">Dropdowns</h4>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="areas" asp-action="Index">Areas</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="hazardous" asp-action="Index">Hazardous</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="uses" asp-action="Index">Uses</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="physical_state" asp-action="Index">Physical State</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="ppe_eye" asp-action="Index">PPE - Eyewear</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="ppe_glove" asp-action="Index">PPE - Gloves</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="ppe_respiratory" asp-action="Index">PPE - Respiratory</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="ppe_suit" asp-action="Index">PPE - Suits</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="risk_eye_contact" asp-action="Index">Eye Contact Risks</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="risk_ingestion" asp-action="Index">Ingestion Risks</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="risk_inhalation" asp-action="Index">Inhalation Risks</a>
+                        <a class="btn btn-outline-secondary text-start fw-semibold" asp-controller="risk_skin_contact" asp-action="Index">Skin Contact Risks</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-4 h-100">
+                <div class="card-body">
+                    <h4 class="card-title text-primary mb-4 border-bottom pb-2">Miscellaneous</h4>
+                    <p class="text-muted">No miscellaneous items defined yet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

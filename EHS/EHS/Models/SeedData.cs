@@ -1,6 +1,8 @@
 ﻿using EHS.Data;
 using Microsoft.EntityFrameworkCore;
 using EHS.Models.Dropdowns;
+using EHS.Models.Dropdowns.SEG;
+using EHS.Models.Dropdowns.ChemicalRiskAssessment;
 
 namespace EHS.Models
 {

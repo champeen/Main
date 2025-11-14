@@ -1,0 +1,233 @@
+﻿@model IEnumerable<EHS.Models.IH.chemical_risk_assessment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.location)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.area)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.use)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.state)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.chemical)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.nfpa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.inhalation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.skin_contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.eye_contact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ingestion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.glove)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.suit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.eyewear)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.respiratory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.oels)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.emergency_response)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.notes)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.risk_score)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.person_performing_assessment_username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.person_performing_assessment_displayname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date_conducted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date_reviewed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.created_user)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.created_user_fullname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.created_user_email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.created_date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.modified_user)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.modified_user_fullname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.modified_user_email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.modified_date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deleted_user)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deleted_user_fullname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deleted_user_email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.deleted_date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.area)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.use)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.state)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.chemical)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.nfpa)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.inhalation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.skin_contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.eye_contact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ingestion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.glove)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.suit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.eyewear)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.respiratory)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.oels)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.emergency_response)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.notes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.risk_score)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.person_performing_assessment_username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.person_performing_assessment_displayname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_conducted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.date_reviewed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.created_user)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.created_user_fullname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.created_user_email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.created_date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.modified_user)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.modified_user_fullname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.modified_user_email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.modified_date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.deleted_user)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.deleted_user_fullname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.deleted_user_email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.deleted_date)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -201,7 +201,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label asp-for="seg_risk_assessment.additional_notes" class="form-label fw-bold"></label>
-                            @Html.TextAreaFor(m => m.seg_risk_assessment.additional_notes, new { id = "editorSegRiskAssessmentNotes", @class = "form-control", @rows = 3 })
+                            @Html.TextAreaFor(m => m.seg_risk_assessment.additional_notes, new { id = "createSegRiskAssessmentNotes", @class = "form-control", @rows = 3 })
                             <span asp-validation-for="seg_risk_assessment.additional_notes" class="text-danger"></span>
                         </div>
                     </div>
@@ -246,6 +246,18 @@
                         agentSelect.append(`<option value="${agent.description}">${agent.description}</option>`);
                     });
                 });
+            });
+        });
+
+        $(function () {
+            $('#createSegRiskAssessmentNotes').summernote({
+                height: 150,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['para', ['ul', 'ol']],
+                    ['insert', ['link', 'picture']],
+                    ['view', ['clear']]
+                ]
             });
         });
     </script>

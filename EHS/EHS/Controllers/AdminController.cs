@@ -23,5 +23,10 @@ namespace EHS.Controllers
         {
             return View();
         }
+
+        public IActionResult dropdownCRA()
+        {
+            return View();
+        }
     }
 }

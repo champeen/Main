@@ -1,95 +1,336 @@
 ﻿@model EHS.ViewModels.SegViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Qualitative Exposure Assessment Details";
 }
 
-<h1 class="mb-4">Risk Assessment Details</h1>
-<div class="card mb-5">
-    <div class="card-header fw-bold">
-        SEG Risk Assessment Info
-    </div>
-    <div class="card-body">
-        <div class="row">
-            @foreach (var prop in typeof(EHS.Models.seg_risk_assessment).GetProperties())
-            {
-                var value = prop.GetValue(Model.seg_risk_assessment);
-                if (value != null)
-                {
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">@prop.Name.Replace("_", " ")</label>
-                        <div class="form-control bg-light">@value</div>
+<style>
+    .detail-item-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background-color: #f8f9fa;
+        margin-bottom: 0.75rem;
+        height: 100%;
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        font-weight: 600; /* semi-bold */
+        text-transform: uppercase;
+        letter-spacing: 0.02em; /* less spread so it feels heavier */
+        color: #000; /* slightly darker */
+        margin-bottom: 0.15rem;
+    }
+
+    .detail-value {
+        font-size: 0.95rem;
+        color: #212529;
+        word-break: break-word;
+    }
+
+    .detail-notes {
+        min-height: 100px;
+    }
+
+    .dark-mode .detail-item-card {
+        background-color: #212529;
+        border-color: #343a40;
+    }
+
+    .dark-mode .detail-label {
+        color: #adb5bd;
+    }
+
+    .dark-mode .detail-value {
+        color: #f8f9fa;
+    }
+</style>
+
+<div class="py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Qualitative Exposure Assessment Details</h2>
+
+            <!-- Similar Exposure Group -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Similar Exposure Group</legend>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.location</div>
+                        </div>
                     </div>
-                }
-            }
-        </div>
-        <div class="mt-4 d-flex justify-content-between">
-            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
-            <a asp-action="Edit" asp-route-id="@Model?.seg_risk_assessment?.id" class="btn btn-primary px-4">Edit</a>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Exposure Type</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.exposure_type</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Agent</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.agent</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Role</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.role</div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Task Information -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Task Information</legend>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Task</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.task</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Frequency of Task</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.frequency_of_task</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Duration of Task</div>
+                            <div class="detail-value">
+                                @{
+                                    var parts = new List<string>();
+                                    if (Model.DurationDays.GetValueOrDefault() > 0)
+                                    {
+                                        parts.Add($"{Model.DurationDays} day{(Model.DurationDays == 1 ? "" : "s")}");
+                                    }
+                                    if (Model.DurationHours.GetValueOrDefault() > 0)
+                                    {
+                                        parts.Add($"{Model.DurationHours} hour{(Model.DurationHours == 1 ? "" : "s")}");
+                                    }
+                                    if (Model.DurationMinutes.GetValueOrDefault() > 0)
+                                    {
+                                        parts.Add($"{Model.DurationMinutes} min");
+                                    }
+                                    var durationText = parts.Any()
+                                    ? string.Join(" ", parts)
+                                    : "Not specified";
+                                }
+                                @durationText
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Additional Information -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Additional Information</legend>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">OEL</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.oel</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Route of Entry</div>
+                            <div class="detail-value">
+                                @Html.DisplayFor(m => m.seg_risk_assessment.route_of_entry)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Controls Recommended</div>
+                            <div class="detail-value">
+                                @Html.DisplayFor(m => m.seg_risk_assessment.controls_recommended)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Exposure Levels Acceptable</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.exposure_levels_acceptable</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Assessment Methods Used</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.assessment_methods_used</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">SEG Number of Workers</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.seg_number_of_workers</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Has Agent Been Changed</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.has_agent_been_changed</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Person Performing Assessment</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.person_performing_assessment_username</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Date Conducted</div>
+                            <div class="detail-value">
+                                @(Model.seg_risk_assessment.date_conducted?.ToString("yyyy-MM-dd") ?? "Not set")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Date Reviewed</div>
+                            <div class="detail-value">
+                                @(Model.seg_risk_assessment.date_reviewed?.ToString("yyyy-MM-dd") ?? "Not set")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Risk Rating -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Risk Rating</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Exposure Rating</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.exposure_rating</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Health Effect Rating</div>
+                            <div class="detail-value">@Model.seg_risk_assessment.health_effect_rating</div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Notes -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Notes</legend>
+                <div class="detail-item-card detail-notes">
+                    <div class="detail-label">Additional Notes</div>
+                    <div class="detail-value">
+                        @if (!string.IsNullOrWhiteSpace(Model.seg_risk_assessment.additional_notes))
+                        {
+                            @Html.Raw(Model.seg_risk_assessment.additional_notes)
+                        }
+                        else
+                        {
+                            <span class="text-muted">No notes recorded.</span>
+                        }
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="mt-4 d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                <a asp-action="Edit"
+                   asp-route-id="@Model.seg_risk_assessment.id"
+                   class="btn btn-primary px-4">
+                    Edit
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
-<h4 class="mb-3">Attachments</h4>
-<div class="card">
+<div class="card shadow rounded-4">
     <div class="card-body">
-        @using (Html.BeginForm("SaveFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
-        {
-            <div class="row align-items-end mb-3">
-                <div class="col-md-9">
-                    <label class="form-label fw-bold">Upload Attachment(s)</label>
-                    <input type="file" name="fileAttachment" class="form-control" @ViewBag.DisableAttachmentUpload />
-                    <div class="text-danger fw-bold">
-                        @Model.FileAttachmentError
+        <h2 class="card-title mb-4">Attachments</h2>
+        @* <h4 class="mb-3">Attachments</h4> *@
+        <div class="card">
+            <div class="card-body">
+                @* Keep or adjust this section based on whether Details should allow uploads/deletes *@
+                @using (Html.BeginForm("SaveFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="row align-items-end mb-3">
+                        <div class="col-md-9">
+                            <label class="form-label fw-bold">Upload Attachment(s)</label>
+                            <input type="file" name="fileAttachment" class="form-control" @ViewBag.DisableAttachmentUpload />
+                            <div class="text-danger fw-bold">
+                                @Model.FileAttachmentError
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="submit" value="Upload" class="btn btn-success w-100" @ViewBag.DisableAttachmentUpload />
+                        </div>
                     </div>
+                }
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>File Name</th>
+                                <th>Date Added</th>
+                                <th>Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.attachments.Any())
+                            {
+                                foreach (var item in Model.attachments)
+                                {
+                                    string size = item.Size < 1000
+                                    ? item.Size + " bytes"
+                                    : string.Format("{0:N0} KB", item.Size / 1000);
+                                    string createdDateFormatted = item.CreatedDate.ToString();
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@createdDateFormatted</td>
+                                        <td>@size</td>
+                                        <td>
+                                            @Html.ActionLink("Download", "DownloadFile", "seg_risk_assessment",
+                                            new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath },
+                                                                        new { @class = "btn btn-sm btn-secondary me-1" })
+
+                                    @if (Model.IsAdmin || Model.Username == Model.seg_risk_assessment.created_user)
+                                            {
+                                                @Html.ActionLink("Delete", "DeleteFile", "seg_risk_assessment",
+                                                new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath },
+                                                                        new { @class = "btn btn-sm btn-danger" })
+                                                                        }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" class="text-center">No attachments found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-3">
-                    <input type="submit" value="Upload" class="btn btn-success w-100" @ViewBag.DisableAttachmentUpload />
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
                 </div>
             </div>
-        }
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>File Name</th>
-                        <th>Date Added</th>
-                        <th>Size</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.attachments.Any())
-                    {
-                        foreach (var item in Model.attachments)
-                        {
-                            string size = item.Size < 1000 ? item.Size + " bytes" : string.Format("{0:N0} KB", item.Size / 1000);
-                            string createdDateFormatted = item.CreatedDate.ToString();
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@createdDateFormatted</td>
-                                <td>@size</td>
-                                <td>
-                                    @Html.ActionLink("Download", "DownloadFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-secondary me-1" })
-                                    @if (Model.IsAdmin || Model.Username == Model.seg_risk_assessment.created_user)
-                                    {
-                                        @Html.ActionLink("Delete", "DeleteFile", "seg_risk_assessment", new { id = Model.seg_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath }, new { @class = "btn btn-sm btn-danger" })
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="4" class="text-center">No attachments found</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="mt-4 d-flex justify-content-between">
-            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
         </div>
     </div>
 </div>

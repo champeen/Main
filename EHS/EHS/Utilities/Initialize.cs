@@ -35,6 +35,7 @@ namespace EHS.Utilities
         public static string ConnectionStringEhs { get; set; }
         public static string ConnectionStringMoc { get; set; }
         public static string AttachmentDirectory_IH_SEG { get; set; }
+        public static string AttachmentDirectory_IH_CRA { get; set; }
 
         public static string Environment { get; set; }
         private static string registryPath = @"Software\\SKSiltron\\EHS";
@@ -83,6 +84,7 @@ namespace EHS.Utilities
 
             // Get Attachment Directorys
             AttachmentDirectory_IH_SEG = GetRegistryKey(registryPath, "AttachmentDirectory_IH_SEG");
+            AttachmentDirectory_IH_CRA = GetRegistryKey(registryPath, "AttachmentDirectory_IH_CRA");
 
             // Teams Provider for Error Channel
             teamsErrorUrl = GetRegistryKey(registryPath, "TeamsErrorUrl");

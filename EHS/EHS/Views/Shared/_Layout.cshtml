@@ -42,6 +42,10 @@
     <link id="flatpickrLightTheme" rel="stylesheet" href="~/css/flatpickr.min.css" />
     <link id="flatpickrDarkTheme" rel="stylesheet" href="~/css/dark.css" disabled />
     <script src="~/js/flatpickr.js"></script>
+
+    <!-- summernote Wizzywig -->
+    <link rel="stylesheet" href="~/lib/summernote/dist/summernote-lite.min.css" />
+    <script src="~/lib/summernote/dist/summernote-lite.min.js"></script>
 </head>
 
 <body >
@@ -64,7 +68,7 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="ihDropdown">
                                 <li><a class="dropdown-item" asp-area="" asp-controller="seg_risk_assessment" asp-action="Index">Similar Exposure Group (SEG) Risk</a></li>
-                                <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Chemical Risk Assessment</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="chemical_risk_assessment" asp-action="Index" disabled="true">Chemical Risk Assessment</a></li>
                                 <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">IH Monitoring Methods</a></li>
                                 <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Noise and Radiation Monitoring</a></li>
                                 <li><a class="dropdown-item disabled" asp-area="" asp-controller="Home" asp-action="Privacy" disabled="true">Ergonomics</a></li>

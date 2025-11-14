@@ -210,7 +210,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <label asp-for="seg_risk_assessment.additional_notes" class="form-label fw-bold"></label>
-                            @Html.TextAreaFor(model => model.seg_risk_assessment.additional_notes, new { id = "editorSegRiskAssessmentNotes", @class = "form-control", @rows = 3 })
+                            @Html.TextAreaFor(model => model.seg_risk_assessment.additional_notes, new { id = "editSegRiskAssessmentNotes", @class = "form-control", @rows = 3 })
                             <span asp-validation-for="seg_risk_assessment.additional_notes" class="text-danger"></span>
                         </div>
                     </div>
@@ -328,6 +328,18 @@
                 $.each(data, function (i, agent) {
                     agentSelect.append(`<option value="${agent.description}">${agent.description}</option>`);
                 });
+            });
+        });
+
+        $(function () {
+            $('#editSegRiskAssessmentNotes').summernote({
+                height: 150,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['para', ['ul', 'ol']],
+                    ['insert', ['link', 'picture']],
+                    ['view', ['clear']]
+                ]
             });
         });
     </script>

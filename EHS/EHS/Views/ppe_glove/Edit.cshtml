@@ -1,0 +1,104 @@
+﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_glove
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ppe_glove</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="sort_order" class="control-label"></label>
+                <input asp-for="sort_order" class="form-control" />
+                <span asp-validation-for="sort_order" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="display" /> @Html.DisplayNameFor(model => model.display)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="created_user" class="control-label"></label>
+                <input asp-for="created_user" class="form-control" />
+                <span asp-validation-for="created_user" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="created_user_fullname" class="control-label"></label>
+                <input asp-for="created_user_fullname" class="form-control" />
+                <span asp-validation-for="created_user_fullname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="created_user_email" class="control-label"></label>
+                <input asp-for="created_user_email" class="form-control" />
+                <span asp-validation-for="created_user_email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="created_date" class="control-label"></label>
+                <input asp-for="created_date" class="form-control" />
+                <span asp-validation-for="created_date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="modified_user" class="control-label"></label>
+                <input asp-for="modified_user" class="form-control" />
+                <span asp-validation-for="modified_user" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="modified_user_fullname" class="control-label"></label>
+                <input asp-for="modified_user_fullname" class="form-control" />
+                <span asp-validation-for="modified_user_fullname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="modified_user_email" class="control-label"></label>
+                <input asp-for="modified_user_email" class="form-control" />
+                <span asp-validation-for="modified_user_email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="modified_date" class="control-label"></label>
+                <input asp-for="modified_date" class="form-control" />
+                <span asp-validation-for="modified_date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="deleted_user" class="control-label"></label>
+                <input asp-for="deleted_user" class="form-control" />
+                <span asp-validation-for="deleted_user" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="deleted_user_fullname" class="control-label"></label>
+                <input asp-for="deleted_user_fullname" class="form-control" />
+                <span asp-validation-for="deleted_user_fullname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="deleted_user_email" class="control-label"></label>
+                <input asp-for="deleted_user_email" class="form-control" />
+                <span asp-validation-for="deleted_user_email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="deleted_date" class="control-label"></label>
+                <input asp-for="deleted_date" class="form-control" />
+                <span asp-validation-for="deleted_date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -139,7 +139,7 @@ namespace EHS.Utilities
             return users;
         }
 
-        public void getDropdownSelectionLists()
+        public void get_SEG_DropdownSelectionLists()
         {
             ViewBag.Employees = getUserList();
             ViewBag.Locations = getLocations();
@@ -159,6 +159,12 @@ namespace EHS.Utilities
             ViewBag.HasAgentBeenChanged = getHasAgentBeenChanged();
             ViewBag.ExposureRatings = getExposureRatings();
             ViewBag.HealthEffectRatings = getHealthEffectRatings();
+        }
+        public void get_CRA_DropdownSelectionLists()
+        {
+            ViewBag.Employees = getUserList();
+            ViewBag.Locations = getLocations();
+            ViewBag.Agents = GetAgentByExposureTypeList("Chemical", null);
         }
 
         public List<SelectListItem> getLocations(string? locationIn = null)
@@ -225,6 +231,43 @@ namespace EHS.Utilities
                 if (agent.PreferredName == agentIn)
                     item.Selected = true;
                 agents.Add(item);
+            }
+            return agents;
+        }
+
+        public List<SelectListItem> GetAgentByExposureTypeList(string exposureType, string agentIn)
+        {
+            List<SelectListItem> agents = new List<SelectListItem>();
+
+            if (exposureType == "Chemical")
+            {
+                // Get list of chemicals and add them to the agent list also....
+                var chemicalList = _contextEHS.ih_chemical.OrderBy(m => m.PreferredName).ToList();
+
+                foreach (var agent in chemicalList)
+                {
+                    SelectListItem item = new SelectListItem { Value = agent.PreferredName, Text = agent.PreferredName };
+                    if (agent.PreferredName == agentIn)
+                        item.Selected = true;
+                    agents.Add(item);
+                }
+            }
+            else
+            {
+                // Create all agents setup (should no longer be chemicals in here, they are in a seperate table)...
+                var agentList = _contextEHS.agent
+                    .Where(m => m.deleted_date == null && m.display == true)
+                    .OrderBy(m => m.sort_order)
+                    .ThenBy(m => m.description)
+                    .ToList();
+
+                foreach (var agent in agentList)
+                {
+                    SelectListItem item = new SelectListItem { Value = agent.description, Text = agent.description };
+                    if (agent.description == agentIn)
+                        item.Selected = true;
+                    agents.Add(item);
+                }
             }
             return agents;
         }
