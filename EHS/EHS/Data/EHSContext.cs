@@ -1,6 +1,9 @@
 ﻿using EHS.Models;
+using EHS.Models.Dropdowns;
+using EHS.Models.Dropdowns.SEG;
 using EHS.Models.IH;
 using Microsoft.EntityFrameworkCore;
+using EHS.Models.Dropdowns.ChemicalRiskAssessment;
 
 //namespace EHS.Models.Dropdowns;
 
@@ -23,24 +26,24 @@ namespace EHS.Data
             return base.SaveChangesAsync(cancellationToken);
         }
 
-        public DbSet<EHS.Models.seg_risk_assessment> seg_risk_assessment { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.location> location { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.exposure_type> exposure_type { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.agent> agent { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.seg_role> seg_role { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.task> task { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.occupational_exposure_limit> occupational_exposure_limit { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.acute_chronic> acute_chronic { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.route_of_entry> route_of_entry { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.frequency_of_task> frequency_of_task { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.monitoring_data_required> monitoring_data_required { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.controls_recommended> controls_recommended { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.yes_no> yes_no { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.assessment_methods_used> assessment_methods_used { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.number_of_workers> number_of_workers { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.has_agent_been_changed> has_agent_been_changed { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.exposure_rating> exposure_rating { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.health_effect_rating> health_effect_rating { get; set; } = default!;
+        public DbSet<seg_risk_assessment> seg_risk_assessment { get; set; } = default!;
+        public DbSet<location> location { get; set; } = default!;
+        public DbSet<exposure_type> exposure_type { get; set; } = default!;
+        public DbSet<agent> agent { get; set; } = default!;
+        public DbSet<seg_role> seg_role { get; set; } = default!;
+        public DbSet<task> task { get; set; } = default!;
+        public DbSet<occupational_exposure_limit> occupational_exposure_limit { get; set; } = default!;
+        public DbSet<acute_chronic> acute_chronic { get; set; } = default!;
+        public DbSet<route_of_entry> route_of_entry { get; set; } = default!;
+        public DbSet<frequency_of_task> frequency_of_task { get; set; } = default!;
+        public DbSet<monitoring_data_required> monitoring_data_required { get; set; } = default!;
+        public DbSet<controls_recommended> controls_recommended { get; set; } = default!;
+        public DbSet<yes_no> yes_no { get; set; } = default!;
+        public DbSet<assessment_methods_used> assessment_methods_used { get; set; } = default!;
+        public DbSet<number_of_workers> number_of_workers { get; set; } = default!;
+        public DbSet<has_agent_been_changed> has_agent_been_changed { get; set; } = default!;
+        public DbSet<exposure_rating> exposure_rating { get; set; } = default!;
+        public DbSet<health_effect_rating> health_effect_rating { get; set; } = default!;
         // --- NEW IH DbSets ---
         public DbSet<IhChemical> ih_chemical { get; set; } = default!;
         public DbSet<IhChemicalSynonym> ih_chemical_synonym { get; set; } = default!;
@@ -48,15 +51,27 @@ namespace EHS.Data
         public DbSet<IhChemicalHazard> ih_chemical_hazard { get; set; } = default!;
         public DbSet<IhChemicalOel> ih_chemical_oel { get; set; } = default!;
         public DbSet<IhChemicalSamplingMethod> ih_chemical_sampling_method { get; set; } = default!;
+        //
+        public DbSet<chemical_risk_assessment> chemical_risk_assessment { get; set; } = default!;
+        public DbSet<chemical_composition> chemical_composition { get; set; } = default!;
+
+        public DbSet<hazard_codes> hazard_codes { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("ehs");
             modelBuilder.HasAnnotation("Relational:HistoryTableSchema", "ehs");
 
+            // computed columns .....
             modelBuilder.Entity<seg_risk_assessment>()
             .Property(e => e.risk_score)
             .HasComputedColumnSql("\"exposure_rating\" * \"health_effect_rating\"", stored: true);
+
+            //modelBuilder.Entity<chemical_risk_assessment>()
+            //.Property(a => a.risk_score)
+            //.HasComputedColumnSql("NULL", stored: false); // placeholder
+            //
 
             // --- IH tables mapping ---
             modelBuilder.Entity<IhChemical>().ToTable("ih_chemical");
@@ -95,6 +110,10 @@ namespace EHS.Data
                 .HasIndex(x => x.IhChemicalId)
                 .HasDatabaseName("ix_ih_chemical_sampling_method_ihchemicalid");
 
+            modelBuilder.Entity<chemical_composition>()
+                .HasIndex(x => x.chemical_risk_assessment_id)
+                .HasDatabaseName("ix_ih_chemical_composition_chemicalriskassessmentid");
+
             modelBuilder.Entity<IhChemicalSynonym>()
             .HasOne(s => s.IhChemical)
             .WithMany(c => c.Synonyms)
@@ -125,7 +144,39 @@ namespace EHS.Data
             .HasForeignKey(s => s.IhChemicalId)
             .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<chemical_composition>()
+              .HasOne(c => c.assessment)
+              .WithMany(a => a.composition)
+              .HasForeignKey(c => c.chemical_risk_assessment_id)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<chemical_risk_assessment>()
+                .Property(p => p.area).HasColumnType("text[]");
+            modelBuilder.Entity<chemical_risk_assessment>()
+                .Property(p => p.use).HasColumnType("text[]");
+
+            modelBuilder.Entity<chemical_risk_assessment>()
+                .Property(p => p.ppe_glove).HasColumnType("text[]");
+            modelBuilder.Entity<chemical_risk_assessment>()
+                .Property(p => p.ppe_suit).HasColumnType("text[]");
+            modelBuilder.Entity<chemical_risk_assessment>()
+                .Property(p => p.ppe_eyewear).HasColumnType("text[]");
+            modelBuilder.Entity<chemical_risk_assessment>()
+                .Property(p => p.ppe_respiratory).HasColumnType("text[]");
+
             base.OnModelCreating(modelBuilder);
         }
+        public DbSet<area> area { get; set; } = default!;
+        public DbSet<hazardous> hazardous { get; set; } = default!;
+        public DbSet<physical_state> physical_state { get; set; } = default!;
+        public DbSet<ppe_eye> ppe_eye { get; set; } = default!;
+        public DbSet<ppe_glove> ppe_glove { get; set; } = default!;
+        public DbSet<ppe_respiratory> ppe_respiratory { get; set; } = default!;
+        public DbSet<ppe_suit> ppe_suit { get; set; } = default!;
+        public DbSet<risk_eye_contact> risk_eye_contact { get; set; } = default!;
+        public DbSet<risk_ingestion> risk_ingestion { get; set; } = default!;
+        public DbSet<risk_inhalation> risk_inhalation { get; set; } = default!;
+        public DbSet<risk_skin_contact> risk_skin_contact { get; set; } = default!;
+        public DbSet<use> use { get; set; } = default!;
     }
 }

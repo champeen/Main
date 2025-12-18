@@ -1,0 +1,84 @@
+﻿@model EHS.Models.IH.chemical_risk_assessment
+
+@{
+    ViewData["Title"] = "Delete Chemical Risk Assessment";
+}
+
+<div class="container-fluid py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="card-title text-danger mb-0">Confirm Deletion</h2>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+            <p class="mb-3">Are you sure you want to delete this chemical risk assessment?</p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr><th>@Html.DisplayNameFor(m => m.location)</th><td>@Html.DisplayFor(m => m.location)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.area)</th><td>@Html.DisplayFor(m => m.area)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.use)</th><td>@Html.DisplayFor(m => m.use)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.state)</th><td>@Html.DisplayFor(m => m.state)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.chemical)</th><td>@Html.DisplayFor(m => m.chemical)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.nfpa)</th><td>@Html.DisplayFor(m => m.nfpa)</td></tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.skin_absorption)</th><td>@Html.DisplayFor(m => m.skin_absorption)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.skin_contact)</th><td>@Html.DisplayFor(m => m.skin_contact)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.eye_contact)</th><td>@Html.DisplayFor(m => m.eye_contact)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.respiratory)</th><td>@Html.DisplayFor(m => m.respiratory)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.ingestion)</th><td>@Html.DisplayFor(m => m.ingestion)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.sensitizer)</th><td>@Html.DisplayFor(m => m.sensitizer)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.carcinogen)</th><td>@Html.DisplayFor(m => m.carcinogen)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.reproductive)</th><td>@Html.DisplayFor(m => m.reproductive)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.other)</th><td>@Html.DisplayFor(m => m.other)</td></tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.ppe_glove)</th><td>@Html.DisplayFor(m => m.ppe_glove)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.ppe_suit)</th><td>@Html.DisplayFor(m => m.ppe_suit)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.ppe_eyewear)</th><td>@Html.DisplayFor(m => m.ppe_eyewear)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.ppe_respiratory)</th><td>@Html.DisplayFor(m => m.ppe_respiratory)</td></tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.oels)</th><td>@Html.DisplayFor(m => m.oels)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.emergency_response)</th><td>@Html.DisplayFor(m => m.emergency_response)</td></tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.notes)</th>
+                            <td>
+                                @* Use Raw in case notes contain rich-text/HTML from a WYSIWYG *@
+                                @Html.Raw(Model.notes)
+                            </td>
+                        </tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.risk_score)</th><td>@Html.DisplayFor(m => m.risk_score)</td></tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.person_performing_assessment_username)</th><td>@Html.DisplayFor(m => m.person_performing_assessment_username)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.person_performing_assessment_displayname)</th><td>@Html.DisplayFor(m => m.person_performing_assessment_displayname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.date_conducted)</th><td>@Html.DisplayFor(m => m.date_conducted)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.date_reviewed)</th><td>@Html.DisplayFor(m => m.date_reviewed)</td></tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user)</th><td>@Html.DisplayFor(m => m.created_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_fullname)</th><td>@Html.DisplayFor(m => m.created_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_email)</th><td>@Html.DisplayFor(m => m.created_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_date)</th><td>@Html.DisplayFor(m => m.created_date)</td></tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user)</th><td>@Html.DisplayFor(m => m.modified_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_fullname)</th><td>@Html.DisplayFor(m => m.modified_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_email)</th><td>@Html.DisplayFor(m => m.modified_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_date)</th><td>@Html.DisplayFor(m => m.modified_date)</td></tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user)</th><td>@Html.DisplayFor(m => m.deleted_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_fullname)</th><td>@Html.DisplayFor(m => m.deleted_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_email)</th><td>@Html.DisplayFor(m => m.deleted_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_date)</th><td>@Html.DisplayFor(m => m.deleted_date)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="id" />
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <input type="submit" value="Delete" class="btn btn-danger px-4" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

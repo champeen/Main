@@ -35,7 +35,7 @@
                         <tr><th>@Html.DisplayNameFor(m => m.health_effect_rating_description)</th><td>@Html.DisplayFor(m => m.health_effect_rating_description)</td></tr>
                         <tr><th>@Html.DisplayNameFor(m => m.date_conducted)</th><td>@Html.DisplayFor(m => m.date_conducted)</td></tr>
                         <tr><th>@Html.DisplayNameFor(m => m.date_reviewed)</th><td>@Html.DisplayFor(m => m.date_reviewed)</td></tr>
-                        <tr><th>@Html.DisplayNameFor(m => m.additional_notes)</th><td>@Html.DisplayFor(m => m.additional_notes)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.additional_notes)</th><td>@Html.Raw(@Model.additional_notes)</td></tr>
                         <tr><th>@Html.DisplayNameFor(m => m.created_user)</th><td>@Html.DisplayFor(m => m.created_user)</td></tr>
                         <tr><th>@Html.DisplayNameFor(m => m.created_user_fullname)</th><td>@Html.DisplayFor(m => m.created_user_fullname)</td></tr>
                         <tr><th>@Html.DisplayNameFor(m => m.created_user_email)</th><td>@Html.DisplayFor(m => m.created_user_email)</td></tr>

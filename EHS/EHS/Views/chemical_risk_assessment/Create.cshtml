@@ -1,0 +1,332 @@
+﻿@model EHS.Models.IH.chemical_risk_assessment
+
+@{
+    ViewData["Title"] = "Create Chemical Risk Assessment";
+}
+
+<div class="py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">Create Chemical Risk Assessment</h2>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+
+            <form asp-action="Create" class="needs-validation" novalidate>
+                @* Hidden audit fields (from TimeStamps base, if present) *@
+                @Html.HiddenFor(m => m.created_user)
+                @Html.HiddenFor(m => m.created_user_fullname)
+                @Html.HiddenFor(m => m.created_user_email)
+                @Html.HiddenFor(m => m.created_date)
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                @* =========================
+                   DETAILS
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Assessment Details</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="location" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.location,
+                            new SelectList(ViewBag.Locations, "Value", "Text"),
+                                                        "-- Select Location --",
+                                                        new { @class = "form-control select2-single", @id = "ChemCreateLocation" })
+                            <span asp-validation-for="location" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="area" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.area,
+                                                        new MultiSelectList(ViewBag.Areas, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateArea", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="area" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="use" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.use,
+                                                        new MultiSelectList(ViewBag.Uses, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateUse", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="use" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="state" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.state,
+                                                        new SelectList(ViewBag.PhysicalStates, "Value", "Text"),
+                                                        "-- Select State --",
+                                                        new { @class = "form-control select2-single", @id = "ChemCreateState" })
+                            <span asp-validation-for="state" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="chemical" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            <input asp-for="chemical" class="form-control" />
+                            <span asp-validation-for="chemical" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="nfpa" class="form-label fw-bold"></label>
+                            <input asp-for="nfpa" class="form-control" />
+                            <span asp-validation-for="nfpa" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                @* =========================
+                   HAZARDS (List<int> -> HazardCodes)
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Hazards</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="skin_absorption" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.skin_absorption,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateSkinAbsorption", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="skin_absorption" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="skin_contact" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.skin_contact,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateSkinContact", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="skin_contact" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="eye_contact" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.eye_contact,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateEyeContact", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="eye_contact" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="respiratory" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.respiratory,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateRespiratory", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="respiratory" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="ingestion" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ingestion,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateIngestion", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ingestion" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="sensitizer" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.sensitizer,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateSensitizer", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="sensitizer" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="carcinogen" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.carcinogen,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateCarcinogen", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="carcinogen" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="reproductive" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.reproductive,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateReproductive", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="reproductive" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="other" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.other,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreateOther", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="other" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                @* =========================
+                   PPE
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Personal Protective Equipment (PPE)</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="ppe_glove" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_glove,
+                                                        new MultiSelectList(ViewBag.PpeGlove, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreatePpeGlove", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_glove" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="ppe_suit" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_suit,
+                                                        new MultiSelectList(ViewBag.PpeSuit, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreatePpeSuit", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_suit" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="ppe_eyewear" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_eyewear,
+                                                        new MultiSelectList(ViewBag.PpeEyewear, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreatePpeEyewear", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_eyewear" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="ppe_respiratory" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_respiratory,
+                                                        new MultiSelectList(ViewBag.PpeRespiratory, "Value", "Text"),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemCreatePpeRespiratory", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_respiratory" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                @* =========================
+                   OTHER / ADMIN
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Other Information</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="oels" class="form-label fw-bold"></label>
+                            @* <input asp-for="oels" class="form-control" /> *@
+                            @Html.TextAreaFor(m => m.oels, new { @class = "form-control", @rows = 3 })
+                            <span asp-validation-for="oels" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="emergency_response" class="form-label fw-bold"></label>
+                            @* <input asp-for="emergency_response" class="form-control" /> *@
+                            @Html.TextAreaFor(m => m.emergency_response, new { @class = "form-control", @rows = 3 })
+                            <span asp-validation-for="emergency_response" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="person_performing_assessment_username" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.person_performing_assessment_username,
+                                                        new SelectList(ViewBag.Employees, "Value", "Text"),
+                                                        "-- Select Employee --",
+                                                        new { @class = "form-control select2-single", @id = "ChemCreatePerson" })
+                            <span asp-validation-for="person_performing_assessment_username" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="date_conducted" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            <input asp-for="date_conducted" type="text" class="form-control datepicker" value="@(Model.date_conducted.ToString("yyyy-MM-dd"))" placeholder="Select date..." />
+                            <span asp-validation-for="date_conducted" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                @* =========================
+                   NOTES (Summernote)
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Notes</legend>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label asp-for="notes" class="form-label fw-bold"></label>
+                            @Html.TextAreaFor(m => m.notes, new { id = "createChemicalRiskNotes", @class = "form-control", @rows = 3 })
+                            <span asp-validation-for="notes" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-success px-4">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            const selects = [
+                "#ChemCreateLocation", "#ChemCreateState", "#ChemCreatePerson",
+                "#ChemCreateArea", "#ChemCreateUse",
+                "#ChemCreateSkinAbsorption", "#ChemCreateSkinContact", "#ChemCreateEyeContact",
+                "#ChemCreateRespiratory", "#ChemCreateIngestion", "#ChemCreateSensitizer",
+                "#ChemCreateCarcinogen", "#ChemCreateReproductive", "#ChemCreateOther",
+                "#ChemCreatePpeGlove", "#ChemCreatePpeSuit", "#ChemCreatePpeEyewear", "#ChemCreatePpeRespiratory"
+            ];
+
+            selects.forEach(function (id) {
+                const $el = $(id);
+
+                $el.select2({
+                    placeholder: $el.data("placeholder") || "** select **",
+                    allowClear: true,
+                    width: "100%"
+                });
+            });
+        });
+
+        $(function () {
+            $('#createChemicalRiskNotes').summernote({
+                height: 150,
+                minHeight: 150,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['para', ['ul', 'ol']],
+                    ['insert', ['link', 'picture']],
+                    ['view', [ 'clear']]
+                ]
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,19 @@
+{
+  "version": "3.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "library": "summernote@0.8.20",
+      "destination": "wwwroot/lib/summernote/",
+      "files": [
+        "dist/summernote-lite.min.css",
+        "dist/summernote-lite.min.js",
+        "dist/font/summernote.ttf",
+        "dist/font/summernote.woff",
+        "dist/font/summernote.woff2",
+        "dist/font/summernote.eot",
+        "dist/font/summernote.hash"
+      ]
+    }
+  ]
+}

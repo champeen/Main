@@ -1,0 +1,86 @@
+﻿@model EHS.Models.chemical_composition
+
+@{
+    ViewData["Title"] = "Edit Chemical Component";
+}
+
+<div class="container-fluid py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">Edit Chemical Component</h2>
+                <a asp-action="Details" asp-controller="chemical_risk_assessment" asp-route-id="@Model.chemical_risk_assessment_id" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Hidden key / audit fields -->
+                <input type="hidden" asp-for="id" />
+                <input type="hidden" asp-for="chemical_risk_assessment_id" />
+                <input type="hidden" asp-for="created_user" />
+                <input type="hidden" asp-for="created_user_fullname" />
+                <input type="hidden" asp-for="created_user_email" />
+                <input type="hidden" asp-for="created_date" />
+                <input type="hidden" asp-for="modified_user" />
+                <input type="hidden" asp-for="modified_user_fullname" />
+                <input type="hidden" asp-for="modified_user_email" />
+                <input type="hidden" asp-for="modified_date" />
+                <input type="hidden" asp-for="deleted_user" />
+                <input type="hidden" asp-for="deleted_user_fullname" />
+                <input type="hidden" asp-for="deleted_user_email" />
+                <input type="hidden" asp-for="deleted_date" />
+
+                <!-- Chemical (select by CAS, show PreferredName) -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Chemical</label>
+                    <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                    @Html.DropDownListFor(
+                    m => m.cas_number,
+                                        new SelectList(ViewBag.Agents, "Value", "Text", Model.cas_number),
+                                        "-- Select Chemical --",
+                                        new { @class = "form-control select2-single", @id = "SegEditAgents" }
+                                        )
+                    <span asp-validation-for="cas_number" class="text-danger"></span>
+                </div>
+
+@*                 <!-- Read-only chemical name (derived) -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Chemical Name (from IH Chemicals)</label>
+                    <div class="form-control-plaintext">
+                        @Model.chemical_name
+                    </div>
+                </div> *@
+
+                <div class="mb-3">
+                    <label asp-for="concentration_low" class="form-label fw-bold"></label>
+                    <input asp-for="concentration_low" class="form-control" />
+                    <span asp-validation-for="concentration_low" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="concentration_high" class="form-label fw-bold"></label>
+                    <input asp-for="concentration_high" class="form-control" />
+                    <span asp-validation-for="concentration_high" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Details"
+                       asp-controller="chemical_risk_assessment"
+                       asp-route-id="@Model.chemical_risk_assessment_id"
+                       class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

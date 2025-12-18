@@ -1,6 +1,8 @@
 ﻿using EHS.Data;
 using Microsoft.EntityFrameworkCore;
 using EHS.Models.Dropdowns;
+using EHS.Models.Dropdowns.SEG;
+using EHS.Models.Dropdowns.ChemicalRiskAssessment;
 
 namespace EHS.Models
 {
@@ -110,9 +112,9 @@ namespace EHS.Models
                     //};
                 }
 
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                /// DROPDOWNS
-                ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /// SEED SIMILAR EXPOSURE GROUP (SEG) RISK ASSESSMENT DROPDOWNS
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 // Look for any Locations....
                 if (!context.location.Any())
@@ -190,231 +192,231 @@ namespace EHS.Models
                 if (!context.agent.Any())
                 {
                     context.agent.AddRange(
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Acetone",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Manganese: Potassium Permanganate",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Manganese: Sodium Permanganate",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Sulfuric Acid",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Potassium Hydroxide",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Hydrofluoric Acid Hydroxide",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Aluminum Oxide",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Graphite",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Caustic Soda",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Nitric Acid",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Ethanediol (Cool Concentrate)",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Propane - 1,2 Diol  (Cry-Tek 100 Antifreeze)",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Phtahalic Anhydride (Crystal Bond)",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Propylene Glycol (Dow Frost's)",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Ethylene Gas",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Chlorodifluoromethane (HCFC-22)",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Hydrochloric Acid",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Hydrogen Peroxide",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Isopropyl Alcohol",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Mercury",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Mineral Spirits",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Oxalic Acid",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "MIBK",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Caustic Potash: KOH",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
-                        new agent
-                        {
-                            exposure_type = "Chemical",
-                            description = "Ammonia",
-                            sort_order = null,
-                            display = true,
-                            created_user = "MJWilson",
-                            created_date = DateTime.Now
-                        },
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Acetone",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Manganese: Potassium Permanganate",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Manganese: Sodium Permanganate",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Sulfuric Acid",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Potassium Hydroxide",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Hydrofluoric Acid Hydroxide",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Aluminum Oxide",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Graphite",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Caustic Soda",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Nitric Acid",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Ethanediol (Cool Concentrate)",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Propane - 1,2 Diol  (Cry-Tek 100 Antifreeze)",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Phtahalic Anhydride (Crystal Bond)",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Propylene Glycol (Dow Frost's)",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Ethylene Gas",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Chlorodifluoromethane (HCFC-22)",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Hydrochloric Acid",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Hydrogen Peroxide",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Isopropyl Alcohol",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Mercury",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Mineral Spirits",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Oxalic Acid",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "MIBK",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Caustic Potash: KOH",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
+                        //new agent
+                        //{
+                        //    exposure_type = "Chemical",
+                        //    description = "Ammonia",
+                        //    sort_order = null,
+                        //    display = true,
+                        //    created_user = "MJWilson",
+                        //    created_date = DateTime.Now
+                        //},
                         new agent
                         {
                             exposure_type = "Ergonomic",
@@ -1517,6 +1519,1145 @@ namespace EHS.Models
                     );
                     context.SaveChanges();
                 }
+
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                /// SEED CHEMICAL RISK ASSESSMENT DROPDOWNS
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                // Look for any 'area' records....
+                if (!context.area.Any())
+                {
+                    context.area.AddRange(
+                        new area
+                        {
+                            description = "C&M",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "EPI",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Fabrication",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Fabrication MWS",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Fabrication MWS, Maintenance",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Fabrication, Maintenance",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Facilities",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Facilities, Maintenance",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "GDR Polish",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "GDR Polish, C&M",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Grind",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Growth",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Growth Operations, R&D",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Growth, R&D",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Growth, Fabrication, Seed Coat",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Growth, Facilities",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Growth, Facilities, EPI",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "GSP, Polish",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "KOH",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Polish GDR",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Polish GDR, GSP",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Polish GSP",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Quality",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "R&D Lab",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "R&D Lab & R&D Growth",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new area
+                        {
+                            description = "Seed Coat",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'use' records....
+                if (!context.use.Any())
+                {
+                    context.use.AddRange(
+                        new use
+                        {
+                            description = "2-5 Grams in Crucible",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Biocide",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Compressor Fluid",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "EPI",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Fab/Polish",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Fab: Studer Oil",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "GDR Polish",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Facilities, Maintenance",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "GDR Polish",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "GDR Polish Slurry",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "KOH Bath (seed coat)",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "KOH Bench",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Lab Chemical",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Maintenance and ?? (base oil)",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Maintenance and ?? (circulating/gear oil)",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Maintenance and ?? (grease)",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Maintenance and ?? (lubricant)",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Maintenance and ?? (turbine oil)",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Polish",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Polish: Terminator",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Process Aid",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Process Aid (DAC)",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Process Aid to remove Metals",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Process Aid: Terminator",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Raw Material",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Slurry",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Tepla Furnace compressor lubricant",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Tepla Furnace vacuum pump oil",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Waste",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new use
+                        {
+                            description = "Water Treatment",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'physical state' records....
+                if (!context.physical_state.Any())
+                {
+                    context.physical_state.AddRange(
+                        new physical_state
+                        {
+                            description = "Solid",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new physical_state
+                        {
+                            description = "Liquid",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new physical_state
+                        {
+                            description = "Gas",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'physical state' records....
+                if (!context.hazardous.Any())
+                {
+                    context.hazardous.AddRange(
+                        new hazardous
+                        {
+                            description = "Hazardous",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazardous
+                        {
+                            description = "Non-Hazardous",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'ppe-eye' records....
+                if (!context.ppe_eye.Any())
+                {
+                    context.ppe_eye.AddRange(
+                        new ppe_eye
+                        {
+                            description = "None Required",
+                            sort_order = "10",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_eye
+                        {
+                            description = "Safety Glasses (with side shields)",
+                            sort_order = "20",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_eye
+                        {
+                            description = "Safety Goggles (splash protection)",
+                            sort_order = "30",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_eye
+                        {
+                            description = "Face Shield (to be worn over safety glasses/goggles)",
+                            sort_order = "40",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_eye
+                        {
+                            description = "Welding Goggles/Shield (for specific light hazards)",
+                            sort_order = "50",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_eye
+                        {
+                            description = "Other (specify in notes) ",
+                            sort_order = "",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'ppe-glove' records....
+                if (!context.ppe_glove.Any())
+                {
+                    context.ppe_glove.AddRange(
+                        new ppe_glove
+                        {
+                            description = "None Required",
+                            sort_order = "10",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_glove
+                        {
+                            description = "Disposable Nitrile Gloves (e.g., incidental contact)",
+                            sort_order = "20",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_glove
+                        {
+                            description = "Disposable Latex Gloves (use with caution due to allergy potential)",
+                            sort_order = "30",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_glove
+                        {
+                            description = "Chemical-Resistant Gloves (e.g., butyl rubber, neoprene, PVC; requires specific compatibility check via SDS)",
+                            sort_order = "40",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_glove
+                        {
+                            description = "Inner/Outer Chemical-Resistant Gloves (for enhanced protection/Level A, B, C)",
+                            sort_order = "50",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_glove
+                        {
+                            description = "Cut-Resistant Gloves (for physical hazards)",
+                            sort_order = "60",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_glove
+                        {
+                            description = "Heat-Resistant Gloves",
+                            sort_order = "70",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_glove
+                        {
+                            description = "Other (specify material and thickness in notes) ",
+                            sort_order = "80",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'ppe-Suit' records....
+                if (!context.ppe_suit.Any())
+                {
+                    context.ppe_suit.AddRange(
+                        new ppe_suit
+                        {
+                            description = "None Required",
+                            sort_order = "10",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_suit
+                        {
+                            description = "Lab Coat (flame-resistant if handling flammable chemicals)",
+                            sort_order = "20",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_suit
+                        {
+                            description = "Chemical-Resistant Apron",
+                            sort_order = "30",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_suit
+                        {
+                            description = "Coveralls (e.g., Tyvek, disposable, or flame-resistant)",
+                            sort_order = "40",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_suit
+                        {
+                            description = "Hooded Chemical-Resistant Suit (e.g., PVC splash suit for Level C)",
+                            sort_order = "50",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_suit
+                        {
+                            description = "Totally-Encapsulating Chemical-Protective Suit (Vapor protective suit for Level A)",
+                            sort_order = "60",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_suit
+                        {
+                            description = "Other (specify in notes) ",
+                            sort_order = "70",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'ppe-Respiratory' records....
+                if (!context.ppe_respiratory.Any())
+                {
+                    context.ppe_respiratory.AddRange(
+                        new ppe_respiratory
+                        {
+                            description = "None Required",
+                            sort_order = "10",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_respiratory
+                        {
+                            description = "Dust Mask (basic nuisance dust, not for chemicals)",
+                            sort_order = "20",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_respiratory
+                        {
+                            description = "Half-Mask Air-Purifying Respirator (APR) (requires specific cartridge/filter for known contaminant and fit-testing)",
+                            sort_order = "30",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_respiratory
+                        {
+                            description = "Full-Face Air-Purifying Respirator (APR) (requires specific cartridge/filter for known contaminant and fit-testing)",
+                            sort_order = "40",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_respiratory
+                        {
+                            description = "Supplied-Air Respirator (SAR) / Air-Line Respirator (for oxygen-deficient or highly toxic atmospheres)",
+                            sort_order = "50",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_respiratory
+                        {
+                            description = "Self-Contained Breathing Apparatus (SCBA) (positive pressure, full-facepiece, for unknown/immediately dangerous to life and health (IDLH) atmospheres)",
+                            sort_order = "60",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_respiratory
+                        {
+                            description = "Escape SCBA (used with SAR)",
+                            sort_order = "70",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new ppe_respiratory
+                        {
+                            description = "Other (specify type and filter/cartridge in notes)",
+                            sort_order = "80",
+                            display = true,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+                // Look for any 'hazard codes' records....
+                if (!context.hazard_codes.Any())
+                {
+                    context.hazard_codes.AddRange(
+                        new hazard_codes
+                        {
+                            code = "H281",
+                            description = "Contains refrigerated gas; may cause cryogenic burns or injury",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H300",
+                            description = "Fatal if swallowed",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H301",
+                            description = "Toxic if swallowed",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H302",
+                            description = "Harmful if swallowed",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H303",
+                            description = "May be harmful if swallowed",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H304",
+                            description = "May be fatal if swallowed and enters airway",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H305",
+                            description = "May be harmful if swallowed and enters airway",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H311",
+                            description = "Toxic in contact with Skin",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H312",
+                            description = "Harmful in contact with skin",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H313",
+                            description = "May be harmful in contact with skin",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H314",
+                            description = "Causes severe skin burns and eye damage",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H315",
+                            description = "Causes skin irritation",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H316",
+                            description = "Causes mild skin irritation",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 1,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H317",
+                            description = "May cause an allergic skin reaction",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H318",
+                            description = "Causes serious eye damage",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H319",
+                            description = "Causes serious eye irritation",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H320",
+                            description = "Causes eye irritation",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H330",
+                            description = "Fatal if inhaled",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H331",
+                            description = "Toxic if inhaled",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H332",
+                            description = "Harmful if inhaled",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H333",
+                            description = "May be harmful inhaled",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H334",
+                            description = "May cause allergy or asthma symptons or breathing difficulties if inhaled",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H335",
+                            description = "May cause respiratory irritation",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H336",
+                            description = "May cause drowsiness or dizziness",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 2,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H340",
+                            description = "May cause genetic defects",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H341",
+                            description = "Suspected of causing genetic defects",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H350",
+                            description = "May cause cancer",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H351",
+                            description = "Suspected of causing cancer **",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H360",
+                            description = "May damage fertility or the unborn child",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H361",
+                            description = "Suspected of damaging fertility or the unborn child",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H362",
+                            description = "May cause harm to breast-fed children",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H370",
+                            description = "Causes damage to organs H372 Causes damage to organs through prolonged or repeated exposure",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 4,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H371",
+                            description = "May cause damage to organs",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        },
+                        new hazard_codes
+                        {
+                            code = "H373",
+                            description = "May cause damage to organs through prolonged or repeated exposure",
+                            sort_order = "",
+                            display = true,
+                            risk_rating = 3,
+                            created_user = "MJWilson",
+                            created_date = DateTime.Now
+                        }
+                    );
+                    context.SaveChanges();
+                }
+
+
             }
         }
     }

@@ -1,0 +1,766 @@
+﻿@model EHS.ViewModels.ChemicalRiskAssessmentViewModel
+
+@{
+    ViewData["Title"] = "Chemical Risk Assessment Details";
+
+    var hazardLookup = ViewBag.HazardLookup as IDictionary<int, string>
+                       ?? new Dictionary<int, string>();
+    var hazardRisk = ViewBag.HazardRisk as IDictionary<int, int>
+                     ?? new Dictionary<int, int>();
+
+    // Returns a sequence of "CODE - Description" lines
+    Func<IEnumerable<int>, IEnumerable<string>> getHazardLines = ids =>
+    {
+        if (ids == null || !ids.Any())
+            return Enumerable.Empty<string>();
+
+        return ids.Select(id =>
+        {
+            if (hazardLookup.TryGetValue(id, out var text))
+                return text;
+
+            return $"ID {id}";
+        });
+    };
+
+    // Returns CSS class based on max risk rating in the list
+    Func<IEnumerable<int>, string> hazardCardClass = ids =>
+    {
+        if (ids == null || !ids.Any())
+            return "hazard-level-0";
+
+        int max = ids
+            .Where(id => hazardRisk.ContainsKey(id))
+            .Select(id => hazardRisk[id])
+            .DefaultIfEmpty(0)
+            .Max();
+
+        return max switch
+        {
+            1 => "hazard-level-1",
+            2 => "hazard-level-2",
+            3 => "hazard-level-3",
+            4 => "hazard-level-4",
+            _ => "hazard-level-0"
+        };
+    };
+}
+
+<style>
+    .detail-item-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background-color: #f8f9fa;
+        margin-bottom: 0.75rem;
+        height: 100%;
+    }
+
+    .detail-label {
+        font-size: 0.8rem;
+        font-weight: 600; /* semi-bold */
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        color: #000;
+        margin-bottom: 0.15rem;
+    }
+
+    .detail-value {
+        font-size: 0.95rem;
+        color: #212529;
+        word-break: break-word;
+    }
+
+    .detail-notes {
+        min-height: 100px;
+    }
+
+    /* Hazard intensity colors */
+    .detail-item-card.hazard-level-0 {
+    }
+
+    .detail-item-card.hazard-level-1 {
+        background-color: #d4edda;
+        border-left: 6px solid #28a745;
+    }
+
+    .detail-item-card.hazard-level-2 {
+        background-color: #fff3cd;
+        border-left: 6px solid #ffc107;
+    }
+
+    .detail-item-card.hazard-level-3 {
+        background-color: #ffe5d0;
+        border-left: 6px solid #fd7e14;
+    }
+
+    .detail-item-card.hazard-level-4 {
+        background-color: #f8d7da;
+        border-left: 6px solid #dc3545;
+    }
+
+    .dark-mode .detail-item-card {
+        background-color: #212529;
+        border-color: #343a40;
+    }
+
+    .dark-mode .detail-label {
+        color: #adb5bd;
+    }
+
+    .dark-mode .detail-value {
+        color: #f8f9fa;
+    }
+
+    .dark-mode .detail-item-card.hazard-level-1 {
+        background-color: #123322;
+        border-left-color: #28a745;
+    }
+
+    .dark-mode .detail-item-card.hazard-level-2 {
+        background-color: #3a3415;
+        border-left-color: #ffc107;
+    }
+
+    .dark-mode .detail-item-card.hazard-level-3 {
+        background-color: #3a2615;
+        border-left-color: #fd7e14;
+    }
+
+    .dark-mode .detail-item-card.hazard-level-4 {
+        background-color: #3a1515;
+        border-left-color: #dc3545;
+    }
+
+    .hazard-line {
+        display: block;
+        margin-bottom: 2px;
+    }
+</style>
+
+<div class="py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">Chemical Risk Assessment Details</h2>
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+
+            @* File Attachment Error Message *@
+            @if (!string.IsNullOrEmpty(Model.FileAttachmentError))
+            {
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
+                            @Model.FileAttachmentError
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Chemical Information -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Basic Information</legend>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Chemical</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.chemical)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">State</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.state)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">NFPA</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.nfpa)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Location</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.location)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Area</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.area)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Use</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.use)</div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </fieldset>
+
+            <!-- Chemical Composition -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Chemical Composition</legend>
+
+                <div class="detail-item-card detail-notes">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="detail-label mb-0">Components (chemicals)</div>                       
+                        <a asp-action="Create" asp-controller="chemical_composition" asp-route-assessmentId="@Model.chemical_risk_assessment.id" class="btn btn-sm btn-success">
+                            Add Component
+                        </a>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <div class="table-container">
+                            <table id="compositionTable" class="table table-striped table-hover table-bordered nowrap datatable-hidden" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>CAS Number</th>
+                                        <th>Chemical Name</th>
+                                        <th>Concentration Low (%)</th>
+                                        <th>Concentration High (%)</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.chemical_risk_assessment?.composition != null &&
+                                                                        Model.chemical_risk_assessment.composition.Any())
+                                    {
+                                        foreach (var item in Model.chemical_risk_assessment.composition)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a asp-controller="IhChemicalsCrud"
+                                                       asp-action="DetailsByCas"
+                                                       asp-route-cas="@item.cas_number">
+                                                        @item.cas_number
+                                                    </a>
+                                                </td>
+                                                <td>@Html.DisplayFor(_ => item.chemical_name)</td>
+                                                <td>@Html.DisplayFor(_ => item.concentration_low)</td>
+                                                <td>@Html.DisplayFor(_ => item.concentration_high)</td>
+                                                <td class="text-nowrap">
+                                                    <div class="d-flex gap-1 flex-nowrap align-items-center">
+                                                        <a class="btn btn-secondary btn-sm" asp-action="Details" asp-controller="chemical_composition" asp-route-chemicalId="@item.id" title="Details">
+                                                            <img src="@Url.Content("~/css/icons/lucide/details.svg")" alt="Info" width="24" height="24" />
+                                                            @* <i data-lucide="info"></i> *@
+                                                        </a>
+                                                        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-controller="chemical_composition" asp-route-chemicalId="@item.id" title="Edit">
+                                                            <img src="@Url.Content("~/css/icons/lucide/edit.svg")" alt="Edit" width="24" height="24" />
+                                                            @* <i data-lucide="pencil"></i> *@
+                                                        </a>
+                                                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="chemical_composition" asp-route-chemicalId="@item.id" title="Delete">
+                                                            <img src="@Url.Content("~/css/icons/lucide/delete.svg")" alt="Delete" width="24" height="24" />
+                                                            @* <i data-lucide="trash-2"></i> *@
+                                                        </a>
+
+@*                                                         <a asp-action="Details"
+                                                           asp-controller="chemical_composition"
+                                                           asp-route-chemicalId="@item.id"
+                                                           class="btn btn-sm btn-outline-info flex-shrink-0">
+                                                            Details
+                                                        </a>
+                                                        <a asp-action="Edit"
+                                                           asp-controller="chemical_composition"
+                                                           asp-route-chemicalId="@item.id"
+                                                           class="btn btn-sm btn-outline-primary flex-shrink-0">
+                                                            Edit
+                                                        </a>
+                                                        <a asp-action="Delete"
+                                                           asp-controller="chemical_composition"
+                                                           asp-route-chemicalId="@item.id"
+                                                           class="btn btn-sm btn-outline-danger flex-shrink-0">
+                                                            Delete
+                                                        </a> *@
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    @* No else: leave tbody empty and let DataTables show its own empty message *@
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Hazards -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Hazards</legend>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.skin_absorption)">
+                            <div class="detail-label">Skin Absorption</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesSkinAbsorption = getHazardLines(Model.chemical_risk_assessment.skin_absorption);
+                                }
+                                @if (!linesSkinAbsorption.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesSkinAbsorption)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.skin_contact)">
+                            <div class="detail-label">Skin Contact</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesSkinContact = getHazardLines(Model.chemical_risk_assessment.skin_contact);
+                                }
+                                @if (!linesSkinContact.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesSkinContact)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.eye_contact)">
+                            <div class="detail-label">Eye Contact</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesEyeContact = getHazardLines(Model.chemical_risk_assessment.eye_contact);
+                                }
+                                @if (!linesEyeContact.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesEyeContact)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.respiratory)">
+                            <div class="detail-label">Respiratory</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesRespiratory = getHazardLines(Model.chemical_risk_assessment.respiratory);
+                                }
+                                @if (!linesRespiratory.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesRespiratory)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.ingestion)">
+                            <div class="detail-label">Ingestion</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesIngestion = getHazardLines(Model.chemical_risk_assessment.ingestion);
+                                }
+                                @if (!linesIngestion.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesIngestion)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.sensitizer)">
+                            <div class="detail-label">Sensitizer</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesSensitizer = getHazardLines(Model.chemical_risk_assessment.sensitizer);
+                                }
+                                @if (!linesSensitizer.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesSensitizer)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.carcinogen)">
+                            <div class="detail-label">Carcinogen</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesCarcinogen = getHazardLines(Model.chemical_risk_assessment.carcinogen);
+                                }
+                                @if (!linesCarcinogen.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesCarcinogen)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.reproductive)">
+                            <div class="detail-label">Reproductive</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesReproductive = getHazardLines(Model.chemical_risk_assessment.reproductive);
+                                }
+                                @if (!linesReproductive.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesReproductive)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-3">
+                        <div class="detail-item-card @hazardCardClass(Model.chemical_risk_assessment.other)">
+                            <div class="detail-label">Other</div>
+                            <div class="detail-value">
+                                @{
+                                    var linesOther = getHazardLines(Model.chemical_risk_assessment.other);
+                                }
+                                @if (!linesOther.Any())
+                                {
+                                    <span class="text-muted">None selected</span>
+                                }
+                                else
+                                {
+                                    foreach (var line in linesOther)
+                                    {
+                                        <span class="hazard-line">@line</span>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- PPE -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Personal Protective Equipment (PPE)</legend>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Gloves</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.ppe_glove)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Suit</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.ppe_suit)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Eyewear</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.ppe_eyewear)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Respiratory</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.ppe_respiratory)</div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Exposure Controls & Response -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Exposure Controls & Response</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">OELs</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.oels)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Emergency Response</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.emergency_response)</div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Risk & Assessment -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Risk & Assessment</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Assessor</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.person_performing_assessment_displayname)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Date Conducted</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.date_conducted)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Reviewer</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.person_performing_review_displayname)</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Date Reviewed</div>
+                            <div class="detail-value">@Html.DisplayFor(m => m.chemical_risk_assessment.date_reviewed)</div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Notes -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Notes</legend>
+                <div class="detail-item-card detail-notes">
+                    <div class="detail-label">Notes</div>
+                    <div class="detail-value">
+                        @if (!string.IsNullOrWhiteSpace(Model.chemical_risk_assessment.notes))
+                        {
+                            @Html.Raw(Model.chemical_risk_assessment.notes)
+                        }
+                        else
+                        {
+                            <span class="text-muted">No notes recorded.</span>
+                        }
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Audit Trail -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Audit Trail</legend>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Created By</div>
+                            <div class="detail-value">
+                                @Html.DisplayFor(m => m.chemical_risk_assessment.created_user_fullname)<br />
+                                <small class="text-muted">@Html.DisplayFor(m => m.chemical_risk_assessment.created_user_email)</small><br />
+                                <small>@Html.DisplayFor(m => m.chemical_risk_assessment.created_date)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Modified By</div>
+                            <div class="detail-value">
+                                @Html.DisplayFor(m => m.chemical_risk_assessment.modified_user_fullname)<br />
+                                <small class="text-muted">@Html.DisplayFor(m => m.chemical_risk_assessment.modified_user_email)</small><br />
+                                <small>@Html.DisplayFor(m => m.chemical_risk_assessment.modified_date)</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="detail-item-card">
+                            <div class="detail-label">Deleted By</div>
+                            <div class="detail-value">
+                                @Html.DisplayFor(m => m.chemical_risk_assessment.deleted_user_fullname)<br />
+                                <small class="text-muted">@Html.DisplayFor(m => m.chemical_risk_assessment.deleted_user_email)</small><br />
+                                <small>@Html.DisplayFor(m => m.chemical_risk_assessment.deleted_date)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Attachments -->
+            <fieldset class="border p-3 mb-4 rounded">
+                <legend class="float-none w-auto px-2">Attachments</legend>
+                <div class="col-md-12">
+                    <div class="detail-item-card">
+                        @using (Html.BeginForm("SaveAttachment", "chemical_risk_assessment", new { id = Model.chemical_risk_assessment.id, sourceView = "Details" }, FormMethod.Post, false, new { enctype = "multipart/form-data" }))
+                        {
+                            <div class="row align-items-end mb-3">
+                                <div class="col-md-9">
+                                    <label class="form-label fw-bold">Upload Attachment(s)</label>
+                                    <input type="file" name="fileAttachment" class="form-control" @ViewBag.DisableAttachmentUpload />
+
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="submit" value="Upload" class="btn btn-success w-100" @ViewBag.DisableAttachmentUpload />
+                                </div>
+                            </div>
+                            @* File Attachment Error Message *@
+                            @if (!string.IsNullOrEmpty(Model.FileAttachmentError))
+                            {
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <div class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
+                                            @Model.FileAttachmentError
+                                            <button type="button"
+                                                    class="btn-close"
+                                                    data-bs-dismiss="alert"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Date Added</th>
+                                        <th>Size</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.attachments.Any())
+                                    {
+                                        foreach (var item in Model.attachments)
+                                        {
+                                            string size = item.Size < 1000
+                                            ? item.Size + " bytes"
+                                            : string.Format("{0:N0} KB", item.Size / 1000);
+                                            string createdDateFormatted = item.CreatedDate.ToString();
+                                            <tr>
+                                                <td>@item.Name</td>
+                                                <td>@createdDateFormatted</td>
+                                                <td>@size</td>
+                                                <td>
+                                                    @Html.ActionLink("Download", "DownloadAttachment", "chemical_risk_assessment",
+                                                    new { id = Model.chemical_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath },
+                                                                                        new { @class = "btn btn-sm btn-secondary me-1" })
+
+                                            @if (Model.IsAdmin || Model.Username == Model.chemical_risk_assessment.created_user)
+                                                    {
+                                                        @Html.ActionLink("Delete", "DeleteAttachment", "chemical_risk_assessment",
+                                                        new { id = Model.chemical_risk_assessment.id, fileName = item.Name, sourcePath = item.FullPath },
+                                                                                        new { @class = "btn btn-sm btn-danger" })
+                                                                                        }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="4" class="text-center">No attachments found</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- End Buttons -->
+            <div class="mt-4 d-flex justify-content-between">
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            if ($.fn.DataTable) {
+                $('#compositionTable').DataTable({
+                    // Set to false if you don't want the horizontal bar when not needed
+                    scrollX: false,
+                    autoWidth: false,
+                    pageLength: 10,
+                    lengthChange: true,
+                    responsive: false,
+                    order: [],
+                    columnDefs: [
+                        { targets: [4], orderable: false, className: 'no-sort' } // Actions column
+                    ],
+                    language: {
+                        emptyTable: "No chemical components recorded."
+                    }
+                });
+
+                $('#compositionTable').removeClass('datatable-hidden');
+            }
+        });
+    </script>
+}
+

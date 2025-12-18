@@ -110,14 +110,14 @@
                         item.risk_score >= 6 ? "table-warning" :
                         "")" *@>
                     <td>
-                        <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.id" title="Edit">
-                            <img src="@Url.Content("~/css/icons/lucide/edit.svg")" alt="Edit" width="24" height="24" />
-                            @* <i data-lucide="pencil"></i> *@
-                        </a>
                         <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.id" title="Details">
                             <img src="@Url.Content("~/css/icons/lucide/details.svg")" alt="Info" width="24" height="24" />
                             @* <i data-lucide="info"></i> *@
                         </a>
+                            <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.id" title="Edit">
+                                <img src="@Url.Content("~/css/icons/lucide/edit.svg")" alt="Edit" width="24" height="24" />
+                                @* <i data-lucide="pencil"></i> *@
+                            </a>
                         <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.id" title="Delete">
                             <img src="@Url.Content("~/css/icons/lucide/delete.svg")" alt="Delete" width="24" height="24" />
                             @* <i data-lucide="trash-2"></i> *@
