@@ -4,230 +4,286 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@{
+    var hazardLookup = ViewData["HazardLookup"] as IReadOnlyDictionary<int, string>
+                       ?? new Dictionary<int, string>();
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.location)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.area)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.use)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.state)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.chemical)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.nfpa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.inhalation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.skin_contact)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.eye_contact)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ingestion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.glove)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.suit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.eyewear)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.respiratory)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.oels)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.emergency_response)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.notes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.risk_score)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.person_performing_assessment_username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.person_performing_assessment_displayname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.date_conducted)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.date_reviewed)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.created_user)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.created_user_fullname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.created_user_email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.created_date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.modified_user)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.modified_user_fullname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.modified_user_email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.modified_date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.deleted_user)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.deleted_user_fullname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.deleted_user_email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.deleted_date)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.location)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.area)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.use)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.state)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.chemical)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.nfpa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.inhalation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.skin_contact)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.eye_contact)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ingestion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.glove)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.suit)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.eyewear)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.respiratory)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.oels)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.emergency_response)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.notes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.risk_score)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.person_performing_assessment_username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.person_performing_assessment_displayname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.date_conducted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.date_reviewed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.created_user)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.created_user_fullname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.created_user_email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.created_date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.modified_user)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.modified_user_fullname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.modified_user_email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.modified_date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.deleted_user)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.deleted_user_fullname)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.deleted_user_email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.deleted_date)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
-            </td>
-        </tr>
+    var hazardRisk = ViewData["HazardRisk"] as IReadOnlyDictionary<int, int>
+                     ?? new Dictionary<int, int>();
+
+    // compositionCounts: assessmentId -> number of components
+    var compositionCounts = ViewBag.CompositionCounts as IReadOnlyDictionary<int, int>
+                            ?? new Dictionary<int, int>();
+
+    // Used for tooltip text if you want it
+    string JoinHazards(IEnumerable<int> ids)
+        => ids == null
+            ? ""
+            : string.Join(", ",
+                ids.Select(id =>
+                    hazardLookup.TryGetValue(id, out var text)
+                        ? text
+                        : $"#{id}"
+                ));
+
+    int GetMaxRisk(IEnumerable<int> ids)
+    {
+        if (ids == null)
+            return 0;
+
+        return ids
+            .Where(id => hazardRisk.ContainsKey(id))
+            .Select(id => hazardRisk[id])
+            .DefaultIfEmpty(0)
+            .Max();
+    }
+
+    string GetHazardBoxClass(int maxRisk)
+        => maxRisk switch
+        {
+            1 => "hazard-box level-1",
+            2 => "hazard-box level-2",
+            3 => "hazard-box level-3",
+            4 => "hazard-box level-4",
+            _ => "hazard-box level-0"
+        };
+
+    bool anyMissingComponents = Model.Any(m =>
+        !compositionCounts.ContainsKey(m.id) || compositionCounts[m.id] == 0);
 }
-    </tbody>
-</table>
+
+<style>
+    .hazard-box {
+        width: 30px;
+        height: 30px;
+        border-radius: 6px;
+        margin: 0 auto;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+
+        .hazard-box.level-0 {
+            background-color: transparent;
+            border-style: dashed;
+            opacity: 0.4;
+        }
+
+        .hazard-box.level-1 {
+            background-color: #28a745;
+        }
+        /* green  */
+        .hazard-box.level-2 {
+            background-color: #ffc107;
+        }
+        /* yellow */
+        .hazard-box.level-3 {
+            background-color: #fd7e14;
+        }
+        /* orange */
+        .hazard-box.level-4 {
+            background-color: #dc3545;
+        }
+    /* red    */
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Chemical Risk Assessments</h1>
+    <div class="btn-group">
+        <button type="button" class="btn btn-outline-info btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            About Chemical Risk
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="https://www.aiha.org/public-resources/consumer-resources/topics-of-interest/industrial-hygiene-overview" target="_blank">Industrial Hygiene Overview</a></li>
+            <li><a class="dropdown-item" href="https://www.cdc.gov/niosh/topics/chemical-safety/default.html" target="_blank">NIOSH Chemical Safety</a></li>
+            <li><a class="dropdown-item" href="https://www.nfpa.org/" target="_blank">NFPA Resources</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="d-flex gap-2 mb-3">
+    <a class="btn btn-success btn-sm" asp-action="Create" title="Create">
+        <img src="@Url.Content("~/css/icons/lucide/create.svg")" alt="Create" width="24" height="24" />
+    </a>
+</div>
+
+@if (anyMissingComponents)
+{
+    <div class="alert alert-warning py-2">
+        <strong>Action needed:</strong> Some chemical risk assessments do not have any
+        <em>chemical composition</em> records defined. Look for the
+        <span class="badge bg-danger">Missing</span> label in the <strong>Components</strong> column.
+        Add chemicals/components in the 'Details' view
+        <img src="@Url.Content("~/css/icons/lucide/details.svg")"
+             alt="Details"
+             width="18"
+             height="18"
+             class="ms-1 align-text-bottom" />
+    </div>
+}
+
+<div class="table-wrapper">
+    <div class="table-container datatable-hidden">
+        <table id="chemicalRiskTable" class="table table-striped table-hover table-bordered nowrap" style="width:100%">
+            <thead>
+                <tr>
+                    @if (Model.Any())
+                    {
+                        <th></th> @* actions *@
+                    }
+                    <th>@Html.DisplayNameFor(model => model.chemical)</th>
+                    <th>Components</th>
+                    <th>@Html.DisplayNameFor(model => model.location)</th>
+                    <th>@Html.DisplayNameFor(model => model.area)</th>
+                    <th>@Html.DisplayNameFor(model => model.use)</th>
+                    <th>@Html.DisplayNameFor(model => model.state)</th>
+                    <th>@Html.DisplayNameFor(model => model.nfpa)</th>
+
+                    @* Hazards *@
+                    <th>@Html.DisplayNameFor(model => model.skin_absorption)</th>
+                    <th>@Html.DisplayNameFor(model => model.skin_contact)</th>
+                    <th>@Html.DisplayNameFor(model => model.eye_contact)</th>
+                    <th>@Html.DisplayNameFor(model => model.respiratory)</th>
+                    <th>@Html.DisplayNameFor(model => model.ingestion)</th>
+                    <th>@Html.DisplayNameFor(model => model.sensitizer)</th>
+                    <th>@Html.DisplayNameFor(model => model.carcinogen)</th>
+                    <th>@Html.DisplayNameFor(model => model.reproductive)</th>
+                    <th>@Html.DisplayNameFor(model => model.other)</th>
+
+                    @* PPE *@
+                    <th>@Html.DisplayNameFor(model => model.ppe_glove)</th>
+                    <th>@Html.DisplayNameFor(model => model.ppe_suit)</th>
+                    <th>@Html.DisplayNameFor(model => model.ppe_eyewear)</th>
+                    <th>@Html.DisplayNameFor(model => model.ppe_respiratory)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var compCount = compositionCounts.TryGetValue(item.id, out var count) ? count : 0;
+                    bool hasComponents = compCount > 0;
+
+                    <tr>
+                        <td class="text-nowrap">
+                            <a class="btn btn-secondary btn-sm" asp-action="Details" asp-route-id="@item.id" title="Details">
+                                <img src="@Url.Content("~/css/icons/lucide/details.svg")" alt="Details" width="24" height="24" />
+                            </a>
+                            <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.id" title="Edit">
+                                <img src="@Url.Content("~/css/icons/lucide/edit.svg")" alt="Edit" width="24" height="24" />
+                            </a>
+                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.id" title="Delete">
+                                <img src="@Url.Content("~/css/icons/lucide/delete.svg")" alt="Delete" width="24" height="24" />
+                            </a>
+                            <a class="btn btn-info btn-sm" asp-action="Attachments" asp-route-id="@item.id" title="Attachments">
+                                <img src="@Url.Content("~/css/icons/lucide/paperclip.svg")" alt="Attachments" width="24" height="24" />
+                            </a>
+                        </td>
+
+                        <td>@Html.DisplayFor(modelItem => item.chemical)</td>
+                        <td>
+                            @if (!hasComponents)
+                            {
+                                <span class="badge bg-danger"
+                                      title="No chemical composition records defined for this assessment. Add in 'Details' view">
+                                    Missing
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success"
+                                      title="Number of chemical components for this assessment.">
+                                    @compCount @(" component" + (compCount == 1 ? "" : "s"))
+                                </span>
+                            }
+                        </td>
+                        <td>@Html.DisplayFor(modelItem => item.location)</td>
+                        <td>@string.Join(", ", item.area ?? new List<string>())</td>
+                        <td>@string.Join(", ", item.use ?? new List<string>())</td>
+                        <td>@Html.DisplayFor(modelItem => item.state)</td>
+
+
+                        <td>@Html.DisplayFor(modelItem => item.nfpa)</td>
+
+                        @* Hazards as colored boxes *@
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.skin_absorption))"
+                                 title="@JoinHazards(item.skin_absorption)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.skin_contact))"
+                                 title="@JoinHazards(item.skin_contact)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.eye_contact))"
+                                 title="@JoinHazards(item.eye_contact)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.respiratory))"
+                                 title="@JoinHazards(item.respiratory)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.ingestion))"
+                                 title="@JoinHazards(item.ingestion)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.sensitizer))"
+                                 title="@JoinHazards(item.sensitizer)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.carcinogen))"
+                                 title="@JoinHazards(item.carcinogen)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.reproductive))"
+                                 title="@JoinHazards(item.reproductive)"></div>
+                        </td>
+                        <td>
+                            <div class="@GetHazardBoxClass(GetMaxRisk(item.other))"
+                                 title="@JoinHazards(item.other)"></div>
+                        </td>
+
+                        @* PPE *@
+                        <td>@string.Join(", ", item.ppe_glove ?? new List<string>())</td>
+                        <td>@string.Join(", ", item.ppe_suit ?? new List<string>())</td>
+                        <td>@string.Join(", ", item.ppe_eyewear ?? new List<string>())</td>
+                        <td>@string.Join(", ", item.ppe_respiratory ?? new List<string>())</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var table = $('#chemicalRiskTable')
+                .on('init.dt', function () {
+                    $('.table-container').removeClass('datatable-hidden');
+                })
+                .DataTable({
+                    scrollX: true,
+                    autoWidth: false,
+                    pageLength: 10,
+                    lengthChange: true,
+                    responsive: false,
+                    order: [],
+                    dom: "<'table-controls d-flex justify-content-between align-items-center'Bf>" +
+                         "t" +
+                         "<'d-flex justify-content-between align-items-center mt-2'ip>",
+                    buttons: [
+                        { extend: 'copy',  exportOptions: { columns: ':visible' } },
+                        { extend: 'csv',   exportOptions: { columns: ':visible:not(:first-child)' } },
+                        { extend: 'excel', exportOptions: { columns: ':visible:not(:first-child)' } },
+                        { extend: 'pdf',   exportOptions: { columns: ':visible' } },
+                        { extend: 'print', exportOptions: { columns: ':visible' } }
+                    ],
+                    columnDefs: [
+                        { targets: [0], orderable: false, className: 'no-sort' }
+                    ],
+                    fixedColumns: {
+                        leftColumns: 1
+                    }
+                });
+        });
+    </script>
+}

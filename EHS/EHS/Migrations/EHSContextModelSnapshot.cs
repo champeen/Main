@@ -85,6 +85,73 @@ namespace EHS.Migrations
                     b.ToTable("area", "ehs");
                 });
 
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.hazard_codes", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<int>("risk_rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("hazard_codes", "ehs");
+                });
+
             modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.hazardous", b =>
                 {
                     b.Property<int>("id")
@@ -1984,6 +2051,9 @@ namespace EHS.Migrations
                         .IsRequired()
                         .HasColumnType("text[]");
 
+                    b.Property<List<int>>("carcinogen")
+                        .HasColumnType("integer[]");
+
                     b.Property<string>("chemical")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -2023,25 +2093,11 @@ namespace EHS.Migrations
                     b.Property<string>("emergency_response")
                         .HasColumnType("text");
 
-                    b.Property<List<string>>("eye_contact")
-                        .IsRequired()
-                        .HasColumnType("text[]");
+                    b.Property<List<int>>("eye_contact")
+                        .HasColumnType("integer[]");
 
-                    b.Property<List<string>>("eyewear")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
-                    b.Property<List<string>>("glove")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
-                    b.Property<List<string>>("ingestion")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
-                    b.Property<List<string>>("inhalation")
-                        .IsRequired()
-                        .HasColumnType("text[]");
+                    b.Property<List<int>>("ingestion")
+                        .HasColumnType("integer[]");
 
                     b.Property<string>("location")
                         .IsRequired()
@@ -2070,6 +2126,9 @@ namespace EHS.Migrations
                     b.Property<string>("oels")
                         .HasColumnType("text");
 
+                    b.Property<List<int>>("other")
+                        .HasColumnType("integer[]");
+
                     b.Property<string>("person_performing_assessment_displayname")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -2079,26 +2138,49 @@ namespace EHS.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
 
-                    b.Property<List<string>>("respiratory")
-                        .IsRequired()
+                    b.Property<string>("person_performing_review_displayname")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("person_performing_review_username")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<List<string>>("ppe_eyewear")
                         .HasColumnType("text[]");
+
+                    b.Property<List<string>>("ppe_glove")
+                        .HasColumnType("text[]");
+
+                    b.Property<List<string>>("ppe_respiratory")
+                        .HasColumnType("text[]");
+
+                    b.Property<List<string>>("ppe_suit")
+                        .HasColumnType("text[]");
+
+                    b.Property<List<int>>("reproductive")
+                        .HasColumnType("integer[]");
+
+                    b.Property<List<int>>("respiratory")
+                        .HasColumnType("integer[]");
 
                     b.Property<int?>("risk_score")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("integer");
 
-                    b.Property<List<string>>("skin_contact")
-                        .IsRequired()
-                        .HasColumnType("text[]");
+                    b.Property<List<int>>("sensitizer")
+                        .HasColumnType("integer[]");
+
+                    b.Property<List<int>>("skin_absorption")
+                        .HasColumnType("integer[]");
+
+                    b.Property<List<int>>("skin_contact")
+                        .HasColumnType("integer[]");
 
                     b.Property<string>("state")
                         .IsRequired()
                         .HasMaxLength(64)
                         .HasColumnType("character varying(64)");
-
-                    b.Property<List<string>>("suit")
-                        .IsRequired()
-                        .HasColumnType("text[]");
 
                     b.Property<List<string>>("use")
                         .IsRequired()

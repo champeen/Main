@@ -105,6 +105,26 @@ namespace EHS.Controllers.ChemicalRiskAssessment
             return View(chemical);
         }
 
+        // GET: IhChemicalsCrud/DetailsByCas?cas=50-00-0
+        [HttpGet]
+        public async Task<IActionResult> DetailsByCas(string? cas)
+        {
+            if (string.IsNullOrWhiteSpace(cas))
+                return BadRequest();
+
+            var chemical = await _context.ih_chemical
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CasNumber == cas);
+
+            if (chemical == null)
+                return RedirectToAction("Index");
+                //return NotFound(); // or RedirectToAction("Index") if you prefer
+
+            // Reuse your existing Details action
+            return RedirectToAction(nameof(Details), new { id = chemical.Id });
+        }
+
+
 
 
         // GET: IhChemicalsCrud/Create
@@ -141,7 +161,7 @@ namespace EHS.Controllers.ChemicalRiskAssessment
         // POST: IhChemicalsCrud/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CasNumber,PreferredName")] IhChemical form)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,CasNumber,PreferredName")] Models.IH.IhChemical form)
         {
             if (id != form.Id) return NotFound();
 

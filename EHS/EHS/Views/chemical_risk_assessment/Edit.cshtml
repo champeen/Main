@@ -1,194 +1,356 @@
 ﻿@model EHS.Models.IH.chemical_risk_assessment
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Chemical Risk Assessment";
 }
 
-<h1>Edit</h1>
+<div class="py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">Edit Chemical Risk Assessment</h2>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
 
-<h4>chemical_risk_assessment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="id" />
-            <div class="form-group">
-                <label asp-for="location" class="control-label"></label>
-                <input asp-for="location" class="form-control" />
-                <span asp-validation-for="location" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="area" class="control-label"></label>
-                <input asp-for="area" class="form-control" />
-                <span asp-validation-for="area" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="use" class="control-label"></label>
-                <input asp-for="use" class="form-control" />
-                <span asp-validation-for="use" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="state" class="control-label"></label>
-                <input asp-for="state" class="form-control" />
-                <span asp-validation-for="state" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="chemical" class="control-label"></label>
-                <input asp-for="chemical" class="form-control" />
-                <span asp-validation-for="chemical" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="nfpa" class="control-label"></label>
-                <input asp-for="nfpa" class="form-control" />
-                <span asp-validation-for="nfpa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="inhalation" class="control-label"></label>
-                <input asp-for="inhalation" class="form-control" />
-                <span asp-validation-for="inhalation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="skin_contact" class="control-label"></label>
-                <input asp-for="skin_contact" class="form-control" />
-                <span asp-validation-for="skin_contact" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="eye_contact" class="control-label"></label>
-                <input asp-for="eye_contact" class="form-control" />
-                <span asp-validation-for="eye_contact" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ingestion" class="control-label"></label>
-                <input asp-for="ingestion" class="form-control" />
-                <span asp-validation-for="ingestion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="glove" class="control-label"></label>
-                <input asp-for="glove" class="form-control" />
-                <span asp-validation-for="glove" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="suit" class="control-label"></label>
-                <input asp-for="suit" class="form-control" />
-                <span asp-validation-for="suit" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="eyewear" class="control-label"></label>
-                <input asp-for="eyewear" class="form-control" />
-                <span asp-validation-for="eyewear" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="respiratory" class="control-label"></label>
-                <input asp-for="respiratory" class="form-control" />
-                <span asp-validation-for="respiratory" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="oels" class="control-label"></label>
-                <input asp-for="oels" class="form-control" />
-                <span asp-validation-for="oels" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="emergency_response" class="control-label"></label>
-                <input asp-for="emergency_response" class="form-control" />
-                <span asp-validation-for="emergency_response" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="notes" class="control-label"></label>
-                <input asp-for="notes" class="form-control" />
-                <span asp-validation-for="notes" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="person_performing_assessment_username" class="control-label"></label>
-                <input asp-for="person_performing_assessment_username" class="form-control" />
-                <span asp-validation-for="person_performing_assessment_username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="person_performing_assessment_displayname" class="control-label"></label>
-                <input asp-for="person_performing_assessment_displayname" class="form-control" />
-                <span asp-validation-for="person_performing_assessment_displayname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="date_conducted" class="control-label"></label>
-                <input asp-for="date_conducted" class="form-control" />
-                <span asp-validation-for="date_conducted" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="date_reviewed" class="control-label"></label>
-                <input asp-for="date_reviewed" class="form-control" />
-                <span asp-validation-for="date_reviewed" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_user" class="control-label"></label>
-                <input asp-for="created_user" class="form-control" />
-                <span asp-validation-for="created_user" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_user_fullname" class="control-label"></label>
-                <input asp-for="created_user_fullname" class="form-control" />
-                <span asp-validation-for="created_user_fullname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_user_email" class="control-label"></label>
-                <input asp-for="created_user_email" class="form-control" />
-                <span asp-validation-for="created_user_email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_date" class="control-label"></label>
-                <input asp-for="created_date" class="form-control" />
-                <span asp-validation-for="created_date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_user" class="control-label"></label>
-                <input asp-for="modified_user" class="form-control" />
-                <span asp-validation-for="modified_user" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_user_fullname" class="control-label"></label>
-                <input asp-for="modified_user_fullname" class="form-control" />
-                <span asp-validation-for="modified_user_fullname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_user_email" class="control-label"></label>
-                <input asp-for="modified_user_email" class="form-control" />
-                <span asp-validation-for="modified_user_email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_date" class="control-label"></label>
-                <input asp-for="modified_date" class="form-control" />
-                <span asp-validation-for="modified_date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_user" class="control-label"></label>
-                <input asp-for="deleted_user" class="form-control" />
-                <span asp-validation-for="deleted_user" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_user_fullname" class="control-label"></label>
-                <input asp-for="deleted_user_fullname" class="form-control" />
-                <span asp-validation-for="deleted_user_fullname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_user_email" class="control-label"></label>
-                <input asp-for="deleted_user_email" class="form-control" />
-                <span asp-validation-for="deleted_user_email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_date" class="control-label"></label>
-                <input asp-for="deleted_date" class="form-control" />
-                <span asp-validation-for="deleted_date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+            <form asp-action="Edit" class="needs-validation" novalidate>
+                @* Primary key *@
+                <input type="hidden" asp-for="id" />
+
+                @* Hidden audit fields (keep these off UI) *@
+                @Html.HiddenFor(m => m.created_user)
+                @Html.HiddenFor(m => m.created_user_fullname)
+                @Html.HiddenFor(m => m.created_user_email)
+                @Html.HiddenFor(m => m.created_date)
+
+                @* If you are setting modified_* in the controller, keep them hidden too *@
+                @Html.HiddenFor(m => m.modified_user)
+                @Html.HiddenFor(m => m.modified_user_fullname)
+                @Html.HiddenFor(m => m.modified_user_email)
+                @Html.HiddenFor(m => m.modified_date)
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                @* =========================
+                   DETAILS
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Assessment Details</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="location" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.location,
+                            new SelectList(ViewBag.Locations, "Value", "Text", Model.location),
+                                                        "-- Select Location --",
+                                                        new { @class = "form-control select2-single", @id = "ChemEditLocation" })
+                            <span asp-validation-for="location" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="area" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.area,
+                                                        new MultiSelectList(ViewBag.Areas, "Value", "Text", Model.area),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditArea", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="area" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="use" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.use,
+                                                        new MultiSelectList(ViewBag.Uses, "Value", "Text", Model.use),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditUse", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="use" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="state" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.state,
+                                                        new SelectList(ViewBag.PhysicalStates, "Value", "Text", Model.state),
+                                                        "-- Select State --",
+                                                        new { @class = "form-control select2-single", @id = "ChemEditState" })
+                            <span asp-validation-for="state" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="chemical" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            <input asp-for="chemical" class="form-control" />
+                            <span asp-validation-for="chemical" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="nfpa" class="form-label fw-bold"></label>
+                            <input asp-for="nfpa" class="form-control" />
+                            <span asp-validation-for="nfpa" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                @* =========================
+                   HAZARDS
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Hazards</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="skin_absorption" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.skin_absorption,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.skin_absorption),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditSkinAbsorption", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="skin_absorption" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="skin_contact" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.skin_contact,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.skin_contact),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditSkinContact", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="skin_contact" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="eye_contact" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.eye_contact,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.eye_contact),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditEyeContact", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="eye_contact" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="respiratory" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.respiratory,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.respiratory),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditRespiratory", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="respiratory" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="ingestion" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ingestion,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.ingestion),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditIngestion", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ingestion" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="sensitizer" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.sensitizer,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.sensitizer),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditSensitizer", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="sensitizer" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label asp-for="carcinogen" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.carcinogen,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.carcinogen),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditCarcinogen", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="carcinogen" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="reproductive" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.reproductive,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.reproductive),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditReproductive", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="reproductive" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="other" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.other,
+                                                        new MultiSelectList(ViewBag.HazardCodes, "Value", "Text", Model.other),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditOther", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="other" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                @* =========================
+                   PPE
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Personal Protective Equipment (PPE)</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label asp-for="ppe_glove" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_glove,
+                                                        new MultiSelectList(ViewBag.PpeGlove, "Value", "Text", Model.ppe_glove),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditPpeGlove", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_glove" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="ppe_suit" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_suit,
+                                                        new MultiSelectList(ViewBag.PpeSuit, "Value", "Text", Model.ppe_suit),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditPpeSuit", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_suit" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="ppe_eyewear" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_eyewear,
+                                                        new MultiSelectList(ViewBag.PpeEyewear, "Value", "Text", Model.ppe_eyewear),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditPpeEyewear", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_eyewear" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="ppe_respiratory" class="form-label fw-bold"></label>
+                            <i class="bi bi-info-circle-fill" style="color:blue;" data-bs-toggle="tooltip" title="Multi-Select"></i>
+                            @Html.ListBoxFor(m => m.ppe_respiratory,
+                                                        new MultiSelectList(ViewBag.PpeRespiratory, "Value", "Text", Model.ppe_respiratory),
+                                                        new { @class = "form-control select2-multiple", @id = "ChemEditPpeRespiratory", multiple = true, data_placeholder = "** select **" })
+                            <span asp-validation-for="ppe_respiratory" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                @* =========================
+                   OTHER / ADMIN
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Other Information</legend>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="oels" class="form-label fw-bold"></label>
+                            @Html.TextAreaFor(m => m.oels, new { @class = "form-control", @rows = 3 })
+                            <span asp-validation-for="oels" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="emergency_response" class="form-label fw-bold"></label>
+                            @Html.TextAreaFor(m => m.emergency_response, new { @class = "form-control", @rows = 3 })
+                            <span asp-validation-for="emergency_response" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="person_performing_assessment_username" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            @Html.DropDownListFor(m => m.person_performing_assessment_username,
+                                                        new SelectList(ViewBag.Employees, "Value", "Text", Model.person_performing_assessment_username),
+                                                        "-- Select Employee --",
+                                                        new { @class = "form-control select2-single", @id = "ChemEditPerson" })
+                            <span asp-validation-for="person_performing_assessment_username" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="date_conducted" class="form-label fw-bold"></label>
+                            <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                            <input asp-for="date_conducted" type="text" class="form-control datepicker" value="@(Model.date_conducted.ToString("yyyy-MM-dd"))" placeholder="Select date..." />
+                            <span asp-validation-for="date_conducted" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="person_performing_review_username" class="form-label fw-bold"></label>
+                            @Html.DropDownListFor(m => m.person_performing_review_username,
+                                                        new SelectList(ViewBag.Employees, "Value", "Text", Model.person_performing_review_username),
+                                                        "-- Select Employee --",
+                                                        new { @class = "form-control select2-single", @id = "ChemEditReviewer" })
+                            <span asp-validation-for="person_performing_review_username" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="date_reviewed" class="form-label fw-bold"></label>
+                            <input asp-for="date_reviewed" type="text" class="form-control datepicker" value="@(Model.date_reviewed?.ToString("yyyy-MM-dd"))" placeholder="Select date..." />
+                            <span asp-validation-for="date_reviewed" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    @* If you want date_reviewed visible later, add it here in same style *@
+                </fieldset>
+
+                @* =========================
+                   NOTES (Summernote)
+                   ========================= *@
+                <fieldset class="border p-3 mb-4 rounded">
+                    <legend class="float-none w-auto px-2">Notes</legend>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label asp-for="notes" class="form-label fw-bold"></label>
+                            @Html.TextAreaFor(m => m.notes, new { id = "editChemicalRiskNotes", @class = "form-control", @rows = 3 })
+                            <span asp-validation-for="notes" class="text-danger"></span>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-4">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(function () {
+            const selects = [
+                "#ChemEditLocation", "#ChemEditState", "#ChemEditPerson", "#ChemEditReviewer",
+                "#ChemEditArea", "#ChemEditUse",
+                "#ChemEditSkinAbsorption", "#ChemEditSkinContact", "#ChemEditEyeContact",
+                "#ChemEditRespiratory", "#ChemEditIngestion", "#ChemEditSensitizer",
+                "#ChemEditCarcinogen", "#ChemEditReproductive", "#ChemEditOther",
+                "#ChemEditPpeGlove", "#ChemEditPpeSuit", "#ChemEditPpeEyewear", "#ChemEditPpeRespiratory"
+            ];
+
+            selects.forEach(function (id) {
+                const $el = $(id);
+
+                $el.select2({
+                    placeholder: $el.data("placeholder") || "** select **",
+                    allowClear: true,
+                    width: "100%"
+                });
+            });
+        });
+
+        $(function () {
+            $('#editChemicalRiskNotes').summernote({
+                height: 150,
+                minHeight: 150,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline']],
+                    ['para', ['ul', 'ol']],
+                    ['insert', ['link', 'picture']],
+                    ['view', ['clear']]
+                ]
+            });
+        });
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

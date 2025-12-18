@@ -28,7 +28,7 @@ namespace EHS.Controllers.SEG
             return View(await _contextEHS.seg_risk_assessment.Where(m => m.deleted_date == null).OrderBy(m => m.id).ToListAsync());
         }
 
-        public async Task<IActionResult> Attachments(int? id)
+        public async Task<IActionResult> Attachments(int? id, string fileAttachmentError = null)
         {
             if (id == null)
                 return NotFound();
@@ -40,13 +40,12 @@ namespace EHS.Controllers.SEG
             SegViewModel segViewModel = new SegViewModel();
             segViewModel.seg_risk_assessment = seg_risk_assessment;
             segViewModel.Username = _username;
+            segViewModel.IsAdmin = _isAdmin;
+            segViewModel.FileAttachmentError = fileAttachmentError;
 
             // GET ALL ATTACHMENTS
             // Get the directory
             DirectoryInfo path = new DirectoryInfo(Path.Combine(Initialization.AttachmentDirectory_IH_SEG, seg_risk_assessment.id.ToString()));
-
-            // TEST
-            bool found = Directory.Exists(Initialization.AttachmentDirectory_IH_SEG);
 
             if (!Directory.Exists(Path.Combine(Initialization.AttachmentDirectory_IH_SEG, seg_risk_assessment.id.ToString())))
                 path.Create();
@@ -73,16 +72,13 @@ namespace EHS.Controllers.SEG
             }
             segViewModel.attachments = attachments.OrderBy(m => m.Name).ToList();
 
-            segViewModel.IsAdmin = _isAdmin;
-            segViewModel.Username = _username;
-
             return View(segViewModel);
         }
 
         // GET: seg_risk_assessments/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string fileAttachmentError = null)
         {
-            if (id == null)
+            if (id == null) 
                 return NotFound();
 
             var seg_risk_assessment = await _contextEHS.seg_risk_assessment.FirstOrDefaultAsync(m => m.id == id);
@@ -92,6 +88,7 @@ namespace EHS.Controllers.SEG
             SegViewModel segViewModel = new SegViewModel();
             segViewModel.seg_risk_assessment = seg_risk_assessment;
             segViewModel.Username = _username;
+            segViewModel.FileAttachmentError = fileAttachmentError;
 
             // GET ALL ATTACHMENTS
             // Get the directory
@@ -143,7 +140,8 @@ namespace EHS.Controllers.SEG
             seg.created_user = employee.onpremisessamaccountname;
             seg.created_user_fullname = employee.displayname;
             seg.created_user_email = employee.mail;
-            seg.created_date = DateTime.Now;
+            seg.created_date = DateTime.Today;
+            seg.date_conducted = DateTime.Today;
 
             SegViewModel segViewModel = new SegViewModel();
             segViewModel.seg_risk_assessment = seg;
@@ -291,13 +289,16 @@ namespace EHS.Controllers.SEG
 
         [HttpPost]
         [DisableRequestSizeLimit, RequestFormLimits(MultipartBodyLengthLimit = int.MaxValue, ValueLengthLimit = int.MaxValue)]
-        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment)
+        public async Task<IActionResult> SaveFile(int id, IFormFile? fileAttachment, string sourceView = null)
         {
             if (id == null || _contextEHS.seg_risk_assessment == null)
                 return NotFound();
 
             if (fileAttachment == null || fileAttachment.Length == 0)
-                return RedirectToAction("Details", new { id, tab = "AttachmentsPtn", fileAttachmentError = "No File Has Been Selected For Upload" });
+                if (sourceView == "Attachments")
+                    return RedirectToAction("Attachments", "seg_risk_assessment", new { id, fileAttachmentError = "No File Has Been Selected For Upload" });
+                else
+                    return RedirectToAction("Details", "seg_risk_assessment", new { id, fileAttachmentError = "No File Has Been Selected For Upload" });
 
             var seg = await _contextEHS.seg_risk_assessment.FirstOrDefaultAsync(m => m.id == id);
             if (seg == null)
@@ -332,7 +333,10 @@ namespace EHS.Controllers.SEG
                 await fileAttachment.CopyToAsync(fileStream);
             }
             //}
-            return RedirectToAction("Attachments", new { id });
+            if (sourceView == "Attachments")
+                return RedirectToAction("Attachments", new { id });
+            else
+                return RedirectToAction("Details", new { id });
         }
 
         public async Task<IActionResult> DownloadFile(int id, string sourcePath, string fileName)

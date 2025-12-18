@@ -1,4 +1,5 @@
 ﻿using EHS.Data;
+using EHS.Models.Dropdowns.ChemicalRiskAssessment;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -165,6 +166,24 @@ namespace EHS.Utilities
             ViewBag.Employees = getUserList();
             ViewBag.Locations = getLocations();
             ViewBag.Agents = GetAgentByExposureTypeList("Chemical", null);
+            ViewBag.Areas = getAreas();
+            ViewBag.HazardCodes = getHazardCodes();
+            ViewBag.Hazards = getHazards();
+            ViewBag.PhysicalStates = getPhysicalStates();
+            ViewBag.PpeEyewear = getPpeEye();
+            ViewBag.PpeGlove = getPpeGlove();
+            ViewBag.PpeRespiratory = getPpeRespiratory();
+            ViewBag.PpeSuit = getPpeSuit();
+            ViewBag.Uses = getUse();
+            //ViewBag.HazardCodes = _contextEHS.hazard_codes
+            //    .Where(h => h.display)
+            //    .OrderBy(h => h.sort_order)
+            //    .Select(h => new SelectListItem
+            //        {
+            //            Value = h.id.ToString(),
+            //            Text = $"{h.code} - {h.description}"
+            //        })
+            //    .ToList();
         }
 
         public List<SelectListItem> getLocations(string? locationIn = null)
@@ -235,7 +254,7 @@ namespace EHS.Utilities
             return agents;
         }
 
-        public List<SelectListItem> GetAgentByExposureTypeList(string exposureType, string agentIn)
+        public List<SelectListItem> GetAgentByExposureTypeList(string exposureType, string? agentIn)
         {
             List<SelectListItem> agents = new List<SelectListItem>();
 
@@ -246,7 +265,7 @@ namespace EHS.Utilities
 
                 foreach (var agent in chemicalList)
                 {
-                    SelectListItem item = new SelectListItem { Value = agent.PreferredName, Text = agent.PreferredName };
+                    SelectListItem item = new SelectListItem { Value = agent.CasNumber, Text = agent.PreferredName };
                     if (agent.PreferredName == agentIn)
                         item.Selected = true;
                     agents.Add(item);
@@ -537,6 +556,178 @@ namespace EHS.Utilities
                 healthEffectRatings.Add(item);
             }
             return healthEffectRatings;
+        }
+
+        public List<SelectListItem> getAreas(string? areaIn = null)
+        {
+            // Create Dropdown List of Users...
+            var areaList = _contextEHS.area
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> areas = new List<SelectListItem>();
+            foreach (var area in areaList)
+            {
+                SelectListItem item = new SelectListItem { Value = area.description, Text = area.description };
+                if (area.description == areaIn)
+                    item.Selected = true;
+                areas.Add(item);
+            }
+            return areas;
+        }
+
+        public List<SelectListItem> getHazardCodes(string? hazardCodeIn = null)
+        {
+            // Create Dropdown List of Users...
+            var hazardCodeList = _contextEHS.hazard_codes
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m=>m.code)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> hazardCodes = new List<SelectListItem>();
+            foreach (var hazardCode in hazardCodeList)
+            {
+                SelectListItem item = new SelectListItem { Value = hazardCode.id.ToString(), Text = hazardCode.code + " - " + hazardCode.description };
+                if (hazardCode.description == hazardCodeIn)
+                    item.Selected = true;
+                hazardCodes.Add(item);
+            }
+            return hazardCodes;
+        }
+
+        public List<SelectListItem> getHazards(string? hazardIn = null)
+        {
+            // Create Dropdown List of Users...
+            var hazardList = _contextEHS.hazardous
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> hazards = new List<SelectListItem>();
+            foreach (var hazard in hazardList)
+            {
+                SelectListItem item = new SelectListItem { Value = hazard.description, Text = hazard.description };
+                if (hazard.description == hazardIn)
+                    item.Selected = true;
+                hazards.Add(item);
+            }
+            return hazards;
+        }
+
+        public List<SelectListItem> getPhysicalStates(string? physicalStateIn = null)
+        {
+            // Create Dropdown List of Users...
+            var physicalStateList = _contextEHS.physical_state
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> physicalStates = new List<SelectListItem>();
+            foreach (var physicalState in physicalStateList)
+            {
+                SelectListItem item = new SelectListItem { Value = physicalState.description, Text = physicalState.description };
+                if (physicalState.description == physicalStateIn)
+                    item.Selected = true;
+                physicalStates.Add(item);
+            }
+            return physicalStates;
+        }
+
+        public List<SelectListItem> getPpeEye(string? ppeEyeIn = null)
+        {
+            // Create Dropdown List of Users...
+            var ppeEyeList = _contextEHS.ppe_eye
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> ppeEyes = new List<SelectListItem>();
+            foreach (var ppeEye in ppeEyeList)
+            {
+                SelectListItem item = new SelectListItem { Value = ppeEye.description, Text = ppeEye.description };
+                if (ppeEye.description == ppeEyeIn)
+                    item.Selected = true;
+                ppeEyes.Add(item);
+            }
+            return ppeEyes;
+        }
+
+        public List<SelectListItem> getPpeGlove(string? ppeGloveIn = null)
+        {
+            // Create Dropdown List of Users...
+            var ppeGloveList = _contextEHS.ppe_glove
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> ppeGloves = new List<SelectListItem>();
+            foreach (var ppeGlove in ppeGloveList)
+            {
+                SelectListItem item = new SelectListItem { Value = ppeGlove.description, Text = ppeGlove.description };
+                if (ppeGlove.description == ppeGloveIn)
+                    item.Selected = true;
+                ppeGloves.Add(item);
+            }
+            return ppeGloves;
+        }
+
+        public List<SelectListItem> getPpeRespiratory(string? ppeRespiratoryIn = null)
+        {
+            // Create Dropdown List of Users...
+            var ppeRespiratoryList = _contextEHS.ppe_respiratory
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> ppeRespiratorys = new List<SelectListItem>();
+            foreach (var ppeRespiratory in ppeRespiratoryList)
+            {
+                SelectListItem item = new SelectListItem { Value = ppeRespiratory.description, Text = ppeRespiratory.description };
+                if (ppeRespiratory.description == ppeRespiratoryIn)
+                    item.Selected = true;
+                ppeRespiratorys.Add(item);
+            }
+            return ppeRespiratorys;
+        }
+
+        public List<SelectListItem> getPpeSuit(string? ppeSuitIn = null)
+        {
+            // Create Dropdown List of Users...
+            var ppeSuitList = _contextEHS.ppe_suit
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> ppeSuits = new List<SelectListItem>();
+            foreach (var ppeSuit in ppeSuitList)
+            {
+                SelectListItem item = new SelectListItem { Value = ppeSuit.description, Text = ppeSuit.description };
+                if (ppeSuit.description == ppeSuitIn)
+                    item.Selected = true;
+                ppeSuits.Add(item);
+            }
+            return ppeSuits;
+        }
+
+        public List<SelectListItem> getUse(string? ppeSuitIn = null)
+        {
+            // Create Dropdown List of Users...
+            var useList = _contextEHS.use
+                .Where(m => m.deleted_date == null && m.display == true)
+                .OrderBy(m => m.sort_order)
+                .ThenBy(m => m.description)
+                .ToList();
+            List<SelectListItem> uses = new List<SelectListItem>();
+            foreach (var use in useList)
+            {
+                SelectListItem item = new SelectListItem { Value = use.description, Text = use.description };
+                if (use.description == ppeSuitIn)
+                    item.Selected = true;
+                uses.Add(item);
+            }
+            return uses;
         }
 
     }

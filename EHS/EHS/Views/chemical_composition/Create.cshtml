@@ -1,112 +1,70 @@
 ﻿@model EHS.Models.chemical_composition
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Chemical Component";
 }
 
-<h1>Create</h1>
+<div class="container-fluid py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
 
-<h4>chemical_composition</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="chemical_risk_assessment_id" class="control-label"></label>
-                <select asp-for="chemical_risk_assessment_id" class ="form-control" asp-items="ViewBag.chemical_risk_assessment_id"></select>
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">Create New Chemical Component</h2>
+                <a asp-action="Details" asp-controller="chemical_risk_assessment" asp-route-id="@Model.chemical_risk_assessment_id" class="btn btn-outline-secondary">Cancel</a>
             </div>
-            <div class="form-group">
-                <label asp-for="cas_number" class="control-label"></label>
-                <input asp-for="cas_number" class="form-control" />
-                <span asp-validation-for="cas_number" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="chemical_name" class="control-label"></label>
-                <input asp-for="chemical_name" class="form-control" />
-                <span asp-validation-for="chemical_name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="concentration_low" class="control-label"></label>
-                <input asp-for="concentration_low" class="form-control" />
-                <span asp-validation-for="concentration_low" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="concentration_high" class="control-label"></label>
-                <input asp-for="concentration_high" class="form-control" />
-                <span asp-validation-for="concentration_high" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_user" class="control-label"></label>
-                <input asp-for="created_user" class="form-control" />
-                <span asp-validation-for="created_user" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_user_fullname" class="control-label"></label>
-                <input asp-for="created_user_fullname" class="form-control" />
-                <span asp-validation-for="created_user_fullname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_user_email" class="control-label"></label>
-                <input asp-for="created_user_email" class="form-control" />
-                <span asp-validation-for="created_user_email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="created_date" class="control-label"></label>
-                <input asp-for="created_date" class="form-control" />
-                <span asp-validation-for="created_date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_user" class="control-label"></label>
-                <input asp-for="modified_user" class="form-control" />
-                <span asp-validation-for="modified_user" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_user_fullname" class="control-label"></label>
-                <input asp-for="modified_user_fullname" class="form-control" />
-                <span asp-validation-for="modified_user_fullname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_user_email" class="control-label"></label>
-                <input asp-for="modified_user_email" class="form-control" />
-                <span asp-validation-for="modified_user_email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="modified_date" class="control-label"></label>
-                <input asp-for="modified_date" class="form-control" />
-                <span asp-validation-for="modified_date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_user" class="control-label"></label>
-                <input asp-for="deleted_user" class="form-control" />
-                <span asp-validation-for="deleted_user" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_user_fullname" class="control-label"></label>
-                <input asp-for="deleted_user_fullname" class="form-control" />
-                <span asp-validation-for="deleted_user_fullname" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_user_email" class="control-label"></label>
-                <input asp-for="deleted_user_email" class="form-control" />
-                <span asp-validation-for="deleted_user_email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="deleted_date" class="control-label"></label>
-                <input asp-for="deleted_date" class="form-control" />
-                <span asp-validation-for="deleted_date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Hidden audit fields (set in controller / server-side) -->
+                <input type="hidden" asp-for="chemical_risk_assessment_id" />
+                <input type="hidden" asp-for="created_user" />
+                <input type="hidden" asp-for="created_user_fullname" />
+                <input type="hidden" asp-for="created_user_email" />
+                <input type="hidden" asp-for="created_date" />
+
+@*                 <div class="mb-3">
+                    <label asp-for="cas_number" class="form-label fw-bold"></label>
+                    <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                    <input asp-for="cas_number" class="form-control" />
+                    <span asp-validation-for="cas_number" class="text-danger"></span>
+                </div> *@
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Chemical</label>
+                    <i class="bi bi-r-circle-fill" style="color:red;" data-bs-toggle="tooltip" title="Required"></i>
+                    @Html.DropDownListFor(
+                    m => m.cas_number,                      // 👈 bind to cas_number
+                                        new SelectList(ViewBag.Agents, "Value", "Text"),
+                                        "-- Select Chemical --",
+                                        new { @class = "form-control select2-single", @id = "SegCreateAgents" }
+                                        )
+                    <span asp-validation-for="cas_number" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="concentration_low" class="form-label fw-bold"></label>
+                    <input asp-for="concentration_low" class="form-control" />
+                    <span asp-validation-for="concentration_low" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="concentration_high" class="form-label fw-bold"></label>
+                    <input asp-for="concentration_high" class="form-control" />
+                    <span asp-validation-for="concentration_high" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Details" asp-controller="chemical_risk_assessment" asp-route-id="@Model.chemical_risk_assessment_id" class="btn btn-outline-secondary">Cancel</a>
+                    <input type="submit" value="Save" class="btn btn-success px-4" />
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

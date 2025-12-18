@@ -1,13 +1,13 @@
-﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.physical_state
+﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.hazard_codes
 
 @{
-    ViewData["Title"] = "Edit Physical State";
+    ViewData["Title"] = "Edit Hazard Code";
 }
 
 <div class="container-fluid py-4">
     <div class="card shadow rounded-4">
         <div class="card-body">
-            <h2 class="card-title text-primary mb-4">Edit Physical State</h2>
+            <h2 class="card-title text-primary mb-4">Edit Hazard Code</h2>
 
             <form asp-action="Edit">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -28,6 +28,12 @@
                 <input type="hidden" asp-for="deleted_date" />
 
                 <div class="mb-3">
+                    <label asp-for="code" class="form-label"></label>
+                    <input asp-for="code" class="form-control" />
+                    <span asp-validation-for="code" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
                     <label asp-for="description" class="form-label"></label>
                     <input asp-for="description" class="form-control" />
                     <span asp-validation-for="description" class="text-danger"></span>
@@ -39,9 +45,15 @@
                     <span asp-validation-for="sort_order" class="text-danger"></span>
                 </div>
 
-                <div class="form-check mb-4">
+                <div class="form-check mb-3">
                     <input class="form-check-input" asp-for="display" />
                     <label class="form-check-label" asp-for="display"></label>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="risk_rating" class="form-label"></label>
+                    <input asp-for="risk_rating" class="form-control" />
+                    <span asp-validation-for="risk_rating" class="text-danger"></span>
                 </div>
 
                 <div class="d-flex justify-content-between">

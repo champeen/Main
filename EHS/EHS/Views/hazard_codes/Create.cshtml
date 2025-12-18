@@ -1,13 +1,13 @@
-﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_eye
+﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.hazard_codes
 
 @{
-    ViewData["Title"] = "Create PPE Eye Entry";
+    ViewData["Title"] = "Create Hazard Code Entry";
 }
 
 <div class="container-fluid py-4">
     <div class="card shadow rounded-4">
         <div class="card-body">
-            <h2 class="card-title mb-4">Create New PPE Eye Entry</h2>
+            <h2 class="card-title mb-4">Create New Hazard Code Entry</h2>
 
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
@@ -17,6 +17,20 @@
                 <input type="hidden" asp-for="created_user_fullname" />
                 <input type="hidden" asp-for="created_user_email" />
                 <input type="hidden" asp-for="created_date" />
+                <input type="hidden" asp-for="modified_user" />
+                <input type="hidden" asp-for="modified_user_fullname" />
+                <input type="hidden" asp-for="modified_user_email" />
+                <input type="hidden" asp-for="modified_date" />
+                <input type="hidden" asp-for="deleted_user" />
+                <input type="hidden" asp-for="deleted_user_fullname" />
+                <input type="hidden" asp-for="deleted_user_email" />
+                <input type="hidden" asp-for="deleted_date" />
+
+                <div class="mb-3">
+                    <label asp-for="code" class="form-label fw-bold"></label>
+                    <input asp-for="code" class="form-control" />
+                    <span asp-validation-for="code" class="text-danger"></span>
+                </div>
 
                 <div class="mb-3">
                     <label asp-for="description" class="form-label fw-bold"></label>
@@ -30,9 +44,15 @@
                     <span asp-validation-for="sort_order" class="text-danger"></span>
                 </div>
 
-                <div class="form-check mb-4">
+                <div class="form-check mb-3">
                     <input class="form-check-input" asp-for="display" />
                     <label class="form-check-label" asp-for="display"></label>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="risk_rating" class="form-label fw-bold"></label>
+                    <input asp-for="risk_rating" class="form-control" />
+                    <span asp-validation-for="risk_rating" class="text-danger"></span>
                 </div>
 
                 <div class="d-flex justify-content-between">

@@ -1,17 +1,22 @@
-﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_inhalation
+﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.hazard_codes
 
 @{
-    ViewData["Title"] = "Inhalation Risk Details";
+    ViewData["Title"] = "Delete Hazard Code";
 }
 
 <div class="container-fluid py-4">
     <div class="card shadow rounded-4">
         <div class="card-body">
-            <h2 class="card-title text-primary mb-4">Inhalation Risk Details</h2>
+            <h2 class="card-title text-danger mb-4">Confirm Deletion</h2>
+            <p class="mb-3">Are you sure you want to delete this hazard code?</p>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <tbody>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.code)</th>
+                            <td>@Html.DisplayFor(m => m.code)</td>
+                        </tr>
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.description)</th>
                             <td>@Html.DisplayFor(m => m.description)</td>
@@ -28,6 +33,7 @@
                             <th>@Html.DisplayNameFor(m => m.risk_rating)</th>
                             <td>@Html.DisplayFor(m => m.risk_rating)</td>
                         </tr>
+
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.created_user)</th>
                             <td>@Html.DisplayFor(m => m.created_user)</td>
@@ -44,6 +50,7 @@
                             <th>@Html.DisplayNameFor(m => m.created_date)</th>
                             <td>@Html.DisplayFor(m => m.created_date)</td>
                         </tr>
+
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.modified_user)</th>
                             <td>@Html.DisplayFor(m => m.modified_user)</td>
@@ -60,6 +67,7 @@
                             <th>@Html.DisplayNameFor(m => m.modified_date)</th>
                             <td>@Html.DisplayFor(m => m.modified_date)</td>
                         </tr>
+
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.deleted_user)</th>
                             <td>@Html.DisplayFor(m => m.deleted_user)</td>
@@ -80,10 +88,13 @@
                 </table>
             </div>
 
-            <div class="mt-4 d-flex justify-content-between">
-                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
-                <a asp-action="Edit" asp-route-id="@Model?.id" class="btn btn-primary px-4">Edit</a>
-            </div>
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="id" />
+                <div class="mt-4 d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                    <input type="submit" value="Delete" class="btn btn-danger px-4" />
+                </div>
+            </form>
         </div>
     </div>
 </div>

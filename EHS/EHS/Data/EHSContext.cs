@@ -55,6 +55,8 @@ namespace EHS.Data
         public DbSet<chemical_risk_assessment> chemical_risk_assessment { get; set; } = default!;
         public DbSet<chemical_composition> chemical_composition { get; set; } = default!;
 
+        public DbSet<hazard_codes> hazard_codes { get; set; } = default!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -152,36 +154,29 @@ namespace EHS.Data
                 .Property(p => p.area).HasColumnType("text[]");
             modelBuilder.Entity<chemical_risk_assessment>()
                 .Property(p => p.use).HasColumnType("text[]");
+
             modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.inhalation).HasColumnType("text[]");
+                .Property(p => p.ppe_glove).HasColumnType("text[]");
             modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.skin_contact).HasColumnType("text[]");
+                .Property(p => p.ppe_suit).HasColumnType("text[]");
             modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.eye_contact).HasColumnType("text[]");
+                .Property(p => p.ppe_eyewear).HasColumnType("text[]");
             modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.ingestion).HasColumnType("text[]");
-            modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.glove).HasColumnType("text[]");
-            modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.suit).HasColumnType("text[]");
-            modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.eyewear).HasColumnType("text[]");
-            modelBuilder.Entity<chemical_risk_assessment>()
-                .Property(p => p.respiratory).HasColumnType("text[]");
+                .Property(p => p.ppe_respiratory).HasColumnType("text[]");
 
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.area> area { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.hazardous> hazardous { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.physical_state> physical_state { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_eye> ppe_eye { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_glove> ppe_glove { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_respiratory> ppe_respiratory { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_suit> ppe_suit { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_eye_contact> risk_eye_contact { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_ingestion> risk_ingestion { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_inhalation> risk_inhalation { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_skin_contact> risk_skin_contact { get; set; } = default!;
-        public DbSet<EHS.Models.Dropdowns.ChemicalRiskAssessment.use> use { get; set; } = default!;
+        public DbSet<area> area { get; set; } = default!;
+        public DbSet<hazardous> hazardous { get; set; } = default!;
+        public DbSet<physical_state> physical_state { get; set; } = default!;
+        public DbSet<ppe_eye> ppe_eye { get; set; } = default!;
+        public DbSet<ppe_glove> ppe_glove { get; set; } = default!;
+        public DbSet<ppe_respiratory> ppe_respiratory { get; set; } = default!;
+        public DbSet<ppe_suit> ppe_suit { get; set; } = default!;
+        public DbSet<risk_eye_contact> risk_eye_contact { get; set; } = default!;
+        public DbSet<risk_ingestion> risk_ingestion { get; set; } = default!;
+        public DbSet<risk_inhalation> risk_inhalation { get; set; } = default!;
+        public DbSet<risk_skin_contact> risk_skin_contact { get; set; } = default!;
+        public DbSet<use> use { get; set; } = default!;
     }
 }

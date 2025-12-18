@@ -3,98 +3,93 @@ using EHS.Models;
 using EHS.Models.Dropdowns.ChemicalRiskAssessment;
 using EHS.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EHS.Controllers.ChemicalRiskAssessment.Dropdowns
 {
-    public class ppe_eyeController : BaseController
+    public class hazard_codesController : BaseController
     {
         private readonly EHSContext _contextEHS;
         private readonly MOCContext _contextMOC;
 
-        public ppe_eyeController(EHSContext contextEHS, MOCContext contextMOC) : base(contextEHS, contextMOC)
+        public hazard_codesController(EHSContext contextEHS, MOCContext contextMOC) : base(contextEHS, contextMOC)
         {
             _contextEHS = contextEHS;
             _contextMOC = contextMOC;
         }
 
-        // GET: ppe_eye
+        // GET: hazard_codes
         public async Task<IActionResult> Index()
         {
-            return View(await _contextEHS.ppe_eye.Where(m => m.deleted_date == null).OrderBy(m => m.sort_order).ThenBy(m => m.description).ToListAsync());
+            return View(await _contextEHS.hazard_codes.Where(m => m.deleted_date == null).OrderBy(m => m.sort_order).ThenBy(m=>m.code).ThenBy(m => m.description).ToListAsync());
         }
 
-        // GET: ppe_eye/Details/5
+        // GET: hazard_codes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var ppe_eye = await _contextEHS.ppe_eye.FirstOrDefaultAsync(m => m.id == id);
-            if (ppe_eye == null)
+            var hazard_codes = await _contextEHS.hazard_codes.FirstOrDefaultAsync(m => m.id == id);
+            if (hazard_codes == null)
                 return NotFound();
 
-            return View(ppe_eye);
+            return View(hazard_codes);
         }
 
-        // GET: ppe_eye/Create
+        // GET: hazard_codes/Create
         public async Task<IActionResult> Create()
         {
-            ppe_eye ppe_eye = new ppe_eye();
+            hazard_codes hazard_codes = new hazard_codes();
             __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
             if (employee == null)
                 return RedirectToAction(nameof(Index));
 
-            ppe_eye.created_user = employee.onpremisessamaccountname;
-            ppe_eye.created_user_fullname = employee.displayname;
-            ppe_eye.created_user_email = employee.mail;
-            ppe_eye.created_date = DateTime.Now;
+            hazard_codes.created_user = employee.onpremisessamaccountname;
+            hazard_codes.created_user_fullname = employee.displayname;
+            hazard_codes.created_user_email = employee.mail;
+            hazard_codes.created_date = DateTime.Now;
 
-            return View(ppe_eye);
+            return View(hazard_codes);
         }
 
-        // POST: ppe_eye/Create
+        // POST: hazard_codes/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ppe_eye ppe_eye)
+        public async Task<IActionResult> Create(hazard_codes hazard_codes)
         {
             if (ModelState.IsValid)
             {
-                _contextEHS.Add(ppe_eye);
+                _contextEHS.Add(hazard_codes);
                 await _contextEHS.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(ppe_eye);
+            return View(hazard_codes);
         }
 
-        // GET: ppe_eye/Edit/5
+        // GET: hazard_codes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var ppe_eye = await _contextEHS.ppe_eye.FindAsync(id);
-            if (ppe_eye == null)
-                 return NotFound();
+            var hazard_codes = await _contextEHS.hazard_codes.FindAsync(id);
+            if (hazard_codes == null)
+                return NotFound();
 
-            return View(ppe_eye);
+            return View(hazard_codes);
         }
 
-        // POST: ppe_eye/Edit/5
+        // POST: hazard_codes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ppe_eye ppe_eye)
+        public async Task<IActionResult> Edit(int id, hazard_codes hazard_codes)
         {
-            if (id != ppe_eye.id)
+            if (id != hazard_codes.id)
                 return NotFound();
 
             if (ModelState.IsValid)
@@ -105,64 +100,64 @@ namespace EHS.Controllers.ChemicalRiskAssessment.Dropdowns
                     if (employee == null)
                         return RedirectToAction(nameof(Index));
 
-                    ppe_eye.modified_user = employee.onpremisessamaccountname;
-                    ppe_eye.modified_user_fullname = employee.displayname;
-                    ppe_eye.modified_user_email = employee.mail;
-                    ppe_eye.modified_date = DateTime.Now;
-                    _contextEHS.Update(ppe_eye);
+                    hazard_codes.modified_user = employee.onpremisessamaccountname;
+                    hazard_codes.modified_user_fullname = employee.displayname;
+                    hazard_codes.modified_user_email = employee.mail;
+                    hazard_codes.modified_date = DateTime.Now;
+                    _contextEHS.Update(hazard_codes);
                     await _contextEHS.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ppe_eyeExists(ppe_eye.id))
+                    if (!hazard_codesExists(hazard_codes.id))
                         return NotFound();
                     else
                         throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(ppe_eye);
+            return View(hazard_codes);
         }
 
-        // GET: ppe_eye/Delete/5
+        // GET: hazard_codes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
                 return NotFound();
 
-            var ppe_eye = await _contextEHS.ppe_eye.FirstOrDefaultAsync(m => m.id == id);
-            if (ppe_eye == null)
+            var hazard_codes = await _contextEHS.hazard_codes.FirstOrDefaultAsync(m => m.id == id);
+            if (hazard_codes == null)
                 return NotFound();
 
-            return View(ppe_eye);
+            return View(hazard_codes);
         }
 
-        // POST: ppe_eye/Delete/5
+        // POST: hazard_codes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var ppe_eye = await _contextEHS.ppe_eye.FindAsync(id);
-            if (ppe_eye == null)
+            var hazard_codes = await _contextEHS.hazard_codes.FindAsync(id);
+            if (hazard_codes == null)
                 return NotFound();
 
             __mst_employee employee = await _contextMOC.__mst_employee.Where(m => m.onpremisessamaccountname == _username).FirstOrDefaultAsync();
             if (employee == null)
                 return RedirectToAction(nameof(Index));
 
-            ppe_eye.deleted_user = _username;
-            ppe_eye.deleted_user_fullname = employee.displayname;
-            ppe_eye.deleted_user_email = employee.mail;
-            ppe_eye.deleted_date = DateTime.Now;
-            _contextEHS.Update(ppe_eye);
+            hazard_codes.deleted_user = _username;
+            hazard_codes.deleted_user_fullname = employee.displayname;
+            hazard_codes.deleted_user_email = employee.mail;
+            hazard_codes.deleted_date = DateTime.Now;
+            _contextEHS.Update(hazard_codes);
             await _contextEHS.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ppe_eyeExists(int id)
+        private bool hazard_codesExists(int id)
         {
-            return _contextEHS.ppe_eye.Any(e => e.id == id);
+            return _contextEHS.hazard_codes.Any(e => e.id == id);
         }
     }
 }

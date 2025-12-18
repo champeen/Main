@@ -1,120 +1,68 @@
 ﻿@model EHS.Models.chemical_composition
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chemical Component Details";
 }
 
-<h1>Details</h1>
+<div class="container-fluid py-4">
+    <div class="card shadow rounded-4">
+        <div class="card-body">
 
-<div>
-    <h4>chemical_composition</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.assessment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.assessment.chemical)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.cas_number)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.cas_number)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.chemical_name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.chemical_name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.concentration_low)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.concentration_low)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.concentration_high)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.concentration_high)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_user)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_user)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_user_fullname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_user_fullname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_user_email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_user_email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.created_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.created_date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_user)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_user)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_user_fullname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_user_fullname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_user_email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_user_email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.modified_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.modified_date)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_user)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_user)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_user_fullname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_user_fullname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_user_email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_user_email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.deleted_date)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.deleted_date)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">Chemical Component Details</h2>
+                <a asp-action="Details" asp-controller="chemical_risk_assessment" asp-route-id="@Model.chemical_risk_assessment_id" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <tbody>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.assessment)</th>
+                            <td>@Html.DisplayFor(m => m.assessment.chemical)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.cas_number)</th>
+                            <td>
+                                <a asp-controller="IhChemicalsCrud"
+                                   asp-action="DetailsByCas"
+                                   asp-route-cas="@Model.cas_number">
+                                    @Model.cas_number
+                                </a>
+                            </td>
+                            @* <td>@Html.DisplayFor(m => m.cas_number)</td> *@
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.chemical_name)</th>
+                            <td>@Html.DisplayFor(m => m.chemical_name)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.concentration_low)</th>
+                            <td>@Html.DisplayFor(m => m.concentration_low)</td>
+                        </tr>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.concentration_high)</th>
+                            <td>@Html.DisplayFor(m => m.concentration_high)</td>
+                        </tr>
+
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user)</th><td>@Html.DisplayFor(m => m.created_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_fullname)</th><td>@Html.DisplayFor(m => m.created_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_user_email)</th><td>@Html.DisplayFor(m => m.created_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.created_date)</th><td>@Html.DisplayFor(m => m.created_date)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user)</th><td>@Html.DisplayFor(m => m.modified_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_fullname)</th><td>@Html.DisplayFor(m => m.modified_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_user_email)</th><td>@Html.DisplayFor(m => m.modified_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.modified_date)</th><td>@Html.DisplayFor(m => m.modified_date)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user)</th><td>@Html.DisplayFor(m => m.deleted_user)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_fullname)</th><td>@Html.DisplayFor(m => m.deleted_user_fullname)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_user_email)</th><td>@Html.DisplayFor(m => m.deleted_user_email)</td></tr>
+                        <tr><th>@Html.DisplayNameFor(m => m.deleted_date)</th><td>@Html.DisplayFor(m => m.deleted_date)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end">
+                <a asp-action="Details" asp-controller="chemical_risk_assessment" asp-route-id="@Model.chemical_risk_assessment_id" class="btn btn-outline-secondary">Back to List</a>
+            </div>
+        </div>
+    </div>
 </div>

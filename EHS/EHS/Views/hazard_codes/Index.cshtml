@@ -1,8 +1,8 @@
-﻿@model IEnumerable<EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_respiratory>
+﻿@model IEnumerable<EHS.Models.Dropdowns.ChemicalRiskAssessment.hazard_codes>
 @using System.Linq
 
 @{
-    ViewData["Title"] = "Respiratory PPE List";
+    ViewData["Title"] = "Hazard Code List";
     var hasData = Model != null && Model.Any();
 }
 
@@ -10,7 +10,7 @@
     <div class="card shadow rounded-4">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="card-title">Respiratory PPE Dropdowns</h2>
+                <h2 class="card-title">Hazard Code Dropdowns</h2>
                 <div>
                     <a asp-action="Create" class="btn btn-sm btn-success me-2">Create New</a>
                     <a asp-controller="Admin" asp-action="dropdownCRA" class="btn btn-sm btn-outline-secondary">Back</a>
@@ -19,13 +19,15 @@
 
             <div class="table-wrapper">
                 <div class="table-container">
-                    <table id="craPpeRespiratoryTable"
+                    <table id="craHazardCodesTable"
                            class="table table-striped table-hover table-bordered nowrap @(hasData ? "datatable-hidden" : "")"
                            style="width:100%">
                         <thead>
                             <tr>
+                                <th>@Html.DisplayNameFor(model => model.code)</th>
                                 <th>@Html.DisplayNameFor(model => model.description)</th>
                                 <th>@Html.DisplayNameFor(model => model.sort_order)</th>
+                                <th>@Html.DisplayNameFor(model => model.risk_rating)</th>
                                 <th>@Html.DisplayNameFor(model => model.display)</th>
                                 <th>Actions</th>
                             </tr>
@@ -34,8 +36,8 @@
                             @if (!hasData)
                             {
                                 <tr>
-                                    <td colspan="4" class="text-center text-muted">
-                                        No respiratory PPE entries found. Click <strong>Create New</strong> to add one.
+                                    <td colspan="6" class="text-center text-muted">
+                                        No hazard code entries found. Click <strong>Create New</strong> to add one.
                                     </td>
                                 </tr>
                             }
@@ -44,8 +46,10 @@
                                 foreach (var item in Model)
                                 {
                                     <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.code)</td>
                                         <td>@Html.DisplayFor(modelItem => item.description)</td>
                                         <td>@Html.DisplayFor(modelItem => item.sort_order)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.risk_rating)</td>
                                         <td>@Html.DisplayFor(modelItem => item.display)</td>
                                         <td class="text-nowrap">
                                             <div class="d-flex gap-1 flex-nowrap align-items-center">
@@ -71,7 +75,7 @@
     {
         <script>
             $(document).ready(function () {
-                $('#craPpeRespiratoryTable').DataTable({
+                $('#craHazardCodesTable').DataTable({
                     scrollX: true,
                     autoWidth: false,
                     pageLength: 10,
@@ -89,11 +93,11 @@
                         { extend: 'print', exportOptions: { columns: ':visible' } }
                     ],
                     columnDefs: [
-                        { targets: [3], orderable: false, className: 'no-sort' } // Actions column
+                        { targets: [5], orderable: false, className: 'no-sort' } // Actions column
                     ]
                 });
 
-                $('#craPpeRespiratoryTable').removeClass('datatable-hidden');
+                $('#craHazardCodesTable').removeClass('datatable-hidden');
             });
         </script>
     }

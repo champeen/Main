@@ -1,17 +1,21 @@
-﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_inhalation
+﻿@model EHS.Models.Dropdowns.ChemicalRiskAssessment.hazard_codes
 
 @{
-    ViewData["Title"] = "Inhalation Risk Details";
+    ViewData["Title"] = "Hazard Code Details";
 }
 
 <div class="container-fluid py-4">
     <div class="card shadow rounded-4">
         <div class="card-body">
-            <h2 class="card-title text-primary mb-4">Inhalation Risk Details</h2>
+            <h2 class="card-title text-primary mb-4">Hazard Code Details</h2>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <tbody>
+                        <tr>
+                            <th>@Html.DisplayNameFor(m => m.code)</th>
+                            <td>@Html.DisplayFor(m => m.code)</td>
+                        </tr>
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.description)</th>
                             <td>@Html.DisplayFor(m => m.description)</td>
@@ -28,6 +32,7 @@
                             <th>@Html.DisplayNameFor(m => m.risk_rating)</th>
                             <td>@Html.DisplayFor(m => m.risk_rating)</td>
                         </tr>
+
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.created_user)</th>
                             <td>@Html.DisplayFor(m => m.created_user)</td>
@@ -44,6 +49,7 @@
                             <th>@Html.DisplayNameFor(m => m.created_date)</th>
                             <td>@Html.DisplayFor(m => m.created_date)</td>
                         </tr>
+
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.modified_user)</th>
                             <td>@Html.DisplayFor(m => m.modified_user)</td>
@@ -60,6 +66,7 @@
                             <th>@Html.DisplayNameFor(m => m.modified_date)</th>
                             <td>@Html.DisplayFor(m => m.modified_date)</td>
                         </tr>
+
                         <tr>
                             <th>@Html.DisplayNameFor(m => m.deleted_user)</th>
                             <td>@Html.DisplayFor(m => m.deleted_user)</td>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EHS.Models.Dropdowns.ChemicalRiskAssessment;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EHS.Models.IH
@@ -22,7 +23,7 @@ namespace EHS.Models.IH
         [Column(TypeName = "text[]")]
         public List<string> use { get; set; } = new();
 
-        [Display(Name = "State")]
+        [Display(Name = "Physical State")]
         [Required, MaxLength(64)]
         public string state { get; set; } = string.Empty;
 
@@ -34,39 +35,61 @@ namespace EHS.Models.IH
         [MaxLength(128)]
         public string? nfpa { get; set; }
 
+
         // Hazards
-        [Display(Name = "Inhalation")]
-        [Column(TypeName = "text[]")]
-        public List<string> inhalation { get; set; } = new();
+        [Display(Name = "Skin Absorption")]
+        [Column(TypeName = "integer[]")]
+        public List<int>? skin_absorption { get; set; } = new();
 
         [Display(Name = "Skin Contact")]
-        [Column(TypeName = "text[]")]
-        public List<string> skin_contact { get; set; } = new();
+        [Column(TypeName = "integer[]")]
+        public List<int>? skin_contact { get; set; } = new();
 
         [Display(Name = "Eye Contact")]
-        [Column(TypeName = "text[]")]
-        public List<string> eye_contact { get; set; } = new();
+        [Column(TypeName = "integer[]")]
+        public List<int>? eye_contact { get; set; } = new();
+
+        [Display(Name = "Respiratory")]
+        [Column(TypeName = "integer[]")]
+        public List<int>? respiratory { get; set; } = new();
 
         [Display(Name = "Ingestion")]
-        [Column(TypeName = "text[]")]
-        public List<string> ingestion { get; set; } = new();
+        [Column(TypeName = "integer[]")]
+        public List<int>? ingestion { get; set; } = new();
+
+        [Display(Name = "Sensitizer")]
+        [Column(TypeName = "integer[]")]
+        public List<int>? sensitizer { get; set; } = new();
+
+        [Display(Name = "Carcinogen")]
+        [Column(TypeName = "integer[]")]
+        public List<int>? carcinogen { get; set; } = new();
+
+        [Display(Name = "Reproductive")]
+        [Column(TypeName = "integer[]")]
+        public List<int>? reproductive { get; set; } = new();
+
+        [Display(Name = "Other")]
+        [Column(TypeName = "integer[]")]
+        public List<int>? other { get; set; } = new();
+
 
         // PPE
         [Display(Name = "Glove")]
         [Column(TypeName = "text[]")]
-        public List<string> glove { get; set; } = new();
+        public List<string>? ppe_glove { get; set; } = new();
 
         [Display(Name = "Suit")]
         [Column(TypeName = "text[]")]
-        public List<string> suit { get; set; } = new();
+        public List<string>? ppe_suit { get; set; } = new();
 
         [Display(Name = "Eyewear")]
         [Column(TypeName = "text[]")]
-        public List<string> eyewear { get; set; } = new();
+        public List<string>? ppe_eyewear { get; set; } = new();
 
         [Display(Name = "Respiratory")]
         [Column(TypeName = "text[]")]
-        public List<string> respiratory { get; set; } = new();
+        public List<string>? ppe_respiratory { get; set; } = new();
 
         // If OELs will be structured later, consider a separate table.
         [Display(Name = "OELs")]
@@ -75,7 +98,7 @@ namespace EHS.Models.IH
         [Display(Name = "Emergency Response")]
         public string? emergency_response { get; set; }
 
-        [Display(Name = "Notes")]
+        [Display(Name = "Additional Notes")]
         public string? notes { get; set; }
 
         // Computed needs SQL in the migration or fluent config; the annotation alone doesn’t define the expression.
@@ -95,6 +118,14 @@ namespace EHS.Models.IH
         [DataType(DataType.Date)]
         [Required]
         public DateTime date_conducted { get; set; }
+
+        [Display(Name = "Person Performing Review (Username)")]
+        [MaxLength(128)]
+        public string? person_performing_review_username { get; set; } = string.Empty;
+
+        [Display(Name = "Person Performing Assessment")]
+        [MaxLength(256)]
+        public string? person_performing_review_displayname { get; set; }
 
         [Display(Name = "Review Date")]
         [DataType(DataType.Date)]

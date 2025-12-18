@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EHS.Migrations
 {
     [DbContext(typeof(EHSContext))]
-    [Migration("20251104194825_AddChemicalIndexes")]
-    partial class AddChemicalIndexes
+    [Migration("20251125144114_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,806 @@ namespace EHS.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.acute_chronic", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.area", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("area", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.hazard_codes", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<int>("risk_rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("hazard_codes", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.hazardous", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("hazardous", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.physical_state", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("physical_state", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_eye", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ppe_eye", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_glove", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ppe_glove", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_respiratory", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ppe_respiratory", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.ppe_suit", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("ppe_suit", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_eye_contact", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<int>("risk_rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("risk_eye_contact", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_ingestion", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<int>("risk_rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("risk_ingestion", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_inhalation", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<int>("risk_rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("risk_inhalation", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.risk_skin_contact", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<int>("risk_rating")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("risk_skin_contact", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.ChemicalRiskAssessment.use", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("use", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.acute_chronic", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -88,7 +887,7 @@ namespace EHS.Migrations
                     b.ToTable("acute_chronic", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.agent", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.agent", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -152,7 +951,7 @@ namespace EHS.Migrations
                     b.ToTable("agent", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.assessment_methods_used", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.assessment_methods_used", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -212,7 +1011,7 @@ namespace EHS.Migrations
                     b.ToTable("assessment_methods_used", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.controls_recommended", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.controls_recommended", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -272,7 +1071,7 @@ namespace EHS.Migrations
                     b.ToTable("controls_recommended", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.exposure_rating", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.exposure_rating", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -335,7 +1134,7 @@ namespace EHS.Migrations
                     b.ToTable("exposure_rating", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.exposure_type", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.exposure_type", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -395,7 +1194,7 @@ namespace EHS.Migrations
                     b.ToTable("exposure_type", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.frequency_of_task", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.frequency_of_task", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -455,7 +1254,7 @@ namespace EHS.Migrations
                     b.ToTable("frequency_of_task", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.has_agent_been_changed", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.has_agent_been_changed", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -515,7 +1314,7 @@ namespace EHS.Migrations
                     b.ToTable("has_agent_been_changed", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.health_effect_rating", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.health_effect_rating", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -578,67 +1377,7 @@ namespace EHS.Migrations
                     b.ToTable("health_effect_rating", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.location", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("created_date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("created_user")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("created_user_email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("created_user_fullname")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("deleted_date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("deleted_user")
-                        .HasColumnType("text");
-
-                    b.Property<string>("deleted_user_email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("deleted_user_fullname")
-                        .HasColumnType("text");
-
-                    b.Property<string>("description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("display")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("modified_date")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("modified_user")
-                        .HasColumnType("text");
-
-                    b.Property<string>("modified_user_email")
-                        .HasColumnType("text");
-
-                    b.Property<string>("modified_user_fullname")
-                        .HasColumnType("text");
-
-                    b.Property<string>("sort_order")
-                        .HasColumnType("text");
-
-                    b.HasKey("id");
-
-                    b.ToTable("location", "ehs");
-                });
-
-            modelBuilder.Entity("EHS.Models.Dropdowns.monitoring_data_required", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.monitoring_data_required", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -698,7 +1437,7 @@ namespace EHS.Migrations
                     b.ToTable("monitoring_data_required", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.number_of_workers", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.number_of_workers", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -758,7 +1497,7 @@ namespace EHS.Migrations
                     b.ToTable("number_of_workers", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.occupational_exposure_limit", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.occupational_exposure_limit", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -818,7 +1557,7 @@ namespace EHS.Migrations
                     b.ToTable("occupational_exposure_limit", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.route_of_entry", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.route_of_entry", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -878,7 +1617,7 @@ namespace EHS.Migrations
                     b.ToTable("route_of_entry", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.seg_role", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.seg_role", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -938,7 +1677,7 @@ namespace EHS.Migrations
                     b.ToTable("seg_role", "ehs");
                 });
 
-            modelBuilder.Entity("EHS.Models.Dropdowns.task", b =>
+            modelBuilder.Entity("EHS.Models.Dropdowns.SEG.task", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -996,6 +1735,66 @@ namespace EHS.Migrations
                     b.HasKey("id");
 
                     b.ToTable("task", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.Dropdowns.location", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("display")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("sort_order")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("location", "ehs");
                 });
 
             modelBuilder.Entity("EHS.Models.Dropdowns.yes_no", b =>
@@ -1068,10 +1867,12 @@ namespace EHS.Migrations
 
                     b.Property<string>("CasNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<string>("PreferredName")
-                        .HasColumnType("text");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<int?>("PubChemCid")
                         .HasColumnType("integer");
@@ -1239,6 +2040,230 @@ namespace EHS.Migrations
                         .IsUnique();
 
                     b.ToTable("ih_chemical_synonym", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.IH.chemical_risk_assessment", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<List<string>>("area")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<List<int>>("carcinogen")
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("chemical")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("date_conducted")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("date_reviewed")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("emergency_response")
+                        .HasColumnType("text");
+
+                    b.Property<List<int>>("eye_contact")
+                        .HasColumnType("integer[]");
+
+                    b.Property<List<int>>("ingestion")
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("location")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<string>("nfpa")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("oels")
+                        .HasColumnType("text");
+
+                    b.Property<List<int>>("other")
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("person_performing_assessment_displayname")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("person_performing_assessment_username")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<string>("person_performing_review_displayname")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("person_performing_review_username")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<List<string>>("ppe_eyewear")
+                        .HasColumnType("text[]");
+
+                    b.Property<List<string>>("ppe_glove")
+                        .HasColumnType("text[]");
+
+                    b.Property<List<string>>("ppe_respiratory")
+                        .HasColumnType("text[]");
+
+                    b.Property<List<string>>("ppe_suit")
+                        .HasColumnType("text[]");
+
+                    b.Property<List<int>>("reproductive")
+                        .HasColumnType("integer[]");
+
+                    b.Property<List<int>>("respiratory")
+                        .HasColumnType("integer[]");
+
+                    b.Property<int?>("risk_score")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("integer");
+
+                    b.Property<List<int>>("sensitizer")
+                        .HasColumnType("integer[]");
+
+                    b.Property<List<int>>("skin_absorption")
+                        .HasColumnType("integer[]");
+
+                    b.Property<List<int>>("skin_contact")
+                        .HasColumnType("integer[]");
+
+                    b.Property<string>("state")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<List<string>>("use")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.HasKey("id");
+
+                    b.ToTable("chemical_risk_assessment", "ehs");
+                });
+
+            modelBuilder.Entity("EHS.Models.chemical_composition", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("cas_number")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("chemical_name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<int>("chemical_risk_assessment_id")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal?>("concentration_high")
+                        .HasColumnType("numeric(6,3)");
+
+                    b.Property<decimal?>("concentration_low")
+                        .HasColumnType("numeric(6,3)");
+
+                    b.Property<DateTime>("created_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("created_user")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("created_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("deleted_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("deleted_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("deleted_user_fullname")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("modified_date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("modified_user")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("modified_user_fullname")
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("chemical_risk_assessment_id")
+                        .HasDatabaseName("ix_ih_chemical_composition_chemicalriskassessmentid");
+
+                    b.ToTable("chemical_composition", "ehs");
                 });
 
             modelBuilder.Entity("EHS.Models.seg_risk_assessment", b =>
@@ -1431,6 +2456,17 @@ namespace EHS.Migrations
                     b.Navigation("IhChemical");
                 });
 
+            modelBuilder.Entity("EHS.Models.chemical_composition", b =>
+                {
+                    b.HasOne("EHS.Models.IH.chemical_risk_assessment", "assessment")
+                        .WithMany("composition")
+                        .HasForeignKey("chemical_risk_assessment_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("assessment");
+                });
+
             modelBuilder.Entity("EHS.Models.IH.IhChemical", b =>
                 {
                     b.Navigation("Hazards");
@@ -1442,6 +2478,11 @@ namespace EHS.Migrations
                     b.Navigation("SamplingMethods");
 
                     b.Navigation("Synonyms");
+                });
+
+            modelBuilder.Entity("EHS.Models.IH.chemical_risk_assessment", b =>
+                {
+                    b.Navigation("composition");
                 });
 #pragma warning restore 612, 618
         }
